@@ -7,7 +7,7 @@
 #define MAP_SECTION_SPRITE_ID_CELLS 4
 #define MAP_SECTION_MAP_WIDTH 2
 #define MAP_SECTION_MAP_HEIGHT 3
-
+#define TILED_MAP_SIZE 32
 
 CTiledMap* CTiledMap::__instance = NULL;
 
@@ -147,7 +147,7 @@ void CTiledMap::Render()
 		for (int c_index = 0; c_index < tiledmap_row_set[r_index]->tiled_row.size(); c_index++)
 		{
 			LPTILEDCELL cell = tiledmap_row_set[r_index]->tiled_row[c_index];
-			cell->GetSprite()->Draw(c_index>0?c_index*16- c_index : c_index * 16, r_index>0?r_index*16- r_index : r_index * 16);
+			cell->GetSprite()->Draw(c_index>0?c_index* TILED_MAP_SIZE - c_index : c_index * TILED_MAP_SIZE, r_index>0?r_index* TILED_MAP_SIZE - r_index : r_index * TILED_MAP_SIZE);
 		}
 	}
 }
