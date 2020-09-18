@@ -7,6 +7,11 @@
 #include "Mario.h"
 #include "Goomba.h"
 #include "Koopas.h"
+//bo sung
+#include "MainCharacter.h"
+#include "BarrelObject.h"
+#include "WheelObject.h"
+#include "CabinObject.h"
 
 #include "TiledMap.h"
 #include "Grid.h"
@@ -14,7 +19,8 @@
 class CPlayScene: public CScene
 {
 protected: 
-	CMario *player;					// A play scene has to have player, right? 
+	//CMario *player;	
+	CMainCharacter* player;// A play scene has to have player, right? 
 
 	vector<LPGAMEOBJECT> objects;
 	
@@ -34,7 +40,8 @@ public:
 	virtual void Render();
 	virtual void Unload();
 
-	CMario * GetPlayer() { return player; } 
+	//CMario * GetPlayer() { return player; } 
+	CMainCharacter* GetPlayer() { return player; }
 
 	//friend class CPlayScenceKeyHandler;
 };

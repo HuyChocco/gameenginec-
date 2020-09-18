@@ -7,7 +7,7 @@
 #define MAP_SECTION_SPRITE_ID_CELLS 4
 #define MAP_SECTION_MAP_WIDTH 2
 #define MAP_SECTION_MAP_HEIGHT 3
-#define TILED_MAP_SIZE 32
+#define TILED_MAP_SIZE 16
 
 CTiledMap* CTiledMap::__instance = NULL;
 

@@ -63,9 +63,11 @@ public:
 	LPANIMATION_SET animation_set;
 	//bổ sung;
 	int id = 0;//mặc định
+	//D3DXVECTOR2 delta;
 public: 
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
+	void SetDirection(int nx) { this->nx = nx; }
 	void GetPosition(float &x, float &y) { x = this->x; y = this->y; }
 	void GetSpeed(float &vx, float &vy) { vx = this->vx; vy = this->vy; }
 
@@ -97,6 +99,7 @@ public:
 	//bổ sung
 	int GetID() { return this->id; }
 	void SetID(int _id) { this->id = _id; }
+	//virtual void SetDelta(D3DXVECTOR2 delta) { }
 	~CGameObject();
 };
 

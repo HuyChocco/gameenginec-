@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\MainCharacterObjects">
+      <UniqueIdentifier>{845b8a51-46d5-43a0-8869-8788fa8c0170}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\MainCharacterObjects">
+      <UniqueIdentifier>{446c1de4-8633-4002-8b82-aa3ae2c10cf0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Brick.cpp">
@@ -66,6 +72,18 @@
     <ClCompile Include="Grid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MainCharacter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WheelObject.cpp">
+      <Filter>Source Files\MainCharacterObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="BarrelObject.cpp">
+      <Filter>Source Files\MainCharacterObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="CabinObject.cpp">
+      <Filter>Source Files\MainCharacterObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Brick.h">
@@ -118,6 +136,18 @@
     </ClInclude>
     <ClInclude Include="Grid.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MainCharacter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WheelObject.h">
+      <Filter>Header Files\MainCharacterObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="CabinObject.h">
+      <Filter>Header Files\MainCharacterObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="BarrelObject.h">
+      <Filter>Header Files\MainCharacterObjects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
