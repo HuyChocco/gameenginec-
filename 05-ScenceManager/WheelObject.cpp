@@ -11,7 +11,7 @@
 CWheelObject::CWheelObject(float x, float y) : CGameObject()
 {
 	
-	SetState(WHEEL_STATE_IDLE);
+	SetState(MAIN_CHARACTER_STATE_IDLE);
 
 	start_x = x;
 	start_y = y;
@@ -42,15 +42,49 @@ void CWheelObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CWheelObject::Render()
 {
-	if(is_Middle_Wheel)
+	int ani = -1;
+	if (is_Middle_Wheel)
+	{
+		
+		
 		animation_set->at(0)->Render(x, y);
+	}	
 	else
-		animation_set->at(1)->Render(x, y);
+	{
+		switch (state)
+		{
+		case MAIN_CHARACTER_STATE_RUN_RIGHT:
+			ani = MAIN_CHARACTER_ANI_RUN_RIGHT;
+			break;
+		case MAIN_CHARACTER_STATE_RUN_LEFT:
+			ani = MAIN_CHARACTER_ANI_RUN_LEFT;
+			break;
+		case MAIN_CHARACTER_STATE_IDLE:
+		{
+			if(nx>0)
+				ani = MAIN_CHARACTER_ANI_IDLE_RIGHT;
+			else
+				ani = MAIN_CHARACTER_ANI_IDLE_LEFT;
+		}
+		break;
+		case MAIN_CHARACTER_STATE_JUMP:
+			ani = MAIN_CHARACTER_ANI_JUMP;
+			break;
+		case MAIN_CHARACTER_STATE_DIE:
+			break;
+		}
+		animation_set->at(ani)->Render(x, y);
+	}
+		
 }
 
 void CWheelObject::SetState(int state)
 {
-	
+	CGameObject::SetState(state);
+	if (state == MAIN_CHARACTER_STATE_RUN_RIGHT)
+		nx = 1;
+	else if (state == MAIN_CHARACTER_STATE_RUN_LEFT)
+		nx = -1;
 }
 
 void CWheelObject::GetBoundingBox(float& left, float& top, float& right, float& bottom)

@@ -11,7 +11,7 @@
 CCabinObject::CCabinObject(float x, float y) : CGameObject()
 {
 	
-	SetState(CABIN_STATE_IDLE);
+	SetState(MAIN_CHARACTER_STATE_IDLE);
 
 	start_x = x;
 	start_y = y;

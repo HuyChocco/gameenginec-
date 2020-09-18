@@ -115,6 +115,7 @@ void CMainCharacter::Render()
 void CMainCharacter::SetState(int state)
 {
 	CGameObject::SetState(state);
+	
 	switch (state)
 	{
 	case MAIN_CHARACTER_STATE_RUN_RIGHT:
@@ -136,6 +137,12 @@ void CMainCharacter::SetState(int state)
 		vy = -MAIN_CHARACTER_DIE_DEFLECT_SPEED;
 		break;
 	}
+	for (int i = 0; i < componentObjects.size(); i++)
+	{
+		componentObjects[i]->SetState(state);
+		componentObjects[i]->SetDirection(nx);
+	}
+
 }
 
 void CMainCharacter::GetBoundingBox(float& left, float& top, float& right, float& bottom)
