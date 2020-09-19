@@ -63,15 +63,37 @@ void CGame::Init(HWND hWnd)
 /*
 	Utility function to wrap LPD3DXSPRITE::Draw 
 */
-void CGame::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha)
+void CGame::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha,bool flip)
 {
+	D3DXMATRIX oldMatrix;
+	spriteHandler->GetTransform(&oldMatrix);
 	D3DXVECTOR3 p(x - cam_x, y - cam_y, 0);
 	RECT r; 
 	r.left = left;
 	r.top = top;
 	r.right = right;
 	r.bottom = bottom;
+	float width = right - left;
+	float height = bottom - top;
+	int scale = 1;
+	D3DXVECTOR2 center = D3DXVECTOR2(p.x+(width / 2) * scale, p.y+(height / 2) * scale); 
+	//D3DXVECTOR2 translate = D3DXVECTOR2(x, y); 
+	D3DXVECTOR2 scaling = D3DXVECTOR2((flip) ? -1 : 1, 1);
+	float angle = 0;
+	D3DXMATRIX newMatrix;
+	D3DXMatrixTransformation2D(
+		&newMatrix,
+		&center,
+		0.0f,
+		&scaling,
+		NULL,
+		angle,
+		NULL
+	);
+	//D3DXMATRIX finalMatrix=newMatrix*oldMatrix;
+	spriteHandler->SetTransform(&newMatrix);
 	spriteHandler->Draw(texture, &r, NULL, &p, D3DCOLOR_ARGB(alpha, 255, 255, 255));
+	//spriteHandler->SetTransform(&oldMatrix);
 }
 //bổ sung tạm ở đây
 void CGame::SetRenderData(D3DXVECTOR2& center, D3DXVECTOR2& translate, D3DXVECTOR2& scaling)

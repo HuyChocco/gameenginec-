@@ -279,13 +279,13 @@ Map-Blaster-Master-Area-2-A.txt
 # MAIN_CHARACTER need to be created first!
 15	9	17	115	2
 # BRICK 
-2	1	0	135	22
-3	1	0	150	22
-4	1	16	150	22
-5	1	32	150	22
-6	1	100	150	22
-7	1	115	150	22
-8	1	130	150	22
+2	1	0	210	2	285	212
+#3	1	0	150	2
+#4	1	16	150	2
+#5	1	32	150	2
+#6	1	100	150	2
+#7	1	115	150	2
+#8	1	130	150	2
 # WHEEL_LEFT
 10	4	18	132	3
 # WHEEL_MIDDLE
@@ -303,4 +303,4 @@ Map-Blaster-Master-Area-2-A.txt
 9	50	115	98	0	148	150	1
 # cellx celly id_object...
 [GRID]
-0	0	2	3	4	5	6	7	8
+0	0	2

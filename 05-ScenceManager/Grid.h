@@ -9,7 +9,7 @@ class CCell
 	vector<LPGAMEOBJECT> objects;
 
 public:
-	CCell() { objects.clear(); };
+	CCell() {  };
 	void Add(LPGAMEOBJECT object) { objects.push_back(object); };
 	vector<LPGAMEOBJECT> GetObjects() { return objects; }
 	void Unload() { objects.clear(); }
