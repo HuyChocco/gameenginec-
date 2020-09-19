@@ -178,7 +178,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
 	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(); break;
-	case OBJECT_TYPE_BRICK: obj = new CBrick(); break;
+	case OBJECT_TYPE_BRICK: 
+	{
+		float r = atof(tokens[5].c_str());
+		float b = atof(tokens[6].c_str());
+		obj = new CBrick(x, y, r, b);
+		break;
+	}
 	case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
 	case OBJECT_TYPE_WHEEL_LEFT:
 	{
@@ -261,11 +267,12 @@ void CPlayScene::_ParseSection_MAP(string line)
 	CTiledMap::GetInstance()->LoadMap(path.c_str());
 
 }
+bool initGridFlag = true;
 void CPlayScene::_ParseSection_GRID(string line)
 {
 	// check flag to init grid
-	//if (flag)
-	//{
+	if (initGridFlag)
+		{
 		int width, height; 
 		CTiledMap::GetInstance()->GetMapWidth(width);
 		CTiledMap::GetInstance()->GetMapHeight(height);
@@ -281,8 +288,8 @@ void CPlayScene::_ParseSection_GRID(string line)
 
 		CGrid::GetInstance()->Init();
 
-		//flag = false;
-	//}
+		initGridFlag = false;
+	}
 
 	vector<string> tokens = split(line);
 
@@ -345,15 +352,19 @@ void CPlayScene::Load()
 		// data section
 		//
 		switch (section)
-		{ 
-			case SCENE_SECTION_TEXTURES: _ParseSection_TEXTURES(line); break;
-			case SCENE_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
-			case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
-			case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
-			case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
-				//bổ sung
-			case SCENE_SECTION_MAP: _ParseSection_MAP(line); break;
-			case SCENE_SECTION_GRID: _ParseSection_GRID(line); break;
+		{
+		case SCENE_SECTION_TEXTURES: _ParseSection_TEXTURES(line); break;
+		case SCENE_SECTION_SPRITES: _ParseSection_SPRITES(line); break;
+		case SCENE_SECTION_ANIMATIONS: _ParseSection_ANIMATIONS(line); break;
+		case SCENE_SECTION_ANIMATION_SETS: _ParseSection_ANIMATION_SETS(line); break;
+		case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
+			//bổ sung
+		case SCENE_SECTION_MAP: _ParseSection_MAP(line); break;
+		case SCENE_SECTION_GRID:
+			{
+				_ParseSection_GRID(line);
+				break;
+			}
 		}
 	}
 

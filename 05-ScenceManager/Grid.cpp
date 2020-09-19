@@ -14,27 +14,14 @@ CGrid::CGrid()
 
 void CGrid::Init()
 {
-	cells = new CCell* [numCol];
-	for (int i = 0; i < numCol; i++)
-		cells[i] = new CCell[numRow];
+	cells = new CCell* [numRow];
+	for (int i = 0; i < numRow; i++)
+		cells[i] = new CCell[numCol];
 }
 
 void CGrid::Add(LPGAMEOBJECT object, float x, float y)
 {
-	/*int startX = x / CELL_WIDTH;
-	int startY = y / CELL_HEIGHT;
-	int endX = (x + object->GetWidth()) / CELL_WIDTH;
-	int endY = (y + object->GetHeight()) / CELL_HEIGHT;*/
-
-	//for (int i = startX; i <= endX; i++)
-	//{
-		/*for (int j = startY; j <= endY; j++)
-		{
-			cells[i][j].Add(object);
-		}*/
-		//cells[i][startY].Add(object);
-	//}
-	//cells[startX][startY].Add(object);
+	
 }
 
 void CGrid::Add(LPGAMEOBJECT object, int xCell, int yCell)
@@ -60,9 +47,9 @@ vector<LPGAMEOBJECT> CGrid::GetList()
 	if (startX >= numCol || startY >= numRow|| endX>=numCol|| endY>=numRow)
 		return objects;
 	objects.clear();
-	for (int i = startX; i <= endX; i++)
+	for (int i = startY; i <= endY; i++)
 	{
-		for (int j = startY; j <= endY; j++)
+		for (int j = startX; j <= endX; j++)
 		{
 			if (cells[i][j].GetObjects().size() > 0)
 			{
