@@ -43,6 +43,7 @@ void CWheelObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void CWheelObject::Render()
 {
 	int ani = -1;
+	int flip = false;
 	if (is_Middle_Wheel)
 	{
 		
@@ -55,16 +56,26 @@ void CWheelObject::Render()
 		{
 		case MAIN_CHARACTER_STATE_RUN_RIGHT:
 			ani = MAIN_CHARACTER_ANI_RUN_RIGHT;
+			flip = false;
 			break;
 		case MAIN_CHARACTER_STATE_RUN_LEFT:
 			ani = MAIN_CHARACTER_ANI_RUN_LEFT;
+			flip = true;
 			break;
 		case MAIN_CHARACTER_STATE_IDLE:
 		{
-			if(nx>0)
+			if (nx > 0)
+			{
 				ani = MAIN_CHARACTER_ANI_IDLE_RIGHT;
+				flip = false;
+			}
+				
 			else
+			{
 				ani = MAIN_CHARACTER_ANI_IDLE_LEFT;
+				flip = true;
+			}
+				
 		}
 		break;
 		case MAIN_CHARACTER_STATE_JUMP:
@@ -73,7 +84,7 @@ void CWheelObject::Render()
 		case MAIN_CHARACTER_STATE_DIE:
 			break;
 		}
-		animation_set->at(ani)->Render(x, y);
+		animation_set->at(ani)->Render(x, y,flip);
 	}
 		
 }

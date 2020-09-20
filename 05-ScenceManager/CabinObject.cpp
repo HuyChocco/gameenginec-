@@ -21,14 +21,24 @@ CCabinObject::CCabinObject(float x, float y) : CGameObject()
 
 void CCabinObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	x += 7;
 	
+	if (nx < 0)
+	{
+		x += 7;
+	}
 
 }
 
 void CCabinObject::Render()
 {
-	animation_set->at(0)->Render(x, y);
+	bool flip = false;
+	if (nx > 0)
+	{
+		flip = true;
+	}
+	else
+		flip = false;
+	animation_set->at(0)->Render(x, y,flip);
 }
 
 void CCabinObject::SetState(int state)
