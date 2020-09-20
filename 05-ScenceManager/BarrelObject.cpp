@@ -21,12 +21,26 @@ CBarrelObject::CBarrelObject(float x, float y) : CGameObject()
 
 void CBarrelObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	y += 2;
+	
+	if (nx > 0)
+	{
+		x += 16;
+		y += 2;
+	}
+	else
+		y += 2;
 }
 
 void CBarrelObject::Render()
 {
-	animation_set->at(0)->Render(x, y);
+	bool flip = false;
+	if (nx > 0)
+	{
+		flip = true;
+	}
+	else
+		flip = false;
+	animation_set->at(0)->Render(x, y, flip);
 }
 
 void CBarrelObject::SetState(int state)
