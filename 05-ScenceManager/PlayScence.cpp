@@ -36,7 +36,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 
 #define OBJECT_TYPE_MARIO	0
 #define OBJECT_TYPE_BRICK	1
-#define OBJECT_TYPE_GOOMBA	2
+#define OBJECT_TYPE_ENEMY1	2
 #define OBJECT_TYPE_KOOPAS	3
 #define OBJECT_TYPE_MAIN_CHARACTER	9
 #define OBJECT_TYPE_WHEEL_LEFT	4
@@ -155,17 +155,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	switch (object_type)
 	{
-	/*case OBJECT_TYPE_MARIO:
-		if (player!=NULL) 
-		{
-			DebugOut(L"[ERROR] MARIO object was created before!\n");
-			return;
-		}
-		obj = new CMario(x,y); 
-		player = (CMario*)obj;  
-
-		DebugOut(L"[INFO] Player object created!\n");
-		break;*/
 	case OBJECT_TYPE_MAIN_CHARACTER:
 		if (player != NULL)
 		{
@@ -177,7 +166,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
-	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(); break;
+	case OBJECT_TYPE_ENEMY1: obj = new CEnemyObject1(); break;
 	case OBJECT_TYPE_BRICK: 
 	{
 		float r = atof(tokens[5].c_str());
@@ -185,14 +174,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CBrick(x, y, r, b);
 		break;
 	}
-	case OBJECT_TYPE_KOOPAS: obj = new CKoopas(); break;
 	case OBJECT_TYPE_WHEEL_LEFT:
 	{
 		obj = new CWheelObject();
 		if (player != NULL)
 		{
 
-			DebugOut(L"[ERROR] MARIO object has been Created Already!\n");
+			DebugOut(L"[INFO] MARIO object has been Created Already!\n");
 			player->AddComponentObject(obj);
 		}
 		break;
@@ -202,7 +190,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CWheelObject();
 		CWheelObject* obj_middle_wheel = (CWheelObject*)obj;
 		obj_middle_wheel->SetIsMiddleWheel();
-		DebugOut(L"[ERROR] MARIO object has been Created Already!\n");
+		DebugOut(L"[INFO] MARIO object has been Created Already!\n");
 		player->AddComponentObject(obj);
 		break;
 	}
@@ -211,21 +199,21 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CWheelObject();
 		CWheelObject* obj_right_wheel =(CWheelObject*) obj;
 		obj_right_wheel->SetIsRightWheel();
-		DebugOut(L"[ERROR] MARIO object has been Created Already!\n");
+		DebugOut(L"[INFO] MARIO object has been Created Already!\n");
 		player->AddComponentObject(obj);
 		break;
 	}
 	case OBJECT_TYPE_CABIN: 
 	{
 		obj = new CCabinObject();
-		DebugOut(L"[ERROR] MARIO object has been Created Already!\n");
+		DebugOut(L"[INFO] MARIO object has been Created Already!\n");
 		player->AddComponentObject(obj);
 		break;
 	}
 	case OBJECT_TYPE_BARREL: 
 	{
 		obj = new CBarrelObject(); 
-		DebugOut(L"[ERROR] MARIO object has been Created Already!\n");
+		DebugOut(L"[INFO] MARIO object has been Created Already!\n");
 		player->AddComponentObject(obj);
 		break;
 	}
@@ -392,15 +380,16 @@ void CPlayScene::Update(DWORD dt)
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 		objects[i]->Update(dt, &coObjects);
+		
 	}
 
 	player->Update(dt, &coObjects);
 	for (int i = 0; i < player->GetComponentObjects().size(); i++)
-		player->GetComponentObjects()[i]->Update(dt, &coObjects);
+		player->GetComponentObjects()[i]->Update(dt);
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return; 
 
-	// Update camera to follow mario
+	// Update camera to follow main character
 	float cx, cy;
 	player->GetPosition(cx, cy);
 
@@ -409,20 +398,22 @@ void CPlayScene::Update(DWORD dt)
 	int widthMap, heightMap;
 	map->GetMapWidth(widthMap);
 	map->GetMapHeight(heightMap);
-	if (cx < game->GetScreenWidth() / 2)
+	if (cx < 320 / 2)//if (cx < game->GetScreenWidth() / 2)
 	{
 		cx = 0;
 		cy = 0;
 	}
-	else if (widthMap - cx < game->GetScreenWidth() / 2)
+	else if (widthMap - cx < 320 / 2)//else if (widthMap - cx < game->GetScreenWidth() / 2)
 	{
-		cx = widthMap - game->GetScreenWidth();
-		
+		cx = widthMap - 320;
+		//cx = widthMap - game->GetScreenWidth();
 	}
 	else
 	{
-		cx -= game->GetScreenWidth() / 2;
-		cy -= game->GetScreenHeight() / 2;
+		cx -= 320 / 2;
+		cy -= 240 / 2;
+		//cx -= game->GetScreenWidth() / 2;
+		//cy -= game->GetScreenHeight() / 2;
 	}
 	
 
@@ -465,34 +456,33 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_A:
 		player->Reset();
 		break;
+	
 	}
-	/*CMario *mario = ((CPlayScene*)scence)->GetPlayer();
-	switch (KeyCode)
-	{
-	case DIK_SPACE:
-		mario->SetState(MARIO_STATE_JUMP);
-		break;
-	case DIK_A: 
-		mario->Reset();
-		break;
-	}*/
+}
+void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
+{
+	
 }
 
 void CPlayScenceKeyHandler::KeyState(BYTE *states)
 {
 	CGame *game = CGame::GetInstance();
-	//CMario *mario = ((CPlayScene*)scence)->GetPlayer();
 	CMainCharacter *player = ((CPlayScene*)scence)->GetPlayer();
 	//// disable control key when Mario die 
-	//if (mario->GetState() == MARIO_STATE_DIE) return;
-	//if (game->IsKeyDown(DIK_RIGHT))
-	//	mario->SetState(MARIO_STATE_WALKING_RIGHT);
-	//else if (game->IsKeyDown(DIK_LEFT))
-	//	mario->SetState(MARIO_STATE_WALKING_LEFT);
-	//else
-	//	mario->SetState(MARIO_STATE_IDLE);
 	if (player->GetState() == MAIN_CHARACTER_STATE_DIE) return;
-	if (game->IsKeyDown(DIK_RIGHT))
+	
+	if (game->IsKeyDown(DIK_UP))
+	{
+		player->SetState(MAIN_CHARACTER_STATE_UP_BARREL);
+	}
+	else if (game->IsKeyDown(DIK_DOWN))
+	{
+			player->SetState(MAIN_CHARACTER_STATE_DOWN_BARREL);
+	}
+		
+	else if (game->IsKeyDown(DIK_X))
+		player->SetState(MAIN_CHARACTER_STATE_BARREL_FIRE);
+	else if (game->IsKeyDown(DIK_RIGHT))
 		player->SetState(MAIN_CHARACTER_STATE_RUN_RIGHT);
 	else if (game->IsKeyDown(DIK_LEFT))
 		player->SetState(MAIN_CHARACTER_STATE_RUN_LEFT);

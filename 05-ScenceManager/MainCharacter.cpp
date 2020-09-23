@@ -72,27 +72,27 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		//
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
-			LPCOLLISIONEVENT e = coEventsResult[i];
+			//LPCOLLISIONEVENT e = coEventsResult[i];
 
-			if (dynamic_cast<CGoomba*>(e->obj)) // if e->obj is Goomba 
-			{
-				CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
+			//if (dynamic_cast<CGoomba*>(e->obj)) // if e->obj is Goomba 
+			//{
+				//CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
 
 				// jump on top >> kill Goomba and deflect a bit 
-				if (e->ny < 0)
+				//if (e->ny < 0)
 				{
 					
 				}
-				else if (e->nx != 0)
+				//else if (e->nx != 0)
 				{
 					
 				}
-			} // if Goomba
-			else if (dynamic_cast<CPortal*>(e->obj))
-			{
-				CPortal* p = dynamic_cast<CPortal*>(e->obj);
-				CGame::GetInstance()->SwitchScene(p->GetSceneId());
-			}
+			//} // if Goomba
+			//else if (dynamic_cast<CPortal*>(e->obj))
+			//{
+			//	CPortal* p = dynamic_cast<CPortal*>(e->obj);
+			//	CGame::GetInstance()->SwitchScene(p->GetSceneId());
+			//}
 		}
 	}
 	
@@ -136,11 +136,17 @@ void CMainCharacter::SetState(int state)
 	case MAIN_CHARACTER_STATE_DIE:
 		vy = -MAIN_CHARACTER_DIE_DEFLECT_SPEED;
 		break;
+	case MAIN_CHARACTER_STATE_UP_BARREL:
+		break;
+	case MAIN_CHARACTER_STATE_DOWN_BARREL:
+		break;
+
 	}
 	for (int i = 0; i < componentObjects.size(); i++)
 	{
 		componentObjects[i]->SetState(state);
 		componentObjects[i]->SetDirection(nx);
+		componentObjects[i]->SetSpeed(vx,vy);
 	}
 
 }

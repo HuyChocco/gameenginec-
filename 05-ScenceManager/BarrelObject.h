@@ -2,6 +2,9 @@
 #include "./GameObject.h"
 #include "./MainCharacter.h"
 
+#define BARREL_ANI_IDLE		0
+#define BARREL_ANI_UP			2
+#define BARREL_ANI_DOWN			1
 class CBarrelObject : public CGameObject
 {
 	int level;
@@ -10,7 +13,7 @@ class CBarrelObject : public CGameObject
 
 	float start_x;			// initial position of BARREL at scene
 	float start_y;
-	
+	bool is_finish_animation;
 public:
 	CBarrelObject(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
@@ -24,5 +27,6 @@ public:
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 
+	void SetIsFinishAnimaion(bool is_finish) { this->is_finish_animation = is_finish; }
 	// void SetDelta(D3DXVECTOR2 delta);
 };

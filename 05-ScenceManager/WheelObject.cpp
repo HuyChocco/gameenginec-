@@ -44,46 +44,24 @@ void CWheelObject::Render()
 {
 	int ani = -1;
 	int flip = false;
+	if (nx > 0)
+	{
+		flip = false;
+	}
+	else
+		flip = true;
 	if (is_Middle_Wheel)
 	{
-		
-		
-		animation_set->at(0)->Render(x, y);
+		ani = WHEEL_ANI_IDLE;
+		animation_set->at(ani)->Render(x, y);
 	}	
 	else
 	{
-		switch (state)
-		{
-		case MAIN_CHARACTER_STATE_RUN_RIGHT:
-			ani = MAIN_CHARACTER_ANI_RUN_RIGHT;
-			flip = false;
-			break;
-		case MAIN_CHARACTER_STATE_RUN_LEFT:
-			ani = MAIN_CHARACTER_ANI_RUN_LEFT;
-			flip = true;
-			break;
-		case MAIN_CHARACTER_STATE_IDLE:
-		{
-			if (nx > 0)
-			{
-				ani = MAIN_CHARACTER_ANI_IDLE_RIGHT;
-				flip = false;
-			}
-				
-			else
-			{
-				ani = MAIN_CHARACTER_ANI_IDLE_LEFT;
-				flip = true;
-			}
-				
-		}
-		break;
-		case MAIN_CHARACTER_STATE_JUMP:
-			ani = MAIN_CHARACTER_ANI_JUMP;
-			break;
-		case MAIN_CHARACTER_STATE_DIE:
-			break;
-		}
+	
+		if (vx != 0)
+			ani = WHEEL_ANI_IDLE_RUN;
+		else
+			ani= WHEEL_ANI_IDLE;
 		animation_set->at(ani)->Render(x, y,flip);
 	}
 		
@@ -92,10 +70,7 @@ void CWheelObject::Render()
 void CWheelObject::SetState(int state)
 {
 	CGameObject::SetState(state);
-	if (state == MAIN_CHARACTER_STATE_RUN_RIGHT)
-		nx = 1;
-	else if (state == MAIN_CHARACTER_STATE_RUN_LEFT)
-		nx = -1;
+	
 }
 
 void CWheelObject::GetBoundingBox(float& left, float& top, float& right, float& bottom)

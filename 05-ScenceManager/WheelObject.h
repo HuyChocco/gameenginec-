@@ -2,6 +2,9 @@
 #include "./GameObject.h"
 #include "./MainCharacter.h"
 
+#define WHEEL_ANI_IDLE		0
+#define WHEEL_ANI_IDLE_RUN			1
+
 class CWheelObject : public CGameObject
 {
 	int level;

@@ -128,6 +128,8 @@
     <ClCompile Include="BarrelObject.cpp" />
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="CabinObject.cpp" />
+    <ClCompile Include="EnemyObject.cpp" />
+    <ClCompile Include="EnemyObject1.cpp" />
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="Koopas.cpp" />
     <ClCompile Include="MainCharacter.cpp" />
@@ -151,6 +153,8 @@
     <ClInclude Include="BarrelObject.h" />
     <ClInclude Include="Brick.h" />
     <ClInclude Include="CabinObject.h" />
+    <ClInclude Include="EnemyObject.h" />
+    <ClInclude Include="EnemyObject1.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="Koopas.h" />
     <ClInclude Include="MainCharacter.h" />
