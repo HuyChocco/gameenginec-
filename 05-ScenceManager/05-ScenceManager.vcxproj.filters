@@ -19,6 +19,12 @@
     <Filter Include="Source Files\MainCharacterObjects">
       <UniqueIdentifier>{446c1de4-8633-4002-8b82-aa3ae2c10cf0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\EnemyObjects">
+      <UniqueIdentifier>{ca08a942-ac18-4395-b937-83b4b8598942}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\EnemyObjects">
+      <UniqueIdentifier>{1c41fddf-29cf-41a6-be75-d903c023adbd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Brick.cpp">
@@ -84,6 +90,12 @@
     <ClCompile Include="CabinObject.cpp">
       <Filter>Source Files\MainCharacterObjects</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyObject1.cpp">
+      <Filter>Source Files\EnemyObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Brick.h">
@@ -148,6 +160,12 @@
     </ClInclude>
     <ClInclude Include="BarrelObject.h">
       <Filter>Header Files\MainCharacterObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyObject1.h">
+      <Filter>Header Files\EnemyObjects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

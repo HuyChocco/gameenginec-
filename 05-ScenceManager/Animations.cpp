@@ -35,7 +35,12 @@ void CAnimation::Render(float x, float y, bool flip, int alpha)
 		{
 			currentFrame++;
 			lastFrameTime = now;
-			if (currentFrame == frames.size()) currentFrame = 0;
+			if (currentFrame == frames.size())
+			{
+				isFinish = true;
+
+				(isRepeat) ? currentFrame = 0 : currentFrame = frames.size() - 1;
+			}
 		}
 	}
 

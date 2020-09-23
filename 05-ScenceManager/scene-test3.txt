@@ -1,11 +1,7 @@
 # id	file_path	transparent_color_r	g	b
 [TEXTURES]
-0	textures\mario.png	255	255	255
 1	textures\Jason-and-Sophia.png	0	57	115
-20	textures\misc.png	176	224	248
-30	textures\Map-Boss1-Tiles.png	255	255	255
-31	textures\Map-Charleston-Tiles.png	255	255	255
-32	textures\tilemap-map1.png	255	255	255
+2	textures\BlasterMaster-Enemies.png	255	0	255
 33	textures\NES-Blaster-Master-Area-2.png	255	255	255
 
 # id	left	top	right	bottom	texture_id
@@ -160,9 +156,13 @@
 20003	21	21	28	28	1
 20004	30	21	37	28	1
 # SOFIA Barrel
+#down-left
 30001	3	3	10	10	1
+#horizontal
 30002	12	3	19	10	1
+#up-left
 30003	21	3	28	10	1
+#straight
 30004	30	3	37	10	1
 # SOFIA Cabin
 50001	39	3	54	10	1
@@ -173,64 +173,18 @@
 60004	30	12	37	19	1
 # Main character empty sprite
 70001	0	0	0	0	1
-# BIG MARIO 
-# idle right
-10001	246	154	260	181	0
-# walk
-10002	275	154	290	181	0		
-10003	304	154	321	181	0
-# idle left
-10011	186	154	200	181	0
-#walk
-10012	155	154	170	181	0
-10013	125	154	140	181	0
-# die 
-10099	215	120	231	135	0
-# SMALL MARIO
-# idle small right
-10021	247	0	259	15	0
-# walk
-10022	275	0	291	15	0
-10023	306	0	320	15	0
-# idle small left
-10031	187	0	198	15	0
-# walk
-10032	155	0	170	15	0
-10033	125	0	139	15	0
-
-#QUESTION BRICK
-40001	300	117	316	133	20
-40002	318	117	334	133	20
-40003	336	117	352	133	20
-40004	355	117	370	133	20
-
+# Enemy 1
+#Walk left 
+80001	91	2	103	26	2
+80002	108	1	121	26	2
+#Walk right
+90001	133	1	145	26	2
+90002	150	2	162	26	2
 # path
 [MAP]
 Map-Blaster-Master-Area-2-A.txt
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
-# ==== MARIO =========
-#idle BIG right
-400	10001	100
-#idle BIG left
-401	10011	100
-#idle small right
-402	10021	100
-#idle small left
-403	10031	100
-#walk right big
-500	10001	100	10002	100	10003	100
-#walk left big
-501	10011	100	10012	100	10013	100
-#walk right small
-502	10021	100	10022	100	10023	100
-#walk left small
-503	10031	100	10032	100	10033	100
-#die
-599	10099	100
-
-# ==== QUESTION BRICK =========
-602	40001	1000	40001	100	40002	100	40003	100	40004	100
 # ==== SOFIA WHEEL =========
 #idle
 700	20002	100
@@ -239,12 +193,10 @@ Map-Blaster-Master-Area-2-A.txt
 # ==== SOFIA BARREL =========
 #idle
 800	30002	100
-#up-right
+#down-left
 801	30001	100
 #up-left
-802	30003	100
-#up
-803	30004	100
+802	30003	100	30004	100
 # ==== SOFIA CABIN =========
 #idle
 900	50001	100
@@ -254,14 +206,15 @@ Map-Blaster-Master-Area-2-A.txt
 # ==== MAIN CHARACTER =========
 #idle
 2000	70001	100
+# ==== ENEMY 1 =========
+#Walk left
+3000	80001	100	80002	100
+#Walk right
+3001	90001	100	90002	100
 #
 # id	ani1	ani2	ani3
 #
 [ANIMATION_SETS]
-# MARIO
-1	400	401	402	403	500	501	502	503	599
-# QUESTION BRICK 
-22	602
 # MAIN_CHARACTER 
 2	2000
 # WHEEL 
@@ -269,23 +222,19 @@ Map-Blaster-Master-Area-2-A.txt
 # CABIN
 4	900
 # BARREL
-5	800	801	802	803
-
+5	800	801	802
+# ENEMY 1
+6	3000	3001
 [OBJECTS]
 # object_id  type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Cabin, 8= Barrel, 9= Main character
-# MARIO
-1	0	17	115	1
+# type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Koopas, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Cabin, 8= Barrel, 9= Main character
 # MAIN_CHARACTER need to be created first!
 15	9	17	115	2
+# ENEMY 1
+16	2	50	155	6
 # BRICK 
+# object_id 	type	l	t	ani_set_id	r	b	
 2	1	0	210	2	285	212
-#3	1	0	150	2
-#4	1	16	150	2
-#5	1	32	150	2
-#6	1	100	150	2
-#7	1	115	150	2
-#8	1	130	150	2
 # WHEEL_LEFT
 10	4	18	132	3
 # WHEEL_MIDDLE
@@ -303,4 +252,4 @@ Map-Blaster-Master-Area-2-A.txt
 9	50	115	98	0	148	150	1
 # cellx celly id_object...
 [GRID]
-0	0	2
+0	0	2	16

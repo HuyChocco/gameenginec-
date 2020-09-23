@@ -43,7 +43,7 @@ void CCabinObject::Render()
 
 void CCabinObject::SetState(int state)
 {
-	
+	CGameObject::SetState(state);
 }
 
 void CCabinObject::GetBoundingBox(float& left, float& top, float& right, float& bottom)

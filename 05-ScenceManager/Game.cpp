@@ -149,7 +149,10 @@ int CGame::IsKeyDown(int KeyCode)
 {
 	return (keyStates[KeyCode] & 0x80) > 0;
 }
-
+int CGame::IsKeyPress(int KeyCode)
+{
+	return IsKeyDown(KeyCode) && !(keyEvents[KeyCode].dwData);
+}
 void CGame::InitKeyboard()
 {
 	HRESULT

@@ -60,6 +60,7 @@ public:
 	
 
 	int IsKeyDown(int KeyCode);
+	int IsKeyPress(int KeyCode);
 	void ProcessKeyboard();
 
 	void Load(LPCWSTR gameFile);

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <Windows.h>
 #include <d3dx9.h>
 #include <unordered_map>
@@ -28,8 +28,15 @@ class CAnimation
 	int defaultTime;
 	vector<LPANIMATION_FRAME> frames;
 public:
+	bool isFinish = false;
+	bool isRepeat = true;
 	CAnimation(int defaultTime = 100) { this->defaultTime = defaultTime; lastFrameTime = -1; currentFrame = -1; }
 	void Add(int spriteId, DWORD time = 0);
+	//Bổ sung
+	int GetCurrentFrame() { return this->currentFrame; }
+	void SetCurrentFrame(int frame) { this->currentFrame = frame; }
+	LPANIMATION_FRAME GetFrame(int frame) { return frames[frame]; }
+
 
 	void Render(float x, float y, bool flip = false, int alpha = 255);
 };
