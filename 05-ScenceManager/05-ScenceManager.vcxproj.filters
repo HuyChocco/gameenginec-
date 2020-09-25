@@ -96,6 +96,9 @@
     <ClCompile Include="EnemyObject1.cpp">
       <Filter>Source Files\EnemyObjects</Filter>
     </ClCompile>
+    <ClCompile Include="Weapon.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Brick.h">
@@ -166,6 +169,9 @@
     </ClInclude>
     <ClInclude Include="EnemyObject1.h">
       <Filter>Header Files\EnemyObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Weapon.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

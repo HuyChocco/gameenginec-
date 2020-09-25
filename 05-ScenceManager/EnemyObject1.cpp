@@ -25,7 +25,7 @@ void CEnemyObject1::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
 	coEvents.clear();
-	//if (state != MAIN_CHARACTER_STATE_DIE)
+	if (state != ENEMY1_STATE_DIE)
 		CalcPotentialCollisions(coObjects, coEvents);
 		// No collision occured, proceed normally
 	if (coEvents.size() == 0)
@@ -60,11 +60,43 @@ void CEnemyObject1::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CEnemyObject1::Render()
 {
-	animation_set->at(0)->Render(x, y);
-	RenderBoundingBox();
+	if (state != ENEMY1_STATE_DIE)
+	{
+		int ani = -1;
+		if (nx > 0)
+			ani = ENEMY1_ANI_WALKING_RIGHT;
+		else
+			ani = ENEMY1_ANI_WALKING_LEFT;
+
+		animation_set->at(ani)->Render(x, y);
+		RenderBoundingBox();
+	}
+	
 }
 
 void CEnemyObject1::SetState(int state)
 {
-	
+	CGameObject::SetState(state);
+	switch (state)
+	{
+	case ENEMY1_STATE_IDLE:
+		vx = 0;
+		break;
+	case ENEMY1_STATE_WALKING:
+		if (nx > 0)
+		{
+			vx = ENEMY1_WALKING_SPEED;
+		}
+
+		else
+		{
+			vx = -ENEMY1_WALKING_SPEED;
+		}
+			
+		break;
+	case ENEMY1_STATE_DIE:
+		break;
+	default:
+		break;
+	}
 }

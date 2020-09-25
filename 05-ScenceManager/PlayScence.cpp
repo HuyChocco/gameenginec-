@@ -456,7 +456,9 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_A:
 		player->Reset();
 		break;
-	
+	case DIK_Z:
+		player->SetState(MAIN_CHARACTER_STATE_BARREL_FIRE);
+		break;
 	}
 }
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
@@ -473,19 +475,17 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	
 	if (game->IsKeyDown(DIK_UP))
 	{
+		//DebugOut(L"[INFO] KeyDown: DIK_UP\n");
 		player->SetState(MAIN_CHARACTER_STATE_UP_BARREL);
 	}
-	else if (game->IsKeyDown(DIK_DOWN))
-	{
-			player->SetState(MAIN_CHARACTER_STATE_DOWN_BARREL);
-	}
-		
-	else if (game->IsKeyDown(DIK_X))
-		player->SetState(MAIN_CHARACTER_STATE_BARREL_FIRE);
 	else if (game->IsKeyDown(DIK_RIGHT))
 		player->SetState(MAIN_CHARACTER_STATE_RUN_RIGHT);
 	else if (game->IsKeyDown(DIK_LEFT))
 		player->SetState(MAIN_CHARACTER_STATE_RUN_LEFT);
 	else
+	{
 		player->SetState(MAIN_CHARACTER_STATE_IDLE);
+		//DebugOut(L"[INFO] ELSE\n");
+	}
+		
 }

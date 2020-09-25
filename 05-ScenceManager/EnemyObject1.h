@@ -7,17 +7,21 @@
 #define ENEMY1_BBOX_HEIGHT 25
 
 #define ENEMY1_STATE_WALKING 100
+
 #define ENEMY1_STATE_DIE 200
+
+#define ENEMY1_STATE_IDLE 300
+
 
 #define ENEMY1_ANI_WALKING_LEFT 0
 #define ENEMY1_ANI_WALKING_RIGHT 1
 class CEnemyObject1:public CEnemyObject
 {
+	
+public:
+	CEnemyObject1();
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
-public:
-	CEnemyObject1();
-
 	virtual void SetState(int state);
 };

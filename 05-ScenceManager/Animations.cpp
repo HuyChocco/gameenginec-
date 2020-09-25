@@ -22,29 +22,36 @@ void CAnimation::Add(int spriteId, DWORD time)
 // NOTE: sometimes Animation object is NULL ??? HOW ??? 
 void CAnimation::Render(float x, float y, bool flip, int alpha)
 {
-	DWORD now = GetTickCount();
-	if (currentFrame == -1)
-	{
-		currentFrame = 0;
-		lastFrameTime = now;
-	}
-	else
-	{
-		DWORD t = frames[currentFrame]->GetTime();
-		if (now - lastFrameTime > t)
+	
+		DWORD now = GetTickCount();
+		if (currentFrame == -1)
 		{
-			currentFrame++;
+			currentFrame = 0;
 			lastFrameTime = now;
-			if (currentFrame == frames.size())
-			{
-				isFinish = true;
-
-				(isRepeat) ? currentFrame = 0 : currentFrame = frames.size() - 1;
-			}
 		}
-	}
+		else
+		{
+			if (!isPause)
+			{
+				DWORD t = frames[currentFrame]->GetTime();
+				if (now - lastFrameTime > t)
+				{
+					currentFrame++;
+					lastFrameTime = now;
+					if (currentFrame == frames.size())
+					{
+						isFinish = true;
 
-	frames[currentFrame]->GetSprite()->Draw(x, y, alpha,flip);
+						(isRepeat) ? currentFrame = 0 : currentFrame = frames.size() - 1;
+					}
+				}
+			}
+			
+		}
+
+		frames[currentFrame]->GetSprite()->Draw(x, y, alpha, flip);
+	
+	
 }
 
 CAnimations * CAnimations::__instance = NULL;

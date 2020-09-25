@@ -14,6 +14,7 @@ class CBarrelObject : public CGameObject
 	float start_x;			// initial position of BARREL at scene
 	float start_y;
 	bool is_finish_animation;
+	bool is_barrel_up;
 public:
 	CBarrelObject(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
@@ -22,6 +23,7 @@ public:
 	void SetState(int state);
 	void SetLevel(int l) { level = l; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
+	bool GetIsBarrelUp() { return is_barrel_up; }
 
 	void Reset();
 
