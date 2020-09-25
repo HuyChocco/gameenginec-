@@ -180,6 +180,9 @@
 #Walk right
 90001	133	1	145	26	2
 90002	150	2	162	26	2
+# Weapon_player
+100001	73	20	80	27	1
+100002	82	20	89	27	1
 # path
 [MAP]
 Map-Blaster-Master-Area-2-A.txt
@@ -212,6 +215,11 @@ Map-Blaster-Master-Area-2-A.txt
 #Walk right
 3001	90001	100	90002	100
 #
+# ==== WEAPON =========
+#left
+4000	100001	100
+#Up
+4001	100002	100
 # id	ani1	ani2	ani3
 #
 [ANIMATION_SETS]
@@ -225,6 +233,8 @@ Map-Blaster-Master-Area-2-A.txt
 5	800	801	802
 # ENEMY 1
 6	3000	3001
+# WEAPON
+7	4000	4001
 [OBJECTS]
 # object_id  type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Koopas, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Cabin, 8= Barrel, 9= Main character

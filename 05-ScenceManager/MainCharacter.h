@@ -3,6 +3,7 @@
 #include "BarrelObject.h"
 #include "WheelObject.h"
 #include "CabinObject.h"
+#include "Weapon.h"
 #define MAIN_CHARACTER_RUN_SPEED		0.15f 
 //0.1f
 #define MAIN_CHARACTER_JUMP_SPEED_Y		0.5f
@@ -20,7 +21,10 @@
 #define MAIN_CHARACTER_STATE_DIE				400
 #define MAIN_CHARACTER_STATE_UP_BARREL				500
 #define MAIN_CHARACTER_STATE_DOWN_BARREL				600
+
+
 #define MAIN_CHARACTER_STATE_BARREL_FIRE				700
+#define MAIN_CHARACTER_STATE_BARREL_FIRE_UP				701
 
 #define MAIN_CHARACTER_ANI_IDLE_RIGHT		0
 #define MAIN_CHARACTER_ANI_IDLE_LEFT			0
@@ -50,6 +54,10 @@ class CMainCharacter: public CGameObject
 
 	//Bo sung them object
 	vector<LPGAMEOBJECT> componentObjects;
+	vector<CWeapon*> list_weapon;
+
+	//Bo sung property
+
 	
 public:
 	CMainCharacter(float x = 0.0f, float y = 0.0f);
@@ -59,7 +67,7 @@ public:
 	void SetState(int state);
 	void SetLevel(int l) { level = l; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
-
+	
 	void Reset();
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);

@@ -58,11 +58,22 @@ void CWheelObject::Render()
 	else
 	{
 	
-		if (vx != 0)
+		//if (vx != 0)
 			ani = WHEEL_ANI_IDLE_RUN;
-		else
-			ani= WHEEL_ANI_IDLE;
-		animation_set->at(ani)->Render(x, y,flip);
+		//else
+			//ani= WHEEL_ANI_IDLE;
+			if (state == MAIN_CHARACTER_STATE_IDLE)
+			{
+				animation_set->at(ani)->isPause = true;
+				animation_set->at(ani)->Render(x, y, flip);
+			}
+			else
+			{
+				animation_set->at(ani)->isPause = false;
+				animation_set->at(ani)->Render(x, y, flip);
+			}
+			
+		
 	}
 		
 }

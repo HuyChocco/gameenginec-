@@ -28,6 +28,7 @@ class CAnimation
 	int defaultTime;
 	vector<LPANIMATION_FRAME> frames;
 public:
+	bool isPause = false;
 	bool isFinish = false;
 	bool isRepeat = true;
 	CAnimation(int defaultTime = 100) { this->defaultTime = defaultTime; lastFrameTime = -1; currentFrame = -1; }

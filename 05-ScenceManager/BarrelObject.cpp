@@ -48,16 +48,13 @@ void CBarrelObject::Render()
 	case MAIN_CHARACTER_STATE_UP_BARREL:
 		ani = BARREL_ANI_UP;
 		animation_set->at(ani)->isRepeat = false;
-		break;
-	case MAIN_CHARACTER_STATE_DOWN_BARREL:
-		ani = BARREL_ANI_DOWN;
-		animation_set->at(BARREL_ANI_UP)->SetCurrentFrame(-1);
-		animation_set->at(BARREL_ANI_UP)->isRepeat = true;
+		is_barrel_up = true;
 		break;
 	default:
 		ani = 0;
 		animation_set->at(BARREL_ANI_UP)->SetCurrentFrame(-1);
 		animation_set->at(BARREL_ANI_UP)->isRepeat = true;
+		is_barrel_up = false;
 	}
 	
 

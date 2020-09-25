@@ -7,7 +7,7 @@
 
 #include "Goomba.h"
 #include "Portal.h"
-
+#include "EnemyObject1.h"
 CMainCharacter::CMainCharacter(float x, float y) : CGameObject()
 {
 
@@ -24,7 +24,12 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
-
+	//Render list of weapon objects
+	if (list_weapon.size() > 0)
+	{
+		for (int i = 0; i < list_weapon.size(); i++)
+			list_weapon[i]->Update(dt, coObjects);
+	}
 	// Simple fall down
 	vy += MAIN_CHARACTER_GRAVITY * dt;
 
@@ -39,7 +44,23 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	// reset untouchable timer if untouchable time has passed
 	
-
+	for (UINT i = 0; i < coObjects->size(); i++)
+	{
+		if (dynamic_cast<CEnemyObject1*>(coObjects->at(i))) {
+			CEnemyObject1* enemy1_object = dynamic_cast<CEnemyObject1*>(coObjects->at(i));
+			if (enemy1_object->GetState() != ENEMY1_STATE_DIE)
+			{
+				float x_enemy, y_enemy;
+				enemy1_object->GetPosition(x_enemy, y_enemy);
+				if (x > x_enemy)
+					enemy1_object->SetDirection(1);
+				else
+					enemy1_object->SetDirection(-1);
+				enemy1_object->SetState(ENEMY1_STATE_WALKING);
+			}
+			
+		}
+	}
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
@@ -94,6 +115,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			//	CGame::GetInstance()->SwitchScene(p->GetSceneId());
 			//}
 		}
+		
 	}
 	
 	for (int i = 0; i < componentObjects.size(); i++)
@@ -110,6 +132,11 @@ void CMainCharacter::Render()
 	animation_set->at(0)->Render(x, y, alpha);
 	RenderBoundingBox();
 	
+	if (list_weapon.size() > 0)
+	{
+		for (int i = 0; i < list_weapon.size(); i++)
+			list_weapon[i]->Render();
+	}
 }
 
 void CMainCharacter::SetState(int state)
@@ -138,7 +165,7 @@ void CMainCharacter::SetState(int state)
 		break;
 	case MAIN_CHARACTER_STATE_UP_BARREL:
 		break;
-	case MAIN_CHARACTER_STATE_DOWN_BARREL:
+	case MAIN_CHARACTER_STATE_BARREL_FIRE:
 		break;
 
 	}
@@ -147,7 +174,28 @@ void CMainCharacter::SetState(int state)
 		componentObjects[i]->SetState(state);
 		componentObjects[i]->SetDirection(nx);
 		componentObjects[i]->SetSpeed(vx,vy);
+		if (state == MAIN_CHARACTER_STATE_BARREL_FIRE)
+		{
+			if (dynamic_cast<CBarrelObject*>(componentObjects[i]))
+			{
+				float x_barrel_object, y_barrel_object;
+				dynamic_cast<CBarrelObject*>(componentObjects[i])->GetPosition(x_barrel_object, y_barrel_object);
+				if (dynamic_cast<CBarrelObject*>(componentObjects[i])->GetIsBarrelUp() == true)
+				{
+					
+					CWeapon* weapon = new CWeapon(x_barrel_object, y_barrel_object, nx, state, true);
+					list_weapon.push_back(weapon);
+				}
+				else
+				{
+					CWeapon* weapon = new CWeapon(x_barrel_object, y_barrel_object, nx, state, false);
+					list_weapon.push_back(weapon);
+				}
+			}
+		}
 	}
+	
+	
 
 }
 
