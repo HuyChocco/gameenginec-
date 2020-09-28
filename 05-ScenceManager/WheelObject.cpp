@@ -1,4 +1,4 @@
-#include <algorithm>
+﻿#include <algorithm>
 #include <assert.h>
 #include "Utils.h"
 
@@ -25,19 +25,40 @@ CWheelObject::CWheelObject(float x, float y) : CGameObject()
 void CWheelObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	
-	if (is_Right_Wheel)
+	CGameObject::Update(dt);
+	if (is_Right_Wheel) //right wheel - bánh xe bên phải
 	{
 		x += 17;
-		y += 11;
+		y += 9;
+		
+		
 	}
 		
-	else if (is_Middle_Wheel)
+	else if (is_Middle_Wheel) //middle wheel - bánh nằm ở giữa trái và phải
 	{
 		x += 9;
-		y += 6;
+		y += 7;
+		if (vx != 0) //Add effect if running
+		{
+			StartUpEffect();
+			if (GetTickCount() - up_effect_start > WHEEL_EFFECT_TIME)
+			{
+				y -= 1;
+			}	
+		}
+		if (state == MAIN_CHARACTER_STATE_UP_BARREL) // Nhân vật đưa nòng súng lên
+		{
+			y+=1;
+		}
 	}
-	else
-		y += 11;
+	else // left wheel - bánh xe bên trái
+	{
+		y += 9;
+		
+	}
+		
+
+	
 }
 
 void CWheelObject::Render()
@@ -50,26 +71,22 @@ void CWheelObject::Render()
 	}
 	else
 		flip = true;
-	if (is_Middle_Wheel)
+	if (is_Middle_Wheel) // Bánh xe ở giữa
 	{
-		ani = WHEEL_ANI_IDLE;
+		ani = WHEEL_ANI_IDLE; //Animation chỉ có 1 frame duy nhất
 		animation_set->at(ani)->Render(x, y);
 	}	
 	else
 	{
-	
-		//if (vx != 0)
 			ani = WHEEL_ANI_IDLE_RUN;
-		//else
-			//ani= WHEEL_ANI_IDLE;
-			if (state == MAIN_CHARACTER_STATE_IDLE)
+			if (vx==0) // Nhân vật đứng yên
 			{
-				animation_set->at(ani)->isPause = true;
-				animation_set->at(ani)->Render(x, y, flip);
+				animation_set->at(ani)->isPause = true; //Dừng animation 
+				animation_set->at(ani)->Render(x, y, flip); // Vẽ frame đang bị tạm dừng
 			}
-			else
+			else // Nhân vật di chuyển
 			{
-				animation_set->at(ani)->isPause = false;
+				animation_set->at(ani)->isPause = false; // Tiếp tục animation đã dừng trước đó
 				animation_set->at(ani)->Render(x, y, flip);
 			}
 			
@@ -97,12 +114,12 @@ void CWheelObject::Reset()
 {
 	
 }
-
+// Thiết lập đây là bánh xe nằm bên phải
 void CWheelObject::SetIsRightWheel()
 {
-	is_Right_Wheel = true;
+	is_Right_Wheel = true; 
 }
-
+// Thiết lập đây là bánh xe nằm ở giữa
 void CWheelObject::SetIsMiddleWheel()
 {
 	is_Middle_Wheel = true;

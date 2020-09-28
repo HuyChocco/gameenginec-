@@ -9,7 +9,7 @@ class CBarrelObject : public CGameObject
 {
 	int level;
 	int untouchable;
-	DWORD untouchable_start;
+	DWORD up_effect_start;
 
 	float start_x;			// initial position of BARREL at scene
 	float start_y;
@@ -22,9 +22,8 @@ public:
 
 	void SetState(int state);
 	void SetLevel(int l) { level = l; }
-	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 	bool GetIsBarrelUp() { return is_barrel_up; }
-
+	void StartUpEffect() { y += 1; up_effect_start = GetTickCount(); }
 	void Reset();
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);

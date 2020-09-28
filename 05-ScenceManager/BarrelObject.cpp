@@ -1,4 +1,4 @@
-#include <algorithm>
+﻿#include <algorithm>
 #include <assert.h>
 #include "Utils.h"
 
@@ -22,13 +22,51 @@ CBarrelObject::CBarrelObject(float x, float y) : CGameObject()
 void CBarrelObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	
-	if (nx > 0)
+	
+	if (state == MAIN_CHARACTER_STATE_UP_BARREL)//nhân vật ở trạng thái đưa nòng súng lên
 	{
-		x += 16;
-		y += 2;
+		
+		if (nx > 0)// Xét quay sang phải
+		{
+			x += (MAIN_CHARACTER_BBOX_WIDTH / 2) - 2;//nằm giữa width của main character
+			y -= 6;
+		}
+		else //Xét quay sang trái
+		{
+			x += (MAIN_CHARACTER_BBOX_WIDTH / 2) - 6;//nằm giữa width của main character
+			y -= 6;
+		}
 	}
-	else
-		y += 2;
+	else if (nx > 0)// nhân vật quay sang phải
+	{
+		x += 16; // canh tọa độ x đặt nòng súng phù hợp
+		y += 1; // canh tọa độ y đặt nòng súng phù hợp
+		if (vx != 0) //Add effect if running
+		{
+			StartUpEffect();
+			if (GetTickCount() - up_effect_start > WHEEL_EFFECT_TIME)
+			{
+				y -= 1;
+			}
+
+
+		}
+	}
+	else // nhân vật quay sang trái
+	{
+		y += 1;// canh tọa độ y đặt nòng súng phù hợp
+		if (vx != 0) //Add effect if running
+		{
+			StartUpEffect();
+			if (GetTickCount() - up_effect_start > WHEEL_EFFECT_TIME)
+			{
+				y -= 1;
+			}
+
+
+		}
+	}
+		
 }
 
 void CBarrelObject::Render()
@@ -48,7 +86,7 @@ void CBarrelObject::Render()
 	case MAIN_CHARACTER_STATE_UP_BARREL:
 		ani = BARREL_ANI_UP;
 		animation_set->at(ani)->isRepeat = false;
-		is_barrel_up = true;
+		is_barrel_up = true;//flag to determine suitable animation
 		break;
 	default:
 		ani = 0;

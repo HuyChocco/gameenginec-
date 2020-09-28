@@ -1,5 +1,5 @@
 #include "Grid.h"
-#define CELL_WIDTH	160
+#define CELL_WIDTH	320
 #define CELL_HEIGHT	120
 CGrid* CGrid::__instance = NULL;
 CGrid* CGrid::GetInstance()

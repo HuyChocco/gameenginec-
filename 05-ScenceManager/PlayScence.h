@@ -7,12 +7,15 @@
 #include "Mario.h"
 #include "Goomba.h"
 #include "Koopas.h"
+#include "EnemyObject1.h"
+#include "Worm.h"
+#include "Spider.h"
 //bo sung
 #include "MainCharacter.h"
 #include "BarrelObject.h"
 #include "WheelObject.h"
 #include "CabinObject.h"
-#include "EnemyObject1.h"
+
 
 #include "TiledMap.h"
 #include "Grid.h"
