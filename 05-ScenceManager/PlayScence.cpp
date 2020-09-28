@@ -34,16 +34,25 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define SCENE_SECTION_MAP	7
 #define SCENE_SECTION_GRID	8
 
+//
 #define OBJECT_TYPE_MARIO	0
+
+//Map objects
 #define OBJECT_TYPE_BRICK	1
+
+//Enemy objects
 #define OBJECT_TYPE_ENEMY1	2
-#define OBJECT_TYPE_KOOPAS	3
+#define OBJECT_TYPE_WORM	3
+#define OBJECT_TYPE_SPIDER	10
+
+//Main character objects
 #define OBJECT_TYPE_MAIN_CHARACTER	9
 #define OBJECT_TYPE_WHEEL_LEFT	4
 #define OBJECT_TYPE_WHEEL_RIGHT	5
 #define OBJECT_TYPE_WHEEL_MIDDLE	6
 #define OBJECT_TYPE_CABIN	7
 #define OBJECT_TYPE_BARREL	8
+
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -167,6 +176,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		DebugOut(L"[INFO] Player object created!\n");
 		break;
 	case OBJECT_TYPE_ENEMY1: obj = new CEnemyObject1(); break;
+	case OBJECT_TYPE_WORM: obj = new CWorm(); break;
+	case OBJECT_TYPE_SPIDER: obj = new CSpider(); break;
 	case OBJECT_TYPE_BRICK: 
 	{
 		float r = atof(tokens[5].c_str());

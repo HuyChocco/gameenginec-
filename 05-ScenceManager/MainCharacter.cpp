@@ -1,4 +1,4 @@
-#include <algorithm>
+﻿#include <algorithm>
 #include <assert.h>
 #include "Utils.h"
 
@@ -7,7 +7,11 @@
 
 #include "Goomba.h"
 #include "Portal.h"
+#include "Brick.h"
+
 #include "EnemyObject1.h"
+#include "Worm.h"
+#include "Spider.h"
 CMainCharacter::CMainCharacter(float x, float y) : CGameObject()
 {
 
@@ -32,7 +36,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	// Simple fall down
 	vy += MAIN_CHARACTER_GRAVITY * dt;
-
+	
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
@@ -59,6 +63,34 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				enemy1_object->SetState(ENEMY1_STATE_WALKING);
 			}
 			
+		}
+		else if (dynamic_cast<CWorm*>(coObjects->at(i))) {
+			CWorm* worm = dynamic_cast<CWorm*>(coObjects->at(i));
+			if (worm->GetState() != WORM_STATE_DIE)
+			{
+				float x_worm, y_worm;
+				worm->GetPosition(x_worm, y_worm);
+				if (x > x_worm)
+					worm->SetDirection(1);
+				else
+					worm->SetDirection(-1);
+				worm->SetState(WORM_STATE_MOVE);
+			}
+
+		}
+		else if (dynamic_cast<CSpider*>(coObjects->at(i))) {
+			CSpider* spider = dynamic_cast<CSpider*>(coObjects->at(i));
+			if (spider->GetState() != SPIDER_STATE_DIE)
+			{
+				float x_spider, y_spider;
+				spider->GetPosition(x_spider, y_spider);
+				if (x > x_spider)
+					spider->SetDirection(1);
+				else
+					spider->SetDirection(-1);
+				spider->SetState(SPIDER_STATE_MOVE);
+			}
+
 		}
 	}
 	// No collision occured, proceed normally
@@ -93,27 +125,17 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		//
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
-			//LPCOLLISIONEVENT e = coEventsResult[i];
+			LPCOLLISIONEVENT e = coEventsResult[i];
+			if (dynamic_cast<CBrick*>(e->obj)) // if e->obj is CBrick 
+			{
+				//CBrick* brick = dynamic_cast<CBrick*>(e->obj);
 
-			//if (dynamic_cast<CGoomba*>(e->obj)) // if e->obj is Goomba 
-			//{
-				//CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
-
-				// jump on top >> kill Goomba and deflect a bit 
-				//if (e->ny < 0)
+				
+				if (e->ny < 0)
 				{
-					
+					Is_On_Ground = true;
 				}
-				//else if (e->nx != 0)
-				{
-					
-				}
-			//} // if Goomba
-			//else if (dynamic_cast<CPortal*>(e->obj))
-			//{
-			//	CPortal* p = dynamic_cast<CPortal*>(e->obj);
-			//	CGame::GetInstance()->SwitchScene(p->GetSceneId());
-			//}
+			}
 		}
 		
 	}
@@ -155,10 +177,17 @@ void CMainCharacter::SetState(int state)
 		break;
 	case MAIN_CHARACTER_STATE_JUMP:
 		// TODO: need to check if MAIN_CHARACTER is *current* on a platform before allowing to jump again
-		vy = -MAIN_CHARACTER_JUMP_SPEED_Y;
+		if (Is_On_Ground)
+
+		{
+			vy = -MAIN_CHARACTER_JUMP_SPEED_Y;
+			Is_On_Ground = false;
+		}
+		
 		break;
 	case MAIN_CHARACTER_STATE_IDLE:
 		vx = 0;
+		
 		break;
 	case MAIN_CHARACTER_STATE_DIE:
 		vy = -MAIN_CHARACTER_DIE_DEFLECT_SPEED;
@@ -167,6 +196,9 @@ void CMainCharacter::SetState(int state)
 		break;
 	case MAIN_CHARACTER_STATE_BARREL_FIRE:
 		break;
+	default:
+		
+		break;
 
 	}
 	for (int i = 0; i < componentObjects.size(); i++)
@@ -174,7 +206,7 @@ void CMainCharacter::SetState(int state)
 		componentObjects[i]->SetState(state);
 		componentObjects[i]->SetDirection(nx);
 		componentObjects[i]->SetSpeed(vx,vy);
-		if (state == MAIN_CHARACTER_STATE_BARREL_FIRE)
+		if (state == MAIN_CHARACTER_STATE_BARREL_FIRE)//Nhân vật bắn
 		{
 			if (dynamic_cast<CBarrelObject*>(componentObjects[i]))
 			{
@@ -183,12 +215,12 @@ void CMainCharacter::SetState(int state)
 				if (dynamic_cast<CBarrelObject*>(componentObjects[i])->GetIsBarrelUp() == true)
 				{
 					
-					CWeapon* weapon = new CWeapon(x_barrel_object, y_barrel_object, nx, state, true);
+					CWeapon* weapon = new CWeapon(x_barrel_object, y_barrel_object, nx, state, true);// Khởi tạo weapon theo x,y của barrel
 					list_weapon.push_back(weapon);
 				}
 				else
 				{
-					CWeapon* weapon = new CWeapon(x_barrel_object, y_barrel_object, nx, state, false);
+					CWeapon* weapon = new CWeapon(x_barrel_object, y_barrel_object, nx, state, false);// Khởi tạo weapon theo x,y của barrel
 					list_weapon.push_back(weapon);
 				}
 			}

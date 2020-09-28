@@ -13,14 +13,13 @@
 
 #define MAIN_CHARACTER_STATE_IDLE			0
 #define MAIN_CHARACTER_STATE_RUN_RIGHT	100
-#define MAIN_CHARACTER_STATE_RUN_RIGHT_UP_BARREL	101
-#define MAIN_CHARACTER_STATE_RUN_RIGHT_DOWN_BARREL	102
+
 
 #define MAIN_CHARACTER_STATE_RUN_LEFT	200
 #define MAIN_CHARACTER_STATE_JUMP			300
 #define MAIN_CHARACTER_STATE_DIE				400
 #define MAIN_CHARACTER_STATE_UP_BARREL				500
-#define MAIN_CHARACTER_STATE_DOWN_BARREL				600
+//#define MAIN_CHARACTER_STATE_DOWN_BARREL				600
 
 
 #define MAIN_CHARACTER_STATE_BARREL_FIRE				700
@@ -41,7 +40,7 @@
 
 
 #define MAIN_CHARACTER_BBOX_WIDTH  24
-#define MAIN_CHARACTER_BBOX_HEIGHT 18
+#define MAIN_CHARACTER_BBOX_HEIGHT 16
 
 class CMainCharacter: public CGameObject
 {
@@ -56,10 +55,13 @@ class CMainCharacter: public CGameObject
 	vector<LPGAMEOBJECT> componentObjects;
 	vector<CWeapon*> list_weapon;
 
-	//Bo sung property
-
+	
 	
 public:
+
+	//Bo sung property
+	bool Is_On_Ground;
+
 	CMainCharacter(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();

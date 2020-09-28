@@ -135,6 +135,7 @@
     <ClCompile Include="MainCharacter.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Portal.cpp" />
+    <ClCompile Include="Spider.cpp" />
     <ClCompile Include="TiledMap.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -148,6 +149,7 @@
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="Weapon.cpp" />
     <ClCompile Include="WheelObject.cpp" />
+    <ClCompile Include="Worm.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animations.h" />
@@ -161,6 +163,7 @@
     <ClInclude Include="MainCharacter.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Portal.h" />
+    <ClInclude Include="Spider.h" />
     <ClInclude Include="TiledMap.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Game.h" />
@@ -174,6 +177,7 @@
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Weapon.h" />
     <ClInclude Include="WheelObject.h" />
+    <ClInclude Include="Worm.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
