@@ -147,7 +147,8 @@ void CTiledMap::Render()
 		for (int c_index = 0; c_index < tiledmap_row_set[r_index]->tiled_row.size(); c_index++)
 		{
 			LPTILEDCELL cell = tiledmap_row_set[r_index]->tiled_row[c_index];
-			cell->GetSprite()->Draw(c_index>0?c_index* TILED_MAP_SIZE - c_index : c_index * TILED_MAP_SIZE, r_index>0?r_index* TILED_MAP_SIZE - r_index : r_index * TILED_MAP_SIZE);
+			//cell->GetSprite()->Draw(c_index>0?c_index* TILED_MAP_SIZE - c_index : c_index * TILED_MAP_SIZE, r_index>0?r_index* TILED_MAP_SIZE - r_index : r_index * TILED_MAP_SIZE);
+			cell->GetSprite()->Draw(c_index > 0 ? c_index * TILED_MAP_SIZE  : c_index * TILED_MAP_SIZE, r_index > 0 ? r_index * TILED_MAP_SIZE  : r_index * TILED_MAP_SIZE);
 		}
 	}
 }
