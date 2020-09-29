@@ -170,10 +170,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
 		}
-		obj = new CMainCharacter(x,y);
-		player = (CMainCharacter*)obj;
-
+		
+		player = new CMainCharacter();
+		player->SetPosition(x, y);
+		player->SetAnimationSet(animation_sets->Get(ani_set_id));
 		DebugOut(L"[INFO] Player object created!\n");
+		return;
 		break;
 	case OBJECT_TYPE_ENEMY1: obj = new CEnemyObject1(); break;
 	case OBJECT_TYPE_WORM: obj = new CWorm(); break;
@@ -188,11 +190,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_WHEEL_LEFT:
 	{
 		obj = new CWheelObject();
+		obj->SetPosition(x, y);
+		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
+		obj->SetID(object_id);
 		if (player != NULL)
 		{
 
 			DebugOut(L"[INFO] MARIO object has been Created Already!\n");
 			player->AddComponentObject(obj);
+			return;
 		}
 		break;
 	}
@@ -201,8 +207,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CWheelObject();
 		CWheelObject* obj_middle_wheel = (CWheelObject*)obj;
 		obj_middle_wheel->SetIsMiddleWheel();
-		DebugOut(L"[INFO] MARIO object has been Created Already!\n");
-		player->AddComponentObject(obj);
+		obj->SetPosition(x, y);
+		obj->SetID(object_id);
+		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
+		if (player != NULL)
+		{
+			DebugOut(L"[INFO] MARIO object has been Created Already!\n");
+			player->AddComponentObject(obj);
+		}
+		return;
 		break;
 	}
 	case OBJECT_TYPE_WHEEL_RIGHT:
@@ -210,22 +223,43 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CWheelObject();
 		CWheelObject* obj_right_wheel =(CWheelObject*) obj;
 		obj_right_wheel->SetIsRightWheel();
-		DebugOut(L"[INFO] MARIO object has been Created Already!\n");
-		player->AddComponentObject(obj);
+		obj->SetPosition(x, y);
+		obj->SetID(object_id);
+		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
+		if (player != NULL)
+		{
+			DebugOut(L"[INFO] MARIO object has been Created Already!\n");
+			player->AddComponentObject(obj);
+		}
+		return;
 		break;
 	}
 	case OBJECT_TYPE_CABIN: 
 	{
 		obj = new CCabinObject();
-		DebugOut(L"[INFO] MARIO object has been Created Already!\n");
-		player->AddComponentObject(obj);
+		obj->SetPosition(x, y);
+		obj->SetID(object_id);
+		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
+		if (player != NULL)
+		{
+			DebugOut(L"[INFO] MARIO object has been Created Already!\n");
+			player->AddComponentObject(obj);
+		}
+		return;
 		break;
 	}
 	case OBJECT_TYPE_BARREL: 
 	{
 		obj = new CBarrelObject(); 
-		DebugOut(L"[INFO] MARIO object has been Created Already!\n");
-		player->AddComponentObject(obj);
+		obj->SetPosition(x, y);
+		obj->SetID(object_id);
+		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
+		if (player != NULL)
+		{
+			DebugOut(L"[INFO] MARIO object has been Created Already!\n");
+			player->AddComponentObject(obj);
+		}
+		return;
 		break;
 	}
 	case OBJECT_TYPE_PORTAL:
@@ -378,7 +412,7 @@ void CPlayScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
-
+	
 	// get objects from grid 
 	objects = CGrid::GetInstance()->GetList();
 	vector<LPGAMEOBJECT> coObjects;
@@ -386,45 +420,52 @@ void CPlayScene::Update(DWORD dt)
 	{
 		coObjects.push_back(objects[i]);
 	}
-
-
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 		objects[i]->Update(dt, &coObjects);
+
+	}
+	if (player == NULL) return;
+	else
+	{
+		player->Update(dt, &coObjects);
 		
 	}
-
-	player->Update(dt, &coObjects);
-	for (int i = 0; i < player->GetComponentObjects().size(); i++)
-		player->GetComponentObjects()[i]->Update(dt);
+	
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
-	if (player == NULL) return; 
-
+	
+	CGame* game = CGame::GetInstance();
+	if (game->GetIsNextMap() == true)
+	{
+		// switch scene
+		game->SwitchScene(game->GetSceneId());
+		game->SetIsNextMap(false);
+	}
 	// Update camera to follow main character
-	float cx, cy;
-	player->GetPosition(cx, cy);
+	float cx = 0, cy = 0;
+	if (player != NULL)
+	{
+		player->GetPosition(cx, cy);
+	}
 
-	CGame *game = CGame::GetInstance();
+	
 	CMap* map = CTiledMap::GetInstance();
 	int widthMap, heightMap;
 	map->GetMapWidth(widthMap);
 	map->GetMapHeight(heightMap);
-	if (cx < 320 / 2)//if (cx < game->GetScreenWidth() / 2)
+	if (cx < game->GetScreenWidth() / 2)
 	{
 		cx = 0;
 		cy = 0;
 	}
-	else if (widthMap - cx < 320 / 2)//else if (widthMap - cx < game->GetScreenWidth() / 2)
+	else if (widthMap - cx < game->GetScreenWidth() / 2)
 	{
-		cx = widthMap - 320;
-		//cx = widthMap - game->GetScreenWidth();
+		cx = widthMap - game->GetScreenWidth();
 	}
 	else
 	{
-		cx -= 320 / 2;
-		cy -= 240 / 2;
-		//cx -= game->GetScreenWidth() / 2;
-		//cy -= game->GetScreenHeight() / 2;
+		cx -= game->GetScreenWidth() / 2;
+		cy -= game->GetScreenHeight() / 2;
 	}
 	
 
@@ -450,8 +491,9 @@ void CPlayScene::Unload()
 		delete objects[i];
 
 	objects.clear();
+	
 	player = NULL;
-
+	CGrid::GetInstance()->Unload();
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
 }
 

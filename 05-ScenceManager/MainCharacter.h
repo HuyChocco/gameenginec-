@@ -76,6 +76,7 @@ public:
 
 	void AddComponentObject(CGameObject* object);
 	vector<LPGAMEOBJECT> GetComponentObjects();
-
+	void ClearObjects() { componentObjects.clear(); list_weapon.clear(); }
+	
 	
 };

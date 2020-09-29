@@ -66,9 +66,9 @@ vector<LPGAMEOBJECT> CGrid::GetList()
 
 void CGrid::Unload()
 {
-	for (int i = 0; i < numCol; i++)
+	for (int i = 0; i < numRow; i++)
 	{
-		for (int j = 0; j < numRow; j++)
+		for (int j = 0; j < numCol; j++)
 		{
 			cells[i][j].Unload();
 		}
