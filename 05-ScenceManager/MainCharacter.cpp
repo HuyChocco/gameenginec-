@@ -136,12 +136,22 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					Is_On_Ground = true;
 				}
 			}
+			else if (dynamic_cast<CPortal*>(e->obj))
+			{
+				CPortal* p = dynamic_cast<CPortal*>(e->obj);
+				//CGame::GetInstance()->SwitchScene(p->GetSceneId());
+				CGame::GetInstance()->SetIsNextMap(true);
+				CGame::GetInstance()->SetSceneId(p->GetSceneId());
+			}
 		}
 		
 	}
 	
 	for (int i = 0; i < componentObjects.size(); i++)
 		componentObjects[i]->SetPosition(x,y);
+	for (int i = 0; i < componentObjects.size(); i++)
+		componentObjects[i]->Update(dt);
+
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	

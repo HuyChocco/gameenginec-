@@ -7,3 +7,4 @@ start	5
 3	scene-test.txt
 4	scene-test2.txt
 5	scene-test3.txt
+6	scene-test4.txt
