@@ -282,7 +282,9 @@ Map-Blaster-Master-Area-2-A.txt
 # BRICK 
 # object_id 	type	l	t	ani_set_id	r	b	
 2	1	0	160	2	318	165
-21	1	384	160.5	2	400	165.5
+21	1	384	160.5	2	511.5	165.5
+22	1	575.5	160.5	2	701.5	165.5
+23	1	769	160.5	2	1024	165.5
 # WHEEL_LEFT
 10	4	18	132	3
 # WHEEL_MIDDLE
@@ -302,4 +304,4 @@ Map-Blaster-Master-Area-2-A.txt
 [GRID]
 0	0	2	17	19
 0	1	18	21
-
+0	2	22	23
