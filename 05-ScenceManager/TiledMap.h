@@ -51,7 +51,7 @@ public:
 	virtual void Render(float x, float y);
 	LPTILEDROW Get(unsigned int id);
 	static CTiledMap* GetInstance();
-	void Clear();
+	virtual void Clear();
 };
 typedef CTiledMap* LPTILEDMAP;
 

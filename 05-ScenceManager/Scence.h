@@ -20,6 +20,7 @@ public:
 	virtual void Render() = 0; 
 	//Bo sung
 	virtual CMap* GetMap() { return NULL; }
+	virtual void GetNextMap() {  }
 };
 typedef CScene * LPSCENE;
 

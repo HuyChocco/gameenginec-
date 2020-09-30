@@ -19,5 +19,7 @@ public:
 	virtual void Update() {};
 	virtual void Render() {};
 	virtual void Render(float x, float y) {};
+
+	virtual void Clear() {};
 	~CMap(){}
 };
