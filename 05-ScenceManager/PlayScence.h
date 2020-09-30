@@ -39,6 +39,7 @@ protected:
 
 	CMap* tiledMap;
 	int id_next_map=-1;
+	LPCWSTR tiled_map_file_path_next;
 public: 
 	bool isRenderNextMap = false;
 	bool initNextMap = true;
@@ -56,6 +57,7 @@ public:
 	//friend class CPlayScenceKeyHandler;
 
 	virtual CMap* GetMap();
+	virtual void GetNextMap();
 };
 
 class CPlayScenceKeyHandler : public CScenceKeyHandler

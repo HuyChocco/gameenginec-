@@ -136,19 +136,20 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					Is_On_Ground = true;
 				}
 			}
+			// Nếu là portal object thì thực hiện chuyển cảnh
 			else if (dynamic_cast<CPortal*>(e->obj))
 			{
 				CPortal* p = dynamic_cast<CPortal*>(e->obj);
-				//CGame::GetInstance()->SwitchScene(p->GetSceneId());
 				CGame::GetInstance()->SetIsNextMap(true);
 				CGame::GetInstance()->SetSceneId(p->GetSceneId());
 			}
 		}
 		
 	}
-	
+	//Cập nhật vị trí cho các đối tượng thành phần như bánh xe, cabin, ...
 	for (int i = 0; i < componentObjects.size(); i++)
 		componentObjects[i]->SetPosition(x,y);
+	//Chạy hàm cập nhật của các đối tượng thành phần
 	for (int i = 0; i < componentObjects.size(); i++)
 		componentObjects[i]->Update(dt);
 
@@ -163,7 +164,7 @@ void CMainCharacter::Render()
 	int alpha = 255;
 	animation_set->at(0)->Render(x, y, alpha);
 	RenderBoundingBox();
-	
+	// Vẽ các đối tượng weapon của nhân vật chính
 	if (list_weapon.size() > 0)
 	{
 		for (int i = 0; i < list_weapon.size(); i++)
@@ -188,12 +189,10 @@ void CMainCharacter::SetState(int state)
 	case MAIN_CHARACTER_STATE_JUMP:
 		// TODO: need to check if MAIN_CHARACTER is *current* on a platform before allowing to jump again
 		if (Is_On_Ground)
-
 		{
 			vy = -MAIN_CHARACTER_JUMP_SPEED_Y;
 			Is_On_Ground = false;
 		}
-		
 		break;
 	case MAIN_CHARACTER_STATE_IDLE:
 		vx = 0;
@@ -211,6 +210,7 @@ void CMainCharacter::SetState(int state)
 		break;
 
 	}
+	//Cập nhật state, hướng di chuyển, tốc độ cho các đối tượng thành phần theo nhân vật chính
 	for (int i = 0; i < componentObjects.size(); i++)
 	{
 		componentObjects[i]->SetState(state);
@@ -221,7 +221,9 @@ void CMainCharacter::SetState(int state)
 			if (dynamic_cast<CBarrelObject*>(componentObjects[i]))
 			{
 				float x_barrel_object, y_barrel_object;
+				//Lấy vị trí x, y của đối tượng nòng sóng
 				dynamic_cast<CBarrelObject*>(componentObjects[i])->GetPosition(x_barrel_object, y_barrel_object);
+				//Nếu nòng sóng đang giơ lên
 				if (dynamic_cast<CBarrelObject*>(componentObjects[i])->GetIsBarrelUp() == true)
 				{
 					

@@ -466,8 +466,9 @@ void CGame::SwitchScene(int scene_id)
 	CSprites::GetInstance()->Clear();
 	CAnimations::GetInstance()->Clear();
 	//bổ sung
-	CTiledMap::GetInstance()->Clear();
-	
+	//CTiledMap::GetInstance()->Clear();
+	if(CTiledMapSets::GetInstance()->Get(current_scene))
+		CTiledMapSets::GetInstance()->Get(current_scene)->Clear();
 	current_scene = scene_id;
 	LPSCENE s = scenes[scene_id];
 	CGame::GetInstance()->SetKeyHandler(s->GetKeyEventHandler());
