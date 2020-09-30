@@ -11,7 +11,7 @@
 
 CTiledMap* CTiledMap::__instance = NULL;
 
-
+CTiledMapSets* CTiledMapSets::__instance = NULL;
 void CTiledRow::Add(int spriteId)
 {
 	LPSPRITE sprite = CSprites::GetInstance()->Get(spriteId);
@@ -151,4 +151,42 @@ void CTiledMap::Render()
 			cell->GetSprite()->Draw(c_index > 0 ? c_index * TILED_MAP_SIZE  : c_index * TILED_MAP_SIZE, r_index > 0 ? r_index * TILED_MAP_SIZE  : r_index * TILED_MAP_SIZE);
 		}
 	}
+}
+
+void CTiledMap::Render(float x, float y)
+{
+	for (int r_index = 0; r_index < tiledmap_row_set.size(); r_index++)
+	{
+
+		for (int c_index = 0; c_index < tiledmap_row_set[r_index]->tiled_row.size(); c_index++)
+		{
+			LPTILEDCELL cell = tiledmap_row_set[r_index]->tiled_row[c_index];
+			
+			cell->GetSprite()->Draw(c_index * TILED_MAP_SIZE + x,  r_index * TILED_MAP_SIZE + y);
+		}
+	}
+}
+
+CTiledMapSets::CTiledMapSets()
+{
+
+}
+
+CTiledMapSets* CTiledMapSets::GetInstance()
+{
+	if (__instance == NULL) __instance = new CTiledMapSets();
+	return __instance;
+}
+
+CMap* CTiledMapSets::Get(unsigned int id)
+{
+	CMap* map = tiled_map_sets[id];
+	if (map == NULL)
+		DebugOut(L"[ERROR] Failed to find map set id: %d\n", id);
+	return map;
+}
+
+void CTiledMapSets::Add(int id, CMap* map)
+{
+	tiled_map_sets[id] = map;
 }

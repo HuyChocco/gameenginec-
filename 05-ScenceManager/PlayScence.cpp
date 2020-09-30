@@ -297,7 +297,10 @@ void CPlayScene::_ParseSection_MAP(string line)
 
 	wstring path = ToWSTR(tokens[0]);
 
-	CTiledMap::GetInstance()->LoadMap(path.c_str());
+	tiledMap = new CTiledMap();
+	tiledMap->LoadMap(path.c_str());
+	CTiledMapSets::GetInstance()->Add(id, tiledMap);
+	
 
 }
 bool initGridFlag = true;
@@ -307,9 +310,10 @@ void CPlayScene::_ParseSection_GRID(string line)
 	if (initGridFlag)
 		{
 		int width, height; 
-		CTiledMap::GetInstance()->GetMapWidth(width);
-		CTiledMap::GetInstance()->GetMapHeight(height);
-
+		//CTiledMap::GetInstance()->GetMapWidth(width);
+		//CTiledMap::GetInstance()->GetMapHeight(height);
+		CTiledMapSets::GetInstance()->Get(id)->GetMapWidth(width);
+		CTiledMapSets::GetInstance()->Get(id)->GetMapHeight(height);
 		int numCol = width / CELL_WIDTH;
 		int numRow = height / CELL_HEIGHT;
 
@@ -406,7 +410,9 @@ void CPlayScene::Load()
 	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
+
 }
+
 
 void CPlayScene::Update(DWORD dt)
 {
@@ -414,11 +420,29 @@ void CPlayScene::Update(DWORD dt)
 	// TO-DO: This is a "dirty" way, need a more organized way 
 	
 	// get objects from grid 
+	CGame* game = CGame::GetInstance();
 	objects = CGrid::GetInstance()->GetList();
 	vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 		coObjects.push_back(objects[i]);
+		if (dynamic_cast<CPortal*>(objects[i]))
+		{
+			CPortal* p = dynamic_cast<CPortal*>(objects[i]);
+			id_next_map = p->GetSceneId();
+			LPSCENE s = game->GetScene(id_next_map);
+			if (s && initNextMap)
+			{
+				//s->Load();
+				if (s->GetMap() != NULL)
+				{
+					CTiledMapSets::GetInstance()->Add(id_next_map, s->GetMap());
+					initNextMap = false;
+				}
+					
+			}
+			
+		}
 	}
 	for (size_t i = 0; i < objects.size(); i++)
 	{
@@ -434,7 +458,7 @@ void CPlayScene::Update(DWORD dt)
 	
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	
-	CGame* game = CGame::GetInstance();
+	
 	if (game->GetIsNextMap() == true)
 	{
 		// switch scene
@@ -447,25 +471,29 @@ void CPlayScene::Update(DWORD dt)
 	{
 		player->GetPosition(cx, cy);
 	}
-
 	
-	CMap* map = CTiledMap::GetInstance();
+	//CMap* map = CTiledMap::GetInstance();
+	CMap* map = CTiledMapSets::GetInstance()->Get(id);
 	int widthMap, heightMap;
 	map->GetMapWidth(widthMap);
 	map->GetMapHeight(heightMap);
+	
 	if (cx < game->GetScreenWidth() / 2)
 	{
 		cx = 0;
 		cy = 0;
+		isRenderNextMap = false;
 	}
 	else if (widthMap - cx < game->GetScreenWidth() / 2)
 	{
 		cx = widthMap - game->GetScreenWidth();
+		isRenderNextMap = true;
 	}
 	else
 	{
 		cx -= game->GetScreenWidth() / 2;
 		cy -= game->GetScreenHeight() / 2;
+		isRenderNextMap = false;
 	}
 	
 
@@ -474,12 +502,24 @@ void CPlayScene::Update(DWORD dt)
 
 void CPlayScene::Render()
 {
-	CTiledMap::GetInstance()->Render();
+	//Vẽ tiled map của scene hiện tại
+	CTiledMapSets::GetInstance()->Get(id)->Render();
+	//Vẽ tiled map của scene tiếp theo nếu thỏa điều kiện
+	if(isRenderNextMap&&id_next_map!=-1&& CTiledMapSets::GetInstance()->Get(id_next_map))
+		CTiledMapSets::GetInstance()->Get(id_next_map)->Render(1024,0);
+	//Vẽ tất cả các object hiện tại
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
+	//Vẽ player object
 	player->Render();
+	//Vẽ các object thành phần của player object
 	for (int i = 0; i < player->GetComponentObjects().size(); i++)
 		player->GetComponentObjects()[i]->Render();
+}
+
+CMap* CPlayScene::GetMap()
+{
+		return tiledMap;
 }
 
 /*
@@ -542,3 +582,4 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	}
 		
 }
+

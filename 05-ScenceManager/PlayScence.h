@@ -36,7 +36,13 @@ protected:
 	//Bổ sung map
 	void _ParseSection_MAP(string line);
 	void _ParseSection_GRID(string line);
+
+	CMap* tiledMap;
+	int id_next_map=-1;
 public: 
+	bool isRenderNextMap = false;
+	bool initNextMap = true;
+
 	CPlayScene(int id, LPCWSTR filePath);
 
 	virtual void Load();
@@ -48,6 +54,8 @@ public:
 	CMainCharacter* GetPlayer() { return player; }
 
 	//friend class CPlayScenceKeyHandler;
+
+	virtual CMap* GetMap();
 };
 
 class CPlayScenceKeyHandler : public CScenceKeyHandler

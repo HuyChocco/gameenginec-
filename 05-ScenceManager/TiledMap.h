@@ -48,7 +48,28 @@ public:
 	//void Add(int id, LPTILEDMAP_SET tiled_map_set);
 	virtual void LoadMap(LPCWSTR filePath);
 	virtual void Render();
+	virtual void Render(float x, float y);
 	LPTILEDROW Get(unsigned int id);
 	static CTiledMap* GetInstance();
 	void Clear();
+};
+typedef CTiledMap* LPTILEDMAP;
+
+/*
+	Manage tiled map set database
+*/
+class CTiledMapSets
+{
+	static CTiledMapSets* __instance;
+
+	//key=scene_id, value=CTiledMap object
+	unordered_map<int, CMap*> tiled_map_sets;
+
+public:
+	CTiledMapSets();
+	void Add(int id, CMap* map);
+	CMap* Get(unsigned int id);
+
+
+	static CTiledMapSets* GetInstance();
 };
