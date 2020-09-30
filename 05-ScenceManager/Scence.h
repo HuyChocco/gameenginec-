@@ -2,7 +2,7 @@
 
 #include <d3dx9.h>
 #include "KeyEventHandler.h"
-
+#include "Map.h"
 class CScene
 {
 protected:
@@ -18,6 +18,8 @@ public:
 	virtual void Unload() = 0;
 	virtual void Update(DWORD dt) = 0;
 	virtual void Render() = 0; 
+	//Bo sung
+	virtual CMap* GetMap() { return NULL; }
 };
 typedef CScene * LPSCENE;
 
@@ -33,4 +35,6 @@ public:
 	virtual void OnKeyUp(int KeyCode) = 0;
 	CScenceKeyHandler(CScene *s) //:CKeyEventHandler() 
 	{ scence = s; }
+
+	
 };

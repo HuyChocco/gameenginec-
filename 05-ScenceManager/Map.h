@@ -18,5 +18,6 @@ public:
 	virtual void LoadMap(LPCWSTR filePath) {};
 	virtual void Update() {};
 	virtual void Render() {};
+	virtual void Render(float x, float y) {};
 	~CMap(){}
 };
