@@ -480,7 +480,7 @@ void CPlayScene::Update(DWORD dt)
 		player->GetPosition(cx, cy);
 	}
 	
-	//CMap* map = CTiledMap::GetInstance();
+	
 	CMap* map = CTiledMapSets::GetInstance()->Get(id);
 	int widthMap, heightMap;
 	map->GetMapWidth(widthMap);
@@ -515,8 +515,15 @@ void CPlayScene::Render()
 	//Vẽ tiled map của scene hiện tại
 	CTiledMapSets::GetInstance()->Get(id)->Render();
 	//Vẽ tiled map của scene tiếp theo nếu thỏa điều kiện
-	if(isRenderNextMap&&id_next_map!=-1&& CTiledMapSets::GetInstance()->Get(id_next_map))
-		CTiledMapSets::GetInstance()->Get(id_next_map)->Render(1024,0);
+	if (isRenderNextMap && id_next_map != -1 && CTiledMapSets::GetInstance()->Get(id_next_map))
+	{
+		CMap* map = CTiledMapSets::GetInstance()->Get(id);
+		int widthMap, heightMap;
+		map->GetMapWidth(widthMap);
+		map->GetMapHeight(heightMap);
+		CTiledMapSets::GetInstance()->Get(id_next_map)->Render(widthMap, 0);
+	}
+		
 	//Vẽ tất cả các object hiện tại
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
