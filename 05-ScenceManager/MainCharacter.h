@@ -19,6 +19,7 @@
 #define MAIN_CHARACTER_STATE_JUMP			300
 #define MAIN_CHARACTER_STATE_DIE				400
 #define MAIN_CHARACTER_STATE_UP_BARREL				500
+#define MAIN_CHARACTER_STATE_NONE_COLLISION			600
 //#define MAIN_CHARACTER_STATE_DOWN_BARREL				600
 
 
@@ -78,5 +79,6 @@ public:
 	vector<LPGAMEOBJECT> GetComponentObjects();
 	void ClearObjects() { componentObjects.clear(); list_weapon.clear(); }
 	
-	
+	float GetStartX() { return start_x; }
+	float GetStartY() { return start_y; }
 };

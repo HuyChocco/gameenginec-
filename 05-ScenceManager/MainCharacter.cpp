@@ -35,7 +35,8 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			list_weapon[i]->Update(dt, coObjects);
 	}
 	// Simple fall down
-	vy += MAIN_CHARACTER_GRAVITY * dt;
+	if(state!= MAIN_CHARACTER_STATE_NONE_COLLISION)
+		vy += MAIN_CHARACTER_GRAVITY * dt;
 	
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -43,11 +44,11 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	coEvents.clear();
 
 	// turn off collision when die 
-	if (state != MAIN_CHARACTER_STATE_DIE)
+	if (state != MAIN_CHARACTER_STATE_NONE_COLLISION&&MAIN_CHARACTER_STATE_DIE)
 		CalcPotentialCollisions(coObjects, coEvents);
 
 	// reset untouchable timer if untouchable time has passed
-	
+	// Xử lý di chuyển của các đối tượng enemy theo đối tượng nhân vật chính
 	for (UINT i = 0; i < coObjects->size(); i++)
 	{
 		if (dynamic_cast<CEnemyObject1*>(coObjects->at(i))) {
@@ -162,6 +163,7 @@ void CMainCharacter::Render()
 {
 	
 	int alpha = 255;
+	
 	animation_set->at(0)->Render(x, y, alpha);
 	RenderBoundingBox();
 	// Vẽ các đối tượng weapon của nhân vật chính
@@ -170,6 +172,8 @@ void CMainCharacter::Render()
 		for (int i = 0; i < list_weapon.size(); i++)
 			list_weapon[i]->Render();
 	}
+	
+	
 }
 
 void CMainCharacter::SetState(int state)
@@ -196,14 +200,15 @@ void CMainCharacter::SetState(int state)
 		break;
 	case MAIN_CHARACTER_STATE_IDLE:
 		vx = 0;
-		
 		break;
 	case MAIN_CHARACTER_STATE_DIE:
-		vy = -MAIN_CHARACTER_DIE_DEFLECT_SPEED;
+		//vy = -MAIN_CHARACTER_DIE_DEFLECT_SPEED;
 		break;
 	case MAIN_CHARACTER_STATE_UP_BARREL:
 		break;
 	case MAIN_CHARACTER_STATE_BARREL_FIRE:
+		break;
+	case MAIN_CHARACTER_STATE_NONE_COLLISION:
 		break;
 	default:
 		
