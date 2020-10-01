@@ -11,8 +11,7 @@
 
 
 using namespace std;
-#define CELL_WIDTH	160
-#define CELL_HEIGHT	120
+
 CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 	CScene(id, filePath)
 {
@@ -303,7 +302,7 @@ void CPlayScene::_ParseSection_MAP(string line)
 	
 
 }
-bool initGridFlag = true;
+
 void CPlayScene::_ParseSection_GRID(string line)
 {
 	// check flag to init grid
@@ -425,6 +424,7 @@ void CPlayScene::Update(DWORD dt)
 	vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 0; i < objects.size(); i++)
 	{
+	
 		coObjects.push_back(objects[i]);
 		//Nếu object là Portal object
 		if (dynamic_cast<CPortal*>(objects[i]))
@@ -454,7 +454,7 @@ void CPlayScene::Update(DWORD dt)
 	}
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		objects[i]->Update(dt, &coObjects);
+			objects[i]->Update(dt, &coObjects);
 
 	}
 	if (player == NULL) return;
@@ -469,9 +469,31 @@ void CPlayScene::Update(DWORD dt)
 	
 	if (game->GetIsNextMap() == true)
 	{
-		// switch scene
-		game->SwitchScene(game->GetSceneId());
-		game->SetIsNextMap(false);
+		//Không xét va chạm và render player lên màn hình
+		player->SetState(MAIN_CHARACTER_STATE_NONE_COLLISION);
+		//Cho camera di chuyển theo trục x
+		player->SetSpeed(0.4, 0);
+		//Lấy width, height của map hiện tại
+		CMap* map = CTiledMapSets::GetInstance()->Get(id);
+		int widthMap, heightMap;
+		map->GetMapWidth(widthMap);
+		map->GetMapHeight(heightMap);
+		//Lấy width, height của map tiếp theo
+		map = CTiledMapSets::GetInstance()->Get(id_next_map);
+		int widthNextMap, heightNextMap;
+		map->GetMapWidth(widthNextMap);
+		map->GetMapHeight(heightNextMap);
+		float player_x, player_y;
+		player->GetPosition(player_x, player_y);
+		//Sau hiệu ứng di chuyển camera sang màn thì tiến hành chuyển màn
+		if (player_x >= widthMap + (widthNextMap / 3))
+		{
+			// switch scene
+			game->SwitchScene(game->GetSceneId());
+			game->SetIsNextMap(false);
+		}
+
+		
 	}
 	// Update camera to follow main character
 	float cx = 0, cy = 0;
@@ -490,24 +512,37 @@ void CPlayScene::Update(DWORD dt)
 	{
 		cx = 0;
 		cy = 0;
-		isRenderNextMap = false;
+		isRenderNextMap = false;//Không tạo hiệu ứng
 	}
 	else if (widthMap - cx < game->GetScreenWidth() / 2)
 	{
 		cx -= game->GetScreenWidth() / 2;
 		//cx = widthMap - game->GetScreenWidth();
-		//Nếu đi gần hết map của scene hiện tại và gần nhất với portal thì đánh dấu sẵn sàng render tiled map của scene tiếp theo portal đang xét gần nhất
+		//Nếu đi gần hết map của scene hiện tại và gần nhất với portal thì đánh dấu để render tiled map của scene tiếp theo portal gần nhất đó
 		isRenderNextMap = true;
 	}
 	else
 	{
 		cx -= game->GetScreenWidth() / 2;
-		cy -= game->GetScreenHeight() / 2;
-		isRenderNextMap = false;
+		//cy -= game->GetScreenHeight() / 2;
+		isRenderNextMap = false;//Không tạo hiệu ứng
 	}
-	
-
-	CGame::GetInstance()->SetCamPos(cx, 0/*cy*/);
+	cy = heightMap - game->GetScreenHeight();
+	//if(cy>= game->GetScreenHeight() / 2)
+	if (player)
+	{
+		float player_x, player_y;
+		player->GetPosition(player_x, player_y);
+		float height = player_y - cy;
+		if (height <= (game->GetScreenHeight() / 6))
+		{
+			height = ((game->GetScreenHeight() / 5) )- height;
+			cy -= height;
+		}
+			
+		
+	}
+	CGame::GetInstance()->SetCamPos(cx, cy);
 }
 
 void CPlayScene::Render()
@@ -521,17 +556,27 @@ void CPlayScene::Render()
 		int widthMap, heightMap;
 		map->GetMapWidth(widthMap);
 		map->GetMapHeight(heightMap);
-		CTiledMapSets::GetInstance()->Get(id_next_map)->Render(widthMap, 0);
+
+		map = CTiledMapSets::GetInstance()->Get(id_next_map);
+		int widthNextMap, heightNextMap;
+		map->GetMapWidth(widthNextMap);
+		map->GetMapHeight(heightNextMap);
+		CTiledMapSets::GetInstance()->Get(id_next_map)->Render(widthMap, heightMap - heightNextMap);
 	}
 		
-	//Vẽ tất cả các object hiện tại
-	for (int i = 0; i < objects.size(); i++)
-		objects[i]->Render();
-	//Vẽ player object
-	player->Render();
-	//Vẽ các object thành phần của player object
-	for (int i = 0; i < player->GetComponentObjects().size(); i++)
-		player->GetComponentObjects()[i]->Render();
+	//Vẽ tất cả các object hiện tại nếu thỏa điều kiện
+	if (player->GetState() != MAIN_CHARACTER_STATE_NONE_COLLISION)
+	{
+		for (int i = 0; i < objects.size(); i++)
+			objects[i]->Render();
+		//Vẽ player object
+		player->Render();
+		//Vẽ các object thành phần của player object
+		for (int i = 0; i < player->GetComponentObjects().size(); i++)
+			player->GetComponentObjects()[i]->Render();
+	}
+	
+	
 }
 
 CMap* CPlayScene::GetMap()
@@ -631,6 +676,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	CMainCharacter *player = ((CPlayScene*)scence)->GetPlayer();
 	//// disable control key when Mario die 
 	if (player->GetState() == MAIN_CHARACTER_STATE_DIE) return;
+	if (player->GetState() == MAIN_CHARACTER_STATE_NONE_COLLISION) return;
 	
 	if (game->IsKeyDown(DIK_UP))
 	{

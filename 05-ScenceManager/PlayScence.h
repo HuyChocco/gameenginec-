@@ -43,7 +43,7 @@ protected:
 public: 
 	bool isRenderNextMap = false;
 	bool initNextMap = true;
-
+	bool initGridFlag = true;
 	CPlayScene(int id, LPCWSTR filePath);
 
 	virtual void Load();
