@@ -262,7 +262,8 @@ void CMainCharacter::GetBoundingBox(float& left, float& top, float& right, float
 */
 void CMainCharacter::Reset()
 {
-	
+	SetState(MAIN_CHARACTER_STATE_IDLE);
+	SetPosition(start_x, start_y);
 }
 
 void CMainCharacter::AddComponentObject(CGameObject* object)
