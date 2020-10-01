@@ -170,7 +170,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			return;
 		}
 		
-		player = new CMainCharacter();
+		player = new CMainCharacter(x, y);
 		player->SetPosition(x, y);
 		player->SetAnimationSet(animation_sets->Get(ani_set_id));
 		DebugOut(L"[INFO] Player object created!\n");
