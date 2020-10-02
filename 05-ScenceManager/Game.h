@@ -50,6 +50,7 @@ class CGame
 	
 	// next map
 	bool isNextMap = false;	// check allow change scene
+	bool isPreMap = false;	// check allow change scene
 	int sceneId;			// sceneId will change
 public:
 	void InitKeyboard();
@@ -68,7 +69,7 @@ public:
 	void Load(LPCWSTR gameFile);
 	LPSCENE GetCurrentScene() { return scenes[current_scene]; }
 	LPSCENE GetScene(int id) { return scenes[id]; }
-	void SwitchScene(int scene_id);
+	void SwitchScene(int scene_id,float pre_player_x=0,float pre_player_y=0);
 
 	int GetScreenWidth() { return screen_width; }
 	int GetScreenHeight() { return screen_height; }
@@ -100,6 +101,8 @@ public:
 	//bo sung
 	bool GetIsNextMap() { return this->isNextMap; }
 	void SetIsNextMap(bool flag) { this->isNextMap = flag; }
+	void SetIsPreMap(bool flag) { this->isPreMap = flag; }
+	bool GetIsPreMap() { return this->isPreMap; }
 	void SetSceneId(int _sceneId) { this->sceneId = _sceneId; }
 	int GetSceneId() { return this->sceneId; }
 	~CGame();

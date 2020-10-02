@@ -39,9 +39,11 @@ protected:
 
 	CMap* tiledMap;
 	int id_next_map=-1;
+	int id_pre_map = -1;
 	LPCWSTR tiled_map_file_path_next;
 public: 
 	bool isRenderNextMap = false;
+	bool isRenderPreMap = false;
 	bool initNextMap = true;
 	bool initGridFlag = true;
 	CPlayScene(int id, LPCWSTR filePath);
