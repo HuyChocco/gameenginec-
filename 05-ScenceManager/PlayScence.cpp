@@ -266,7 +266,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			float r = atof(tokens[5].c_str());
 			float b = atof(tokens[6].c_str());
 			int scene_id = atoi(tokens[7].c_str());
-			obj = new CPortal(x, y, r, b, scene_id);
+			int type = atoi(tokens[8].c_str());
+			obj = new CPortal(x, y, r, b, scene_id, type);
 		}
 		break;
 	default:
@@ -430,25 +431,50 @@ void CPlayScene::Update(DWORD dt)
 		if (dynamic_cast<CPortal*>(objects[i]))
 		{
 			CPortal* p = dynamic_cast<CPortal*>(objects[i]);
-			//Lấy scene id của scene tiếp theo từ portal object
-			id_next_map = p->GetSceneId();
-			//Get scene tiếp theo thông qua scene_id
-			LPSCENE s = game->GetScene(id_next_map);
-			//Nếu scene tiếp theo tồn tại và chưa load tiled map của scene tiếp theo
-			if (s && initNextMap)
+			if (p->GetType() == 1)//Nếu là đối tượng portal chuyển scene tiếp theo
 			{
-				// Lấy tiled map tiếp theo
-				s->GetNextMap();
-				// Nếu tiled map tiếp theo tồn tại
-				if (s->GetMap() != NULL)
+				//Lấy scene id của scene tiếp theo từ portal object
+				id_next_map = p->GetSceneId();
+				//Get scene kế tiếp thông qua scene_id
+				LPSCENE s = game->GetScene(id_next_map);
+				//Nếu scene tiếp theo tồn tại và chưa load tiled map của scene tiếp theo
+				if (s && initNextMap)
 				{
-					//Thêm vào đối tượng CTiledMapSets
-					CTiledMapSets::GetInstance()->Add(id_next_map, s->GetMap());
-					//Chuyển cờ đánh dấu đã load được tiled map tiếp theo
-					initNextMap = false;
+					// Lấy tiled map tiếp theo
+					s->GetNextMap();
+					// Nếu tiled map tiếp theo tồn tại
+					if (s->GetMap() != NULL)
+					{
+						//Thêm vào đối tượng CTiledMapSets
+						CTiledMapSets::GetInstance()->Add(id_next_map, s->GetMap());
+						//Chuyển cờ đánh dấu đã load được tiled map tiếp theo
+						initNextMap = false;
+					}
+
 				}
-					
+			}	
+			else //Nếu là đối tượng portal chuyển scene trước
+			{
+				//Lấy scene id của scene trước từ portal object
+				id_pre_map = p->GetSceneId();
+				//Get scene trước thông qua scene_id
+				LPSCENE s = game->GetScene(id_pre_map);
+				if (s && initNextMap)
+				{
+					// Lấy tiled map trước
+					s->GetNextMap();
+					// Nếu tiled map trước tồn tại
+					if (s->GetMap() != NULL)
+					{
+						//Thêm vào đối tượng CTiledMapSets
+						CTiledMapSets::GetInstance()->Add(id_pre_map, s->GetMap());
+						//Chuyển cờ đánh dấu đã load được tiled map trước
+						initNextMap = false;
+					}
+
+				}
 			}
+			
 			
 		}
 	}
@@ -489,11 +515,39 @@ void CPlayScene::Update(DWORD dt)
 		if (player_x >= widthMap + (widthNextMap / 3))
 		{
 			// switch scene
-			game->SwitchScene(game->GetSceneId());
+			game->SwitchScene(game->GetSceneId(), player_x, player_y);
 			game->SetIsNextMap(false);
 		}
 
 		
+	}
+	else if (game->GetIsPreMap() == true)
+	{
+		//Không xét va chạm và render player lên màn hình
+		player->SetState(MAIN_CHARACTER_STATE_NONE_COLLISION);
+		//Cho camera di chuyển theo trục x
+		player->SetSpeed(-0.4, 0);
+		//Lấy width, height của map hiện tại
+		CMap* map = CTiledMapSets::GetInstance()->Get(id);
+		int widthMap, heightMap;
+		map->GetMapWidth(widthMap);
+		map->GetMapHeight(heightMap);
+		//Lấy width, height của map trước
+		map = CTiledMapSets::GetInstance()->Get(id_pre_map);
+		int widthPreMap, heightPreMap;
+		map->GetMapWidth(widthPreMap);
+		map->GetMapHeight(heightPreMap);
+		float player_x, player_y;
+		player->GetPosition(player_x, player_y);
+		//Sau hiệu ứng di chuyển camera sang màn thì tiến hành chuyển màn
+		//if (player_x <= -(widthPreMap / 3))
+		{
+			// switch scene
+			game->SwitchScene(game->GetSceneId());
+			game->SetIsPreMap(false);
+		}
+
+
 	}
 	// Update camera to follow main character
 	float cx = 0, cy = 0;
@@ -512,7 +566,10 @@ void CPlayScene::Update(DWORD dt)
 	{
 		cx = 0;
 		cy = 0;
+		
 		isRenderNextMap = false;//Không tạo hiệu ứng
+		isRenderPreMap = true;
+
 	}
 	else if (widthMap - cx < game->GetScreenWidth() / 2)
 	{
@@ -520,15 +577,16 @@ void CPlayScene::Update(DWORD dt)
 		//cx = widthMap - game->GetScreenWidth();
 		//Nếu đi gần hết map của scene hiện tại và gần nhất với portal thì đánh dấu để render tiled map của scene tiếp theo portal gần nhất đó
 		isRenderNextMap = true;
+		isRenderPreMap = false;//Không tạo hiệu ứng
 	}
 	else
 	{
 		cx -= game->GetScreenWidth() / 2;
-		//cy -= game->GetScreenHeight() / 2;
 		isRenderNextMap = false;//Không tạo hiệu ứng
+		isRenderPreMap = false;//Không tạo hiệu ứng
 	}
+	//Xử lý camera theo trục y
 	cy = heightMap - game->GetScreenHeight();
-	//if(cy>= game->GetScreenHeight() / 2)
 	if (player)
 	{
 		float player_x, player_y;
@@ -563,7 +621,19 @@ void CPlayScene::Render()
 		map->GetMapHeight(heightNextMap);
 		CTiledMapSets::GetInstance()->Get(id_next_map)->Render(widthMap, heightMap - heightNextMap);
 	}
-		
+	else if (isRenderPreMap && id_pre_map != -1 && CTiledMapSets::GetInstance()->Get(id_pre_map))
+	{
+		CMap* map = CTiledMapSets::GetInstance()->Get(id);
+		int widthMap, heightMap;
+		map->GetMapWidth(widthMap);
+		map->GetMapHeight(heightMap);
+
+		map = CTiledMapSets::GetInstance()->Get(id_pre_map);
+		int widthPreMap, heightPreMap;
+		map->GetMapWidth(widthPreMap);
+		map->GetMapHeight(heightPreMap);
+		CTiledMapSets::GetInstance()->Get(id_pre_map)->Render(-widthPreMap, heightMap - heightPreMap);
+	}
 	//Vẽ tất cả các object hiện tại nếu thỏa điều kiện
 	if (player->GetState() != MAIN_CHARACTER_STATE_NONE_COLLISION)
 	{
@@ -636,13 +706,16 @@ void CPlayScene::GetNextMap()
 */
 void CPlayScene::Unload()
 {
-	for (int i = 0; i < objects.size(); i++)
-		delete objects[i];
+	//for (int i = 0; i < objects.size(); i++)
+		//delete objects[i];
 
 	objects.clear();
 	
 	player = NULL;
-
+	isRenderNextMap = false;
+	isRenderPreMap = false;
+	initNextMap = true;
+	initGridFlag = true;
 	CGrid::GetInstance()->Unload();
 
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
