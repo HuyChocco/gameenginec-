@@ -11,10 +11,11 @@
 #include <dinput.h>
 
 #include "Scence.h"
-
+#include <unordered_map>
 using namespace std;
 
 #define KEYBOARD_BUFFER_SIZE 1024
+
 
 class CGame
 {
@@ -52,6 +53,8 @@ class CGame
 	bool isNextMap = false;	// check allow change scene
 	bool isPreMap = false;	// check allow change scene
 	int sceneId;			// sceneId will change
+
+	int next_portal_id;
 public:
 	void InitKeyboard();
 	void SetKeyHandler(LPKEYEVENTHANDLER handler) { keyHandler = handler; }
@@ -69,7 +72,7 @@ public:
 	void Load(LPCWSTR gameFile);
 	LPSCENE GetCurrentScene() { return scenes[current_scene]; }
 	LPSCENE GetScene(int id) { return scenes[id]; }
-	void SwitchScene(int scene_id,float pre_player_x=0,float pre_player_y=0);
+	void SwitchScene(int scene_id);
 
 	int GetScreenWidth() { return screen_width; }
 	int GetScreenHeight() { return screen_height; }
@@ -105,6 +108,9 @@ public:
 	bool GetIsPreMap() { return this->isPreMap; }
 	void SetSceneId(int _sceneId) { this->sceneId = _sceneId; }
 	int GetSceneId() { return this->sceneId; }
+
+	void SetNextPortalId(int _portalId) { this->next_portal_id = _portalId; }
+	int GetNextPortalId() { return this->next_portal_id; }
 	~CGame();
 };
 

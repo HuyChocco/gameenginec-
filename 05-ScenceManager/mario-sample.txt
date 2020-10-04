@@ -6,5 +6,5 @@ start	5
 2	scene2.txt
 3	scene-test.txt
 4	scene-test2.txt
-5	scene-test3.txt
-6	scene-test4.txt
+5	scene-test-A.txt
+6	scene-test-B.txt

@@ -456,7 +456,7 @@ void CGame::Load(LPCWSTR gameFile)
 	SwitchScene(current_scene);
 }
 
-void CGame::SwitchScene(int scene_id, float pre_player_x , float pre_player_y )
+void CGame::SwitchScene(int scene_id)
 {
 	DebugOut(L"[INFO] Switching to scene %d\n", scene_id);
 
@@ -466,12 +466,12 @@ void CGame::SwitchScene(int scene_id, float pre_player_x , float pre_player_y )
 	CSprites::GetInstance()->Clear();
 	CAnimations::GetInstance()->Clear();
 	//bổ sung
-	//CTiledMap::GetInstance()->Clear();
 	if(CTiledMapSets::GetInstance()->Get(current_scene))
 		CTiledMapSets::GetInstance()->Get(current_scene)->Clear();
 	current_scene = scene_id;
 	LPSCENE s = scenes[scene_id];
 	CGame::GetInstance()->SetKeyHandler(s->GetKeyEventHandler());
 	s->Load();
+	
 	
 }

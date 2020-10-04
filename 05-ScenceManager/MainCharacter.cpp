@@ -145,13 +145,17 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (p->GetType() == 1)
 				{
 					CGame::GetInstance()->SetIsNextMap(true);
+					CGame::GetInstance()->SetIsPreMap(false);
 					CGame::GetInstance()->SetSceneId(p->GetSceneId());
+					CGame::GetInstance()->SetNextPortalId(p->GetNextPortalId());
 				}
 				//Nếu portal là đối tượng chuyển previous scene
 				else
 				{
 					CGame::GetInstance()->SetIsPreMap(true);
+					CGame::GetInstance()->SetIsNextMap(false);
 					CGame::GetInstance()->SetSceneId(p->GetSceneId());
+					CGame::GetInstance()->SetNextPortalId(p->GetNextPortalId());
 				}
 			
 				
