@@ -4,6 +4,7 @@
 #include "WheelObject.h"
 #include "CabinObject.h"
 #include "Weapon.h"
+#include "Human.h"
 #define MAIN_CHARACTER_RUN_SPEED		0.15f 
 //0.1f
 #define MAIN_CHARACTER_JUMP_SPEED_Y		0.5f
@@ -20,6 +21,7 @@
 #define MAIN_CHARACTER_STATE_DIE				400
 #define MAIN_CHARACTER_STATE_UP_BARREL				500
 #define MAIN_CHARACTER_STATE_NONE_COLLISION			600
+#define MAIN_CHARACTER_STATE_HUMAN					800
 //#define MAIN_CHARACTER_STATE_DOWN_BARREL				600
 
 
@@ -62,7 +64,7 @@ public:
 
 	//Bo sung property
 	bool Is_On_Ground;
-
+	bool Is_Human;
 	CMainCharacter(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();

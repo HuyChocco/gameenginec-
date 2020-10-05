@@ -51,6 +51,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define OBJECT_TYPE_WHEEL_MIDDLE	6
 #define OBJECT_TYPE_CABIN	7
 #define OBJECT_TYPE_BARREL	8
+#define OBJECT_TYPE_HUMAN	11
 
 
 #define OBJECT_TYPE_PORTAL	50
@@ -166,13 +167,19 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_MAIN_CHARACTER:
 		if (player != NULL)
 		{
-			DebugOut(L"[ERROR] MARIO object was created before!\n");
+			DebugOut(L"[ERROR] Player object was created before!\n");
 			return;
 		}
 		
 		player = new CMainCharacter(x, y);
 		player->SetPosition(x, y);
 		player->SetAnimationSet(animation_sets->Get(ani_set_id));
+		//if (CGame::GetInstance()->GetIsPreMap())
+		//{
+			//LAST_PLAYER_POSITION position;
+			//position= CGame::GetInstance()->GetLastPlayerPosition();
+			//player->SetPosition(position.x, position.y);
+		//}
 		DebugOut(L"[INFO] Player object created!\n");
 		return;
 		break;
@@ -195,7 +202,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		if (player != NULL)
 		{
 
-			DebugOut(L"[INFO] MARIO object has been Created Already!\n");
+			DebugOut(L"[INFO] Player object has been Created Already!\n");
 			player->AddComponentObject(obj);
 			return;
 		}
@@ -211,7 +218,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
 		if (player != NULL)
 		{
-			DebugOut(L"[INFO] MARIO object has been Created Already!\n");
+			DebugOut(L"[INFO] Player object has been Created Already!\n");
 			player->AddComponentObject(obj);
 		}
 		return;
@@ -241,7 +248,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
 		if (player != NULL)
 		{
-			DebugOut(L"[INFO] MARIO object has been Created Already!\n");
+			DebugOut(L"[INFO] Player object has been Created Already!\n");
 			player->AddComponentObject(obj);
 		}
 		return;
@@ -255,7 +262,20 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
 		if (player != NULL)
 		{
-			DebugOut(L"[INFO] MARIO object has been Created Already!\n");
+			DebugOut(L"[INFO] Player object has been Created Already!\n");
+			player->AddComponentObject(obj);
+		}
+		return;
+		break;
+	}
+	case OBJECT_TYPE_HUMAN:
+	{
+		obj = new CHuman(x, y);
+		obj->SetID(object_id);
+		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
+		if (player != NULL)
+		{
+			DebugOut(L"[INFO] Player object has been Created Already!\n");
 			player->AddComponentObject(obj);
 		}
 		return;
@@ -267,7 +287,29 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			float b = atof(tokens[6].c_str());
 			int scene_id = atoi(tokens[7].c_str());
 			int type = atoi(tokens[8].c_str());
-			obj = new CPortal(x, y, r, b, scene_id, type);
+			int next_portal_id = atoi(tokens[9].c_str());
+			obj = new CPortal(x, y, r, b, scene_id, type, next_portal_id);
+			if (CGame::GetInstance()->GetIsPreMap())
+			{
+				if (player != NULL)
+				{
+					if (CGame::GetInstance()->GetNextPortalId() == object_id)
+					{
+						player->SetPosition((x - MAIN_CHARACTER_BBOX_WIDTH)-2, y);
+					}
+				}
+			}
+			else if (CGame::GetInstance()->GetIsNextMap())
+			{
+				if (player != NULL)
+				{
+					if (CGame::GetInstance()->GetNextPortalId() == object_id)
+					{
+						player->SetPosition(x+(r-x)+2, y);
+					}
+				}
+			}
+
 		}
 		break;
 	default:
@@ -492,9 +534,12 @@ void CPlayScene::Update(DWORD dt)
 	
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	
-	
+	//Thực hiện chuyển sang scene tiếp theo
 	if (game->GetIsNextMap() == true)
 	{
+		
+		float player_x, player_y;
+		player->GetPosition(player_x, player_y);
 		//Không xét va chạm và render player lên màn hình
 		player->SetState(MAIN_CHARACTER_STATE_NONE_COLLISION);
 		//Cho camera di chuyển theo trục x
@@ -509,20 +554,23 @@ void CPlayScene::Update(DWORD dt)
 		int widthNextMap, heightNextMap;
 		map->GetMapWidth(widthNextMap);
 		map->GetMapHeight(heightNextMap);
-		float player_x, player_y;
 		player->GetPosition(player_x, player_y);
 		//Sau hiệu ứng di chuyển camera sang màn thì tiến hành chuyển màn
 		if (player_x >= widthMap + (widthNextMap / 3))
 		{
 			// switch scene
-			game->SwitchScene(game->GetSceneId(), player_x, player_y);
+			game->SwitchScene(game->GetSceneId());
 			game->SetIsNextMap(false);
 		}
 
 		
 	}
+	//Thực hiện chuyển về scene trước
 	else if (game->GetIsPreMap() == true)
 	{
+		
+		float player_x, player_y;
+		player->GetPosition(player_x, player_y);
 		//Không xét va chạm và render player lên màn hình
 		player->SetState(MAIN_CHARACTER_STATE_NONE_COLLISION);
 		//Cho camera di chuyển theo trục x
@@ -537,11 +585,10 @@ void CPlayScene::Update(DWORD dt)
 		int widthPreMap, heightPreMap;
 		map->GetMapWidth(widthPreMap);
 		map->GetMapHeight(heightPreMap);
-		float player_x, player_y;
 		player->GetPosition(player_x, player_y);
 		//Sau hiệu ứng di chuyển camera sang màn thì tiến hành chuyển màn
 		//if (player_x <= -(widthPreMap / 3))
-		{
+		{ 
 			// switch scene
 			game->SwitchScene(game->GetSceneId());
 			game->SetIsPreMap(false);
@@ -549,11 +596,25 @@ void CPlayScene::Update(DWORD dt)
 
 
 	}
+	//if (CGame::GetInstance()->GetIsJustSwitched())
+		//return;
 	// Update camera to follow main character
 	float cx = 0, cy = 0;
 	if (player != NULL)
 	{
-		player->GetPosition(cx, cy);
+		if (player->Is_Human)
+		{
+			for (int i = 0; i < player->GetComponentObjects().size(); i++)
+			{
+				if (dynamic_cast<CHuman*>(player->GetComponentObjects()[i]))
+				{
+					CHuman* human = dynamic_cast<CHuman*>(player->GetComponentObjects()[i]);
+					human->GetPosition(cx, cy);
+				}
+			}
+		}
+		else
+			player->GetPosition(cx, cy);
 	}
 	
 	
@@ -641,10 +702,8 @@ void CPlayScene::Render()
 			objects[i]->Render();
 		//Vẽ player object
 		player->Render();
-		//Vẽ các object thành phần của player object
-		for (int i = 0; i < player->GetComponentObjects().size(); i++)
-			player->GetComponentObjects()[i]->Render();
 	}
+	
 	
 	
 }
@@ -735,6 +794,9 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_Z:
 		player->SetState(MAIN_CHARACTER_STATE_BARREL_FIRE);
+		break;
+	case DIK_M:
+		player->SetState(MAIN_CHARACTER_STATE_HUMAN);
 		break;
 	}
 }

@@ -105,6 +105,9 @@
     <ClCompile Include="Spider.cpp">
       <Filter>Source Files\EnemyObjects</Filter>
     </ClCompile>
+    <ClCompile Include="Human.cpp">
+      <Filter>Source Files\MainCharacterObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Brick.h">
@@ -184,6 +187,9 @@
     </ClInclude>
     <ClInclude Include="Spider.h">
       <Filter>Header Files\EnemyObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Human.h">
+      <Filter>Header Files\MainCharacterObjects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
