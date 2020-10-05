@@ -151,6 +151,16 @@
 141	128	192	144	208	33
 142	144	192	160	208	33
 143	160	192	176	208	33
+# SOFIA Human
+#idle
+10001	3	30	11	46	1
+#move left
+10002	12	30	20	46	1
+10003	21	30	29	46	1
+10004	30	30	38	46	1
+# Crawl left - Bo ben trai
+10005	39	30	55	46	1
+10006	56	30	72	46	1
 # SOFIA Wheel 
 20001	3	21	10	28	1
 20002	12	21	19	28	1
@@ -205,6 +215,13 @@
 Map-Blaster-Master-Area-2-B.txt
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
+# ==== SOFIA HUMAN =========
+#idle
+600	10001	100
+#move left
+601	10002	100	10003	100	10004	100
+#crawl left
+602	10005	100	10006	100
 # ==== SOFIA WHEEL =========
 #idle
 700	20002	100
@@ -252,6 +269,8 @@ Map-Blaster-Master-Area-2-B.txt
 # id	ani1	ani2	ani3
 #
 [ANIMATION_SETS]
+# SOFIA 
+1	600	601	602
 # MAIN_CHARACTER 
 2	2000
 # WHEEL 
@@ -300,7 +319,8 @@ Map-Blaster-Master-Area-2-B.txt
 13	7	25	118	4
 # BARREL
 14	8	17	118	5
-
+# HUMAN
+30	11	17	115	1
 
 # --- SCENE PORTAL ----
 # object_id 	type	l	t	ani_set_id	r	b	scene_id	type_portal: 1-Next scene 0-Previous scene	next_portal_id
