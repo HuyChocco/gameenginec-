@@ -15,7 +15,7 @@
 #include "BarrelObject.h"
 #include "WheelObject.h"
 #include "CabinObject.h"
-
+#include "Human.h"
 
 #include "TiledMap.h"
 #include "Grid.h"
