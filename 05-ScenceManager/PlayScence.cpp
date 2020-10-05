@@ -51,6 +51,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define OBJECT_TYPE_WHEEL_MIDDLE	6
 #define OBJECT_TYPE_CABIN	7
 #define OBJECT_TYPE_BARREL	8
+#define OBJECT_TYPE_HUMAN	11
 
 
 #define OBJECT_TYPE_PORTAL	50
@@ -257,6 +258,19 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	{
 		obj = new CBarrelObject(); 
 		obj->SetPosition(x, y);
+		obj->SetID(object_id);
+		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
+		if (player != NULL)
+		{
+			DebugOut(L"[INFO] Player object has been Created Already!\n");
+			player->AddComponentObject(obj);
+		}
+		return;
+		break;
+	}
+	case OBJECT_TYPE_HUMAN:
+	{
+		obj = new CHuman(x, y);
 		obj->SetID(object_id);
 		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
 		if (player != NULL)
@@ -588,7 +602,19 @@ void CPlayScene::Update(DWORD dt)
 	float cx = 0, cy = 0;
 	if (player != NULL)
 	{
-		player->GetPosition(cx, cy);
+		if (player->Is_Human)
+		{
+			for (int i = 0; i < player->GetComponentObjects().size(); i++)
+			{
+				if (dynamic_cast<CHuman*>(player->GetComponentObjects()[i]))
+				{
+					CHuman* human = dynamic_cast<CHuman*>(player->GetComponentObjects()[i]);
+					human->GetPosition(cx, cy);
+				}
+			}
+		}
+		else
+			player->GetPosition(cx, cy);
 	}
 	
 	
@@ -676,9 +702,6 @@ void CPlayScene::Render()
 			objects[i]->Render();
 		//Vẽ player object
 		player->Render();
-		//Vẽ các object thành phần của player object
-		for (int i = 0; i < player->GetComponentObjects().size(); i++)
-			player->GetComponentObjects()[i]->Render();
 	}
 	
 	
@@ -771,6 +794,9 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_Z:
 		player->SetState(MAIN_CHARACTER_STATE_BARREL_FIRE);
+		break;
+	case DIK_M:
+		player->SetState(MAIN_CHARACTER_STATE_HUMAN);
 		break;
 	}
 }
