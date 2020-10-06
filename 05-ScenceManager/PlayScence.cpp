@@ -634,8 +634,19 @@ void CPlayScene::Update(DWORD dt)
 	}
 	else if (widthMap - cx < game->GetScreenWidth() / 2)
 	{
-		cx -= game->GetScreenWidth() / 2;
-		//cx = widthMap - game->GetScreenWidth();
+		bool has_portal_object = false;
+		for (size_t i = 0; i < objects.size(); i++)
+		{
+			//Nếu object là Portal object
+			if (dynamic_cast<CPortal*>(objects[i]))
+			{
+				has_portal_object = true;
+			}
+		}
+		if(has_portal_object)
+			cx -= game->GetScreenWidth() / 2;
+		else
+			cx = widthMap - game->GetScreenWidth();
 		//Nếu đi gần hết map của scene hiện tại và gần nhất với portal thì đánh dấu để render tiled map của scene tiếp theo portal gần nhất đó
 		isRenderNextMap = true;
 		isRenderPreMap = false;//Không tạo hiệu ứng
@@ -651,7 +662,19 @@ void CPlayScene::Update(DWORD dt)
 	if (player)
 	{
 		float player_x, player_y;
-		player->GetPosition(player_x, player_y);
+		if (player->Is_Human)
+		{
+			for (int i = 0; i < player->GetComponentObjects().size(); i++)
+			{
+				if (dynamic_cast<CHuman*>(player->GetComponentObjects()[i]))
+				{
+					CHuman* human = dynamic_cast<CHuman*>(player->GetComponentObjects()[i]);
+					human->GetPosition(player_x, player_y);
+				}
+			}
+		}
+		else
+			player->GetPosition(player_x, player_y);
 		float height = player_y - cy;
 		if (height <= (game->GetScreenHeight() / 6))
 		{
@@ -695,7 +718,7 @@ void CPlayScene::Render()
 		map->GetMapHeight(heightPreMap);
 		CTiledMapSets::GetInstance()->Get(id_pre_map)->Render(-widthPreMap, heightMap - heightPreMap);
 	}
-	//Vẽ tất cả các object hiện tại nếu thỏa điều kiện
+	//Vẽ tất cả các obj ect hiện tại nếu thỏa điều kiện
 	if (player->GetState() != MAIN_CHARACTER_STATE_NONE_COLLISION)
 	{
 		for (int i = 0; i < objects.size(); i++)
