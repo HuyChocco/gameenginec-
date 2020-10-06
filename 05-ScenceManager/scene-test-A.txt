@@ -291,40 +291,41 @@ Map-Blaster-Master-Area-2-A.txt
 # object_id  type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Worm, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Cabin, 8= Barrel, 9= Main character, 10= Spider, 11=Human
 # MAIN_CHARACTER need to be created first!
-15	9	17	115	2
-# ENEMY 1
-#16	2	50	155	6
-# WORM - ENEMY
-17	3	50	100	8
-19	3	280	100	8
-# SPIDER - ENEMY
-18	10	420	120	9
+1	9	17	115	2
+# MAIN OBJECTS LIST
+# HUMAN
+2	11	17	115	1
+# WHEEL_LEFT
+3	4	18	132	3
+# WHEEL_MIDDLE
+4	5	25	125	3
+# WHEEL_RIGHT
+5	6	32	132	3
+# CABIN
+6	7	25	118	4
+# BARREL
+7	8	17	118	5
+# ENEMY LIST
+# WORM
+10	3	50	100	8
+11	3	280	100	8
+# SPIDER
+12	10	420	120	9
+# MAP OBJECT LIST
 # BRICK 
 # object_id 	type	l	t	ani_set_id	r	b	
-2	1	0	160	2	318	170
-21	1	384	160.5	2	511.5	170
-22	1	575.5	160.5	2	701.5	170
-23	1	769	160.5	2	1024	170
-# WHEEL_LEFT
-10	4	18	132	3
-# WHEEL_MIDDLE
-11	5	25	125	3
-# WHEEL_RIGHT
-12	6	32	132	3
-# CABIN
-13	7	25	118	4
-# BARREL
-14	8	17	118	5
-# HUMAN
-30	11	17	115	1
+100	1	0	160	2	318	170
+101	1	384	160.5	2	511.5	170
+102	1	575.5	160.5	2	701.5	170
+103	1	769	160.5	2	1024	170
 
 # --- SCENE PORTAL ----
 # object_id 	type	l	t	ani_set_id	r	b	scene_id	type_portal: 1-Next scene 0-Previous scene	next_portal_id
-9	50	965	118.5	2	977	159.5	6	1	9
+1000	50	965	118.5	2	977	159.5	2	1	1000
 # cellx celly id_object...
 [GRID]
-0	0	2	17	19
-0	3	18	21
-0	4	22
-0	5	23
-0	6	9
+0	0	100	10	11
+0	3	12	101
+0	4	102
+0	5	103
+0	6	1000
