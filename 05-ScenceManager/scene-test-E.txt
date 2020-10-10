@@ -3,7 +3,7 @@
 1	textures\Jason-and-Sophia.png	0	57	115
 2	textures\BlasterMaster-Enemies.png	255	0	255
 33	textures\NES-Blaster-Master-Area-2.png	255	255	255
-44	textures\NES-Blaster-Master-Area-2-Overworld.png	255	255	255
+
 # id	left	top	right	bottom	texture_id
 [SPRITES]
 # tiled map sprites
@@ -151,16 +151,6 @@
 141	128	192	144	208	33
 142	144	192	160	208	33
 143	160	192	176	208	33
-# SOFIA Human
-#idle
-10001	3	30	11	46	1
-#move left
-10002	12	30	20	46	1
-10003	21	30	29	46	1
-10004	30	30	38	46	1
-# Crawl left - Bo ben trai
-10005	39	30	55	46	1
-10006	56	30	72	46	1
 # SOFIA Wheel 
 20001	3	21	10	28	1
 20002	12	21	19	28	1
@@ -212,16 +202,9 @@
 100002	116	20	123	43	1
 # path
 [MAP]
-Map-Blaster-Master-Area-2-A.txt
+Map-Blaster-Master-Area-2-E.txt
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
-# ==== SOFIA HUMAN =========
-#idle
-600	10001	100
-#move left
-601	10002	100	10003	100	10004	100
-#crawl left
-602	10005	100	10006	100
 # ==== SOFIA WHEEL =========
 #idle
 700	20002	100
@@ -269,8 +252,6 @@ Map-Blaster-Master-Area-2-A.txt
 # id	ani1	ani2	ani3
 #
 [ANIMATION_SETS]
-# SOFIA 
-1	600	601	602
 # MAIN_CHARACTER 
 2	2000
 # WHEEL 
@@ -289,43 +270,45 @@ Map-Blaster-Master-Area-2-A.txt
 7	4000	4001
 [OBJECTS]
 # object_id  type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Worm, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Cabin, 8= Barrel, 9= Main character, 10= Spider, 11=Human
+# type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Worm, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Cabin, 8= Barrel, 9= Main character, 10= Spider
 # MAIN_CHARACTER need to be created first!
-1	9	17	115	2
-# MAIN OBJECTS LIST
-# HUMAN
-2	11	17	115	1
-# WHEEL_LEFT
-3	4	18	132	3
-# WHEEL_MIDDLE
-4	5	25	125	3
-# WHEEL_RIGHT
-5	6	32	132	3
-# CABIN
-6	7	25	118	4
-# BARREL
-7	8	17	118	5
-# ENEMY LIST
-# WORM
-10	3	50	100	8
-11	3	280	100	8
-# SPIDER
-12	10	420	120	9
-# MAP OBJECT LIST
+15	9	65	110	2
+# ENEMY 1
+#16	2	50	155	6
+# WORM - ENEMY
+17	3	50	100	8
+19	3	280	100	8
+# SPIDER - ENEMY
+18	10	420	120	9
 # BRICK 
-# object_id 	type	l	t	ani_set_id	r	b	
-100	1	0	160	2	318	170
-101	1	384	160.5	2	511.5	170
-102	1	575.5	160.5	2	701.5	170
-103	1	769	160.5	2	1024	170
+# object_id 	type	l	t	ani_set_id	r	b
+2	1	32	144	2	96	176
+50	1	96	176	2	160	192
+51	1	160	144	2	224	176
+52	1	224	176	2	288	192
+53	1	288	144	2	352	176
+54	1	352	176	2	416	192
+55	1	416	144	2	480	176
+60	1	16	0	2	32	160
+61	1	480	0	2	496	160
+# WHEEL_LEFT
+10	4	18	132	3
+# WHEEL_MIDDLE
+11	5	25	125	3
+# WHEEL_RIGHT
+12	6	32	132	3
+# CABIN
+13	7	25	118	4
+# BARREL
+14	8	17	118	5
+
 
 # --- SCENE PORTAL ----
-# object_id 	type	l	t	ani_set_id	r	b	scene_id	type_portal: 1-Next scene 0-Previous scene	next_portal_id
-1000	50	965	118.5	2	977	159.5	2	1	1000
+# object_id 	type	l	t	ani_set_id	r	b	scene_id	type_portal: 1-Next scene 0-Previous scene
+9	50	32	112	2	64	144	49	0
+109	50	448	112	2	480	144	9	1
 # cellx celly id_object...
 [GRID]
-0	0	100	10	11
-0	3	12	101
-0	4	102
-0	5	103
-0	6	1000
+1	0	9	60	2	50	19
+1	1	51	52	53
+1	2	109	61	54	55	18

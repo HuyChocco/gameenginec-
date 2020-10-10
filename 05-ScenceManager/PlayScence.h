@@ -41,6 +41,7 @@ protected:
 	int id_next_map=-1;
 	int id_pre_map = -1;
 	LPCWSTR tiled_map_file_path_next;
+	CSprites* sprites_next_map;
 public: 
 	bool isRenderNextMap = false;
 	bool isRenderPreMap = false;
@@ -60,6 +61,9 @@ public:
 
 	virtual CMap* GetMap();
 	virtual void GetNextMap();
+
+	
+	CSprites* GetSpritesNextMap() { return sprites_next_map; }
 };
 
 class CPlayScenceKeyHandler : public CScenceKeyHandler

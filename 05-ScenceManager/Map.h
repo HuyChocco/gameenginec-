@@ -8,6 +8,7 @@ public:
 	int map_width;
 	int map_height;
 	LPCWSTR filePath;
+
 public:
 	CMap();
 	void SetMapWidth(int map_width) { this->map_width = map_width; }

@@ -53,6 +53,7 @@ class CGame
 	bool isNextMap = false;	// check allow change scene
 	bool isPreMap = false;	// check allow change scene
 	int sceneId;			// sceneId will change
+	bool is_rendering_next_map = false; // Kiểm tra có hiệu ứng đang vẽ map kế tiếp không
 
 	int next_portal_id;
 public:
@@ -108,6 +109,8 @@ public:
 	bool GetIsPreMap() { return this->isPreMap; }
 	void SetSceneId(int _sceneId) { this->sceneId = _sceneId; }
 	int GetSceneId() { return this->sceneId; }
+	void SetRenderingNextMap(int flag) { this->is_rendering_next_map = flag; }
+	int GetRenderingNextMap() { return this->is_rendering_next_map; }
 
 	void SetNextPortalId(int _portalId) { this->next_portal_id = _portalId; }
 	int GetNextPortalId() { return this->next_portal_id; }

@@ -14,7 +14,8 @@ protected:
 	LPCWSTR sceneFilePath;
 
 	//Bổ sung
-	
+
+
 	
 
 public: 
