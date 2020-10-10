@@ -1,7 +1,9 @@
-#include "TiledMap.h"
+﻿#include "TiledMap.h"
 #include "Utils.h"
 #include <iostream>
 #include <fstream>
+#include "Game.h"
+#include "PlayScence.h"
 #define MAX_MAP_LINE 1024
 #define MAP_SECTION_UNKNOWN -1
 #define MAP_SECTION_SPRITE_ID_CELLS 4
@@ -14,14 +16,42 @@ CTiledMap* CTiledMap::__instance = NULL;
 CTiledMapSets* CTiledMapSets::__instance = NULL;
 void CTiledRow::Add(int spriteId)
 {
-	LPSPRITE sprite = CSprites::GetInstance()->Get(spriteId);
-
-	if (sprite == NULL)
+	//Thêm phần xử lý add sprite cho hiệu ứng render next map
+	if (CGame::GetInstance()->GetRenderingNextMap())
 	{
-		DebugOut(L"[ERROR] Sprite ID %d cannot be found!\n", spriteId);
+		CScene* scene_next = CGame::GetInstance()->GetScene(CGame::GetInstance()->GetSceneId());
+		CSprites* sprites;
+		if (scene_next)
+		{
+			CPlayScene* play_scene = dynamic_cast<CPlayScene*>(scene_next);
+			sprites = play_scene->GetSpritesNextMap();
+			if (sprites)
+			{
+				LPSPRITE sprite = sprites->Get(spriteId);
+
+				if (sprite == NULL)
+				{
+					DebugOut(L"[ERROR] Sprite ID %d cannot be found!\n", spriteId);
+				}
+				LPTILEDCELL cell = new CTiledCell(sprite);
+				tiled_row_next_map.push_back(cell);
+			}
+
+		}
+		
 	}
-	LPTILEDCELL cell = new CTiledCell(sprite);
-	tiled_row.push_back(cell);
+	else
+	{
+		LPSPRITE sprite = CSprites::GetInstance()->Get(spriteId);
+
+		if (sprite == NULL)
+		{
+			DebugOut(L"[ERROR] Sprite ID %d cannot be found!\n", spriteId);
+		}
+		LPTILEDCELL cell = new CTiledCell(sprite);
+		tiled_row.push_back(cell);
+	}
+	
 }
 void CTiledRow::Render(float x, float y, int alpha)
 {
@@ -117,7 +147,12 @@ void CTiledMap::_ParseSection_SPRITE_ID_CELLS(string line,int lineCount)
 		
 		row->Add(spriteId);
 	}
-	tiledmap_row_set[lineCount]= row;
+	if (CGame::GetInstance()->GetRenderingNextMap())
+	{
+		tiledmap_row_set_next_map[lineCount] = row;
+	}
+	else
+		tiledmap_row_set[lineCount]= row;
 }
 
 void CTiledMap::_ParseSection_MAP_WIDTH(string line)
@@ -155,12 +190,12 @@ void CTiledMap::Render()
 
 void CTiledMap::Render(float x, float y)
 {
-	for (int r_index = 0; r_index < tiledmap_row_set.size(); r_index++)
+	for (int r_index = 0; r_index < tiledmap_row_set_next_map.size(); r_index++)
 	{
 
-		for (int c_index = 0; c_index < tiledmap_row_set[r_index]->tiled_row.size(); c_index++)
+		for (int c_index = 0; c_index < tiledmap_row_set_next_map[r_index]->tiled_row_next_map.size(); c_index++)
 		{
-			LPTILEDCELL cell = tiledmap_row_set[r_index]->tiled_row[c_index];
+			LPTILEDCELL cell = tiledmap_row_set_next_map[r_index]->tiled_row_next_map[c_index];
 			
 			cell->GetSprite()->Draw(c_index * TILED_MAP_SIZE + x,  r_index * TILED_MAP_SIZE + y);
 		}

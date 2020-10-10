@@ -3,7 +3,7 @@
 1	textures\Jason-and-Sophia.png	0	57	115
 2	textures\BlasterMaster-Enemies.png	255	0	255
 33	textures\NES-Blaster-Master-Area-2.png	255	255	255
-
+44	textures\NES-Blaster-Master-Area-2-Overworld.png	255	255	255
 # id	left	top	right	bottom	texture_id
 [SPRITES]
 # tiled map sprites
@@ -210,6 +210,53 @@
 # Weapon_player
 100001	91	20	114	27	1
 100002	116	20	123	43	1
+# FLOATER
+#move left
+130001	104	406	122	422	2
+130002	84	407	102	422	2
+#move right
+130003	132	406	150	422	2
+130004	152	407	170	422	2
+# DOMES
+#move left
+140001	87	425	105	441	2
+140002	67	424	85	441	2
+#move right
+140003	149	425	167	441	2
+140004	169	424	187	441	2
+# JUMPERS
+#move left
+150001	108	1	122	27	2
+150002	91	2	204	27	2
+#move right
+150003	132	1	146	27	2
+150004	150	2	163	27	2
+# INSECT
+#move left
+160001	104	530	122	548	2
+160002	84	533	102	548	2
+#move right
+160003	132	530	150	548	2
+160004	152	533	170	548	2
+# ORBS
+#move left
+170001	98	387	116	405	2
+170002	78	387	96	405	2
+#move right
+170003	138	387	156	405	2
+170004	158	387	176	405	2
+# SKULLS
+#walk left
+180001	62	527	80	548	2
+180002	42	530	60	548	2
+#walk right
+180003	174	527	192	548	2
+180004	194	530	212	548	2
+# DASHER
+#walk left
+190001	193	515	203	565	2
+#walk right
+190002	51	515	61	565	2
 # path
 [MAP]
 Map-Blaster-Master-Area-2-B.txt
@@ -266,6 +313,41 @@ Map-Blaster-Master-Area-2-B.txt
 4000	100001	100
 #Up
 4001	100002	100
+# === FLOATERS =====
+#walk left
+7000	130001	100	130002	100
+#walk right
+7001	130003	100	130004	100
+# === DOMES ===
+#walk left
+8000	140001	100	140002	100
+#walk right
+8001	140003	100	140004	100
+# === JUMPERS ======
+#walk left
+9000	150001	100	150002	100
+#walk right
+9001	150003	100	150004	100
+# === INSECT =====
+#walk left
+10000	160001	100	160002	100
+#walk right
+10001	160003	100	160004	100
+# === ORBS ====
+#walk left
+11000	170001	100	170002	100
+#walk right
+11001	170003	100	170004	100
+#=== SKULLS ====
+#walk left
+12000	180001	100	180002	100
+#walk right
+120001	180003	100	180004	100
+#=== DASHERS =====
+#walk left
+130000	190001	100
+#walk right
+130001	190002	100
 # id	ani1	ani2	ani3
 #
 [ANIMATION_SETS]
@@ -287,6 +369,20 @@ Map-Blaster-Master-Area-2-B.txt
 9	6000	6001
 # WEAPON
 7	4000	4001
+# FLOATERS
+10	7000	7001
+# DOMES
+11	8000	8001
+# JUMPERS
+12	9000	9001
+# INSECT
+13	10000	10001
+# ORBS
+14	11000	11001
+# SKULLS
+15	12000	12001
+# DASHERS
+16	13000	13001
 [OBJECTS]
 # object_id  type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Worm, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Cabin, 8= Barrel, 9= Main character, 10= Spider
@@ -311,6 +407,25 @@ Map-Blaster-Master-Area-2-B.txt
 11	3	280	100	8
 # SPIDER
 12	10	420	120	9
+# FLOATERS
+13	12	104	1135	10
+14	12	136	1100	10
+15	12	136	1172	10
+# DOMES
+16	13	308	1172	11
+17	13	161	84	11
+18	13	222	84	11
+19	13	328	84	11
+# JUMPERS
+20	14	58	983	12
+# INSECT
+21	15	339	747	13
+22	15	362	598	13
+23	15	392	478	13
+# ORBS
+24	16	232	464	14
+25	16	201	334	14
+26	16	73	336	14
 # MAP OBJECT LIST
 # BRICK 
 # object_id 	type	l	t	ani_set_id	r	b	
@@ -365,7 +480,7 @@ Map-Blaster-Master-Area-2-B.txt
 # object_id 	type	l	t	ani_set_id	r	b	scene_id	type_portal: 1-Next scene 0-Previous scene	next_portal_id
 1000	50	47.3333	1160.67	2	58.6666	1182.0033	1	0	1000
 1001	50	451.17	124.30	2	471.12	159.6	1	1	1000
-1002	50	451.17	1160	2	471.12	1182	1	1	1000
+1002	50	451.17	1160	2	471.12	1182	3	1	1000
 # cellx celly id_object...
 [GRID]
 9	0	53	54	1000	52
