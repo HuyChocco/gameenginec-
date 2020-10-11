@@ -775,9 +775,6 @@ void CPlayScene::GetNextMap()
 		if (line == "[MAP]") {
 			section = SCENE_SECTION_MAP; continue;
 		}
-		if (line == "[GRID]") {
-			section = SCENE_SECTION_GRID; continue;
-		}
 		if (line == "[SPRITES]") {
 			section = SCENE_SECTION_SPRITES; continue;
 		}
