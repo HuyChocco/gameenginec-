@@ -56,6 +56,7 @@ class CGame
 	bool is_rendering_next_map = false; // Kiểm tra có hiệu ứng đang vẽ map kế tiếp không
 
 	int next_portal_id;
+	int next_scence_id_effect;
 public:
 	void InitKeyboard();
 	void SetKeyHandler(LPKEYEVENTHANDLER handler) { keyHandler = handler; }
@@ -103,17 +104,25 @@ public:
 	static CGame * GetInstance();
 
 	//bo sung
+
 	bool GetIsNextMap() { return this->isNextMap; }
 	void SetIsNextMap(bool flag) { this->isNextMap = flag; }
+
 	void SetIsPreMap(bool flag) { this->isPreMap = flag; }
 	bool GetIsPreMap() { return this->isPreMap; }
+	//Get, Set scence id tiếp theo
 	void SetSceneId(int _sceneId) { this->sceneId = _sceneId; }
 	int GetSceneId() { return this->sceneId; }
+
 	void SetRenderingNextMap(int flag) { this->is_rendering_next_map = flag; }
 	int GetRenderingNextMap() { return this->is_rendering_next_map; }
 
+	void SetScenceIDRenderingNextMap(int id) { this->next_scence_id_effect = id; }
+	int GetScenceIDRenderingNextMap() { return this->next_scence_id_effect; }
+
 	void SetNextPortalId(int _portalId) { this->next_portal_id = _portalId; }
 	int GetNextPortalId() { return this->next_portal_id; }
+
 	~CGame();
 };
 
