@@ -242,7 +242,6 @@
 #move right
 140003	132	530	150	545	2
 140004	152	533	170	548	2
-
 # path
 [MAP]
 Map-Blaster-Master-Area-2-D.txt
