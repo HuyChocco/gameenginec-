@@ -3,7 +3,7 @@
 1	textures\Jason-and-Sophia.png	0	57	115
 2	textures\BlasterMaster-Enemies.png	255	0	255
 33	textures\NES-Blaster-Master-Area-2.png	255	255	255
-44	textures\NES-Blaster-Master-Area-2-Overworld.png	255	255	255
+44	textures\NES-Blaster-Master-Area-2-Overworld1.png	255	255	255
 # id	left	top	right	bottom	texture_id
 [SPRITES]
 # tiled map sprites

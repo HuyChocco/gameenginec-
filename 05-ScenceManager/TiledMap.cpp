@@ -16,10 +16,11 @@ CTiledMap* CTiledMap::__instance = NULL;
 CTiledMapSets* CTiledMapSets::__instance = NULL;
 void CTiledRow::Add(int spriteId)
 {
+	CGame* game = CGame::GetInstance();
 	//Thêm phần xử lý add sprite cho hiệu ứng render next map
 	if (CGame::GetInstance()->GetRenderingNextMap())
 	{
-		CScene* scene_next = CGame::GetInstance()->GetScene(CGame::GetInstance()->GetSceneId());
+		CScene* scene_next = game->GetScene(game->GetScenceIDRenderingNextMap());
 		CSprites* sprites;
 		if (scene_next)
 		{
@@ -147,6 +148,7 @@ void CTiledMap::_ParseSection_SPRITE_ID_CELLS(string line,int lineCount)
 		
 		row->Add(spriteId);
 	}
+	//Bổ sung code cho hiệu ứng vẽ scence tiếp theo trước khi switch_scence
 	if (CGame::GetInstance()->GetRenderingNextMap())
 	{
 		tiledmap_row_set_next_map[lineCount] = row;

@@ -1,9 +1,13 @@
 [SETTINGS]
-start	2
+start	3
 #scene list
 [SCENES]
-0	intro-scene.txt
-1	scene-test-A.txt
-2	scene-test-B.txt
-3	scene-test-C.txt
-10	end-scene.txt
+0	intro-scence.txt
+1	scence-test-A.txt
+2	scence-test-B.txt
+3	scence-test-C.txt
+4	scence-test-D.txt
+5	scence-test-E.txt
+6	scence-test-I.txt
+7	scence-test-K.txt
+10	end-scence.txt
