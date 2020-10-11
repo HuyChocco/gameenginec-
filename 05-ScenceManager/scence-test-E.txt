@@ -3,7 +3,7 @@
 1	textures\Jason-and-Sophia.png	0	57	115
 2	textures\BlasterMaster-Enemies.png	255	0	255
 33	textures\NES-Blaster-Master-Area-2.png	255	255	255
-
+44	textures\NES-Blaster-Master-Area-2-Overworld1.png	255	255	255
 # id	left	top	right	bottom	texture_id
 [SPRITES]
 # tiled map sprites
@@ -151,6 +151,16 @@
 141	128	192	144	208	33
 142	144	192	160	208	33
 143	160	192	176	208	33
+# SOFIA Human
+#idle
+10001	3	30	11	46	1
+#move left
+10002	12	30	20	46	1
+10003	21	30	29	46	1
+10004	30	30	38	46	1
+# Crawl left - Bo ben trai
+10005	39	30	55	46	1
+10006	56	30	72	46	1
 # SOFIA Wheel 
 20001	3	21	10	28	1
 20002	12	21	19	28	1
@@ -200,11 +210,65 @@
 # Weapon_player
 100001	91	20	114	27	1
 100002	116	20	123	43	1
+# FLOATER
+#move left
+130001	104	406	122	422	2
+130002	84	407	102	422	2
+#move right
+130003	132	406	150	422	2
+130004	152	407	170	422	2
+# DOMES
+#move left
+140001	87	425	105	441	2
+140002	67	424	85	441	2
+#move right
+140003	149	425	167	441	2
+140004	169	424	187	441	2
+# JUMPERS
+#move left
+150001	108	1	122	27	2
+150002	91	2	204	27	2
+#move right
+150003	132	1	146	27	2
+150004	150	2	163	27	2
+# INSECT
+#move left
+160001	104	530	122	548	2
+160002	84	533	102	548	2
+#move right
+160003	132	530	150	548	2
+160004	152	533	170	548	2
+# ORBS
+#move left
+170001	98	387	116	405	2
+170002	78	387	96	405	2
+#move right
+170003	138	387	156	405	2
+170004	158	387	176	405	2
+# SKULLS
+#walk left
+180001	62	527	80	548	2
+180002	42	530	60	548	2
+#walk right
+180003	174	527	192	548	2
+180004	194	530	212	548	2
+# DASHER
+#walk left
+190001	193	515	203	565	2
+#walk right
+190002	51	515	61	565	2
 # path
 [MAP]
 Map-Blaster-Master-Area-2-E.txt
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
+# ==== SOFIA HUMAN =========
+#idle
+600	10001	100
+#move left
+601	10002	100	10003	100	10004	100
+#crawl left
+602	10005	100	10006	100
 # ==== SOFIA WHEEL =========
 #idle
 700	20002	100
@@ -249,9 +313,46 @@ Map-Blaster-Master-Area-2-E.txt
 4000	100001	100
 #Up
 4001	100002	100
+# === FLOATERS =====
+#walk left
+7000	130001	100	130002	100
+#walk right
+7001	130003	100	130004	100
+# === DOMES ===
+#walk left
+8000	140001	100	140002	100
+#walk right
+8001	140003	100	140004	100
+# === JUMPERS ======
+#walk left
+9000	150001	100	150002	100
+#walk right
+9001	150003	100	150004	100
+# === INSECT =====
+#walk left
+10000	160001	100	160002	100
+#walk right
+10001	160003	100	160004	100
+# === ORBS ====
+#walk left
+11000	170001	100	170002	100
+#walk right
+11001	170003	100	170004	100
+#=== SKULLS ====
+#walk left
+12000	180001	100	180002	100
+#walk right
+120001	180003	100	180004	100
+#=== DASHERS =====
+#walk left
+130000	190001	100
+#walk right
+130001	190002	100
 # id	ani1	ani2	ani3
 #
 [ANIMATION_SETS]
+# SOFIA 
+1	600	601	602
 # MAIN_CHARACTER 
 2	2000
 # WHEEL 
@@ -268,47 +369,61 @@ Map-Blaster-Master-Area-2-E.txt
 9	6000	6001
 # WEAPON
 7	4000	4001
+# FLOATERS
+10	7000	7001
+# DOMES
+11	8000	8001
+# JUMPERS
+12	9000	9001
+# INSECT
+13	10000	10001
+# ORBS
+14	11000	11001
+# SKULLS
+15	12000	12001
+# DASHERS
+16	13000	13001
 [OBJECTS]
 # object_id  type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Worm, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Cabin, 8= Barrel, 9= Main character, 10= Spider
 # MAIN_CHARACTER need to be created first!
-15	9	65	110	2
-# ENEMY 1
-#16	2	50	155	6
+1	9	79	1162.33	2
+# MAIN OBJECTS LIST
+# HUMAN
+2	11	17	115	1
+# WHEEL_LEFT
+3	4	18	132	3
+# WHEEL_MIDDLE
+4	5	25	125	3
+# WHEEL_RIGHT
+5	6	32	132	3
+# CABIN
+6	7	25	118	4
+# BARREL
+7	8	17	118	5
+# ENEMY LIST
 # WORM - ENEMY
-17	3	50	100	8
-19	3	280	100	8
+10	3	50	100	8
+11	3	280	100	8
 # SPIDER - ENEMY
-18	10	420	120	9
+12	10	420	120	9
 # BRICK 
 # object_id 	type	l	t	ani_set_id	r	b
-2	1	32	144	2	96	176
-50	1	96	176	2	160	192
-51	1	160	144	2	224	176
-52	1	224	176	2	288	192
-53	1	288	144	2	352	176
-54	1	352	176	2	416	192
-55	1	416	144	2	480	176
-60	1	16	0	2	32	160
-61	1	480	0	2	496	160
-# WHEEL_LEFT
-10	4	18	132	3
-# WHEEL_MIDDLE
-11	5	25	125	3
-# WHEEL_RIGHT
-12	6	32	132	3
-# CABIN
-13	7	25	118	4
-# BARREL
-14	8	17	118	5
-
-
+100	1	32	144	2	96	176
+101	1	96	176	2	160	192
+102	1	160	144	2	224	176
+103	1	224	176	2	288	192
+104	1	288	144	2	352	176
+105	1	352	176	2	416	192
+106	1	416	144	2	480	176
+107	1	16	0	2	32	160
+108	1	480	0	2	496	160
 # --- SCENE PORTAL ----
 # object_id 	type	l	t	ani_set_id	r	b	scene_id	type_portal: 1-Next scene 0-Previous scene
-9	50	32	112	2	64	144	49	0
-109	50	448	112	2	480	144	9	1
+#1000	50	32	112	2	64	144	49	0
+#1001	50	448	112	2	480	144	9	1
 # cellx celly id_object...
 [GRID]
-1	0	9	60	2	50	19
-1	1	51	52	53
-1	2	109	61	54	55	18
+1	0	107	100	101
+1	1	102	103	104
+1	2	109	108	105	106
