@@ -242,7 +242,6 @@
 #move right
 140003	132	530	150	545	2
 140004	152	533	170	548	2
-
 # path
 [MAP]
 Map-Blaster-Master-Area-2-I.txt
@@ -461,6 +460,6 @@ Map-Blaster-Master-Area-2-I.txt
 # object_id 	type	l	t	ani_set_id	r	b	scene_id	type_portal: 1-Next scene 0-Previous scene
 #1000	50	47.75	103.5	2	57.25	128.5	4	1
 #1001	50	47.3333	872	2	57.3333	895.3333	4	1
-#1002	50	454	873.333	2	464	896.6663	4	1
+1002	50	454	873.333	2	464	896.6663	3	0	1001	
 # cellx celly id_object...
 [GRID]
