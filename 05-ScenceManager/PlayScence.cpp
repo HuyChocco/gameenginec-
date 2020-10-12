@@ -627,7 +627,7 @@ void CPlayScene::Update(DWORD dt)
 
 		if (has_portal_object)
 		{
-			cx -= (float)game->GetScreenWidth() / 2;
+			//cx -= (float)game->GetScreenWidth() / 2;
 			//Nếu đi gần hết map của scene hiện tại và gần nhất với portal thì đánh dấu để render tiled map của scene tiếp theo portal gần nhất đó
 			CGame::GetInstance()->SetRenderingNextMap(true);//Tạo hiệu ứng
 
@@ -658,10 +658,13 @@ void CPlayScene::Update(DWORD dt)
 			
 		else
 		{
-			cx = widthMap - game->GetScreenWidth();
+			//cx = widthMap - game->GetScreenWidth();
 			CGame::GetInstance()->SetRenderingNextMap(false);
 		}
-			
+		if(game->GetIsNextMap())
+			cx -= (float)game->GetScreenWidth() / 2;
+		else
+			cx = widthMap - game->GetScreenWidth();
 		
 		//isRenderNextMap = true;
 		//isRenderPreMap = false;//Không tạo hiệu ứng
@@ -725,7 +728,7 @@ void CPlayScene::Render()
 		int widthNextMap, heightNextMap;
 		map->GetMapWidth(widthNextMap);
 		map->GetMapHeight(heightNextMap);
-		CTiledMapSets::GetInstance()->Get(id_next_map)->Render(widthMap, heightMap - heightNextMap);
+		CTiledMapSets::GetInstance()->Get(id_next_map)->Render(widthMap,heightMap<heightNextMap ? heightMap - heightNextMap: 0);
 	}
 	/*else if (isRenderPreMap && id_pre_map != -1 && CTiledMapSets::GetInstance()->Get(id_pre_map))
 	{
