@@ -349,7 +349,7 @@ Map-Blaster-Master-Area-2-D.txt
 # object_id  type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Worm, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Cabin, 8= Barrel, 9= Main character, 10= Spider, 11=Human
 # type: 12 = Floater, 13 = Domes, 14 = Jumpers, 15 = Insect,16 = Orbs, 17 = Skulls, 18 = Dashers, 19 = Mine, 20 = LAVA
-# type: 101 = DESTROYABLE_BRICK 
+# type: 101 = DESTROYABLE_BRICK, Stairs = 102
 # MAIN_CHARACTER need to be created first!
 1	9	78	144.73	2
 # MAIN OBJECTS LIST
@@ -367,8 +367,8 @@ Map-Blaster-Master-Area-2-D.txt
 7	8	17	118	5
 # ENEMY LIST
 # LAVA
-#10	20	96	322	
-#11	20	224	448.667	
+10	20	96	322	
+11	20	224	448.667	
 #12	20	161.33	706	
 #13	20	288	832.667	
 #14	20	223.33	1218		
@@ -459,15 +459,61 @@ Map-Blaster-Master-Area-2-D.txt
 #166	101	160.182	1072.18	2	191.182	1088.18
 #167	101	95.6667	1136	2	126.6667	1152
 #168	101	160.333	1583.67	2	191.333	1599.67
-
+# STAIRS
+169	1	49.3333	112	2	61.3333	322
 # --- SCENE PORTAL ----
 # object_id 	type	l	t	ani_set_id	r	b	scene_id	type_portal: 1-Next scene 0-Previous scene
-#1000	50	452	105.333	2	463	128.333	4	1
+1000	50	452	105.333	2	463	128.333	3	0	1001
 #1001	50	453.5	616	2	464.5	639	4	1
 #1002	50	47	871.5	2	58	894.5	4	1
 #1003	50	47.5	1127.5	2	58.5	1150.5	4	1
 #1004	50	453	1127	2	464	1150	4	1
 #1005	50	48	1640	2	59	1663	4	1
-#1006	51	69.3333	110	2	82	118	4	1
+1006	51	69.3333	110	2	82	118	4	1
 # cellx celly id_object...
 [GRID]
+0	0	154	157	169	1006
+0	1	154	
+0	2	154	149	155	1000
+1	0	157	153	169	1006	152	
+1	1	151	146
+1	2	146	1000	155	150
+2	0	157	169	142	10	143	
+2	1	144	145
+2	2	144	141	156
+3	0	157	158	136
+3	1	137	11	139	138
+3	2	138	140	156
+4	0	158	135	134
+4	1	135
+4	2	148	156
+5	0	158	132
+5	1	12	131	130
+5	2	130	1001	156	159
+6	0	158	147	132	127
+6	1	131	130	127	13	129
+6	2	13	129	128	130
+7	0	158	161	1002	121	127	120
+7	1	
+7	2
+8	0
+8	1
+8	2
+9	0
+9	1
+9	2
+10	0
+10	1
+10	2
+11	0
+11	1
+11	2
+12	0
+12	1
+12	2
+13	0
+13	1
+13	2
+14	0
+14	1
+14	2
