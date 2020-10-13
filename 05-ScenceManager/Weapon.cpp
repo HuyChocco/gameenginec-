@@ -2,6 +2,9 @@
 #include "EnemyObject1.h"
 #include "Worm.h"
 #include "Spider.h"
+
+#include "Brick.h"
+#include "Portal.h"
 CWeapon::CWeapon(float x, float y, int nx, int state, bool isBarrelUp)
 {
 	this->x = x;
@@ -97,6 +100,24 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 					if (e->nx != 0)
 					{
 						spider->SetState(ENEMY1_STATE_DIE);
+						SetState(WEAPON_STATE_NONE);
+					}
+
+				}
+				else if (dynamic_cast<CBrick*>(e->obj)) // if e->obj is Spider 
+				{
+					//if (e->nx != 0)
+					{
+						
+						SetState(WEAPON_STATE_NONE);
+					}
+
+				}
+				else if (dynamic_cast<CPortal*>(e->obj)) // if e->obj is Spider 
+				{
+					//if (e->nx != 0)
+					{
+
 						SetState(WEAPON_STATE_NONE);
 					}
 
