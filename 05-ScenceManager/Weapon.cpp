@@ -10,7 +10,7 @@ CWeapon::CWeapon(float x, float y, int nx, int state, bool isBarrelUp)
 	this->x = x;
 	this->y = y;
 	this->nx = nx;
-	
+	this->timeAttack = 0.0f;
 	
 	if (isBarrelUp)//determine which state used for animation
 		SetState(WEAPON_STATE_FIRE_UP);
@@ -26,8 +26,13 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 {
 	if (state != WEAPON_STATE_NONE)
 	{
+		
 		CGameObject::Update(dt);
-
+		timeAttack += dt;
+		if (timeAttack > TIME_ENABLE_FIRE)
+		{
+			SetState(WEAPON_STATE_NONE);
+		}
 		vector<LPCOLLISIONEVENT> coEvents;
 		vector<LPCOLLISIONEVENT> coEventsResult;
 

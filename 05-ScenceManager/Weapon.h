@@ -15,10 +15,12 @@
 
 #define WEAPON_FLY_SPEED 0.3f;
 #define WEAPON_CHARACTER_JUMP_SPEED_Y	0.3f;
+
+#define TIME_ENABLE_FIRE			2000
 class CWeapon : public CGameObject
 {
-	
-	
+	int dame = 0;
+	DWORD timeAttack;
 public:
 	CWeapon(float x, float y, int nx, int state,bool isBarrelUp);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object = NULL);

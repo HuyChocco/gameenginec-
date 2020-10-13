@@ -17,7 +17,7 @@
 #define FLOATER_ANI_MOVE_RIGHT 1
 class CFloater :public CEnemyObject
 {
-
+	
 public:
 	CFloater();
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);

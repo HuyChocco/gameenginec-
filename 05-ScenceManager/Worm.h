@@ -17,7 +17,7 @@
 #define WORM_ANI_MOVE_RIGHT 1
 class CWorm :public CEnemyObject
 {
-
+	
 public:
 	CWorm();
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
