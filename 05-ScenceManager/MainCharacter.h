@@ -58,7 +58,10 @@ class CMainCharacter: public CGameObject
 	vector<LPGAMEOBJECT> componentObjects;
 	vector<CWeapon*> list_weapon;
 
-	
+	int blood;
+	int alive;
+	int heart;
+	int score;
 	
 public:
 
