@@ -678,7 +678,7 @@ void CPlayScene::Update(DWORD dt)
 		CGame::GetInstance()->SetRenderingNextMap(false);//Không tạo hiệu ứng
 	}
 	//Xử lý camera theo trục y
-	cy = heightMap - game->GetScreenHeight();
+	cy = game->GetScreenHeight();
 
 	if (player)
 	{
@@ -701,10 +701,11 @@ void CPlayScene::Update(DWORD dt)
 
 		float height = player_y - cy;
 
-		if (height <= ((float)game->GetScreenHeight() / 6))
+		if (height >= ((float)game->GetScreenHeight() / 6))
 		{
-			height = ((float)(game->GetScreenHeight() / 5) )- height;
-			cy -= height;
+			height += (float)(game->GetScreenHeight() / 8);
+
+			cy += height;
 		}
 			
 		
@@ -728,7 +729,7 @@ void CPlayScene::Render()
 		int widthNextMap, heightNextMap;
 		map->GetMapWidth(widthNextMap);
 		map->GetMapHeight(heightNextMap);
-		CTiledMapSets::GetInstance()->Get(id_next_map)->Render(widthMap,heightMap<heightNextMap ? heightMap - heightNextMap: 0);
+		CTiledMapSets::GetInstance()->Get(id_next_map)->Render(widthMap, 0);
 	}
 	/*else if (isRenderPreMap && id_pre_map != -1 && CTiledMapSets::GetInstance()->Get(id_pre_map))
 	{

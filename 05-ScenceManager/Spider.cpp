@@ -8,9 +8,9 @@ CSpider::CSpider() :CEnemyObject()
 void CSpider::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	left = x;
-	top = y;
+	top = y- SPIDER_BBOX_HEIGHT;
 	right = x + SPIDER_BBOX_WIDTH;
-	bottom = y + SPIDER_BBOX_HEIGHT;
+	bottom = y;
 }
 
 void CSpider::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -19,7 +19,7 @@ void CSpider::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt);
 
 	// Simple fall down
-	vy += 0.002f * dt;
+	vy -= 0.002f * dt;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -69,7 +69,7 @@ void CSpider::Render()
 			ani = SPIDER_ANI_MOVE_LEFT;
 
 		animation_set->at(ani)->Render(x, y);
-		//RenderBoundingBox();
+		RenderBoundingBox();
 	}
 
 }

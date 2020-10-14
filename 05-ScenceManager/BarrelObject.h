@@ -23,7 +23,7 @@ public:
 	void SetState(int state);
 	void SetLevel(int l) { level = l; }
 	bool GetIsBarrelUp() { return is_barrel_up; }
-	void StartUpEffect() { y += 1; up_effect_start = GetTickCount(); }
+	void StartUpEffect() { y -= 1; up_effect_start = GetTickCount(); }
 	void Reset();
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
