@@ -26,7 +26,7 @@ void CCabinObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		StartUpEffect();
 		if (GetTickCount() - up_effect_start > WHEEL_EFFECT_TIME)
 		{
-			y -= 1;
+			y += 1;
 		}
 
 

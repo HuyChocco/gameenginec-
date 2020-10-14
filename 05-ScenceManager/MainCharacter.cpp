@@ -92,7 +92,8 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 		// Simple fall down
 		if (state != MAIN_CHARACTER_STATE_NONE_COLLISION)
-			vy += MAIN_CHARACTER_GRAVITY * dt;
+			//vy += MAIN_CHARACTER_GRAVITY * dt;
+			vy -= MAIN_CHARACTER_GRAVITY * dt;
 
 		coEvents.clear();
 		// turn off collision when die 
@@ -136,7 +137,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					//CBrick* brick = dynamic_cast<CBrick*>(e->obj);
 
 
-					if (e->ny < 0)
+					if (e->ny > 0)
 					{
 						Is_On_Ground = true;
 					}
@@ -253,7 +254,7 @@ void CMainCharacter::SetState(int state)
 		// TODO: need to check if MAIN_CHARACTER is *current* on a platform before allowing to jump again
 		if (Is_On_Ground)
 		{
-			vy = -MAIN_CHARACTER_JUMP_SPEED_Y;
+			vy = MAIN_CHARACTER_JUMP_SPEED_Y;
 			Is_On_Ground = false;
 		}
 		break;
@@ -326,9 +327,9 @@ void CMainCharacter::SetState(int state)
 void CMainCharacter::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	left = x;
-	top = y;
+	top = y - MAIN_CHARACTER_BBOX_HEIGHT;
 	right = x + MAIN_CHARACTER_BBOX_WIDTH;
-	bottom = y + MAIN_CHARACTER_BBOX_HEIGHT;
+	bottom = y ;
 	
 }
 

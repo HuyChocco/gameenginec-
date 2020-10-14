@@ -291,7 +291,7 @@ Map-Blaster-Master-Area-2-A.txt
 # object_id  type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Worm, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Cabin, 8= Barrel, 9= Main character, 10= Spider, 11=Human
 # MAIN_CHARACTER need to be created first!
-1	9	17	115	2
+1	9	0	200	2
 # MAIN OBJECTS LIST
 # HUMAN
 2	11	17	115	1
@@ -314,14 +314,14 @@ Map-Blaster-Master-Area-2-A.txt
 # MAP OBJECT LIST
 # BRICK 
 # object_id 	type	l	t	ani_set_id	r	b	
-100	1	0	160	2	318	170
-101	1	384	160.5	2	511.5	170
-102	1	575.5	160.5	2	701.5	170
-103	1	769	160.5	2	1024	170
+100	1	0	79.5	2	318	70
+101	1	384	79.5	2	511.5	70
+102	1	575.5	79.5	2	701.5	70
+103	1	769	79.5	2	1024	70
 
 # --- SCENE PORTAL ----
 # object_id 	type	l	t	ani_set_id	r	b	scene_id	type_portal: 1-Next scene 0-Previous scene	next_portal_id
-1000	50	965	118.5	2	977	159.5	2	1	1000
+1000	50	965	121.5	2	977	80.5	2	1	1000
 # cellx celly id_object...
 [GRID]
 0	0	100	10	11

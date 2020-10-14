@@ -65,8 +65,8 @@ void CGame::Init(HWND hWnd)
 */
 void CGame::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha,bool flip)
 {
-	D3DXMATRIX oldMatrix;
-	spriteHandler->GetTransform(&oldMatrix);
+	//D3DXMATRIX oldMatrix;
+	//spriteHandler->GetTransform(&oldMatrix);
 	D3DXVECTOR3 p(x - cam_x, y - cam_y, 0);
 	RECT r; 
 	r.left = left;
@@ -102,27 +102,31 @@ void CGame::SetRenderData(D3DXVECTOR2& center, D3DXVECTOR2& translate, D3DXVECTO
 	D3DXMatrixIdentity(&mt);
 	mt._22 = -1;
 	mt._41 = -this->cam_x;
-	mt._42 = this->cam_y;//this->y;
+	mt._42 = this->cam_y;
 	D3DXVECTOR4 curTranslate;
 	D3DXVECTOR4 curCenter;
+
 	D3DXVec2Transform(&curCenter, &D3DXVECTOR2(center.x, center.y), &mt);
+
 	D3DXVec2Transform(&curTranslate, &D3DXVECTOR2(translate.x, translate.y), &mt);
 
 	center.x = curCenter.x;
 	center.y = curCenter.y;
 	translate.x = curTranslate.x;
 	translate.y = curTranslate.y;
+	
+	
+	
 }
-void CGame::DrawWithTransformation(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha )
+void CGame::DrawWithTransformation(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha, bool flip )
 {
 	float width = right - left;
 	float height = bottom - top;
 	int scale = 1;
-	D3DXVECTOR2 center= D3DXVECTOR2((width/2)*scale,(height/2)*scale); //= sprite->GetCenter();
-	D3DXVECTOR2 translate= D3DXVECTOR2(x,y); //= sprite->GetTranslate();
-	D3DXVECTOR2 scaling= D3DXVECTOR2(1,1);// = sprite->GetScaling();
+	D3DXVECTOR2 center= D3DXVECTOR2(flip?(width/2)*scale-width*scale: (width / 2) * scale,(height/2)*scale);
+	D3DXVECTOR2 translate= D3DXVECTOR2(flip?x+width*scale:x,y); 
+	D3DXVECTOR2 scaling= D3DXVECTOR2((flip) ? -1 : 1, 1);
 	float angle=0;
-	//viewport->SetRenderData(center, translate, scaling);//convert
 	SetRenderData(center, translate, scaling);
 	RECT r;
 	r.left = left;
@@ -130,6 +134,8 @@ void CGame::DrawWithTransformation(float x, float y, LPDIRECT3DTEXTURE9 texture,
 	r.right = right;
 	r.bottom = bottom;
 	D3DXMATRIX matrix;
+	
+
 	D3DXMatrixTransformation2D(
 		&matrix,
 		NULL,
@@ -139,9 +145,32 @@ void CGame::DrawWithTransformation(float x, float y, LPDIRECT3DTEXTURE9 texture,
 		angle,
 		&translate
 	);
-
+	
 	spriteHandler->SetTransform(&matrix);
 	spriteHandler->Draw(texture, &r, NULL, NULL, D3DCOLOR_ARGB(alpha, 255, 255, 255));
+	/*float width = right - left;
+	float height = bottom - top;
+	int scale = 1;
+	D3DXVECTOR3 center= D3DXVECTOR3((width/2)*scale,(height/2)*scale,0);
+	RECT r;
+	r.left = left;
+	r.top = top;
+	r.right = right;
+	r.bottom = bottom;
+
+	D3DXMATRIX mt;
+	D3DXMatrixIdentity(&mt);
+	mt._22 = -1;
+	mt._41 = -this->cam_x;
+	mt._42 = this->cam_y;
+	D3DXVECTOR3 position = D3DXVECTOR3(x,y,0);
+
+	D3DXVECTOR4 vp_pos;
+	D3DXVec3Transform(&vp_pos, &position, &mt);
+
+	D3DXVECTOR3 pos(vp_pos.x, vp_pos.y, 0);
+
+	spriteHandler->Draw(texture, &r, &center, &pos, D3DCOLOR_ARGB(alpha, 255, 255, 255));*/
 
 }
 
@@ -474,4 +503,32 @@ void CGame::SwitchScene(int scene_id)
 	s->Load();
 	
 	
+}
+
+
+void CGame::TransformViewPortPosition(float& x, float& y, float l, float t, float r, float b)
+{
+	float width = r - l;
+	float height = b - t;
+	int scale = 1;
+	D3DXVECTOR3 center = D3DXVECTOR3((width / 2) * scale, (height / 2) * scale, 0);
+	RECT rect;
+	rect.left = l;
+	rect.top = t;
+	rect.right = r;
+	rect.bottom = b;
+
+	D3DXMATRIX mt;
+	D3DXMatrixIdentity(&mt);
+	mt._22 = -1;
+	mt._41 = -this->cam_x;
+	mt._42 = this->cam_y;
+	D3DXVECTOR3 position = D3DXVECTOR3(x, y, 0);
+
+	D3DXVECTOR4 vp_pos;
+	D3DXVec3Transform(&vp_pos, &position, &mt);
+
+	D3DXVECTOR3 pos(vp_pos.x, vp_pos.y, 0);
+	x = pos.x;
+	y = pos.y;
 }

@@ -158,7 +158,7 @@ void CWeapon::Render()
 			break;
 		}
 		animation_set->at(ani)->Render(x, y, flip);
-		//RenderBoundingBox();
+		RenderBoundingBox();
 	}
 	
 	
@@ -180,7 +180,7 @@ void CWeapon::SetState(int state)
 		}
 		break;
 	case WEAPON_STATE_FIRE_UP:
-		vy = -WEAPON_CHARACTER_JUMP_SPEED_Y;
+		vy = WEAPON_CHARACTER_JUMP_SPEED_Y;
 		break;
 	}
 }
@@ -188,17 +188,19 @@ void CWeapon::SetState(int state)
 void CWeapon::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	left = x;
-	top = y;
+	
 	
 	if (state == WEAPON_STATE_FIRE_UP)
 	{
+		top = y - WEAPON_UP_BBOX_HEIGHT;
 		right = x + WEAPON_UP_BBOX_WIDTH;
-		bottom = y + WEAPON_UP_BBOX_HEIGHT;
+		bottom = y;
 	}
 	else
 	{
+		top = y - WEAPON_BBOX_HEIGHT;
 		right = x + WEAPON_BBOX_WIDTH;
-		bottom = y + WEAPON_BBOX_HEIGHT;
+		bottom = y ;
 	}
 }
 

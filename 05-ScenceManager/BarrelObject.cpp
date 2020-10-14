@@ -29,12 +29,12 @@ void CBarrelObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (nx > 0)// Xét quay sang phải
 		{
 			x += (MAIN_CHARACTER_BBOX_WIDTH / 2) - 2;//nằm giữa width của main character
-			y -= 6;
+			y += 6;
 		}
 		else //Xét quay sang trái
 		{
 			x += (MAIN_CHARACTER_BBOX_WIDTH / 2) - 6;//nằm giữa width của main character
-			y -= 6;
+			y += 6;
 		}
 	}
 	else if (nx > 0)// nhân vật quay sang phải
@@ -46,7 +46,7 @@ void CBarrelObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			StartUpEffect();
 			if (GetTickCount() - up_effect_start > WHEEL_EFFECT_TIME)
 			{
-				y -= 1;
+				y += 1;
 			}
 
 

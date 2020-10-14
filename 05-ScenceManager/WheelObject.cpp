@@ -29,7 +29,7 @@ void CWheelObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (is_Right_Wheel) //right wheel - bánh xe bên phải
 	{
 		x += 17;
-		y += 9;
+		y -= (MAIN_CHARACTER_BBOX_HEIGHT - 6);
 		
 		
 	}
@@ -37,13 +37,13 @@ void CWheelObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	else if (is_Middle_Wheel) //middle wheel - bánh nằm ở giữa trái và phải
 	{
 		x += 9;
-		y += 7;
+		y -= 7;
 		if (vx != 0) //Add effect if running
 		{
 			StartUpEffect();
 			if (GetTickCount() - up_effect_start > WHEEL_EFFECT_TIME)
 			{
-				y -= 1;
+				y += 1;
 			}	
 		}
 		if (state == MAIN_CHARACTER_STATE_UP_BARREL) // Nhân vật đưa nòng súng lên
@@ -53,7 +53,7 @@ void CWheelObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	else // left wheel - bánh xe bên trái
 	{
-		y += 9;
+		y -= (MAIN_CHARACTER_BBOX_HEIGHT-6);
 		
 	}
 		

@@ -74,7 +74,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 	// Simple fall down
-	vy += HUMAN_GRAVITY * dt;
+	vy -= HUMAN_GRAVITY * dt;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -121,7 +121,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			LPCOLLISIONEVENT e = coEventsResult[i];
 			if (dynamic_cast<CBrick*>(e->obj)) // if e->obj is CBrick 
 			{
-				if (e->ny < 0)
+				if (e->ny > 0)
 				{
 					is_on_ground = true;
 				}
@@ -200,7 +200,7 @@ void CHuman::SetState(int state)
 		
 		if (is_on_ground)
 		{
-			vy = -MAIN_CHARACTER_JUMP_SPEED_Y;
+			vy = MAIN_CHARACTER_JUMP_SPEED_Y;
 			is_on_ground = false;
 		}
 		break;
@@ -216,17 +216,19 @@ void CHuman::GetBoundingBox(float& left, float& top, float& right, float& bottom
 {
 
 	left = x;
-	top = y;
+	
 
 	if (level == HUMAN_LEVEL_BIG)
 	{
+		top = y- HUMAN_BIG_BBOX_HEIGHT;
 		right = x + HUMAN_BIG_BBOX_WIDTH;
-		bottom = y + HUMAN_BIG_BBOX_HEIGHT;
+		bottom = y ;
 	}
 	else
 	{
+		top = y- HUMAN_SMALL_BBOX_HEIGHT;
 		right = x + HUMAN_SMALL_BBOX_WIDTH;
-		bottom = y + HUMAN_SMALL_BBOX_HEIGHT;
+		bottom = y ;
 	}
 }
 

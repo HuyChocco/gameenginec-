@@ -1,12 +1,15 @@
 #include "Brick.h"
-
+#include "Game.h"
 CBrick::CBrick(float l, float t, float r, float b)
 {
 	
 	x = l;
+
 	y = t;
+
 	width = r - l + 1;
-	height = b - t + 1;
+
+	height = -(b - t + 1);
 }
 
 
@@ -18,8 +21,9 @@ void CBrick::Render()
 
 void CBrick::GetBoundingBox(float &l, float &t, float &r, float &b)
 {
+
 	l = x;
-	t = y;
+	t = y - height;
 	r = x + width;
-	b = y + height;
+	b = y ;
 }
