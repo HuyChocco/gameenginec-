@@ -3,6 +3,7 @@
 #include "./MainCharacter.h"
 
 #define WHEEL_ANI_IDLE		0
+#define WHEEL_ANI_RIGHT_WHEEL		2
 #define WHEEL_ANI_IDLE_RUN			1
 #define WHEEL_EFFECT_TIME 1000
 class CWheelObject : public CGameObject

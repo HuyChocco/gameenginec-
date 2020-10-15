@@ -48,8 +48,10 @@ void CAnimation::Render(float x, float y, bool flip, int alpha)
 			}
 			
 		}
-
-		frames[currentFrame]->GetSprite()->Draw(x, y, alpha, flip);
+		if(isHubObject)
+			frames[currentFrame]->GetSprite()->DrawWithoutTransformation(x, y, alpha, flip);
+		else
+			frames[currentFrame]->GetSprite()->Draw(x, y, alpha, flip);
 	
 	
 }

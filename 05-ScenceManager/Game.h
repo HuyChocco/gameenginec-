@@ -65,7 +65,7 @@ public:
 	//bổ sung
 	void SetRenderData(D3DXVECTOR2& center, D3DXVECTOR2& translate, D3DXVECTOR2& scaling);
 	void DrawWithTransformation(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha = 255, bool flip = false);
-	
+	void DrawWithoutTransformation(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha = 255, bool flip = false);
 	void TransformViewPortPosition(float& x, float& y, float l, float t, float r, float b);
 
 	int IsKeyDown(int KeyCode);

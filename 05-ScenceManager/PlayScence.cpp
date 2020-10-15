@@ -8,7 +8,8 @@
 #include "Portal.h"
 //#include "TiledMap.h"
 #include "Grid.h"
-
+#include "GunHub.h"
+#include "PowerHub.h"
 
 using namespace std;
 
@@ -53,6 +54,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define OBJECT_TYPE_BARREL	8
 #define OBJECT_TYPE_HUMAN	11
 
+#define OBJECT_TYPE_POWERHUB	500
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -174,18 +176,23 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		player = new CMainCharacter(x, y);
 		player->SetPosition(x, y);
 		player->SetAnimationSet(animation_sets->Get(ani_set_id));
-		//if (CGame::GetInstance()->GetIsPreMap())
-		//{
-			//LAST_PLAYER_POSITION position;
-			//position= CGame::GetInstance()->GetLastPlayerPosition();
-			//player->SetPosition(position.x, position.y);
-		//}
 		DebugOut(L"[INFO] Player object created!\n");
 		return;
 		break;
 	case OBJECT_TYPE_ENEMY1: obj = new CEnemyObject1(); break;
 	case OBJECT_TYPE_WORM: obj = new CWorm(); break;
 	case OBJECT_TYPE_SPIDER: obj = new CSpider(); break;
+	case OBJECT_TYPE_POWERHUB: 
+	{
+		obj = new CPowerHub();
+		obj->SetPosition(x, y);
+		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
+		hub_objects.push_back(obj);
+		DebugOut(L"[INFO] PowerHub object created!\n");
+		return;
+		break;
+	}
+	
 	case OBJECT_TYPE_BRICK: 
 	{
 		float r = atof(tokens[5].c_str());
@@ -469,35 +476,7 @@ void CPlayScene::Update(DWORD dt)
 	{
 	
 		coObjects.push_back(objects[i]);
-		//Nếu object là Portal object
-		//if (dynamic_cast<CPortal*>(objects[i]))
-		//{
-			//CPortal* p = dynamic_cast<CPortal*>(objects[i]);
-			
-			//else //Nếu là đối tượng portal chuyển scene trước
-			//{
-				//Lấy scene id của scene trước từ portal object
-				//id_pre_map = p->GetSceneId();
-				//Get scene trước thông qua scene_id
-				//LPSCENE s = game->GetScene(id_pre_map);
-				//if (s && initNextMap)
-				//{
-					// Lấy tiled map trước
-					//s->GetNextMap();
-					// Nếu tiled map trước tồn tại
-					//if (s->GetMap() != NULL)
-					//{
-						//Thêm vào đối tượng CTiledMapSets
-					//	CTiledMapSets::GetInstance()->Add(id_pre_map, s->GetMap());
-						//Chuyển cờ đánh dấu đã load được tiled map trước
-					//	initNextMap = false;
-					//}
-
-				//}
-			//}
-			
-			
-		//}
+		
 	}
 	for (size_t i = 0; i < objects.size(); i++)
 	{
@@ -605,9 +584,6 @@ void CPlayScene::Update(DWORD dt)
 	{
 		cx = 0;
 		cy = 0;
-		
-		//isRenderNextMap = false;//Không tạo hiệu ứng
-		//isRenderPreMap = true;
 		CGame::GetInstance()->SetRenderingNextMap(false);//Không tạo hiệu ứng
 
 	}
@@ -627,7 +603,6 @@ void CPlayScene::Update(DWORD dt)
 
 		if (has_portal_object)
 		{
-			//cx -= (float)game->GetScreenWidth() / 2;
 			//Nếu đi gần hết map của scene hiện tại và gần nhất với portal thì đánh dấu để render tiled map của scene tiếp theo portal gần nhất đó
 			CGame::GetInstance()->SetRenderingNextMap(true);//Tạo hiệu ứng
 
@@ -658,23 +633,18 @@ void CPlayScene::Update(DWORD dt)
 			
 		else
 		{
-			//cx = widthMap - game->GetScreenWidth();
 			CGame::GetInstance()->SetRenderingNextMap(false);
 		}
-		if(game->GetIsNextMap())
+
+		if(game->GetIsNextMap())//nếu player va chạm portal
 			cx -= (float)game->GetScreenWidth() / 2;
 		else
 			cx = widthMap - game->GetScreenWidth();
-		
-		//isRenderNextMap = true;
-		//isRenderPreMap = false;//Không tạo hiệu ứng
 		
 	}
 	else
 	{
 		cx -= (float)game->GetScreenWidth() / 2;
-		//isRenderNextMap = false;//Không tạo hiệu ứng
-		//isRenderPreMap = false;//Không tạo hiệu ứng
 		CGame::GetInstance()->SetRenderingNextMap(false);//Không tạo hiệu ứng
 	}
 	//Xử lý camera theo trục y
@@ -729,7 +699,7 @@ void CPlayScene::Render()
 		int widthNextMap, heightNextMap;
 		map->GetMapWidth(widthNextMap);
 		map->GetMapHeight(heightNextMap);
-		CTiledMapSets::GetInstance()->Get(id_next_map)->Render(widthMap, 0);
+		CTiledMapSets::GetInstance()->Get(id_next_map)->Render(widthMap, heightMap< heightNextMap? 0: heightMap);
 	}
 	/*else if (isRenderPreMap && id_pre_map != -1 && CTiledMapSets::GetInstance()->Get(id_pre_map))
 	{
@@ -751,6 +721,10 @@ void CPlayScene::Render()
 			objects[i]->Render();
 		//Vẽ player object
 		player->Render();
+
+		//Vẽ Hub objects
+		for (int i = 0; i < hub_objects.size(); i++)
+			hub_objects[i]->Render();
 	}
 	
 	
@@ -848,6 +822,7 @@ void CPlayScene::Unload()
 	isRenderPreMap = false;
 	initNextMap = true;
 	initGridFlag = true;
+	hub_objects.clear();
 	CGrid::GetInstance()->Unload();
 
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
