@@ -75,7 +75,21 @@ void CWheelObject::Render()
 	{
 		ani = WHEEL_ANI_IDLE; //Animation chỉ có 1 frame duy nhất
 		animation_set->at(ani)->Render(x, y);
-	}	
+	}
+	else if (is_Right_Wheel) // Bánh xe bên phải
+	{
+		ani = WHEEL_ANI_RIGHT_WHEEL; //Animation chỉ có 1 frame duy nhất
+		if (vx == 0) // Nhân vật đứng yên
+		{
+			animation_set->at(ani)->isPause = true; //Dừng animation 
+			animation_set->at(ani)->Render(x, y, flip); // Vẽ frame đang bị tạm dừng
+		}
+		else // Nhân vật di chuyển
+		{
+			animation_set->at(ani)->isPause = false; // Tiếp tục animation đã dừng trước đó
+			animation_set->at(ani)->Render(x, y, flip);
+		}
+	}
 	else
 	{
 			ani = WHEEL_ANI_IDLE_RUN;

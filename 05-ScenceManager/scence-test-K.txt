@@ -4,6 +4,7 @@
 2	textures\BlasterMaster-Enemies.png	255	0	255
 33	textures\NES-Blaster-Master-Area-2.png	255	255	255
 44	textures\NES-Blaster-Master-Area-2-Overworld1.png	255	255	255
+55	textures\sophia.png	255	255	255
 # id	left	top	right	bottom	texture_id
 [SPRITES]
 # tiled map sprites
@@ -161,11 +162,16 @@
 # Crawl left - Bo ben trai
 10005	39	30	55	46	1
 10006	56	30	72	46	1
-# SOFIA Wheel 
+# SOFIA left Wheel 
 20001	3	21	10	28	1
 20002	12	21	19	28	1
 20003	21	21	28	28	1
 20004	30	21	37	28	1
+# SOFIA right Wheel 
+200003	21	21	28	28	1
+200004	30	21	37	28	1
+200001	3	21	10	28	1
+200002	12	21	19	28	1
 # SOFIA Barrel
 #down-left
 30001	3	3	10	10	1
@@ -272,10 +278,12 @@ Map-Blaster-Master-Area-2-K.txt
 #crawl left
 602	10005	100	10006	100
 # ==== SOFIA WHEEL =========
-#idle
+#idle-of left-wheel
 700	20002	100
-#right
+#left-wheel
 701	20001	100	20002	100	20003	100	20004	100
+#right-wheel
+702	200003	100	200004	100	200001	100	200002	100
 # ==== SOFIA BARREL =========
 #idle
 800	30002	100
@@ -358,7 +366,7 @@ Map-Blaster-Master-Area-2-K.txt
 # MAIN_CHARACTER 
 2	2000
 # WHEEL 
-3	700	701
+3	700	701	702
 # CABIN
 4	900	901
 # BARREL

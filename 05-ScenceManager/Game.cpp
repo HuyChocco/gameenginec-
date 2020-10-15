@@ -173,7 +173,20 @@ void CGame::DrawWithTransformation(float x, float y, LPDIRECT3DTEXTURE9 texture,
 	spriteHandler->Draw(texture, &r, &center, &pos, D3DCOLOR_ARGB(alpha, 255, 255, 255));*/
 
 }
-
+void CGame::DrawWithoutTransformation(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha, bool flip)
+{
+	RECT r;
+	r.left = left;
+	r.top = top;
+	r.right = right;
+	r.bottom = bottom;
+	D3DXMATRIX mt;
+	D3DXMatrixIdentity(&mt);
+	mt._41 = x;
+	mt._42 = y;
+	spriteHandler->SetTransform(&mt);
+	spriteHandler->Draw(texture, &r, NULL, NULL, D3DCOLOR_ARGB(alpha, 255, 255, 255));
+}
 int CGame::IsKeyDown(int KeyCode)
 {
 	return (keyStates[KeyCode] & 0x80) > 0;

@@ -4,6 +4,7 @@
 2	textures\BlasterMaster-Enemies.png	255	0	255
 33	textures\NES-Blaster-Master-Area-2.png	255	255	255
 44	textures\NES-Blaster-Master-Area-2-Overworld.png	255	255	255
+55	textures\sophia.png	255	255	255
 # id	left	top	right	bottom	texture_id
 [SPRITES]
 # tiled map sprites
@@ -161,11 +162,16 @@
 # Crawl left - Bo ben trai
 10005	39	30	55	46	1
 10006	56	30	72	46	1
-# SOFIA Wheel 
+# SOFIA left Wheel 
 20001	3	21	10	28	1
 20002	12	21	19	28	1
 20003	21	21	28	28	1
 20004	30	21	37	28	1
+# SOFIA right Wheel 
+200003	21	21	28	28	1
+200004	30	21	37	28	1
+200001	3	21	10	28	1
+200002	12	21	19	28	1
 # SOFIA Barrel
 #down-left
 30001	3	3	10	10	1
@@ -210,6 +216,15 @@
 # Weapon_player
 100001	91	20	114	27	1
 100002	116	20	123	43	1
+# Hub objects
+# PowerHub - Text
+800001	175	219	183	235	55
+# PowerHub
+800002	115	98	123	130	55
+# GunHub
+800003	154	221	162	253	55
+# Hov-Text
+800004	112	240	120	256	55	
 # path
 [MAP]
 Map-Blaster-Master-Area-2-A.txt
@@ -223,10 +238,12 @@ Map-Blaster-Master-Area-2-A.txt
 #crawl left
 602	10005	100	10006	100
 # ==== SOFIA WHEEL =========
-#idle
+#idle-of left-wheel
 700	20002	100
-#right
+#left-wheel
 701	20001	100	20002	100	20003	100	20004	100
+#right-wheel
+702	200003	100	200004	100	200001	100	200002	100
 # ==== SOFIA BARREL =========
 #idle
 800	30002	100
@@ -266,6 +283,15 @@ Map-Blaster-Master-Area-2-A.txt
 4000	100001	100
 #Up
 4001	100002	100
+# ==== HUB =========
+#PowerHub - Text
+10000	800001	100
+#PowerHub
+10001	800002	100
+#GunHub
+10002	800003	100
+#Hov - text
+10003	800004	100
 # id	ani1	ani2	ani3
 #
 [ANIMATION_SETS]
@@ -274,7 +300,7 @@ Map-Blaster-Master-Area-2-A.txt
 # MAIN_CHARACTER 
 2	2000
 # WHEEL 
-3	700	701
+3	700	701	702
 # CABIN
 4	900	901
 # BARREL
@@ -287,9 +313,12 @@ Map-Blaster-Master-Area-2-A.txt
 9	6000	6001
 # WEAPON
 7	4000	4001
+# HUB
+100	10000	10001	10002	10003
 [OBJECTS]
 # object_id  type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Worm, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Cabin, 8= Barrel, 9= Main character, 10= Spider, 11=Human
+# type: 12 = Floater, 13 = Domes, 14 = Jumpers, 15 = Insect,16 = Orbs, 17 = Skulls, 18 = Dashers, 500 = PowerHub, 501 = GunHub
 # MAIN_CHARACTER need to be created first!
 1	9	0	200	2
 # MAIN OBJECTS LIST
@@ -305,6 +334,8 @@ Map-Blaster-Master-Area-2-A.txt
 6	7	25	118	4
 # BARREL
 7	8	17	118	5
+# HUB LIST - x,y theo trục màn hình
+9	500	10	100	100
 # ENEMY LIST
 # WORM
 10	3	50	100	8

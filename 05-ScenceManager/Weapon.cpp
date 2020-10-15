@@ -158,7 +158,7 @@ void CWeapon::Render()
 			break;
 		}
 		animation_set->at(ani)->Render(x, y, flip);
-		RenderBoundingBox();
+		//RenderBoundingBox();
 	}
 	
 	
