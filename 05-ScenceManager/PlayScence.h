@@ -10,6 +10,7 @@
 #include "EnemyObject1.h"
 #include "Worm.h"
 #include "Spider.h"
+#include "Cannon.h"
 //bo sung
 #include "MainCharacter.h"
 #include "BarrelObject.h"
@@ -17,8 +18,10 @@
 #include "CabinObject.h"
 #include "Human.h"
 
+
 #include "TiledMap.h"
 #include "Grid.h"
+
 
 class CPlayScene: public CScene
 {
@@ -44,6 +47,9 @@ protected:
 	int id_pre_map = -1;
 	LPCWSTR tiled_map_file_path_next;
 	CSprites* sprites_next_map;
+
+
+
 public: 
 	bool isRenderNextMap = false;
 	bool isRenderPreMap = false;
@@ -66,6 +72,8 @@ public:
 
 	
 	CSprites* GetSpritesNextMap() { return sprites_next_map; }
+
+
 };
 
 class CPlayScenceKeyHandler : public CScenceKeyHandler

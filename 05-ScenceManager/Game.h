@@ -15,6 +15,11 @@
 using namespace std;
 
 #define KEYBOARD_BUFFER_SIZE 1024
+enum TYPE_SCENCE
+{
+	WORLD,
+	OVER_WORLD
+};
 
 
 class CGame

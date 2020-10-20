@@ -74,7 +74,8 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 	}
 	// Simple fall down
-	vy -= HUMAN_GRAVITY * dt;
+	if(level==HUMAN_LEVEL_SMALL)
+		vy -= HUMAN_GRAVITY * dt;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -133,18 +134,47 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
-
+int ani = HUMAN_ANI_BIG_WALKING;
+int flip = false;
 void CHuman::Render()
 {
-	int ani = -1;
-	bool flip = false;
-	
+	//int ani = -1;
+	//bool flip = false;
 	if (state == MAIN_CHARACTER_STATE_DIE)
 		ani = HUMAN_ANI_DIE;
 	else
+	{
 		if (level == HUMAN_LEVEL_BIG)
 		{
-
+			switch (state)
+			{
+			case MAIN_CHARACTER_STATE_RUN_RIGHT:
+				flip = true;
+				ani = HUMAN_ANI_BIG_WALKING;
+				break;
+			case MAIN_CHARACTER_STATE_RUN_LEFT:
+				flip = false;
+				ani = HUMAN_ANI_BIG_WALKING;
+				break;
+			case MAIN_CHARACTER_STATE_UP_BARREL:
+				ani = HUMAN_ANI_BIG_WALKING_UP;
+				break;
+			case MAIN_CHARACTER_STATE_DOWN_BARREL:
+				ani = HUMAN_ANI_BIG_WALKING_DOWN;
+				break;
+			}
+			if (vx == 0 && vy==0) // Nhân vật đứng yên
+			{
+				animation_set->at(ani)->isPause = true; //Dừng animation 
+				animation_set->at(ani)->Render(x, y, flip); // Vẽ frame đang bị tạm dừng
+			}
+			else // Nhân vật di chuyển
+			{
+				animation_set->at(ani)->isPause = false; // Tiếp tục animation đã dừng trước đó
+				animation_set->at(ani)->Render(x, y, flip);
+			}
+			RenderBoundingBox();
+			return;
 		}
 		else if (level == HUMAN_LEVEL_SMALL)
 		{
@@ -162,7 +192,7 @@ void CHuman::Render()
 				ani = HUMAN_ANI_SMALL_WALKING;
 				flip = true;
 			}
-			else
+			else if(vx<0)
 			{
 				ani = HUMAN_ANI_SMALL_WALKING;
 				flip = false;
@@ -171,12 +201,15 @@ void CHuman::Render()
 
 		}
 
-	int alpha = 255;
+		int alpha = 255;
 
+		animation_set->at(ani)->Render(x, y, flip);
+		
+		RenderBoundingBox();
+	}
+		
 
-	animation_set->at(ani)->Render(x, y, flip, alpha);
-
-	RenderBoundingBox();
+	
 	
 	
 }
@@ -197,15 +230,26 @@ void CHuman::SetState(int state)
 		break;
 	case MAIN_CHARACTER_STATE_JUMP:
 		// TODO: need to check if HUMAN is *current* on a platform before allowing to jump again
-		
-		if (is_on_ground)
+		if (level == HUMAN_LEVEL_SMALL)
 		{
-			vy = MAIN_CHARACTER_JUMP_SPEED_Y;
-			is_on_ground = false;
+			if (is_on_ground)
+			{
+				vy = HUMAN_SMALL_JUMP_SPEED_Y;
+				is_on_ground = false;
+			}
 		}
+	
 		break;
 	case MAIN_CHARACTER_STATE_IDLE:
 		vx = 0;
+		break;
+	case MAIN_CHARACTER_STATE_UP_BARREL:
+		if(level==HUMAN_LEVEL_BIG)
+			vy = HUMAN_WALKING_SPEED;
+		break;
+	case MAIN_CHARACTER_STATE_DOWN_BARREL:
+		if (level == HUMAN_LEVEL_BIG)
+			vy = - HUMAN_WALKING_SPEED;
 		break;
 	case MAIN_CHARACTER_STATE_DIE:
 		break;

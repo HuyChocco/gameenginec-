@@ -15,7 +15,7 @@ protected:
 
 	//Bổ sung
 
-
+	int type_scence;
 	
 
 public: 
@@ -30,7 +30,8 @@ public:
 	virtual CMap* GetMap() { return NULL; }
 	virtual void GetNextMap() {  }
 
-	
+	void SetTypeScence(int type) { this->type_scence = type; }
+	int GetTypeScence() { return this->type_scence; }
 
 };
 typedef CScene * LPSCENE;
