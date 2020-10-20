@@ -266,6 +266,8 @@ void CMainCharacter::SetState(int state)
 		break;
 	case MAIN_CHARACTER_STATE_UP_BARREL:
 		break;
+	case MAIN_CHARACTER_STATE_DOWN_BARREL:
+		break;
 	case MAIN_CHARACTER_STATE_BARREL_FIRE:
 		break;
 	case MAIN_CHARACTER_STATE_NONE_COLLISION:

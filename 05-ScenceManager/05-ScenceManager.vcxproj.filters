@@ -126,6 +126,12 @@
     <ClCompile Include="GunHub.cpp">
       <Filter>Source Files\Hub</Filter>
     </ClCompile>
+    <ClCompile Include="Cannon.cpp">
+      <Filter>Source Files\EnemyObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Eyeball.cpp">
+      <Filter>Source Files\EnemyObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Brick.h">
@@ -223,6 +229,12 @@
     </ClInclude>
     <ClInclude Include="HovHub.h">
       <Filter>Header Files\Hub</Filter>
+    </ClInclude>
+    <ClInclude Include="Cannon.h">
+      <Filter>Header Files\EnemyObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Eyeball.h">
+      <Filter>Header Files\EnemyObjects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

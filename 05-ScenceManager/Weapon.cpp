@@ -5,19 +5,31 @@
 
 #include "Brick.h"
 #include "Portal.h"
+CWeapon::CWeapon(int type)
+{
+	if (type == WEAPON_TYPE_ENEMY_CANNONS)
+	{
+		this->timeAttack = 0.0f;
+		SetTypeWeapon(WEAPON_TYPE_ENEMY_CANNONS);
+		CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+		LPANIMATION_SET ani_set = animation_sets->Get(WEAPON_ANI_SETS_ID_CANNONS);
+		if (ani_set)
+			SetAnimationSet(ani_set);
+	}
+}
 CWeapon::CWeapon(float x, float y, int nx, int state, bool isBarrelUp)
 {
 	this->x = x;
 	this->y = y;
 	this->nx = nx;
 	this->timeAttack = 0.0f;
-	
+	SetTypeWeapon(WEAPON_TYPE_PLAYER);
 	if (isBarrelUp)//determine which state used for animation
 		SetState(WEAPON_STATE_FIRE_UP);
 	else
 		SetState(WEAPON_STATE_FIRE);
 	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
-	LPANIMATION_SET ani_set = animation_sets->Get(7);
+	LPANIMATION_SET ani_set = animation_sets->Get(WEAPON_ANI_SETS_ID);
 	if(ani_set)
 		SetAnimationSet(ani_set);
 }
@@ -67,68 +79,97 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 			//
 			// Collision logic with other objects
 			//
-			for (UINT i = 0; i < coEventsResult.size(); i++)
+			if (type_weapon == WEAPON_TYPE_PLAYER)
 			{
-
-
-				LPCOLLISIONEVENT e = coEventsResult[i];
-
-				if (dynamic_cast<CEnemyObject1*>(e->obj)) // if e->obj is Enemy1 
+				for (UINT i = 0; i < coEventsResult.size(); i++)
 				{
-					CEnemyObject1* enemy1_object = dynamic_cast<CEnemyObject1*>(e->obj);
+					LPCOLLISIONEVENT e = coEventsResult[i];
 
-
-					if (e->nx != 0)
+					if (dynamic_cast<CEnemyObject1*>(e->obj)) // if e->obj is Enemy1 
 					{
-						enemy1_object->SetState(ENEMY1_STATE_DIE);
-						SetState(WEAPON_STATE_NONE);
+						CEnemyObject1* enemy1_object = dynamic_cast<CEnemyObject1*>(e->obj);
+
+
+						if (e->nx != 0)
+						{
+							enemy1_object->SetState(ENEMY1_STATE_DIE);
+							SetState(WEAPON_STATE_EXPLODE);
+						}
+
+					}
+					else if (dynamic_cast<CWorm*>(e->obj)) // if e->obj is Worm 
+					{
+						CWorm* worm = dynamic_cast<CWorm*>(e->obj);
+
+
+						if (e->nx != 0)
+						{
+							worm->SetState(ENEMY1_STATE_DIE);
+							SetState(WEAPON_STATE_EXPLODE);
+						}
+
+					}
+					else if (dynamic_cast<CSpider*>(e->obj)) // if e->obj is Spider 
+					{
+						CSpider* spider = dynamic_cast<CSpider*>(e->obj);
+
+
+						if (e->nx != 0)
+						{
+							spider->SetState(ENEMY1_STATE_DIE);
+							SetState(WEAPON_STATE_EXPLODE);
+						}
+
+					}
+					else if (dynamic_cast<CBrick*>(e->obj)) // if e->obj is Spider 
+					{
+						//if (e->nx != 0)
+						{
+
+							SetState(WEAPON_STATE_EXPLODE);
+						}
+
+					}
+					else if (dynamic_cast<CPortal*>(e->obj)) // if e->obj is Spider 
+					{
+						//if (e->nx != 0)
+						{
+
+							SetState(WEAPON_STATE_EXPLODE);
+						}
+
 					}
 
+
 				}
-				else if (dynamic_cast<CWorm*>(e->obj)) // if e->obj is Worm 
+			}
+			else if (type_weapon == WEAPON_TYPE_ENEMY_CANNONS)
+			{
+				for (UINT i = 0; i < coEventsResult.size(); i++)
 				{
-					CWorm* worm = dynamic_cast<CWorm*>(e->obj);
-
-
-					if (e->nx != 0)
+					LPCOLLISIONEVENT e = coEventsResult[i];
+					
+					if (dynamic_cast<CBrick*>(e->obj)) // if e->obj is Spider 
 					{
-						worm->SetState(ENEMY1_STATE_DIE);
-						SetState(WEAPON_STATE_NONE);
+						//if (e->nx != 0)
+						{
+
+							SetState(WEAPON_STATE_NONE);
+						}
+
+					}
+					else if (dynamic_cast<CPortal*>(e->obj)) // if e->obj is Spider 
+					{
+						//if (e->nx != 0)
+						{
+
+							SetState(WEAPON_STATE_NONE);
+						}
+
 					}
 
-				}
-				else if (dynamic_cast<CSpider*>(e->obj)) // if e->obj is Spider 
-				{
-					CSpider* spider = dynamic_cast<CSpider*>(e->obj);
-
-
-					if (e->nx != 0)
-					{
-						spider->SetState(ENEMY1_STATE_DIE);
-						SetState(WEAPON_STATE_NONE);
-					}
 
 				}
-				else if (dynamic_cast<CBrick*>(e->obj)) // if e->obj is Spider 
-				{
-					//if (e->nx != 0)
-					{
-						
-						SetState(WEAPON_STATE_NONE);
-					}
-
-				}
-				else if (dynamic_cast<CPortal*>(e->obj)) // if e->obj is Spider 
-				{
-					//if (e->nx != 0)
-					{
-
-						SetState(WEAPON_STATE_NONE);
-					}
-
-				}
-
-
 			}
 
 		}
@@ -140,67 +181,150 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 
 void CWeapon::Render()
 {
-	if (state != WEAPON_STATE_NONE)
+	int typeWeapon = GetTypeWeapon();
+
+
+	if (typeWeapon == WEAPON_TYPE_PLAYER)
 	{
-		int flip = false;
-		int ani = -1;
-		if (nx > 0)
-			flip = true;
-		else
-			flip = false;
-		switch (state)
+		if (state != WEAPON_STATE_NONE)
 		{
-		case WEAPON_STATE_FIRE:
-			ani = WEAPON_ANI_FLY_HORIZONTAL;
-			break;
-		case WEAPON_STATE_FIRE_UP:
-			ani = WEAPON_ANI_FLY_VERTICAL;
-			break;
+			int flip = false;
+			int ani = -1;
+			if (nx > 0)
+				flip = true;
+			else
+				flip = false;
+			switch (state)
+			{
+			case WEAPON_STATE_FIRE:
+				ani = WEAPON_ANI_FLY_HORIZONTAL;
+				break;
+			case WEAPON_STATE_FIRE_UP:
+				ani = WEAPON_ANI_FLY_VERTICAL;
+				break;
+			case WEAPON_STATE_EXPLODE:
+				ani = WEAPON_ANI_EXPLODE;
+				break;
+			}
+			if (state == WEAPON_STATE_EXPLODE)
+			{
+				float l, t, r, b;
+				GetBoundingBox(l, t, r, b);
+				if (isFlyHorizontalRight)
+					animation_set->at(ani)->Render(r - 10, y, flip);
+				else if (isFlyHorizontalLeft)
+					animation_set->at(ani)->Render(l - 10, y, flip);
+				else
+					animation_set->at(ani)->Render(x, b + 10, flip);
+				if (animation_set->at(ani)->isFinish)
+				{
+					animation_set->at(ani)->isFinish = false;
+					SetState(WEAPON_STATE_NONE);
+				}
+			}
+			else
+				animation_set->at(ani)->Render(x, y, flip);
+			RenderBoundingBox();
 		}
-		animation_set->at(ani)->Render(x, y, flip);
-		//RenderBoundingBox();
 	}
-	
+	else if (typeWeapon == WEAPON_TYPE_ENEMY_CANNONS)
+	{
+		if (state != WEAPON_STATE_NONE)
+		{
+			int ani = WEAPON_ANI_ENEMY_CANNONS;
+			int flip = false;
+			if (state == WEAPON_CANNONS_STATE_FIRE_HORIZONTAL_RIGHT)
+				flip = true;
+			else
+				flip = false;
+			animation_set->at(ani)->Render(x, y, flip);
+			RenderBoundingBox();
+		}
+	}
 	
 }
 
 void CWeapon::SetState(int state)
 {
 	CGameObject::SetState(state);
-	switch (state)
+	if (type_weapon == WEAPON_TYPE_PLAYER)
 	{
-	case WEAPON_STATE_FIRE:
-		if (nx > 0)
+		switch (state)
 		{
-			vx = WEAPON_FLY_SPEED;
+		case WEAPON_STATE_FIRE:
+			if (nx > 0)
+			{
+				vx = WEAPON_FLY_SPEED;
+				isFlyHorizontalRight = true;
+				isFlyHorizontalLeft = false;
+				isFlyUp = false;
+			}
+			else
+			{
+				vx = -WEAPON_FLY_SPEED;
+				isFlyHorizontalLeft = true;
+				isFlyHorizontalRight = false;
+			}
+			break;
+		case WEAPON_STATE_FIRE_UP:
+			isFlyUp = true;
+			isFlyHorizontalLeft = false;
+			isFlyHorizontalRight = false;
+			vy = WEAPON_FLY_SPEED;
+			break;
+		case WEAPON_STATE_EXPLODE:
+			break;
 		}
-		else
-		{
-			vx = -WEAPON_FLY_SPEED;
-		}
-		break;
-	case WEAPON_STATE_FIRE_UP:
-		vy = WEAPON_CHARACTER_JUMP_SPEED_Y;
-		break;
 	}
+	else if (type_weapon == WEAPON_TYPE_ENEMY_CANNONS)
+	{
+		switch (state)
+		{
+		case WEAPON_CANNONS_STATE_FIRE_HORIZONTAL_LEFT:
+			vx = -WEAPON_CANNONS_FLY_SPEED;
+			break;
+		case WEAPON_CANNONS_STATE_FIRE_HORIZONTAL_RIGHT:
+			vx = WEAPON_CANNONS_FLY_SPEED;
+			break;
+		case WEAPON_CANNONS_STATE_FIRE_VERTICAL_UP:
+			vy = WEAPON_CANNONS_FLY_SPEED;
+			break;
+		case WEAPON_CANNONS_STATE_FIRE_VERTICAL_DOWN:
+			vy = -WEAPON_CANNONS_FLY_SPEED;
+			break;
+		case WEAPON_CANNONS_STATE_EXPLODE:
+			break;
+		}
+	}
+	
 }
 
 void CWeapon::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	left = x;
 	
-	
-	if (state == WEAPON_STATE_FIRE_UP)
+	int typeWeapon = GetTypeWeapon();
+	if (typeWeapon == WEAPON_TYPE_PLAYER)
 	{
-		top = y - WEAPON_UP_BBOX_HEIGHT;
-		right = x + WEAPON_UP_BBOX_WIDTH;
-		bottom = y;
+		left = x;
+		if (state == WEAPON_STATE_FIRE_UP)
+		{
+			top = y - WEAPON_UP_BBOX_HEIGHT;
+			right = x + WEAPON_UP_BBOX_WIDTH;
+			bottom = y;
+		}
+		else
+		{
+			top = y - WEAPON_BBOX_HEIGHT;
+			right = x + WEAPON_BBOX_WIDTH;
+			bottom = y;
+		}
 	}
-	else
+	else if (typeWeapon == WEAPON_TYPE_ENEMY_CANNONS)
 	{
-		top = y - WEAPON_BBOX_HEIGHT;
-		right = x + WEAPON_BBOX_WIDTH;
-		bottom = y ;
+		left = x;
+		top = y - WEAPON_CANNONS_BBOX_HEIGHT;
+		right = x + WEAPON_CANNONS_BBOX_WIDTH;
+		bottom = y;
 	}
 }
 

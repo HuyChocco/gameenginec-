@@ -34,7 +34,10 @@
 #define HUMAN_ANI_BIG_IDLE		0
 #define HUMAN_ANI_SMALL_IDLE		0
 
-#define HUMAN_ANI_BIG_WALKING			5
+#define HUMAN_ANI_BIG_WALKING			3
+#define HUMAN_ANI_BIG_WALKING_UP			4
+#define HUMAN_ANI_BIG_WALKING_DOWN			5
+
 #define HUMAN_ANI_SMALL_WALKING		1
 #define HUMAN_ANI_SMALL_CRAWLING		2
 
@@ -47,14 +50,14 @@ class CHuman : public CGameObject
 	float start_x;			// initial position of Human at scene
 	float start_y;
 	bool is_on_ground;
-	
+	bool is_set_level;
 public:
 	CHuman(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
 
 	void SetState(int state);
-	void SetLevel(int l) { level = l; }
+	void SetLevel(int l) { level = l; is_set_level = true; }
 	
 	void Reset();
 

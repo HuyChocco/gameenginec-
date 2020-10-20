@@ -6,8 +6,8 @@
 #include "Textures.h"
 #include "Sprites.h"
 #include "Portal.h"
-//#include "TiledMap.h"
-#include "Grid.h"
+
+//#include "Grid.h"
 #include "GunHub.h"
 #include "PowerHub.h"
 
@@ -44,6 +44,8 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define OBJECT_TYPE_ENEMY1	2
 #define OBJECT_TYPE_WORM	3
 #define OBJECT_TYPE_SPIDER	10
+#define OBJECT_TYPE_CANNON	19
+#define OBJECT_TYPE_EYEBALL	20
 
 //Main character objects
 #define OBJECT_TYPE_MAIN_CHARACTER	9
@@ -182,6 +184,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_ENEMY1: obj = new CEnemyObject1(); break;
 	case OBJECT_TYPE_WORM: obj = new CWorm(); break;
 	case OBJECT_TYPE_SPIDER: obj = new CSpider(); break;
+	case OBJECT_TYPE_CANNON: obj = new CCannon(); break;
 	case OBJECT_TYPE_POWERHUB: 
 	{
 		obj = new CPowerHub();
@@ -241,7 +244,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
 		if (player != NULL)
 		{
-			DebugOut(L"[INFO] MARIO object has been Created Already!\n");
+			DebugOut(L"[INFO] Player object has been Created Already!\n");
 			player->AddComponentObject(obj);
 		}
 		return;
@@ -280,6 +283,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CHuman(x, y);
 		obj->SetID(object_id);
 		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
+		if (type_scence == OVER_WORLD)
+			dynamic_cast<CHuman*>(obj)->SetLevel(HUMAN_LEVEL_BIG);
 		if (player != NULL)
 		{
 			DebugOut(L"[INFO] Player object has been Created Already!\n");
@@ -684,7 +689,7 @@ void CPlayScene::Render()
 		map->GetMapHeight(heightPreMap);
 		CTiledMapSets::GetInstance()->Get(id_pre_map)->Render(-widthPreMap, heightMap - heightPreMap);
 	}*/
-	//Vẽ tất cả các obj ect hiện tại nếu thỏa điều kiện
+	//Vẽ tất cả các object hiện tại nếu thỏa điều kiện
 	if (player->GetState() != MAIN_CHARACTER_STATE_NONE_COLLISION)
 	{
 		for (int i = 0; i < objects.size(); i++)
@@ -835,6 +840,11 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	{
 		//DebugOut(L"[INFO] KeyDown: DIK_UP\n");
 		player->SetState(MAIN_CHARACTER_STATE_UP_BARREL);
+	}
+	else if (game->IsKeyDown(DIK_DOWN))
+	{
+		//DebugOut(L"[INFO] KeyDown: DIK_UP\n");
+		player->SetState(MAIN_CHARACTER_STATE_DOWN_BARREL);
 	}
 	else if (game->IsKeyDown(DIK_RIGHT))
 		player->SetState(MAIN_CHARACTER_STATE_RUN_RIGHT);
