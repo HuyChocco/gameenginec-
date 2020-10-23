@@ -18,7 +18,7 @@
 #define HUMAN_SMALL_CRAWL_BBOX_WIDTH  16
 #define HUMAN_SMALL_CRAWL_BBOX_HEIGHT 16
 
-#define HUMAN_WALKING_SPEED		0.15f 
+#define HUMAN_WALKING_SPEED		0.1f 
 
 #define HUMAN_JUMP_SPEED_Y		0.5f
 #define HUMAN_JUMP_DEFLECT_SPEED 0.2f
@@ -51,6 +51,9 @@ class CHuman : public CGameObject
 	float start_y;
 	bool is_on_ground;
 	bool is_set_level;
+
+	bool isGoingUp;
+	bool isGoingDown;
 public:
 	CHuman(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
@@ -63,5 +66,8 @@ public:
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 
-
+	void SetGoingUp(bool flag) { isGoingUp = flag; }
+	void SetGoingDown(bool flag) { isGoingDown = flag; }
+	bool GetGoingUp() { return isGoingUp; }
+	bool GetGoingDown() { return isGoingDown; }
 };

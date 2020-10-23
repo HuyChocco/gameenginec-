@@ -69,7 +69,8 @@
 162	41	607	67	629	2
 #bullet_cannons
 163	252	102	260	118	1
-#163	70	603	92	629	2
+#bullet_cannons_explosion
+164	296	102	312	118	1	
 # TELEPROTERS
 154	159	568	175	584	2
 #khong co ao choang
@@ -82,7 +83,9 @@
 #nham mat
 152	119	550	135	566	2
 #weapon
-153	51	515	67	531	2
+153	252	102	260	118	1
+#bullet_eyeball_explosion
+154	296	102	312	118	1
 # SOFIA Human
 #idle
 10001	3	30	11	46	1
@@ -106,6 +109,12 @@
 10013	208	3	232	35	1
 10014	233	3	257	35	1
 10015	258	3	282	35	1
+#bullet_sofia
+10016	135	183	139	187	55
+#bullet_explosion
+10017	155	181	162	189	55
+10018	171	178	187	191	55
+10019	192	177	208	193	55
 # SOFIA left Wheel 
 20001	3	21	10	28	1
 20002	12	21	19	28	1
@@ -179,14 +188,21 @@ map-overworld-25.txt
 1161	161	300	162	300
 #bullet_cannons
 1162	163	100
+#bullet_cannons_explosion
+1163	164	100
 # ==== ENEMY TELEPORTERS =========
 #bien hinh
 1152	154	100	155	50	154	50	155	50	154	50	155	100
 #sau khi bien hinh va tan cong
 1153	155	100		
 # ==== ENEMY EYEBALLS =========
-1150	152	100	150	100	151	100
-1151	153	100
+1150	150	100	151	100
+# nham mat chuan bi ban
+1151	152	100
+#Dan
+1152	153	100
+#Dan no
+1153	154	100
 # ==== SOFIA HUMAN =========
 #idle
 600	10001	100
@@ -201,6 +217,10 @@ map-overworld-25.txt
 604	10010	100	10011	100	10012	100
 #move down
 605	10013	100	10014	100	10015	100
+#bullet
+606	10016	100
+#bullet_explosion
+607	10017	100	10018	100	10019	100
 # ==== SOFIA WHEEL =========
 #idle-of left-wheel
 700	20002	100
@@ -253,7 +273,7 @@ map-overworld-25.txt
 #
 [ANIMATION_SETS]
 # SOFIA 
-1	600	601	602	603	604	605
+1	600	601	602	603	604	605	606	607
 # MAIN_CHARACTER 
 2	2000
 # WHEEL 
@@ -271,15 +291,15 @@ map-overworld-25.txt
 # WEAPON
 7	4000	4001	4002
 # CANNONS
-10	1160	1161	1162
+10	1160	1161	1162	1163
 # EYEBALLS
-11	1150
+11	1150	1151	1152	1153
 [OBJECTS]
 # object_id  type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Worm, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Cabin, 8= Barrel, 9= Main character, 10= Spider, 11=Human
-# type: 12 = Floater, 13 = Domes, 14 = Jumpers, 15 = Insect,16 = Orbs, 17 = Skulls, 18 = Dashers, 500 = PowerHub, 501 = GunHub, 19=Cannon, 20= Eyeball
+# type: 12 = Floater, 13 = Domes, 14 = Jumpers, 15 = Insect,16 = Orbs, 17 = Skulls, 18 = Dashers, 500 = PowerHub, 501 = GunHub, 19=Cannon, 20= Eyeball, 21 = Spike
 # MAIN_CHARACTER need to be created first!
-1	9	100	115	2
+1	9	100	150	2
 # MAIN OBJECTS LIST
 # HUMAN
 2	11	17	115	1
@@ -300,7 +320,9 @@ map-overworld-25.txt
 # SPIDER
 12	10	420	120	9
 # CANNONS
-13	19	120	120	10
+13	19	160	140	10
+# EYEBALL
+14	20	200	200	11
 # MAP OBJECT LIST
 # BRICK 
 # object_id 	type	l	t	ani_set_id	r	b	
@@ -340,13 +362,13 @@ map-overworld-25.txt
 257	1	80	97.167	2	97	80.834
 258 	1	207.667	96.833	2	224.3337	80.5
 #Spikes        l    t        r    b
-366	1	63.5679	223.6385	2	255	192
-367	1	223.265	194.365	2	255.16	144.1888
-368	1	175.422	128.241	2	207.7059	63.6731
-369	1	204.595	111.708	2	255.6654	63.7389
-370	1	127.929	160.136	2	191.7592	127.9683
-371	1	63.8003	95.179	2	144.502	63.8399
-372	1	64	205.256	2	96	89
+366	21	63.5679	223.6385	2	255	192
+367	21	223.265	194.365	2	255.16	144.1888
+368	21	175.422	128.241	2	207.7059	63.6731
+369	21	204.595	111.708	2	255.6654	63.7389
+370	21	127.929	160.136	2	191.7592	127.9683
+371	21	63.8003	95.179	2	144.502	63.8399
+372	21	64	205.256	2	96	89
 # --- SCENE PORTAL ----
 # object_id     type    l    t    ani_set_id    r    b    scene_id    type_portal: 1-Next scene 0-Previous scene    next_portal_id
 #cong ben trai
@@ -360,7 +382,7 @@ map-overworld-25.txt
 # cellx celly id_object...
 [GRID]
 2	0	122	125	366	372
-1	0	125	366	372	370	371	13
+1	0	125	366	372	370	371	13	14
 0	0	125	129	1004	371
 2	1	122	126	366
 1	1	126	127	1002	366	367	370	368	369

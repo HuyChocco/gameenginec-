@@ -3,6 +3,7 @@
 CCannon::CCannon():CEnemyObject()
 {
 	SetState(CANNON_STATE_IDLE);
+	this->blood = 1;
 }
 
 void CCannon::GetBoundingBox(float& left, float& top, float& right, float& bottom)

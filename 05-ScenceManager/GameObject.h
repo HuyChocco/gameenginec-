@@ -55,7 +55,7 @@ public:
 	float vy;
 
 	int nx;	 
-
+	int ny;
 	int state;
 
 	DWORD dt; 
@@ -68,6 +68,7 @@ public:
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
 	void SetDirection(int nx) { this->nx = nx; }
+	void SetDirectionY(int ny) { this->ny = ny; }
 	void GetPosition(float &x, float &y) { x = this->x; y = this->y; }
 	void GetSpeed(float &vx, float &vy) { vx = this->vx; vy = this->vy; }
 

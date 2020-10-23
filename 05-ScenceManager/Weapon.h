@@ -1,5 +1,5 @@
 #include "GameObject.h"
-
+#include "Game.h"
 #define WEAPON_BBOX_WIDTH 24
 #define WEAPON_BBOX_HEIGHT 8
 
@@ -8,6 +8,12 @@
 
 #define WEAPON_CANNONS_BBOX_WIDTH 8
 #define WEAPON_CANNONS_BBOX_HEIGHT 16
+
+#define WEAPON_EYEBALL_BBOX_WIDTH 8
+#define WEAPON_EYEBALL_BBOX_HEIGHT 16
+
+#define WEAPON_BIG_HUMAN_BBOX_WIDTH 4
+#define WEAPON_BIG_HUMAN_BBOX_HEIGHT 4
 
 #define WEAPON_STATE_NONE		100 //General
 
@@ -22,26 +28,45 @@
 #define WEAPON_CANNONS_STATE_EXPLODE		702
 #define WEAPON_CANNONS_STATE_FIRE_VERTICAL_DOWN		703
 #define WEAPON_CANNONS_STATE_FIRE_HORIZONTAL_RIGHT		704
-//Player
+//Enemy Eyeball
+#define WEAPON_EYEBALL_STATE_FLY		700
+#define WEAPON_EYEBALL_STATE_EXPLODE		701
+
 #define WEAPON_ANI_SETS_ID 7
 #define WEAPON_ANI_SETS_ID_CANNONS 10
+#define WEAPON_ANI_SETS_ID_EYEBALL 11
+#define WEAPON_ANI_SETS_ID_HUMAN 1
+//Big Human
+#define WEAPON_BIG_HUMAN_STATE_FLY		800
+#define WEAPON_BIG_HUMAN_STATE_EXPLODE		801
+#define WEAPON_BIG_HUMAN_STATE_FLY_UP		802
+#define WEAPON_BIG_HUMAN_STATE_FLY_DOWN		803
+
+#define WEAPON_ANI_BIG_HUMAN 6
+#define WEAPON_ANI_EXPLODE_BIG_HUMAN 7
+//Player
 #define WEAPON_ANI_FLY_HORIZONTAL 0
 #define WEAPON_ANI_FLY_VERTICAL 1
 #define WEAPON_ANI_EXPLODE 2
 
 //Enemy_Cannons
 #define WEAPON_ANI_ENEMY_CANNONS 2
-
+#define WEAPON_ANI_EXPLODE_ENEMY_CANNONS 3
+//Enemy_Eyeball
+#define WEAPON_ANI_ENEMY_EYEBALL 2
+#define WEAPON_ANI_EXPLODE_ENEMY_EYEBALL 3
 //Player
 #define WEAPON_FLY_SPEED 0.3f;
 
-#define WEAPON_CANNONS_FLY_SPEED 0.2f;
-
+#define WEAPON_CANNONS_FLY_SPEED 0.15f;
+#define WEAPON_BIG_HUMAN_FLY_SPEED 0.15f;
 
 #define TIME_ENABLE_FIRE			1000
 
 #define WEAPON_TYPE_PLAYER			1
 #define WEAPON_TYPE_ENEMY_CANNONS			2
+#define WEAPON_TYPE_ENEMY_EYEBALL			3
+#define WEAPON_TYPE_BIG_HUMAN			4
 class CWeapon : public CGameObject
 {
 	int dame = 0;
@@ -50,6 +75,8 @@ class CWeapon : public CGameObject
 	bool isFlyHorizontalLeft;
 	bool isFlyUp;
 	int type_weapon;
+
+	bool isBurning;
 public:
 	CWeapon(int type);
 	CWeapon(float x, float y, int nx, int state,bool isBarrelUp);
@@ -63,4 +90,6 @@ public:
 
 	void SetTypeWeapon(int type) { this->type_weapon = type; }
 	int GetTypeWeapon() { return this->type_weapon; }
+
+	int GetDame() { return this->dame; }
 };

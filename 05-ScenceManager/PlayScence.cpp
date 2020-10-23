@@ -39,6 +39,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 
 //Map objects
 #define OBJECT_TYPE_BRICK	1
+#define OBJECT_TYPE_SPIKE	21
 
 //Enemy objects
 #define OBJECT_TYPE_ENEMY1	2
@@ -185,6 +186,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_WORM: obj = new CWorm(); break;
 	case OBJECT_TYPE_SPIDER: obj = new CSpider(); break;
 	case OBJECT_TYPE_CANNON: obj = new CCannon(); break;
+	case OBJECT_TYPE_EYEBALL: obj = new CEyeball(); break;
+	case OBJECT_TYPE_SPIKE:
+	{
+		float r = atof(tokens[5].c_str());
+		float b = atof(tokens[6].c_str());
+		obj = new CSpike(x, y, r, b);
+		break;
+	}
 	case OBJECT_TYPE_POWERHUB: 
 	{
 		obj = new CPowerHub();
@@ -838,12 +847,10 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	
 	if (game->IsKeyDown(DIK_UP))
 	{
-		//DebugOut(L"[INFO] KeyDown: DIK_UP\n");
 		player->SetState(MAIN_CHARACTER_STATE_UP_BARREL);
 	}
 	else if (game->IsKeyDown(DIK_DOWN))
 	{
-		//DebugOut(L"[INFO] KeyDown: DIK_UP\n");
 		player->SetState(MAIN_CHARACTER_STATE_DOWN_BARREL);
 	}
 	else if (game->IsKeyDown(DIK_RIGHT))

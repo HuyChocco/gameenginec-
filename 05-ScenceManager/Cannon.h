@@ -33,4 +33,5 @@ public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 	virtual void SetState(int state);
+	void LostBlood(int _blood) { this->blood -= _blood; }
 };
