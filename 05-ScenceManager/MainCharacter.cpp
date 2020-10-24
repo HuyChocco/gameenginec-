@@ -13,6 +13,8 @@
 #include "Worm.h"
 #include "Spider.h"
 #include "Eyeball.h"
+#include "Floater.h"
+#include "Dome.h"
 CMainCharacter::CMainCharacter(float x, float y) : CGameObject()
 {
 
@@ -42,17 +44,35 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		// Xử lý di chuyển của các đối tượng enemy theo đối tượng nhân vật chính
 		for (UINT i = 0; i < coObjects->size(); i++)
 		{
-			if (dynamic_cast<CEnemyObject1*>(coObjects->at(i))) {
-				CEnemyObject1* enemy1_object = dynamic_cast<CEnemyObject1*>(coObjects->at(i));
-				if (enemy1_object->GetState() != ENEMY1_STATE_DIE)
+			if (dynamic_cast<CFloater*>(coObjects->at(i))) {
+				CFloater* floater = dynamic_cast<CFloater*>(coObjects->at(i));
+				if (floater->GetState() != FLOATER_STATE_DIE)
 				{
 					float x_enemy, y_enemy;
-					enemy1_object->GetPosition(x_enemy, y_enemy);
+					floater->GetPosition(x_enemy, y_enemy);
 					if (x > x_enemy)
-						enemy1_object->SetDirection(1);
+						floater->SetDirection(1);
 					else
-						enemy1_object->SetDirection(-1);
-					enemy1_object->SetState(ENEMY1_STATE_WALKING);
+						floater->SetDirection(-1);
+					floater->SetState(FLOATER_STATE_MOVE);
+					if (floater->GetBlood() < 0)
+						floater->SetState(FLOATER_STATE_DIE);
+				}
+
+			}
+			else if (dynamic_cast<CDome*>(coObjects->at(i))) {
+				CDome* dome = dynamic_cast<CDome*>(coObjects->at(i));
+				if (dome->GetState() != DOME_STATE_DIE)
+				{
+					float x_enemy, y_enemy;
+					dome->GetPosition(x_enemy, y_enemy);
+					if (x > x_enemy)
+						dome->SetDirection(1);
+					else
+						dome->SetDirection(-1);
+					dome->SetState(DOME_STATE_MOVE);
+					if (dome->GetBlood() < 0)
+						dome->SetState(DOME_STATE_DIE);
 				}
 
 			}
@@ -67,34 +87,8 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					else
 						worm->SetDirection(-1);
 					worm->SetState(WORM_STATE_MOVE);
-				}
-
-			}
-			else if (dynamic_cast<CSpider*>(coObjects->at(i))) {
-				CSpider* spider = dynamic_cast<CSpider*>(coObjects->at(i));
-				if (spider->GetState() != SPIDER_STATE_DIE)
-				{
-					float x_spider, y_spider;
-					spider->GetPosition(x_spider, y_spider);
-					if (x > x_spider)
-						spider->SetDirection(1);
-					else
-						spider->SetDirection(-1);
-					spider->SetState(SPIDER_STATE_MOVE);
-				}
-
-			}
-			else if (dynamic_cast<CSpider*>(coObjects->at(i))) {
-				CSpider* spider = dynamic_cast<CSpider*>(coObjects->at(i));
-				if (spider->GetState() != SPIDER_STATE_DIE)
-				{
-					float x_spider, y_spider;
-					spider->GetPosition(x_spider, y_spider);
-					if (x > x_spider)
-						spider->SetDirection(1);
-					else
-						spider->SetDirection(-1);
-					spider->SetState(SPIDER_STATE_MOVE);
+					if (worm->GetBlood() < 0)
+						worm->SetState(WORM_STATE_DIE);
 				}
 
 			}
@@ -241,7 +235,6 @@ void CMainCharacter::Render()
 	{
 		animation_set->at(0)->Render(x, y, alpha);
 		// Vẽ các đối tượng weapon của nhân vật chính
-	//	if (!Is_Human)
 		{
 			if (list_weapon.size() > 0)
 			{
@@ -377,9 +370,19 @@ void CMainCharacter::SetState(int state)
 					
 					else
 					{
-						weapon->SetPosition(x_human, y_human - HUMAN_BIG_BBOX_HEIGHT / 2);
-						weapon->SetDirection(nx);
-						weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY);
+						if (dynamic_cast<CHuman*>(componentObjects[i])->GetLevel() == HUMAN_LEVEL_BIG)
+						{
+							weapon->SetPosition(x_human, y_human - HUMAN_BIG_BBOX_HEIGHT / 2);
+							weapon->SetDirection(nx);
+							weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY);
+						}
+						else
+						{
+							weapon->SetPosition(x_human, y_human - HUMAN_SMALL_BBOX_HEIGHT / 2);
+							weapon->SetDirection(nx);
+							weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY);
+						}
+						
 					}
 					list_weapon.push_back(weapon);
 				}

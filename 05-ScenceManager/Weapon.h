@@ -77,6 +77,7 @@ class CWeapon : public CGameObject
 	int type_weapon;
 
 	bool isBurning;
+	bool isAttacked;
 public:
 	CWeapon(int type);
 	CWeapon(float x, float y, int nx, int state,bool isBarrelUp);
@@ -92,4 +93,5 @@ public:
 	int GetTypeWeapon() { return this->type_weapon; }
 
 	int GetDame() { return this->dame; }
+	//void SetAttack(bool flag) { isAttacked = flag; }
 };

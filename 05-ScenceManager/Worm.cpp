@@ -3,6 +3,7 @@
 CWorm::CWorm() :CEnemyObject()
 {
 	SetState(WORM_STATE_IDLE);
+	this->blood = 1;
 }
 
 void CWorm::GetBoundingBox(float& left, float& top, float& right, float& bottom)

@@ -3,15 +3,16 @@
 CDome::CDome() :CEnemyObject()
 {
 	SetState(DOME_STATE_IDLE);
+	this->blood = 1;
 }
 
 void CDome::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 
 	left = x;
-	top = y;
+	top = y - DOME_BBOX_HEIGHT;
 	right = x + DOME_BBOX_WIDTH;
-	bottom = y + DOME_BBOX_HEIGHT;
+	bottom = y;
 }
 
 void CDome::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -70,7 +71,7 @@ void CDome::Render()
 			ani = DOME_ANI_MOVE_LEFT;
 
 		animation_set->at(ani)->Render(x, y);
-		//RenderBoundingBox();
+		RenderBoundingBox();
 	}
 
 }

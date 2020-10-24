@@ -3,6 +3,7 @@
 #include "Textures.h"
 #include "Scence.h"
 #include "GameObject.h"
+
 #include "Brick.h"
 #include "Mario.h"
 #include "Goomba.h"
@@ -13,6 +14,8 @@
 #include "Cannon.h"
 #include "Spike.h"
 #include "Eyeball.h"
+#include "Floater.h"
+#include "Dome.h"
 //bo sung
 #include "MainCharacter.h"
 #include "BarrelObject.h"

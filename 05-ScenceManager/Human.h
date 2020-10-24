@@ -61,7 +61,7 @@ public:
 
 	void SetState(int state);
 	void SetLevel(int l) { level = l; is_set_level = true; }
-	
+	int GetLevel() { return level; }
 	void Reset();
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);

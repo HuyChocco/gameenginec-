@@ -8,10 +8,14 @@ CCannon::CCannon():CEnemyObject()
 
 void CCannon::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	left = x;
-	top = y - CANNON_BBOX_HEIGHT;
-	right = x + CANNON_BBOX_WIDTH;
-	bottom = y;
+	if (state != CANNON_STATE_DIE)
+	{
+		left = x;
+		top = y - CANNON_BBOX_HEIGHT;
+		right = x + CANNON_BBOX_WIDTH;
+		bottom = y;
+	}
+	
 }
 
 void CCannon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
