@@ -7,15 +7,19 @@ CEyeball::CEyeball() :CEnemyObject()
 	timeWaitingToMove = 0;
 	timeMoving = 0;
 
-	this->blood = 2;
+	this->blood = 1;
 }
 
 void CEyeball::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	left = x;
-	top = y - EYEBALL_BBOX_HEIGHT;
-	right = x + EYEBALL_BBOX_WIDTH;
-	bottom = y;
+	if (state != EYEBALL_STATE_DIE)
+	{
+		left = x;
+		top = y - EYEBALL_BBOX_HEIGHT;
+		right = x + EYEBALL_BBOX_WIDTH;
+		bottom = y;
+	}
+	
 }
 
 void CEyeball::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)

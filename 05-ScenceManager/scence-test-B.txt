@@ -162,6 +162,25 @@
 # Crawl left - Bo ben trai
 10005	39	30	55	46	1
 10006	56	30	72	46	1
+# BIG-SOFIA
+# move left
+10007	208	69	232	101	1
+10008	233	69	257	101	1
+10009	258	69	282	101	1
+# move up
+10010	208	36	232	68	1
+10011	233	36	257	68	1
+10012	258	36	282	68	1
+# move down
+10013	208	3	232	35	1
+10014	233	3	257	35	1
+10015	258	3	282	35	1
+#bullet_sofia
+10016	135	183	139	187	55
+#bullet_explosion
+10017	155	181	162	189	55
+10018	171	178	187	191	55
+10019	192	177	208	193	55
 # SOFIA left Wheel 
 20001	3	21	10	28	1
 20002	12	21	19	28	1
@@ -213,9 +232,25 @@
 #move right
 120003	132	406	149	421	2
 120004	152	407	169	421	2
-# Weapon_player
+# WEAPON_PLAYER
+#fly_horizontal
 100001	91	20	114	27	1
+#fly_vertical
 100002	116	20	123	43	1
+#explode
+100003	140	101	148	109	1
+100004	149	97	165	113	1
+100005	166	97	182	113	1
+100006	183	93	207	117	1
+# Hub objects
+# PowerHub - Text
+800001	175	219	183	235	55
+# PowerHub
+800002	115	98	123	130	55
+# GunHub
+800003	154	221	162	253	55
+# Hov-Text
+800004	112	240	120	256	55
 # FLOATER
 #move left
 130001	104	406	122	422	2
@@ -321,6 +356,17 @@ Map-Blaster-Master-Area-2-B.txt
 4000	100001	100
 #Up
 4001	100002	100
+#explode
+4002	100003	100	100004	100	100005	100
+# ==== HUB =========
+#PowerHub - Text
+100000	800001	100
+#PowerHub
+100001	800002	100
+#GunHub
+100002	800003	100
+#Hov - text
+100003	800004	100
 # === FLOATERS =====
 #walk left
 7000	130001	100	130002	100
@@ -360,7 +406,7 @@ Map-Blaster-Master-Area-2-B.txt
 #
 [ANIMATION_SETS]
 # SOFIA 
-1	600	601	602
+1	600	601	602	603	604	605	606	607
 # MAIN_CHARACTER 
 2	2000
 # WHEEL 
@@ -376,7 +422,7 @@ Map-Blaster-Master-Area-2-B.txt
 # SPIDER - ENEMY
 9	6000	6001
 # WEAPON
-7	4000	4001
+7	4000	4001	4002
 # FLOATERS
 10	7000	7001
 # DOMES
@@ -391,10 +437,12 @@ Map-Blaster-Master-Area-2-B.txt
 15	12000	12001
 # DASHERS
 16	13000	13001
+# HUB
+100	100000	100001	100002	100003
 [OBJECTS]
 # object_id  type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Worm, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Cabin, 8= Barrel, 9= Main character, 10= Spider, 11=Human
-# type: 12 = Floater, 13 = Domes, 14 = Jumpers, 15 = Insect,16 = Orbs, 17 = Skulls, 18 = Dashers
+# type: 12 = Floater, 13 = Domes, 14 = Jumpers, 15 = Insect,16 = Orbs, 17 = Skulls, 18 = Dashers, 500 = PowerHub, 501 = GunHub
 # MAIN_CHARACTER need to be created first!
 1	9	79	1162.33	2
 # MAIN OBJECTS LIST
@@ -410,6 +458,8 @@ Map-Blaster-Master-Area-2-B.txt
 6	7	25	118	4
 # BARREL
 7	8	17	118	5
+# HUB LIST - x,y theo trục màn hình
+9	500	10	100	100
 # ENEMY LIST
 # WORM
 10	3	50	1180	8
@@ -417,9 +467,9 @@ Map-Blaster-Master-Area-2-B.txt
 # SPIDER
 12	10	420	1160	9
 # FLOATERS
-13	10	104	145	10
-14	10	136	180	10
-15	10	136	108	10
+13	12	104	145	10
+14	12	136	180	10
+15	12	136	108	10
 # DOMES
 16	13	308	108	11
 17	13	161	1196	11

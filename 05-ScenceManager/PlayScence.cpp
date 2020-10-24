@@ -45,6 +45,8 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define OBJECT_TYPE_ENEMY1	2
 #define OBJECT_TYPE_WORM	3
 #define OBJECT_TYPE_SPIDER	10
+#define OBJECT_TYPE_FLOATER	12
+#define OBJECT_TYPE_DOME	13
 #define OBJECT_TYPE_CANNON	19
 #define OBJECT_TYPE_EYEBALL	20
 
@@ -184,9 +186,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	case OBJECT_TYPE_ENEMY1: obj = new CEnemyObject1(); break;
 	case OBJECT_TYPE_WORM: obj = new CWorm(); break;
-	case OBJECT_TYPE_SPIDER: obj = new CSpider(); break;
+	case OBJECT_TYPE_FLOATER: obj = new CFloater(); break;
 	case OBJECT_TYPE_CANNON: obj = new CCannon(); break;
 	case OBJECT_TYPE_EYEBALL: obj = new CEyeball(); break;
+	case OBJECT_TYPE_DOME: obj = new CDome(); break;
 	case OBJECT_TYPE_SPIKE:
 	{
 		float r = atof(tokens[5].c_str());

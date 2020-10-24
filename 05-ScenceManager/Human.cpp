@@ -13,6 +13,9 @@
 #include "EnemyObject1.h"
 #include "Spike.h"
 #include "Eyeball.h"
+#include "Cannon.h"
+#include "Floater.h"
+#include "Dome.h"
 CHuman::CHuman(float x, float y) : CGameObject()
 {
 	level = HUMAN_LEVEL_SMALL;
@@ -33,17 +36,35 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// Xử lý di chuyển của các đối tượng enemy theo đối tượng nhân vật chính
 	for (UINT i = 0; i < coObjects->size(); i++)
 	{
-		if (dynamic_cast<CEnemyObject1*>(coObjects->at(i))) {
-			CEnemyObject1* enemy1_object = dynamic_cast<CEnemyObject1*>(coObjects->at(i));
-			if (enemy1_object->GetState() != ENEMY1_STATE_DIE)
+		if (dynamic_cast<CFloater*>(coObjects->at(i))) {
+			CFloater* floater = dynamic_cast<CFloater*>(coObjects->at(i));
+			if (floater->GetState() != FLOATER_STATE_DIE)
 			{
 				float x_enemy, y_enemy;
-				enemy1_object->GetPosition(x_enemy, y_enemy);
+				floater->GetPosition(x_enemy, y_enemy);
 				if (x > x_enemy)
-					enemy1_object->SetDirection(1);
+					floater->SetDirection(1);
 				else
-					enemy1_object->SetDirection(-1);
-				enemy1_object->SetState(ENEMY1_STATE_WALKING);
+					floater->SetDirection(-1);
+				floater->SetState(FLOATER_STATE_MOVE);
+				if (floater->GetBlood() < 0)
+					floater->SetState(FLOATER_STATE_DIE);
+			}
+
+		}
+		if (dynamic_cast<CDome*>(coObjects->at(i))) {
+			CDome* dome = dynamic_cast<CDome*>(coObjects->at(i));
+			if (dome->GetState() != DOME_STATE_DIE)
+			{
+				float x_enemy, y_enemy;
+				dome->GetPosition(x_enemy, y_enemy);
+				if (x > x_enemy)
+					dome->SetDirection(1);
+				else
+					dome->SetDirection(-1);
+				dome->SetState(DOME_STATE_MOVE);
+				if (dome->GetBlood() < 0)
+					dome->SetState(DOME_STATE_DIE);
 			}
 
 		}
@@ -58,26 +79,14 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else
 					worm->SetDirection(-1);
 				worm->SetState(WORM_STATE_MOVE);
-			}
-
-		}
-		else if (dynamic_cast<CSpider*>(coObjects->at(i))) {
-			CSpider* spider = dynamic_cast<CSpider*>(coObjects->at(i));
-			if (spider->GetState() != SPIDER_STATE_DIE)
-			{
-				float x_spider, y_spider;
-				spider->GetPosition(x_spider, y_spider);
-				if (x > x_spider)
-					spider->SetDirection(1);
-				else
-					spider->SetDirection(-1);
-				spider->SetState(SPIDER_STATE_MOVE);
+				if (worm->GetBlood() < 0)
+					worm->SetState(WORM_STATE_DIE);
 			}
 
 		}
 		else if (dynamic_cast<CEyeball*>(coObjects->at(i))) {
 			CEyeball* eyeball = dynamic_cast<CEyeball*>(coObjects->at(i));
-			if (eyeball->GetState() != SPIDER_STATE_DIE)
+			if (eyeball->GetState() != EYEBALL_STATE_DIE)
 			{
 				float x_eyeball, y_eyeball;
 				eyeball->GetPosition(x_eyeball, y_eyeball);
@@ -91,7 +100,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					eyeball->SetDirectionY(-1);//Down
 				if (eyeball->GetBlood() < 0)
 					eyeball->SetState(EYEBALL_STATE_DIE);
-				
+				//eyeball->SetState(EYEBALL_STATE_IDLE);
 			}
 
 		}
@@ -140,7 +149,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			{
 
 				LPCOLLISIONEVENT e = coEventsResult[i];
-				if (dynamic_cast<CBrick*>(e->obj)) // if e->obj is CBrick 
+				if (dynamic_cast<CBrick*>(e->obj)) 
 				{
 					if (e->ny > 0)
 					{
@@ -158,38 +167,12 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		// clean up collision events
 		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
-	//}
-	//else
-	//{
-	//	for (UINT i = 0; i < coObjects->size(); i++)
-	//	{
-	//		if (dynamic_cast<CBrick*>(coObjects->at(i)))
-	//		{
-	//			CBrick* brick = dynamic_cast<CBrick*>(coObjects->at(i));
-	//			float l1, t1, r1, b1, l2, t2, r2, b2;
-	//			GetBoundingBox(l1, t1, r1, b1);
-	//			brick->GetBoundingBox(l2, t2, r2, b2);
-
-	//			if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
-	//			{
-	//				dx = 0;
-	//				dy = 0;
-
-	//			}
-	//		}
-	//	}
-	//	
-	//	x += dx;
-	//	y += dy;	
-	//}
 	
 }
 int ani = HUMAN_ANI_BIG_WALKING;
 int flip = false;
 void CHuman::Render()
 {
-	//int ani = -1;
-	//bool flip = false;
 	if (state == MAIN_CHARACTER_STATE_DIE)
 		ani = HUMAN_ANI_DIE;
 	else
@@ -306,8 +289,7 @@ void CHuman::SetState(int state)
 			isGoingUp = true;
 			isGoingDown = false;
 			vy = HUMAN_WALKING_SPEED;
-		}
-			
+		}	
 		break;
 	case MAIN_CHARACTER_STATE_DOWN_BARREL:
 		if (level == HUMAN_LEVEL_BIG)
@@ -315,8 +297,7 @@ void CHuman::SetState(int state)
 			isGoingUp = false;
 			isGoingDown = true;
 			vy = -HUMAN_WALKING_SPEED;
-		}
-			
+		}	
 		break;
 	case MAIN_CHARACTER_STATE_DIE:
 		break;
