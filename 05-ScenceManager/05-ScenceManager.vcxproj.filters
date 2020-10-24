@@ -31,6 +31,12 @@
     <Filter Include="Source Files\Hub">
       <UniqueIdentifier>{2da29e54-d4da-454e-bad0-567ec78c2023}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\ItemObjects">
+      <UniqueIdentifier>{aa18adc3-cfb9-4bf0-ac8a-40f2333175fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ItemObjects">
+      <UniqueIdentifier>{730a5cf7-3068-4db5-bb79-57ad78cecd08}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Brick.cpp">
@@ -131,6 +137,9 @@
     </ClCompile>
     <ClCompile Include="Eyeball.cpp">
       <Filter>Source Files\EnemyObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Spike.cpp">
+      <Filter>Source Files\ItemObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -235,6 +244,9 @@
     </ClInclude>
     <ClInclude Include="Eyeball.h">
       <Filter>Header Files\EnemyObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Spike.h">
+      <Filter>Header Files\ItemObjects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

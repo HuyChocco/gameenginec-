@@ -11,6 +11,8 @@
 #include "Worm.h"
 #include "Spider.h"
 #include "EnemyObject1.h"
+#include "Spike.h"
+#include "Eyeball.h"
 CHuman::CHuman(float x, float y) : CGameObject()
 {
 	level = HUMAN_LEVEL_SMALL;
@@ -25,6 +27,7 @@ CHuman::CHuman(float x, float y) : CGameObject()
 
 void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	CGame* game = CGame::GetInstance();
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
 	// Xử lý di chuyển của các đối tượng enemy theo đối tượng nhân vật chính
@@ -72,67 +75,114 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 
 		}
+		else if (dynamic_cast<CEyeball*>(coObjects->at(i))) {
+			CEyeball* eyeball = dynamic_cast<CEyeball*>(coObjects->at(i));
+			if (eyeball->GetState() != SPIDER_STATE_DIE)
+			{
+				float x_eyeball, y_eyeball;
+				eyeball->GetPosition(x_eyeball, y_eyeball);
+				if (x > x_eyeball)
+					eyeball->SetDirection(1);
+				else
+					eyeball->SetDirection(-1);
+				if (y > y_eyeball)
+					eyeball->SetDirectionY(1);//Up
+				else
+					eyeball->SetDirectionY(-1);//Down
+				if (eyeball->GetBlood() < 0)
+					eyeball->SetState(EYEBALL_STATE_DIE);
+				
+			}
+
+		}
 	}
 	// Simple fall down
 	if(level==HUMAN_LEVEL_SMALL)
+	{
 		vy -= HUMAN_GRAVITY * dt;
-
-	vector<LPCOLLISIONEVENT> coEvents;
-	vector<LPCOLLISIONEVENT> coEventsResult;
-
-	coEvents.clear();
-
-	// turn off collision when die 
-	if (state != HUMAN_STATE_DIE)
-		CalcPotentialCollisions(coObjects, coEvents);
-
-	// No collision occured, proceed normally
-	if (coEvents.size() == 0)
-	{
-		x += dx;
-		y += dy;
 	}
-	else
-	{
-		float min_tx, min_ty, nx = 0, ny;
-		float rdx = 0;
-		float rdy = 0;
+		vector<LPCOLLISIONEVENT> coEvents;
+		vector<LPCOLLISIONEVENT> coEventsResult;
 
-		// TODO: This is a very ugly designed function!!!!
-		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
+		coEvents.clear();
 
-		// how to push back HUMAN if collides with a moving objects, what if HUMAN is pushed this way into another object?
-		//if (rdx != 0 && rdx!=dx)
-		//	x += nx*abs(rdx); 
+		// turn off collision when die 
+		if (state != HUMAN_STATE_DIE)
+			CalcPotentialCollisions(coObjects, coEvents);
 
-		// block every object first!
-		x += min_tx * dx + nx * 0.4f;
-		y += min_ty * dy + ny * 0.4f;
-
-		if (nx != 0) vx = 0;
-		if (ny != 0) vy = 0;
-
-
-		//
-		// Collision logic with other objects
-		//
-		for (UINT i = 0; i < coEventsResult.size(); i++)
+		// No collision occured, proceed normally
+		if (coEvents.size() == 0)
 		{
-			
-			LPCOLLISIONEVENT e = coEventsResult[i];
-			if (dynamic_cast<CBrick*>(e->obj)) // if e->obj is CBrick 
-			{
-				if (e->ny > 0)
-				{
-					is_on_ground = true;
-				}
-			}
-			
+			x += dx;
+			y += dy;
 		}
-	}
+		else
+		{
+			float min_tx, min_ty, nx = 0, ny;
+			float rdx = 0;
+			float rdy = 0;
 
-	// clean up collision events
-	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+			// TODO: This is a very ugly designed function!!!!
+			FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
+
+			// block every object first!
+			x += min_tx * dx + nx * 0.4f;
+			y += min_ty * dy + ny * 0.4f;
+
+			if (nx != 0) vx = 0;
+			if (ny != 0) vy = 0;
+
+
+			//
+			// Collision logic with other objects
+			//
+			for (UINT i = 0; i < coEventsResult.size(); i++)
+			{
+
+				LPCOLLISIONEVENT e = coEventsResult[i];
+				if (dynamic_cast<CBrick*>(e->obj)) // if e->obj is CBrick 
+				{
+					if (e->ny > 0)
+					{
+						is_on_ground = true;
+					}
+				}
+				else if (dynamic_cast<CSpike*>(e->obj))
+				{
+					x += dx;
+					y += dy;
+				}
+
+			}
+		}
+
+		// clean up collision events
+		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+	//}
+	//else
+	//{
+	//	for (UINT i = 0; i < coObjects->size(); i++)
+	//	{
+	//		if (dynamic_cast<CBrick*>(coObjects->at(i)))
+	//		{
+	//			CBrick* brick = dynamic_cast<CBrick*>(coObjects->at(i));
+	//			float l1, t1, r1, b1, l2, t2, r2, b2;
+	//			GetBoundingBox(l1, t1, r1, b1);
+	//			brick->GetBoundingBox(l2, t2, r2, b2);
+
+	//			if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+	//			{
+	//				dx = 0;
+	//				dy = 0;
+
+	//			}
+	//		}
+	//	}
+	//	
+	//	x += dx;
+	//	y += dy;	
+	//}
+	
 }
 int ani = HUMAN_ANI_BIG_WALKING;
 int flip = false;
@@ -223,10 +273,14 @@ void CHuman::SetState(int state)
 	case MAIN_CHARACTER_STATE_RUN_RIGHT:
 		vx = HUMAN_WALKING_SPEED;
 		nx = 1;
+		isGoingUp = false;
+		isGoingDown = false;
 		break;
 	case MAIN_CHARACTER_STATE_RUN_LEFT:
 		vx = -HUMAN_WALKING_SPEED;
 		nx = -1;
+		isGoingUp = false;
+		isGoingDown = false;
 		break;
 	case MAIN_CHARACTER_STATE_JUMP:
 		// TODO: need to check if HUMAN is *current* on a platform before allowing to jump again
@@ -238,18 +292,31 @@ void CHuman::SetState(int state)
 				is_on_ground = false;
 			}
 		}
-	
+		isGoingUp = false;
+		isGoingDown = false;
 		break;
 	case MAIN_CHARACTER_STATE_IDLE:
 		vx = 0;
+		if (level == HUMAN_LEVEL_BIG)
+			vy = 0;
 		break;
 	case MAIN_CHARACTER_STATE_UP_BARREL:
-		if(level==HUMAN_LEVEL_BIG)
+		if (level == HUMAN_LEVEL_BIG)
+		{
+			isGoingUp = true;
+			isGoingDown = false;
 			vy = HUMAN_WALKING_SPEED;
+		}
+			
 		break;
 	case MAIN_CHARACTER_STATE_DOWN_BARREL:
 		if (level == HUMAN_LEVEL_BIG)
-			vy = - HUMAN_WALKING_SPEED;
+		{
+			isGoingUp = false;
+			isGoingDown = true;
+			vy = -HUMAN_WALKING_SPEED;
+		}
+			
 		break;
 	case MAIN_CHARACTER_STATE_DIE:
 		break;

@@ -143,6 +143,7 @@
     <ClCompile Include="Portal.cpp" />
     <ClCompile Include="PowerHub.cpp" />
     <ClCompile Include="Spider.cpp" />
+    <ClCompile Include="Spike.cpp" />
     <ClCompile Include="TiledMap.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -179,6 +180,7 @@
     <ClInclude Include="Portal.h" />
     <ClInclude Include="PowerHub.h" />
     <ClInclude Include="Spider.h" />
+    <ClInclude Include="Spike.h" />
     <ClInclude Include="TiledMap.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Game.h" />

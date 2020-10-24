@@ -12,6 +12,7 @@
 #include "EnemyObject1.h"
 #include "Worm.h"
 #include "Spider.h"
+#include "Eyeball.h"
 CMainCharacter::CMainCharacter(float x, float y) : CGameObject()
 {
 
@@ -83,13 +84,42 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 
 			}
+			else if (dynamic_cast<CSpider*>(coObjects->at(i))) {
+				CSpider* spider = dynamic_cast<CSpider*>(coObjects->at(i));
+				if (spider->GetState() != SPIDER_STATE_DIE)
+				{
+					float x_spider, y_spider;
+					spider->GetPosition(x_spider, y_spider);
+					if (x > x_spider)
+						spider->SetDirection(1);
+					else
+						spider->SetDirection(-1);
+					spider->SetState(SPIDER_STATE_MOVE);
+				}
+
+			}
+			else if (dynamic_cast<CEyeball*>(coObjects->at(i))) {
+				CEyeball* eyeball = dynamic_cast<CEyeball*>(coObjects->at(i));
+				if (eyeball->GetState() != EYEBALL_STATE_DIE)
+				{
+					float x_eyeball, y_eyeball;
+					eyeball->GetPosition(x_eyeball, y_eyeball);
+					if (x > x_eyeball)
+						eyeball->SetDirection(1);
+					else
+						eyeball->SetDirection(-1);
+					if (y > y_eyeball)
+						eyeball->SetDirectionY(1);//Up
+					else
+						eyeball->SetDirectionY(-1);//Down
+					if (eyeball->GetBlood() < 0)
+						eyeball->SetState(EYEBALL_STATE_DIE);
+					//eyeball->SetState(EYEBALL_STATE_IDLE);
+				}
+
+			}
 		}
-		//Render list of weapon objects
-		if (list_weapon.size() > 0)
-		{
-			for (int i = 0; i < list_weapon.size(); i++)
-				list_weapon[i]->Update(dt, coObjects);
-		}
+		
 		// Simple fall down
 		if (state != MAIN_CHARACTER_STATE_NONE_COLLISION)
 			//vy += MAIN_CHARACTER_GRAVITY * dt;
@@ -170,7 +200,12 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		}
 	}
-	
+	//Update list of weapon objects
+	if (list_weapon.size() > 0)
+	{
+		for (int i = 0; i < list_weapon.size(); i++)
+			list_weapon[i]->Update(dt, coObjects);
+	}
 	//Cập nhật vị trí cho các đối tượng thành phần như bánh xe, cabin, human...
 	//Chạy hàm cập nhật của các đối tượng thành phần
 	for (int i = 0; i < componentObjects.size(); i++)
@@ -200,15 +235,49 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CMainCharacter::Render()
 {
-	
 	int alpha = 255;
-	
-	animation_set->at(0)->Render(x, y, alpha);
-	RenderBoundingBox();
-
-	// Vẽ các đối tượng weapon của nhân vật chính
-	if (!Is_Human)
+	CGame* game = CGame::GetInstance();
+	if (!game->GetCurrentScene()->GetTypeScence() == OVER_WORLD)
 	{
+		animation_set->at(0)->Render(x, y, alpha);
+		// Vẽ các đối tượng weapon của nhân vật chính
+	//	if (!Is_Human)
+		{
+			if (list_weapon.size() > 0)
+			{
+				for (int i = 0; i < list_weapon.size(); i++)
+					list_weapon[i]->Render();
+			}
+		}
+
+		//Vẽ các object thành phần của player object
+		for (int i = 0; i < componentObjects.size(); i++)
+		{
+			//Chỉ Render đối tượng CHuman
+			if (Is_Human)
+			{
+				componentObjects[i]->Render();
+			}
+			//Render các đối tượng thành phần không phải CHuman
+			else
+			{
+				if (!dynamic_cast<CHuman*>(componentObjects[i]))
+					componentObjects[i]->Render();
+			}
+		}
+		RenderBoundingBox();
+
+	}
+	
+	else
+	{
+		Is_Human = true;
+		for (int i = 0; i < componentObjects.size(); i++)
+		{
+			//Chỉ Render đối tượng CHuman
+			if (dynamic_cast<CHuman*>(componentObjects[i]))
+				componentObjects[i]->Render();
+		}
 		if (list_weapon.size() > 0)
 		{
 			for (int i = 0; i < list_weapon.size(); i++)
@@ -216,22 +285,6 @@ void CMainCharacter::Render()
 		}
 	}
 	
-	//Vẽ các object thành phần của player object
-	for (int i = 0; i < componentObjects.size(); i++)
-	{
-		//Chỉ Render đối tượng CHuman
-		if (Is_Human)
-		{
-			componentObjects[i]->Render();
-		}
-		//Render các đối tượng thành phần không phải CHuman
-		else
-		{
-			if (!dynamic_cast<CHuman*>(componentObjects[i]))
-				componentObjects[i]->Render();
-		}
-	}
-		
 	
 	
 }
@@ -301,24 +354,60 @@ void CMainCharacter::SetState(int state)
 		
 		if (state == MAIN_CHARACTER_STATE_BARREL_FIRE)//Nhân vật bắn
 		{
-			if (dynamic_cast<CBarrelObject*>(componentObjects[i]))
+			if (Is_Human)
 			{
-				float x_barrel_object, y_barrel_object;
-				//Lấy vị trí x, y của đối tượng nòng sóng
-				dynamic_cast<CBarrelObject*>(componentObjects[i])->GetPosition(x_barrel_object, y_barrel_object);
-				//Nếu nòng sóng đang giơ lên
-				if (dynamic_cast<CBarrelObject*>(componentObjects[i])->GetIsBarrelUp() == true)
+				CWeapon* weapon = new CWeapon(WEAPON_TYPE_BIG_HUMAN);// Khởi tạo weapon theo x,y của human
+				float x_human, y_human;
+				//Lấy vị trí x, y của đối tượng human
+				if (dynamic_cast<CHuman*>(componentObjects[i]))
 				{
+					dynamic_cast<CHuman*>(componentObjects[i])->GetPosition(x_human, y_human);
 					
-					CWeapon* weapon = new CWeapon(x_barrel_object, y_barrel_object, nx, state, true);// Khởi tạo weapon theo x,y của barrel
+					if (dynamic_cast<CHuman*>(componentObjects[i])->GetGoingUp())
+					{
+						weapon->SetPosition(x_human + HUMAN_BIG_BBOX_WIDTH / 2, y_human);
+						weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY_UP);
+					}
+						
+					else if (dynamic_cast<CHuman*>(componentObjects[i])->GetGoingDown())
+					{
+						weapon->SetPosition(x_human+ HUMAN_BIG_BBOX_WIDTH/2, y_human);
+						weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY_DOWN);
+					}
+					
+					else
+					{
+						weapon->SetPosition(x_human, y_human - HUMAN_BIG_BBOX_HEIGHT / 2);
+						weapon->SetDirection(nx);
+						weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY);
+					}
 					list_weapon.push_back(weapon);
 				}
-				else
+				
+			}
+			else
+			{
+				if (dynamic_cast<CBarrelObject*>(componentObjects[i]))
 				{
-					CWeapon* weapon = new CWeapon(x_barrel_object, y_barrel_object, nx, state, false);// Khởi tạo weapon theo x,y của barrel
-					list_weapon.push_back(weapon);
+					float x_barrel_object, y_barrel_object;
+					//Lấy vị trí x, y của đối tượng nòng sóng
+					dynamic_cast<CBarrelObject*>(componentObjects[i])->GetPosition(x_barrel_object, y_barrel_object);
+					//Nếu nòng sóng đang giơ lên
+					if (dynamic_cast<CBarrelObject*>(componentObjects[i])->GetIsBarrelUp() == true)
+					{
+
+						CWeapon* weapon = new CWeapon(x_barrel_object, y_barrel_object, nx, state, true);// Khởi tạo weapon theo x,y của barrel
+						list_weapon.push_back(weapon);
+					}
+					else
+					{
+						CWeapon* weapon = new CWeapon(x_barrel_object, y_barrel_object, nx, state, false);// Khởi tạo weapon theo x,y của barrel
+						list_weapon.push_back(weapon);
+					}
 				}
 			}
+			
+			
 		}
 	}
 	

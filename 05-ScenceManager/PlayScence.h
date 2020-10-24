@@ -11,6 +11,8 @@
 #include "Worm.h"
 #include "Spider.h"
 #include "Cannon.h"
+#include "Spike.h"
+#include "Eyeball.h"
 //bo sung
 #include "MainCharacter.h"
 #include "BarrelObject.h"

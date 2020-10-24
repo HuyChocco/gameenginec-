@@ -85,6 +85,8 @@ public:
 	int GetScreenWidth() { return screen_width; }
 	int GetScreenHeight() { return screen_height; }
 
+	bool CheckCollision(float l1, float t1, float r1, float b1, float l2, float t2, float r2, float b2);
+
 	static void SweptAABB(
 		float ml,			// move left 
 		float mt,			// move top
