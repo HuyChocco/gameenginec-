@@ -7,6 +7,7 @@
 #define FLOATER_BBOX_HEIGHT 15
 
 #define FLOATER_STATE_MOVE 100
+#define FLOATER_STATE_MOVE_CHANGE_DIRECTION 101
 
 #define FLOATER_STATE_DIE 200
 
@@ -15,9 +16,11 @@
 
 #define FLOATER_ANI_MOVE_LEFT 0
 #define FLOATER_ANI_MOVE_RIGHT 1
+
+#define TIME_CHANGE_DIRECTION 1000
 class CFloater :public CEnemyObject
 {
-	
+	DWORD time_moving;
 public:
 	CFloater();
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
