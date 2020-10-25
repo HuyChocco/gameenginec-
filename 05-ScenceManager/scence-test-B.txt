@@ -310,6 +310,17 @@ Map-Blaster-Master-Area-2-B.txt
 601	10002	100	10003	100	10004	100
 #crawl left
 602	10005	100	10006	100
+#BIG-SOFIA
+#move left
+603	10007	100	10008	100	10009	100
+#move up
+604	10010	100	10011	100	10012	100
+#move down
+605	10013	100	10014	100	10015	100
+#bullet
+606	10016	100
+#bullet_explosion
+607	10017	100	10018	100	10019	100
 # ==== SOFIA WHEEL =========
 #idle-of left-wheel
 700	20002	100

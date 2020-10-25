@@ -54,7 +54,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						floater->SetDirection(1);
 					else
 						floater->SetDirection(-1);
-					floater->SetState(FLOATER_STATE_MOVE);
+					//floater->SetState(FLOATER_STATE_MOVE);
 					if (floater->GetBlood() < 0)
 						floater->SetState(FLOATER_STATE_DIE);
 				}

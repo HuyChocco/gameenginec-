@@ -2,8 +2,10 @@
 
 CFloater::CFloater() :CEnemyObject()
 {
-	SetState(FLOATER_STATE_IDLE);
+	SetState(FLOATER_STATE_MOVE);
 	this->blood = 1;
+
+	time_moving = 0;
 }
 
 void CFloater::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -16,11 +18,29 @@ void CFloater::GetBoundingBox(float& left, float& top, float& right, float& bott
 
 void CFloater::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	DWORD now = GetTickCount();
+	DWORD duration = now - time_moving;
+	if (duration >= TIME_CHANGE_DIRECTION)
+	{
+		SetState(FLOATER_STATE_MOVE_CHANGE_DIRECTION);
+		time_moving = now;
+	}
+	else
+	{
+		if (nx > 0)
+		{
+			vx = FLOATER_MOVE_SPEED;
+		}
+		else
+		{
+			vx = -FLOATER_MOVE_SPEED;
+		}
+	}
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
 
 	// Simple fall down
-	vy -= 0.002f * dt;
+	//vy -= 0.002f * dt;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -53,6 +73,8 @@ void CFloater::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+
+	
 }
 
 void CFloater::Render()
@@ -84,12 +106,15 @@ void CFloater::SetState(int state)
 		{
 			vx = FLOATER_MOVE_SPEED;
 		}
-
 		else
 		{
 			vx = -FLOATER_MOVE_SPEED;
 		}
-
+		vy = FLOATER_MOVE_SPEED;
+		break;
+	case FLOATER_STATE_MOVE_CHANGE_DIRECTION:
+		vx = -vx;
+		vy = -vy;
 		break;
 	case FLOATER_STATE_DIE:
 		break;
