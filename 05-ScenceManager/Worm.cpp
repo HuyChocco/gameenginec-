@@ -9,7 +9,7 @@ CWorm::CWorm() :CEnemyObject()
 void CWorm::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	left = x;
-	top = y- WORM_BBOX_HEIGHT;
+	top = y - WORM_BBOX_HEIGHT;
 	right = x + WORM_BBOX_WIDTH;
 	bottom = y ;
 }
@@ -20,7 +20,7 @@ void CWorm::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt);
 
 	// Simple fall down
-	vy -= 0.002f * dt;
+	vy -= 0.0001f * dt;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
