@@ -54,7 +54,6 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						floater->SetDirection(1);
 					else
 						floater->SetDirection(-1);
-					//floater->SetState(FLOATER_STATE_MOVE);
 					if (floater->GetBlood() < 0)
 						floater->SetState(FLOATER_STATE_DIE);
 				}
@@ -108,7 +107,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						eyeball->SetDirectionY(-1);//Down
 					if (eyeball->GetBlood() < 0)
 						eyeball->SetState(EYEBALL_STATE_DIE);
-					//eyeball->SetState(EYEBALL_STATE_IDLE);
+					
 				}
 
 			}

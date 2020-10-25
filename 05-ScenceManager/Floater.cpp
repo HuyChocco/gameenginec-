@@ -6,39 +6,75 @@ CFloater::CFloater() :CEnemyObject()
 	this->blood = 1;
 
 	time_moving = 0;
+	
 }
 
 void CFloater::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	left = x;
-	top = y - FLOATER_BBOX_HEIGHT;
-	right = x + FLOATER_BBOX_WIDTH;
-	bottom = y ;
+	if (state != FLOATER_STATE_DIE)
+	{
+		left = x;
+		top = y - FLOATER_BBOX_HEIGHT;
+		right = x + FLOATER_BBOX_WIDTH;
+		bottom = y;
+	}
+	
 }
 
 void CFloater::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	DWORD now = GetTickCount();
-	DWORD duration = now - time_moving;
-	if (duration >= TIME_CHANGE_DIRECTION)
+	
+
+	time_moving += dt;
+	if (isRepeat)
 	{
-		SetState(FLOATER_STATE_MOVE_CHANGE_DIRECTION);
-		time_moving = now;
+		if (time_moving >= TIME_CHANGE_DIRECTION)
+		{
+			SetState(FLOATER_STATE_MOVE_CHANGE_DIRECTION_Y);
+			isBeingDown = false;
+			time_moving = 0;
+			isRepeat = false;
+		}
 	}
 	else
 	{
-		if (nx > 0)
+		if (!isBeingDown)
 		{
-			vx = FLOATER_MOVE_SPEED;
+			if (time_moving >= TIME_CHANGE_DIRECTION)
+			{
+				SetState(FLOATER_STATE_MOVE_CHANGE_DIRECTION_X);
+				isBeingDown = true;
+				time_moving = 0;
+			}
 		}
 		else
 		{
-			vx = -FLOATER_MOVE_SPEED;
+			if (isBeingUp)
+			{
+				if (time_moving >= TIME_CHANGE_DIRECTION)
+				{
+					SetState(FLOATER_STATE_MOVE_CHANGE_DIRECTION_X);
+					isBeingUp = false;
+					time_moving = 0;
+					isRepeat = true;
+				}
+			}
+			else
+			{
+				if (time_moving >= TIME_CHANGE_DIRECTION)
+				{
+					SetState(FLOATER_STATE_MOVE_CHANGE_DIRECTION_Y);
+					isBeingUp = true;
+					time_moving = 0;
+				}
+			}
+
 		}
 	}
+	
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
-
+	
 	// Simple fall down
 	//vy -= 0.002f * dt;
 
@@ -67,8 +103,8 @@ void CFloater::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		x += min_tx * dx + nx * 0.4f;
 		y += min_ty * dy + ny * 0.4f;
 
-		if (nx != 0) vx = 0;
-		if (ny != 0) vy = 0;
+		if (nx != 0) vx = -vx;
+		if (ny != 0) vy = -vy;
 
 	}
 	// clean up collision events
@@ -88,7 +124,7 @@ void CFloater::Render()
 			ani = FLOATER_ANI_MOVE_LEFT;
 
 		animation_set->at(ani)->Render(x, y);
-		//RenderBoundingBox();
+		RenderBoundingBox();
 	}
 
 }
@@ -110,10 +146,12 @@ void CFloater::SetState(int state)
 		{
 			vx = -FLOATER_MOVE_SPEED;
 		}
-		vy = FLOATER_MOVE_SPEED;
+		vy = -FLOATER_MOVE_SPEED;
 		break;
-	case FLOATER_STATE_MOVE_CHANGE_DIRECTION:
+	case FLOATER_STATE_MOVE_CHANGE_DIRECTION_X:
 		vx = -vx;
+		break;
+	case FLOATER_STATE_MOVE_CHANGE_DIRECTION_Y:
 		vy = -vy;
 		break;
 	case FLOATER_STATE_DIE:
