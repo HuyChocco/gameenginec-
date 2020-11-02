@@ -555,3 +555,48 @@ void CGame::TransformViewPortPosition(float& x, float& y, float l, float t, floa
 	x = pos.x;
 	y = pos.y;
 }
+
+int CGame::RandomItem(int _item)
+{
+	int itemRandom;
+
+	if (_item > 6)
+	{
+		int random = rand() % 100;
+
+		if (random < 10)
+		{
+			itemRandom = 0;// ANI_ITEM_WHIP
+		}
+		else if (random < 20 && random >= 10)
+		{
+			itemRandom = 1;// ANI_ITEM_KNIFE
+		}
+		else if (random < 30 && random >= 20)
+		{
+			itemRandom = 2;// ANI_ITEM_AXE
+		}
+		else if (random < 40 && random >= 30)
+		{
+			itemRandom = 3;// ANI_ITEM_BOMERANG
+		}
+		else if (random < 50 && random >= 40)
+		{
+			itemRandom = 6;// ANI_ITEM_FIRE
+		}
+		else if (random < 60 && random >= 50)
+		{
+			itemRandom = 4;// ANI_ITEM_SMALL_HEART
+		}
+		else
+		{
+			itemRandom = 5;// ANI_ITEM_BIG_HEART
+		}
+	}
+	else
+	{
+		itemRandom = _item;
+	}
+
+	return itemRandom;
+}

@@ -16,6 +16,9 @@
 #include "Cannon.h"
 #include "Floater.h"
 #include "Dome.h"
+#include "Jumper.h"
+#define JUMPER_ROUNDING_DISTANCE_X 100
+#define JUMPER_ROUNDING_DISTANCE_Y 40
 CHuman::CHuman(float x, float y) : CGameObject()
 {
 	level = HUMAN_LEVEL_SMALL;
@@ -38,68 +41,76 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		if (dynamic_cast<CFloater*>(coObjects->at(i))) {
 			CFloater* floater = dynamic_cast<CFloater*>(coObjects->at(i));
-			if (floater->GetState() != FLOATER_STATE_DIE)
-			{
-				float x_enemy, y_enemy;
-				floater->GetPosition(x_enemy, y_enemy);
-				if (x > x_enemy)
-					floater->SetDirection(1);
-				else
-					floater->SetDirection(-1);
-				if (floater->GetBlood() < 0)
-					floater->SetState(FLOATER_STATE_DIE);
-			}
+
+			float x_enemy, y_enemy;
+			floater->GetPosition(x_enemy, y_enemy);
+			if (x > x_enemy)
+				floater->SetDirection(1);
+			else
+				floater->SetDirection(-1);
+
+
 
 		}
-		if (dynamic_cast<CDome*>(coObjects->at(i))) {
+		else if (dynamic_cast<CDome*>(coObjects->at(i))) {
 			CDome* dome = dynamic_cast<CDome*>(coObjects->at(i));
-			if (dome->GetState() != DOME_STATE_DIE)
-			{
-				float x_enemy, y_enemy;
-				dome->GetPosition(x_enemy, y_enemy);
-				if (x > x_enemy)
-					dome->SetDirection(1);
-				else
-					dome->SetDirection(-1);
-				dome->SetState(DOME_STATE_MOVE);
-				if (dome->GetBlood() < 0)
-					dome->SetState(DOME_STATE_DIE);
-			}
+
+			float x_enemy, y_enemy;
+			dome->GetPosition(x_enemy, y_enemy);
+			if (x > x_enemy)
+				dome->SetDirection(1);
+			else
+				dome->SetDirection(-1);
+
 
 		}
 		else if (dynamic_cast<CWorm*>(coObjects->at(i))) {
 			CWorm* worm = dynamic_cast<CWorm*>(coObjects->at(i));
-			if (worm->GetState() != WORM_STATE_DIE)
-			{
-				float x_worm, y_worm;
-				worm->GetPosition(x_worm, y_worm);
-				if (x > x_worm)
-					worm->SetDirection(1);
-				else
-					worm->SetDirection(-1);
-				worm->SetState(WORM_STATE_MOVE);
-				if (worm->GetBlood() < 0)
-					worm->SetState(WORM_STATE_DIE);
-			}
+
+			float x_worm, y_worm;
+			worm->GetPosition(x_worm, y_worm);
+			if (x > x_worm)
+				worm->SetDirection(1);
+			else
+				worm->SetDirection(-1);
+			
+
+
 
 		}
 		else if (dynamic_cast<CEyeball*>(coObjects->at(i))) {
 			CEyeball* eyeball = dynamic_cast<CEyeball*>(coObjects->at(i));
-			if (eyeball->GetState() != EYEBALL_STATE_DIE)
+
+			float x_eyeball, y_eyeball;
+			eyeball->GetPosition(x_eyeball, y_eyeball);
+			if (x > x_eyeball)
+				eyeball->SetDirection(1);
+			else
+				eyeball->SetDirection(-1);
+			if (y > y_eyeball)
+				eyeball->SetDirectionY(1);//Up
+			else
+				eyeball->SetDirectionY(-1);//Down
+
+
+
+		}
+		else if (dynamic_cast<CCannon*>(coObjects->at(i))) {
+			CCannon* cannon = dynamic_cast<CCannon*>(coObjects->at(i));
+		}
+		else if (dynamic_cast<CJumper*>(coObjects->at(i))) {
+			CJumper* jumper = dynamic_cast<CJumper*>(coObjects->at(i));
+
+			float x_jumper, y_jumper;
+			jumper->GetPosition(x_jumper, y_jumper);
+			if (x > x_jumper)
+				jumper->SetDirection(1);
+			else
+				jumper->SetDirection(-1);
+			if (jumper->GetState() != STATE_ITEM)
 			{
-				float x_eyeball, y_eyeball;
-				eyeball->GetPosition(x_eyeball, y_eyeball);
-				if (x > x_eyeball)
-					eyeball->SetDirection(1);
-				else
-					eyeball->SetDirection(-1);
-				if (y > y_eyeball)
-					eyeball->SetDirectionY(1);//Up
-				else
-					eyeball->SetDirectionY(-1);//Down
-				if (eyeball->GetBlood() < 0)
-					eyeball->SetState(EYEBALL_STATE_DIE);
-				
+				if (abs(x - x_jumper) < JUMPER_ROUNDING_DISTANCE_X && abs(y - y_jumper) < JUMPER_ROUNDING_DISTANCE_Y)
+					jumper->SetState(JUMPER_STATE_JUMP);
 			}
 
 		}
@@ -117,7 +128,16 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		// turn off collision when die 
 		if (state != HUMAN_STATE_DIE)
 			CalcPotentialCollisions(coObjects, coEvents);
+		// reset untouchable timer if untouchable time has passed
+		if (untouchable == 1)
+		{
 
+			if (GetTickCount() - untouchable_start > MAIN_CHARACTER_UNTOUCHABLE_TIME)
+			{
+				untouchable = 0;
+				untouchable_start = 0;
+			}
+		}
 		// No collision occured, proceed normally
 		if (coEvents.size() == 0)
 		{
@@ -160,7 +180,125 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					x += dx;
 					y += dy;
 				}
+				else if (dynamic_cast<CWorm*>(e->obj))
+				{
+					CWorm* worm = dynamic_cast<CWorm*>(e->obj);
+					if (worm->GetState() != STATE_ITEM)
+					{
+						StartUntouchable();
+						float vxWorm, vyWorm;
+						worm->GetSpeed(vxWorm, vyWorm);
+						if (e->ny != 0)
+						{
+							y += vyWorm * dt;
+							//y += dy;
+						}
+						else
+							x += dx;
+					}
+					else
+						worm->SetState(WORM_STATE_DIE);
+				}
+				else if (dynamic_cast<CFloater*>(e->obj))
+				{
+					CFloater* floater = dynamic_cast<CFloater*>(e->obj);
+					if (floater->GetState() != STATE_ITEM)
+					{
+						StartUntouchable();
+						float vxFloater, vyFloater;
+						floater->GetSpeed(vxFloater, vyFloater);
+						if (e->ny != 0)
+						{
+							y += vyFloater * dt;
+							//y += dy;
+						}
+						else
+							x += dx;
+					}
+					else
+						floater->SetState(FLOATER_STATE_DIE);
 
+				}
+				else if (dynamic_cast<CCannon*>(e->obj))
+				{
+					CCannon* cannon = dynamic_cast<CCannon*>(e->obj);
+					if (cannon->GetState() != STATE_ITEM)
+					{
+						StartUntouchable();
+						float vxCannon, vyCannon;
+						cannon->GetSpeed(vxCannon, vyCannon);
+						if (e->ny != 0)
+						{
+							y += vyCannon * dt;
+							//y += dy;
+						}
+						else
+							x += dx;
+					}
+					else
+						cannon->SetState(CANNON_STATE_DIE);
+
+				}
+				else if (dynamic_cast<CEyeball*>(e->obj))
+				{
+					CEyeball* eyeball = dynamic_cast<CEyeball*>(e->obj);
+					if (eyeball->GetState() != STATE_ITEM)
+					{
+						StartUntouchable();
+						float vxEyeball, vyEyeball;
+						eyeball->GetSpeed(vxEyeball, vyEyeball);
+						if (e->ny != 0)
+						{
+							y += vyEyeball * dt;
+							//y += dy;
+						}
+						else
+							x += dx;
+					}
+					else
+						eyeball->SetState(EYEBALL_STATE_DIE);
+
+				}
+				else if (dynamic_cast<CDome*>(e->obj))
+				{
+					CDome* dome = dynamic_cast<CDome*>(e->obj);
+					if (dome->GetState() != STATE_ITEM)
+					{
+						StartUntouchable();
+						float vxDome, vyDome;
+						dome->GetSpeed(vxDome, vyDome);
+						if (e->ny != 0)
+						{
+							y += vyDome * dt;
+							//y += dy;
+						}
+						else
+							x += dx;
+					}
+					else
+						dome->SetState(DOME_STATE_DIE);
+
+				}
+				else if (dynamic_cast<CJumper*>(e->obj))
+				{
+				CJumper* jumper = dynamic_cast<CJumper*>(e->obj);
+					if (jumper->GetState() != STATE_ITEM)
+					{
+						StartUntouchable();
+						float vxJumper, vyJumper;
+						jumper->GetSpeed(vxJumper, vyJumper);
+						if (e->ny != 0)
+						{
+							y += vyJumper * dt;
+							//y += dy;
+						}
+						else
+							x += dx;
+					}
+					else
+						jumper->SetState(DOME_STATE_DIE);
+
+				}
 			}
 		}
 
@@ -234,7 +372,8 @@ void CHuman::Render()
 		}
 
 		int alpha = 255;
-
+		if (untouchable)
+			alpha = 128;
 		animation_set->at(ani)->Render(x, y, flip);
 		
 		RenderBoundingBox();

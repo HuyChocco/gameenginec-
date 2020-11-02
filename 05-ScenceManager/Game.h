@@ -132,6 +132,8 @@ public:
 	int GetNextPortalId() { return this->next_portal_id; }
 
 	int GetCurrentScenceID() { return current_scene; }
+
+	int RandomItem(int _item);
 	~CGame();
 };
 
