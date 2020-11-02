@@ -46,7 +46,7 @@
 
 #define MAIN_CHARACTER_BBOX_WIDTH  24
 #define MAIN_CHARACTER_BBOX_HEIGHT 16
-
+#define MAIN_CHARACTER_UNTOUCHABLE_TIME 500
 class CMainCharacter: public CGameObject
 {
 	int level;
@@ -88,4 +88,6 @@ public:
 	
 	float GetStartX() { return start_x; }
 	float GetStartY() { return start_y; }
+
+	void CollisionItem(int item);
 };

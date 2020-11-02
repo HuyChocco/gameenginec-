@@ -16,6 +16,7 @@
 #include "Eyeball.h"
 #include "Floater.h"
 #include "Dome.h"
+#include "Jumper.h"
 //bo sung
 #include "MainCharacter.h"
 #include "BarrelObject.h"

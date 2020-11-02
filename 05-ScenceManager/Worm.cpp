@@ -1,17 +1,38 @@
 #include "Worm.h"
-
-CWorm::CWorm() :CEnemyObject()
+#include "Brick.h"
+#include "Jumper.h"
+CWorm::CWorm(int _item) :CEnemyObject()
 {
-	SetState(WORM_STATE_IDLE);
+	SetState(WORM_STATE_MOVE);
 	this->blood = 1;
+	item = _item;
+	this->isEnable = true;
+	this->isDisplay = true;
 }
 
 void CWorm::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	left = x;
-	top = y - WORM_BBOX_HEIGHT;
-	right = x + WORM_BBOX_WIDTH;
-	bottom = y ;
+	if (isEnable)
+	{
+		left = x;
+		if (state != STATE_ITEM)
+		{
+			top = y - WORM_BBOX_HEIGHT;
+			right = x + WORM_BBOX_WIDTH;
+		}
+		else
+		{
+			if (item == 1)
+			{
+				top = y - ITEM_P_BBOX_HEIGHT;
+
+				right = x + ITEM_P_BBOX_WIDTH;
+			}
+			
+		}
+		bottom = y;
+	}
+	
 }
 
 void CWorm::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -20,13 +41,20 @@ void CWorm::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt);
 
 	// Simple fall down
-	vy -= 0.0001f * dt;
-
+	if (isDisplay)
+		vy -= 0.0001f * dt;
+	if (this->blood < 0)
+	{
+		if(item>0)
+			SetState(STATE_ITEM);
+		else
+			SetState(WORM_STATE_DIE);
+	}
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
 	coEvents.clear();
-	if (state != WORM_STATE_DIE)
+	if (isDisplay)
 		CalcPotentialCollisions(coObjects, coEvents);
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
@@ -53,7 +81,29 @@ void CWorm::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
+		for (UINT i = 0; i < coEventsResult.size(); i++)
+		{
+			LPCOLLISIONEVENT e = coEventsResult[i];
 
+			if (dynamic_cast<CBrick*>(e->obj))
+			{
+				if (e->ny > 0)
+				{
+					SetState(WORM_STATE_MOVE);
+				}
+				
+
+			}
+			else if (dynamic_cast<CWorm*>(e->obj))
+			{
+				x += dx;
+			}
+			else if (dynamic_cast<CJumper*>(e->obj))
+			{
+				x += dx;
+			}
+
+		}
 	}
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
@@ -61,16 +111,33 @@ void CWorm::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CWorm::Render()
 {
-	if (state != WORM_STATE_DIE)
+	if (isEnable)
 	{
 		int ani = -1;
-		if (nx > 0)
-			ani = WORM_ANI_MOVE_RIGHT;
-		else
-			ani = WORM_ANI_MOVE_LEFT;
-
-		animation_set->at(ani)->Render(x, y);
-		RenderBoundingBox();
+		switch (state)
+		{
+		case WORM_STATE_IDLE:
+		case WORM_STATE_MOVE:
+			if (nx > 0)
+				ani = WORM_ANI_MOVE_RIGHT;
+			else
+				ani = WORM_ANI_MOVE_LEFT;
+			break;
+		case STATE_ITEM:
+			if (hasItem)
+			{
+				ani = item;
+				animation_item_set->at(ani-1)->Render(x, y);
+			}
+			
+			break;
+		}
+		if (isDisplay)
+		{
+			animation_set->at(ani)->Render(x, y);
+			RenderBoundingBox();
+		}
+			
 	}
 
 }
@@ -96,6 +163,14 @@ void CWorm::SetState(int state)
 
 		break;
 	case WORM_STATE_DIE:
+		isDisplay = false;
+		isEnable = false;
+		break;
+	case STATE_ITEM:
+		hasItem = true;
+		vy = 0;
+		vx = 0;
+		isDisplay = false;
 		break;
 	default:
 		break;

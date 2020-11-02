@@ -1,11 +1,18 @@
 #pragma once
 #include "GameObject.h"
+#include "Game.h"
+#define STATE_ITEM 10000
+#define ITEM_P_BBOX_WIDTH	16
+#define ITEM_P_BBOX_HEIGHT	16
 //#include "Weapon.h"
 class CEnemyObject : public CGameObject
 {
 protected:
 	int blood;
-
+	int item;
+	bool isEnable;
+	bool isDisplay;
+	bool hasItem;
 public:
 	CEnemyObject();
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom) = 0;

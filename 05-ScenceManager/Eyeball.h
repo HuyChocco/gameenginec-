@@ -28,7 +28,7 @@ class CEyeball :public CEnemyObject
 
 	vector<CGameObject*> list_weapon;
 public:
-	CEyeball();
+	CEyeball(int _item);
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();

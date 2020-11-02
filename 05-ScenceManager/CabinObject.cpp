@@ -45,6 +45,9 @@ void CCabinObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CCabinObject::Render()
 {
+	int alpha = 255;
+	if (untouchable)
+		alpha = 128;
 	bool flip = false;
 	int ani = -1;
 	if (nx > 0)
@@ -59,7 +62,7 @@ void CCabinObject::Render()
 	}
 	else
 		ani = CABIN_ANI_HORIZONTAL;
-	animation_set->at(ani)->Render(x, y,flip);
+	animation_set->at(ani)->Render(x, y,flip,alpha);
 }
 
 void CCabinObject::SetState(int state)

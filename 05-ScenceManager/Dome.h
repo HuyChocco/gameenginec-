@@ -7,19 +7,25 @@
 #define DOME_BBOX_HEIGHT 15
 
 #define DOME_STATE_MOVE 100
+#define DOME_STATE_CLIMB 101
+#define DOME_STATE_LAY_UP 102
 
 #define DOME_STATE_DIE 200
 
-#define DOME_STATE_IDLE 300
+#define DOME_STATE_START 300
 
 
 #define DOME_ANI_MOVE_LEFT 0
 #define DOME_ANI_MOVE_RIGHT 1
+#define DOME_ANI_CLIMB 2
+#define DOME_ANI_LAY_UP 3
 class CDome :public CEnemyObject
 {
-	
+	bool isMoving;
+	bool isClimbing;
+	bool isLayingUp;
 public:
-	CDome();
+	CDome(int _item);
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();

@@ -6,7 +6,6 @@
 class CCabinObject : public CGameObject
 {
 	int level;
-	int untouchable;
 	DWORD up_effect_start;
 
 	float start_x;			// initial position of CABIN at scene

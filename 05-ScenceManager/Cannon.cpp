@@ -1,18 +1,33 @@
 ﻿#include "Cannon.h"
 #include "Weapon.h"
-CCannon::CCannon():CEnemyObject()
+CCannon::CCannon(int _item):CEnemyObject()
 {
 	SetState(CANNON_STATE_IDLE);
 	this->blood = 1;
+	isEnable = true;
+	isDisplay = true;
 }
 
 void CCannon::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (state != CANNON_STATE_DIE)
+	if (isEnable)
 	{
 		left = x;
-		top = y - CANNON_BBOX_HEIGHT;
-		right = x + CANNON_BBOX_WIDTH;
+		if (state != STATE_ITEM)
+		{
+			top = y - CANNON_BBOX_HEIGHT;
+			right = x + CANNON_BBOX_WIDTH;
+		}
+		else
+		{
+			if (item == 1)
+			{
+				top = y - ITEM_P_BBOX_HEIGHT;
+
+				right = x + ITEM_P_BBOX_WIDTH;
+			}
+
+		}
 		bottom = y;
 	}
 	
@@ -20,16 +35,28 @@ void CCannon::GetBoundingBox(float& left, float& top, float& right, float& botto
 
 void CCannon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	for (int i = 0; i < list_weapon.size(); i++)
+	if (this->blood < 0)
 	{
-		list_weapon[i]->Update(dt, coObjects);
+		if (item > 0)
+			SetState(STATE_ITEM);
+		else
+			SetState(CANNON_STATE_DIE);
 	}
+	if (isEnable)
+	{
+		for (int i = 0; i < list_weapon.size(); i++)
+		{
+			list_weapon[i]->Update(dt, coObjects);
+		}
+	}
+	
 }
 
 void CCannon::Render()
 {
-	if (state != CANNON_STATE_DIE)
+	if (isEnable)
 	{
+		
 		int ani = -1;
 		if (!isFireVertical)
 		{
@@ -74,6 +101,8 @@ void CCannon::SetState(int state)
 		vx = 0;
 		break;
 	case CANNON_STATE_DIE:
+		isDisplay = false;
+		isEnable = false;
 		break;
 	case CANNON_STATE_FIRE_VERTICAL:
 	{

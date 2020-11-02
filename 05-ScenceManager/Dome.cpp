@@ -1,18 +1,37 @@
 #include "Dome.h"
-
-CDome::CDome() :CEnemyObject()
+#include "Brick.h"
+CDome::CDome(int _item) :CEnemyObject()
 {
-	SetState(DOME_STATE_IDLE);
+	SetState(DOME_STATE_START);
 	this->blood = 1;
+	item = _item;
+	isEnable = true;
+	isDisplay = true;
 }
 
 void CDome::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
+	if (isEnable)
+	{
+		left = x;
+		if (state != STATE_ITEM)
+		{
+			top = y - DOME_BBOX_HEIGHT;
+			right = x + DOME_BBOX_WIDTH;
+		}
+		else
+		{
+			if (item == 1)
+			{
+				top = y - ITEM_P_BBOX_HEIGHT;
 
-	left = x;
-	top = y - DOME_BBOX_HEIGHT;
-	right = x + DOME_BBOX_WIDTH;
-	bottom = y;
+				right = x + ITEM_P_BBOX_WIDTH;
+			}
+
+		}
+		bottom = y;
+	}
+	
 }
 
 void CDome::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -21,19 +40,28 @@ void CDome::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt);
 
 	// Simple fall down
-	vy -= 0.002f * dt;
-
+	if (isDisplay)
+		vy -= 0.0001f * dt;
+	if (this->blood < 0)
+	{
+		if (item > 0)
+			SetState(STATE_ITEM);
+		else
+			SetState(DOME_STATE_DIE);
+	}
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
 	coEvents.clear();
-	if (state != DOME_STATE_DIE)
+	if (isDisplay)
 		CalcPotentialCollisions(coObjects, coEvents);
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
 		x += dx;
 		y += dy;
+		if(!isMoving)
+			SetState(DOME_STATE_LAY_UP);
 	}
 	else
 	{
@@ -54,24 +82,64 @@ void CDome::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		if (nx != 0) vx = 0;
 		if (ny != 0) vy = 0;
+		for (UINT i = 0; i < coEventsResult.size(); i++)
+		{
+			LPCOLLISIONEVENT e = coEventsResult[i];
 
+			if (dynamic_cast<CBrick*>(e->obj))
+			{
+				if (e->ny > 0)
+				{
+					SetState(DOME_STATE_MOVE);
+				}
+				else if (e->nx < 0)
+				{
+					SetState(DOME_STATE_CLIMB);
+				}
+				
+			}
+			
+		}
 	}
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+
+	
 }
 
 void CDome::Render()
 {
-	if (state != DOME_STATE_DIE)
+	if (isEnable)
 	{
 		int ani = -1;
-		if (nx > 0)
-			ani = DOME_ANI_MOVE_RIGHT;
-		else
-			ani = DOME_ANI_MOVE_LEFT;
-
-		animation_set->at(ani)->Render(x, y);
-		RenderBoundingBox();
+		switch (state)
+		{
+		case DOME_STATE_MOVE:
+			if (nx > 0)
+				ani = DOME_ANI_MOVE_RIGHT;
+			else
+				ani = DOME_ANI_MOVE_LEFT;
+			break;
+		case DOME_STATE_LAY_UP:
+			ani = DOME_ANI_LAY_UP;
+			break;
+		case DOME_STATE_CLIMB:
+			ani = DOME_ANI_CLIMB;
+			break;
+		case DOME_STATE_START:
+			ani = DOME_ANI_CLIMB;
+			break;
+		case STATE_ITEM:
+			ani = item;
+			animation_item_set->at(ani - 1)->Render(x, y);
+			break;
+		}
+		if (isDisplay)
+		{
+			animation_set->at(ani)->Render(x, y);
+			RenderBoundingBox();
+		}
+		
 	}
 
 }
@@ -81,22 +149,35 @@ void CDome::SetState(int state)
 	CGameObject::SetState(state);
 	switch (state)
 	{
-	case DOME_STATE_IDLE:
-		vx = 0;
+	case DOME_STATE_START:
+		vx = DOME_MOVE_SPEED;
 		break;
 	case DOME_STATE_MOVE:
 		if (nx > 0)
 		{
 			vx = DOME_MOVE_SPEED;
 		}
-
 		else
 		{
 			vx = -DOME_MOVE_SPEED;
 		}
-
+		isMoving = true;
 		break;
 	case DOME_STATE_DIE:
+		isDisplay = false;
+		isEnable = false;
+		break;
+	case DOME_STATE_CLIMB:
+		vx = DOME_MOVE_SPEED;
+		isClimbing = true;
+		break;
+	case DOME_STATE_LAY_UP:
+		isLayingUp = true;
+		break;
+	case STATE_ITEM:
+		vx = 0;
+		vy = 0;
+		isDisplay = false;
 		break;
 	default:
 		break;
