@@ -90,7 +90,16 @@ void CWorm::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (e->ny > 0)
 				{
 					SetState(WORM_STATE_MOVE);
+					startMoving = true;
 				}
+				if (startMoving)
+				{
+					if (e->nx != 0)
+					{
+						SetState(WORM_STATE_JUMP);
+					}
+				}
+				
 				
 
 			}
@@ -100,7 +109,18 @@ void CWorm::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 			else if (dynamic_cast<CJumper*>(e->obj))
 			{
-				x += dx;
+				CJumper* jumper = dynamic_cast<CJumper*>(e->obj);
+				if (jumper->GetState() != STATE_ITEM)
+				{
+					float vxJumper, vyJumper;
+					jumper->GetSpeed(vxJumper, vyJumper);
+					if (e->ny != 0)
+					{
+						y -= vyJumper*dt;
+					}
+					else
+						x += dx;
+				}
 			}
 
 		}
@@ -117,6 +137,7 @@ void CWorm::Render()
 		switch (state)
 		{
 		case WORM_STATE_IDLE:
+		case WORM_STATE_JUMP:
 		case WORM_STATE_MOVE:
 			if (nx > 0)
 				ani = WORM_ANI_MOVE_RIGHT;
@@ -160,7 +181,17 @@ void CWorm::SetState(int state)
 		{
 			vx = -WORM_MOVE_SPEED;
 		}
-
+		break;
+	case WORM_STATE_JUMP:
+		vy = 0.02f;
+		if (nx > 0)
+		{
+			vx = WORM_MOVE_SPEED;
+		}
+		else
+		{
+			vx = -WORM_MOVE_SPEED;
+		}
 		break;
 	case WORM_STATE_DIE:
 		isDisplay = false;

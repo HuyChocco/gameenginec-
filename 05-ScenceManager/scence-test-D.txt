@@ -551,7 +551,7 @@ Map-Blaster-Master-Area-2-D.txt
 # --- SCENE PORTAL ----
 # object_id 	type	l	t	ani_set_id	r	b	scene_id	type_portal: 1-Next scene 0-Previous scene
 #1000	50	452	1654.667	2	463	1631.667	4	1
-#1001	50	453.5	1144.0	2	464.5	1121.0	4	1
+1001	50	453.5	1144.0	2	464.5	1121.0	4	0	1001
 #1002	50	47	888.5	2	58	865.5	4	1
 #1003	50	47.5	632.5	2	58.5	609.5	4	1
 #1004	50	453	633.0	2	464	610.0	4	1

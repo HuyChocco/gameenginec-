@@ -42,7 +42,7 @@ void CCannon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		else
 			SetState(CANNON_STATE_DIE);
 	}
-	if (isEnable)
+	//if (isEnable)
 	{
 		for (int i = 0; i < list_weapon.size(); i++)
 		{

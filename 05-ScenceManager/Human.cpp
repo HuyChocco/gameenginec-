@@ -17,7 +17,7 @@
 #include "Floater.h"
 #include "Dome.h"
 #include "Jumper.h"
-#define JUMPER_ROUNDING_DISTANCE_X 100
+#define JUMPER_ROUNDING_DISTANCE_X 50
 #define JUMPER_ROUNDING_DISTANCE_Y 40
 CHuman::CHuman(float x, float y) : CGameObject()
 {
@@ -183,121 +183,168 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else if (dynamic_cast<CWorm*>(e->obj))
 				{
 					CWorm* worm = dynamic_cast<CWorm*>(e->obj);
+					float vxWorm, vyWorm;
+					worm->GetSpeed(vxWorm, vyWorm);
 					if (worm->GetState() != STATE_ITEM)
 					{
 						StartUntouchable();
-						float vxWorm, vyWorm;
-						worm->GetSpeed(vxWorm, vyWorm);
 						if (e->ny != 0)
 						{
-							y += vyWorm * dt;
-							//y += dy;
+							y -= 2 * vyWorm * dt;
 						}
 						else
 							x += dx;
 					}
 					else
+					{
+						if (e->ny != 0)
+						{
+							y -= 2 * vy * dt;
+						}
+						else
+							x += dx;
 						worm->SetState(WORM_STATE_DIE);
+					}
+
 				}
 				else if (dynamic_cast<CFloater*>(e->obj))
 				{
 					CFloater* floater = dynamic_cast<CFloater*>(e->obj);
+					float vxFloater, vyFloater;
+					floater->GetSpeed(vxFloater, vyFloater);
 					if (floater->GetState() != STATE_ITEM)
 					{
 						StartUntouchable();
-						float vxFloater, vyFloater;
-						floater->GetSpeed(vxFloater, vyFloater);
+
 						if (e->ny != 0)
 						{
-							y += vyFloater * dt;
-							//y += dy;
+							y -= 2 * vyFloater * dt;
 						}
 						else
 							x += dx;
 					}
 					else
+					{
+						if (e->ny < 0)
+						{
+							y -= 2 * vy * dt;
+						}
+						else
+							x += dx;
 						floater->SetState(FLOATER_STATE_DIE);
-
-				}
-				else if (dynamic_cast<CCannon*>(e->obj))
-				{
-					CCannon* cannon = dynamic_cast<CCannon*>(e->obj);
-					if (cannon->GetState() != STATE_ITEM)
-					{
-						StartUntouchable();
-						float vxCannon, vyCannon;
-						cannon->GetSpeed(vxCannon, vyCannon);
-						if (e->ny != 0)
-						{
-							y += vyCannon * dt;
-							//y += dy;
-						}
-						else
-							x += dx;
 					}
-					else
-						cannon->SetState(CANNON_STATE_DIE);
 
-				}
-				else if (dynamic_cast<CEyeball*>(e->obj))
-				{
-					CEyeball* eyeball = dynamic_cast<CEyeball*>(e->obj);
-					if (eyeball->GetState() != STATE_ITEM)
-					{
-						StartUntouchable();
-						float vxEyeball, vyEyeball;
-						eyeball->GetSpeed(vxEyeball, vyEyeball);
-						if (e->ny != 0)
-						{
-							y += vyEyeball * dt;
-							//y += dy;
-						}
-						else
-							x += dx;
-					}
-					else
-						eyeball->SetState(EYEBALL_STATE_DIE);
 
 				}
 				else if (dynamic_cast<CDome*>(e->obj))
 				{
 					CDome* dome = dynamic_cast<CDome*>(e->obj);
+					float vxDome, vyDome;
+					dome->GetSpeed(vxDome, vyDome);
 					if (dome->GetState() != STATE_ITEM)
 					{
 						StartUntouchable();
-						float vxDome, vyDome;
-						dome->GetSpeed(vxDome, vyDome);
 						if (e->ny != 0)
 						{
-							y += vyDome * dt;
-							//y += dy;
+							y -= 2 * vyDome * dt;
 						}
 						else
 							x += dx;
 					}
 					else
+					{
+						if (e->ny < 0)
+						{
+							y -= 2 * vy * dt;
+						}
+						else
+							x += dx;
 						dome->SetState(DOME_STATE_DIE);
+					}
+
 
 				}
 				else if (dynamic_cast<CJumper*>(e->obj))
 				{
-				CJumper* jumper = dynamic_cast<CJumper*>(e->obj);
+					CJumper* jumper = dynamic_cast<CJumper*>(e->obj);
+					float vxJumper, vyJumper;
+					jumper->GetSpeed(vxJumper, vyJumper);
 					if (jumper->GetState() != STATE_ITEM)
 					{
 						StartUntouchable();
-						float vxJumper, vyJumper;
-						jumper->GetSpeed(vxJumper, vyJumper);
 						if (e->ny != 0)
 						{
-							y += vyJumper * dt;
-							//y += dy;
+							y -= 2 * vyJumper * dt;
 						}
 						else
 							x += dx;
 					}
 					else
+					{
+						if (e->ny < 0)
+						{
+							y -= 2 * vy * dt;
+						}
+						else
+							x += dx;
 						jumper->SetState(DOME_STATE_DIE);
+					}
 
+
+				}
+				//Indoor enemies
+				else if (dynamic_cast<CCannon*>(e->obj))
+				{
+					CCannon* cannon = dynamic_cast<CCannon*>(e->obj);
+					float vxCannon, vyCannon;
+					cannon->GetSpeed(vxCannon, vyCannon);
+					if (cannon->GetState() != STATE_ITEM)
+					{
+						StartUntouchable();
+						if (e->ny != 0)
+						{
+							y += vyCannon * dt;
+						}
+						else
+							x += dx;
+					}
+					else
+					{
+						if (e->ny != 0)
+						{
+							y += dy;
+						}
+						else
+							x += dx;
+						cannon->SetState(CANNON_STATE_DIE);
+					}
+				}
+				else if (dynamic_cast<CEyeball*>(e->obj))
+				{
+					CEyeball* eyeball = dynamic_cast<CEyeball*>(e->obj);
+					float vxEyeball, vyEyeball;
+					eyeball->GetSpeed(vxEyeball, vyEyeball);
+					if (eyeball->GetState() != STATE_ITEM)
+					{
+						StartUntouchable();
+						if (e->ny != 0)
+						{
+							y += vyEyeball * dt;
+						}
+						else
+							x += dx;
+					}
+					else
+					{
+						if (e->ny != 0)
+						{
+							y += dy;
+						}
+						else
+							x += dx;
+						eyeball->SetState(EYEBALL_STATE_DIE);
+
+					}
 				}
 			}
 		}

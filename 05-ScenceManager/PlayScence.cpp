@@ -713,7 +713,7 @@ void CPlayScene::Update(DWORD dt)
 
 		float height = player_y - cy;
 
-		if (height >= ((float)game->GetScreenHeight() / 6))
+		if (height >= ((float)game->GetScreenHeight() / 12))
 		{
 			height += (float)(game->GetScreenHeight() / 8);
 
