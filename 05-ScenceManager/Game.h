@@ -11,10 +11,16 @@
 #include <dinput.h>
 
 #include "Scence.h"
-
+#include <unordered_map>
 using namespace std;
 
 #define KEYBOARD_BUFFER_SIZE 1024
+enum TYPE_SCENCE
+{
+	WORLD,
+	OVER_WORLD
+};
+
 
 class CGame
 {
@@ -52,6 +58,10 @@ class CGame
 	bool isNextMap = false;	// check allow change scene
 	bool isPreMap = false;	// check allow change scene
 	int sceneId;			// sceneId will change
+	bool is_rendering_next_map = false; // Kiểm tra có hiệu ứng đang vẽ map kế tiếp không
+
+	int next_portal_id;
+	int next_scence_id_effect;
 public:
 	void InitKeyboard();
 	void SetKeyHandler(LPKEYEVENTHANDLER handler) { keyHandler = handler; }
@@ -59,8 +69,9 @@ public:
 	void Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha = 255, bool flip = false);
 	//bổ sung
 	void SetRenderData(D3DXVECTOR2& center, D3DXVECTOR2& translate, D3DXVECTOR2& scaling);
-	void DrawWithTransformation(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha = 255);
-	
+	void DrawWithTransformation(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha = 255, bool flip = false);
+	void DrawWithoutTransformation(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha = 255, bool flip = false);
+	void TransformViewPortPosition(float& x, float& y, float l, float t, float r, float b);
 
 	int IsKeyDown(int KeyCode);
 	int IsKeyPress(int KeyCode);
@@ -69,10 +80,12 @@ public:
 	void Load(LPCWSTR gameFile);
 	LPSCENE GetCurrentScene() { return scenes[current_scene]; }
 	LPSCENE GetScene(int id) { return scenes[id]; }
-	void SwitchScene(int scene_id,float pre_player_x=0,float pre_player_y=0);
+	void SwitchScene(int scene_id);
 
 	int GetScreenWidth() { return screen_width; }
 	int GetScreenHeight() { return screen_height; }
+
+	bool CheckCollision(float l1, float t1, float r1, float b1, float l2, float t2, float r2, float b2);
 
 	static void SweptAABB(
 		float ml,			// move left 
@@ -99,12 +112,28 @@ public:
 	static CGame * GetInstance();
 
 	//bo sung
+
 	bool GetIsNextMap() { return this->isNextMap; }
 	void SetIsNextMap(bool flag) { this->isNextMap = flag; }
+
 	void SetIsPreMap(bool flag) { this->isPreMap = flag; }
 	bool GetIsPreMap() { return this->isPreMap; }
+	//Get, Set scence id tiếp theo
 	void SetSceneId(int _sceneId) { this->sceneId = _sceneId; }
 	int GetSceneId() { return this->sceneId; }
+
+	void SetRenderingNextMap(int flag) { this->is_rendering_next_map = flag; }
+	int GetRenderingNextMap() { return this->is_rendering_next_map; }
+
+	void SetScenceIDRenderingNextMap(int id) { this->next_scence_id_effect = id; }
+	int GetScenceIDRenderingNextMap() { return this->next_scence_id_effect; }
+
+	void SetNextPortalId(int _portalId) { this->next_portal_id = _portalId; }
+	int GetNextPortalId() { return this->next_portal_id; }
+
+	int GetCurrentScenceID() { return current_scene; }
+
+	int RandomItem(int _item);
 	~CGame();
 };
 

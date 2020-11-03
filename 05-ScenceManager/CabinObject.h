@@ -6,7 +6,6 @@
 class CCabinObject : public CGameObject
 {
 	int level;
-	int untouchable;
 	DWORD up_effect_start;
 
 	float start_x;			// initial position of CABIN at scene
@@ -20,7 +19,7 @@ public:
 
 	void SetState(int state);
 	void SetLevel(int l) { level = l; }
-	void StartUpEffect() { y += 1; up_effect_start = GetTickCount(); }
+	void StartUpEffect() { y -= 1; up_effect_start = GetTickCount(); }
 
 	void Reset();
 

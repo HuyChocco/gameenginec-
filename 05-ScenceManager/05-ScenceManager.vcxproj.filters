@@ -25,6 +25,18 @@
     <Filter Include="Source Files\EnemyObjects">
       <UniqueIdentifier>{1c41fddf-29cf-41a6-be75-d903c023adbd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Hub">
+      <UniqueIdentifier>{b1a3a768-8837-4e24-8077-157d440b4862}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Hub">
+      <UniqueIdentifier>{2da29e54-d4da-454e-bad0-567ec78c2023}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ItemObjects">
+      <UniqueIdentifier>{aa18adc3-cfb9-4bf0-ac8a-40f2333175fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ItemObjects">
+      <UniqueIdentifier>{730a5cf7-3068-4db5-bb79-57ad78cecd08}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Brick.cpp">
@@ -93,16 +105,37 @@
     <ClCompile Include="EnemyObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyObject1.cpp">
-      <Filter>Source Files\EnemyObjects</Filter>
-    </ClCompile>
     <ClCompile Include="Weapon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Worm.cpp">
       <Filter>Source Files\EnemyObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Spider.cpp">
+    <ClCompile Include="Human.cpp">
+      <Filter>Source Files\MainCharacterObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Dome.cpp">
+      <Filter>Source Files\EnemyObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Floater.cpp">
+      <Filter>Source Files\EnemyObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="PowerHub.cpp">
+      <Filter>Source Files\Hub</Filter>
+    </ClCompile>
+    <ClCompile Include="GunHub.cpp">
+      <Filter>Source Files\Hub</Filter>
+    </ClCompile>
+    <ClCompile Include="Cannon.cpp">
+      <Filter>Source Files\EnemyObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Eyeball.cpp">
+      <Filter>Source Files\EnemyObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Spike.cpp">
+      <Filter>Source Files\ItemObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Jumper.cpp">
       <Filter>Source Files\EnemyObjects</Filter>
     </ClCompile>
   </ItemGroup>
@@ -173,16 +206,49 @@
     <ClInclude Include="EnemyObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyObject1.h">
-      <Filter>Header Files\EnemyObjects</Filter>
-    </ClInclude>
     <ClInclude Include="Weapon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Worm.h">
       <Filter>Header Files\EnemyObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Spider.h">
+    <ClInclude Include="Human.h">
+      <Filter>Header Files\MainCharacterObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Dome.h">
+      <Filter>Header Files\EnemyObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Floater.h">
+      <Filter>Header Files\EnemyObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="PowerHub.h">
+      <Filter>Header Files\Hub</Filter>
+    </ClInclude>
+    <ClInclude Include="GunHub.h">
+      <Filter>Header Files\Hub</Filter>
+    </ClInclude>
+    <ClInclude Include="HovHub.h">
+      <Filter>Header Files\Hub</Filter>
+    </ClInclude>
+    <ClInclude Include="Cannon.h">
+      <Filter>Header Files\EnemyObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Eyeball.h">
+      <Filter>Header Files\EnemyObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Spike.h">
+      <Filter>Header Files\ItemObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Jumper.h">
+      <Filter>Header Files\EnemyObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Insect.h">
+      <Filter>Header Files\EnemyObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Orb.h">
+      <Filter>Header Files\EnemyObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Skull.h">
       <Filter>Header Files\EnemyObjects</Filter>
     </ClInclude>
   </ItemGroup>

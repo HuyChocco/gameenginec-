@@ -12,6 +12,7 @@ using namespace std;
 
 #define ID_TEX_BBOX -100		// special texture to draw object bounding box
 
+
 class CGameObject; 
 typedef CGameObject * LPGAMEOBJECT;
 
@@ -55,19 +56,23 @@ public:
 	float vy;
 
 	int nx;	 
-
+	int ny;
 	int state;
 
 	DWORD dt; 
 
 	LPANIMATION_SET animation_set;
+	LPANIMATION_SET animation_item_set;
 	//bổ sung;
 	int id = 0;//mặc định
 	//D3DXVECTOR2 delta;
+
+	int untouchable;
 public: 
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
 	void SetDirection(int nx) { this->nx = nx; }
+	void SetDirectionY(int ny) { this->ny = ny; }
 	void GetPosition(float &x, float &y) { x = this->x; y = this->y; }
 	void GetSpeed(float &vx, float &vy) { vx = this->vx; vy = this->vy; }
 
@@ -76,6 +81,7 @@ public:
 	void RenderBoundingBox();
 
 	void SetAnimationSet(LPANIMATION_SET ani_set) { animation_set = ani_set; }
+	void SetAnimationItemSet(LPANIMATION_SET ani_set) { animation_item_set = ani_set; }
 
 	LPCOLLISIONEVENT SweptAABBEx(LPGAMEOBJECT coO);
 	void CalcPotentialCollisions(vector<LPGAMEOBJECT> *coObjects, vector<LPCOLLISIONEVENT> &coEvents);
@@ -99,7 +105,7 @@ public:
 	//bổ sung
 	int GetID() { return this->id; }
 	void SetID(int _id) { this->id = _id; }
-	//virtual void SetDelta(D3DXVECTOR2 delta) { }
+	void SetUntouchable(int flag) { untouchable = flag; }
 	~CGameObject();
 };
 

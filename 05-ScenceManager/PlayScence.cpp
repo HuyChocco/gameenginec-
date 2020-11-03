@@ -6,9 +6,10 @@
 #include "Textures.h"
 #include "Sprites.h"
 #include "Portal.h"
-//#include "TiledMap.h"
-#include "Grid.h"
 
+//#include "Grid.h"
+#include "GunHub.h"
+#include "PowerHub.h"
 
 using namespace std;
 
@@ -38,11 +39,17 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 
 //Map objects
 #define OBJECT_TYPE_BRICK	1
+#define OBJECT_TYPE_SPIKE	21
 
 //Enemy objects
 #define OBJECT_TYPE_ENEMY1	2
 #define OBJECT_TYPE_WORM	3
 #define OBJECT_TYPE_SPIDER	10
+#define OBJECT_TYPE_FLOATER	12
+#define OBJECT_TYPE_DOME	13
+#define OBJECT_TYPE_JUMPER	14
+#define OBJECT_TYPE_CANNON	19
+#define OBJECT_TYPE_EYEBALL	20
 
 //Main character objects
 #define OBJECT_TYPE_MAIN_CHARACTER	9
@@ -51,7 +58,9 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define OBJECT_TYPE_WHEEL_MIDDLE	6
 #define OBJECT_TYPE_CABIN	7
 #define OBJECT_TYPE_BARREL	8
+#define OBJECT_TYPE_HUMAN	11
 
+#define OBJECT_TYPE_POWERHUB	500
 
 #define OBJECT_TYPE_PORTAL	50
 
@@ -166,7 +175,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_MAIN_CHARACTER:
 		if (player != NULL)
 		{
-			DebugOut(L"[ERROR] MARIO object was created before!\n");
+			DebugOut(L"[ERROR] Player object was created before!\n");
 			return;
 		}
 		
@@ -176,9 +185,84 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		DebugOut(L"[INFO] Player object created!\n");
 		return;
 		break;
-	case OBJECT_TYPE_ENEMY1: obj = new CEnemyObject1(); break;
-	case OBJECT_TYPE_WORM: obj = new CWorm(); break;
-	case OBJECT_TYPE_SPIDER: obj = new CSpider(); break;
+	case  OBJECT_TYPE_WORM:
+	{
+		int item = 0;
+		if(tokens.size()>5)
+			item = atoi(tokens[5].c_str());
+		obj = new CWorm(item);
+		LPANIMATION_SET ani_set = animation_sets->Get(200);
+		obj->SetAnimationItemSet(ani_set);
+	}
+		break;
+	case OBJECT_TYPE_FLOATER:
+	{
+		int item = 0;
+		if (tokens.size() > 5)
+			item = atoi(tokens[5].c_str());
+		obj = new CFloater(item);
+		LPANIMATION_SET ani_set = animation_sets->Get(200);
+		obj->SetAnimationItemSet(ani_set);
+	}
+		break;
+	case OBJECT_TYPE_CANNON:
+	{
+		int item = 0;
+		if (tokens.size() > 5)
+			item = atoi(tokens[5].c_str());
+		obj = new CCannon(item);
+		LPANIMATION_SET ani_set = animation_sets->Get(200);
+		obj->SetAnimationItemSet(ani_set);
+	}
+		 break;
+	case OBJECT_TYPE_EYEBALL:
+	{
+		int item = 0;
+		if (tokens.size() > 5)
+			item = atoi(tokens[5].c_str());
+		obj = new CEyeball(item);
+		LPANIMATION_SET ani_set = animation_sets->Get(200);
+		obj->SetAnimationItemSet(ani_set);
+	}
+		 break;
+	case OBJECT_TYPE_DOME: 
+	{
+		int item = 0;
+		if (tokens.size() > 5)
+			item = atoi(tokens[5].c_str());
+		obj = new CDome(item);
+		LPANIMATION_SET ani_set = animation_sets->Get(200);
+		obj->SetAnimationItemSet(ani_set);
+	}
+		break;
+	case OBJECT_TYPE_JUMPER:
+	{
+		int item = 0;
+		if (tokens.size() > 5)
+			item = atoi(tokens[5].c_str());
+		obj = new CJumper(item);
+		LPANIMATION_SET ani_set = animation_sets->Get(200);
+		obj->SetAnimationItemSet(ani_set);
+	}
+	break;
+	case OBJECT_TYPE_SPIKE:
+	{
+		float r = atof(tokens[5].c_str());
+		float b = atof(tokens[6].c_str());
+		obj = new CSpike(x, y, r, b);
+		break;
+	}
+	case OBJECT_TYPE_POWERHUB: 
+	{
+		obj = new CPowerHub();
+		obj->SetPosition(x, y);
+		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
+		hub_objects.push_back(obj);
+		DebugOut(L"[INFO] PowerHub object created!\n");
+		return;
+		break;
+	}
+	
 	case OBJECT_TYPE_BRICK: 
 	{
 		float r = atof(tokens[5].c_str());
@@ -195,7 +279,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		if (player != NULL)
 		{
 
-			DebugOut(L"[INFO] MARIO object has been Created Already!\n");
+			DebugOut(L"[INFO] Player object has been Created Already!\n");
 			player->AddComponentObject(obj);
 			return;
 		}
@@ -211,7 +295,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
 		if (player != NULL)
 		{
-			DebugOut(L"[INFO] MARIO object has been Created Already!\n");
+			DebugOut(L"[INFO] Player object has been Created Already!\n");
 			player->AddComponentObject(obj);
 		}
 		return;
@@ -227,7 +311,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
 		if (player != NULL)
 		{
-			DebugOut(L"[INFO] MARIO object has been Created Already!\n");
+			DebugOut(L"[INFO] Player object has been Created Already!\n");
 			player->AddComponentObject(obj);
 		}
 		return;
@@ -241,7 +325,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
 		if (player != NULL)
 		{
-			DebugOut(L"[INFO] MARIO object has been Created Already!\n");
+			DebugOut(L"[INFO] Player object has been Created Already!\n");
 			player->AddComponentObject(obj);
 		}
 		return;
@@ -255,7 +339,22 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
 		if (player != NULL)
 		{
-			DebugOut(L"[INFO] MARIO object has been Created Already!\n");
+			DebugOut(L"[INFO] Player object has been Created Already!\n");
+			player->AddComponentObject(obj);
+		}
+		return;
+		break;
+	}
+	case OBJECT_TYPE_HUMAN:
+	{
+		obj = new CHuman(x, y);
+		obj->SetID(object_id);
+		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
+		if (type_scence == OVER_WORLD)
+			dynamic_cast<CHuman*>(obj)->SetLevel(HUMAN_LEVEL_BIG);
+		if (player != NULL)
+		{
+			DebugOut(L"[INFO] Player object has been Created Already!\n");
 			player->AddComponentObject(obj);
 		}
 		return;
@@ -267,7 +366,29 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			float b = atof(tokens[6].c_str());
 			int scene_id = atoi(tokens[7].c_str());
 			int type = atoi(tokens[8].c_str());
-			obj = new CPortal(x, y, r, b, scene_id, type);
+			int next_portal_id = atoi(tokens[9].c_str());
+			obj = new CPortal(x, y, r, b, scene_id, type, next_portal_id);
+			if (CGame::GetInstance()->GetIsPreMap())
+			{
+				if (player != NULL)
+				{
+					if (CGame::GetInstance()->GetNextPortalId() == object_id)
+					{
+						player->SetPosition((x - MAIN_CHARACTER_BBOX_WIDTH)-2, y);
+					}
+				}
+			}
+			else if (CGame::GetInstance()->GetIsNextMap())
+			{
+				if (player != NULL)
+				{
+					if (CGame::GetInstance()->GetNextPortalId() == object_id)
+					{
+						player->SetPosition(x+(r-x)+2, y);
+					}
+				}
+			}
+
 		}
 		break;
 	default:
@@ -427,56 +548,7 @@ void CPlayScene::Update(DWORD dt)
 	{
 	
 		coObjects.push_back(objects[i]);
-		//Nếu object là Portal object
-		if (dynamic_cast<CPortal*>(objects[i]))
-		{
-			CPortal* p = dynamic_cast<CPortal*>(objects[i]);
-			if (p->GetType() == 1)//Nếu là đối tượng portal chuyển scene tiếp theo
-			{
-				//Lấy scene id của scene tiếp theo từ portal object
-				id_next_map = p->GetSceneId();
-				//Get scene kế tiếp thông qua scene_id
-				LPSCENE s = game->GetScene(id_next_map);
-				//Nếu scene tiếp theo tồn tại và chưa load tiled map của scene tiếp theo
-				if (s && initNextMap)
-				{
-					// Lấy tiled map tiếp theo
-					s->GetNextMap();
-					// Nếu tiled map tiếp theo tồn tại
-					if (s->GetMap() != NULL)
-					{
-						//Thêm vào đối tượng CTiledMapSets
-						CTiledMapSets::GetInstance()->Add(id_next_map, s->GetMap());
-						//Chuyển cờ đánh dấu đã load được tiled map tiếp theo
-						initNextMap = false;
-					}
-
-				}
-			}	
-			else //Nếu là đối tượng portal chuyển scene trước
-			{
-				//Lấy scene id của scene trước từ portal object
-				id_pre_map = p->GetSceneId();
-				//Get scene trước thông qua scene_id
-				LPSCENE s = game->GetScene(id_pre_map);
-				if (s && initNextMap)
-				{
-					// Lấy tiled map trước
-					s->GetNextMap();
-					// Nếu tiled map trước tồn tại
-					if (s->GetMap() != NULL)
-					{
-						//Thêm vào đối tượng CTiledMapSets
-						CTiledMapSets::GetInstance()->Add(id_pre_map, s->GetMap());
-						//Chuyển cờ đánh dấu đã load được tiled map trước
-						initNextMap = false;
-					}
-
-				}
-			}
-			
-			
-		}
+		
 	}
 	for (size_t i = 0; i < objects.size(); i++)
 	{
@@ -492,9 +564,32 @@ void CPlayScene::Update(DWORD dt)
 	
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	
-	
+	//Thực hiện chuyển sang scene tiếp theo
 	if (game->GetIsNextMap() == true)
 	{
+		game->SetRenderingNextMap(true);
+		//Lấy scene id của scene tiếp theo từ game object
+		id_next_map = game->GetSceneId();
+		game->SetScenceIDRenderingNextMap(id_next_map);
+		//Get scene kế tiếp thông qua scene_id
+		LPSCENE s = game->GetScene(id_next_map);
+		//Nếu scene tiếp theo tồn tại và chưa load tiled map của scene tiếp theo
+		if (s && initNextMap )
+		{
+			// Lấy tiled map tiếp theo
+			s->GetNextMap();
+			// Nếu tiled map tiếp theo tồn tại
+			if (s->GetMap() != NULL)
+			{
+				//Thêm vào đối tượng CTiledMapSets
+				CTiledMapSets::GetInstance()->Add(id_next_map, s->GetMap());
+				//Chuyển cờ đánh dấu đã load được tiled map tiếp theo
+				initNextMap = false;
+			}
+
+		}
+		float player_x, player_y;
+		player->GetPosition(player_x, player_y);
 		//Không xét va chạm và render player lên màn hình
 		player->SetState(MAIN_CHARACTER_STATE_NONE_COLLISION);
 		//Cho camera di chuyển theo trục x
@@ -509,39 +604,41 @@ void CPlayScene::Update(DWORD dt)
 		int widthNextMap, heightNextMap;
 		map->GetMapWidth(widthNextMap);
 		map->GetMapHeight(heightNextMap);
-		float player_x, player_y;
 		player->GetPosition(player_x, player_y);
 		//Sau hiệu ứng di chuyển camera sang màn thì tiến hành chuyển màn
 		if (player_x >= widthMap + (widthNextMap / 3))
 		{
 			// switch scene
-			game->SwitchScene(game->GetSceneId(), player_x, player_y);
+			game->SwitchScene(game->GetSceneId());
 			game->SetIsNextMap(false);
 		}
 
 		
 	}
+	//Thực hiện chuyển về scene trước
 	else if (game->GetIsPreMap() == true)
 	{
+		
+		//float player_x, player_y;
+		//player->GetPosition(player_x, player_y);
 		//Không xét va chạm và render player lên màn hình
-		player->SetState(MAIN_CHARACTER_STATE_NONE_COLLISION);
+		//player->SetState(MAIN_CHARACTER_STATE_NONE_COLLISION);
 		//Cho camera di chuyển theo trục x
-		player->SetSpeed(-0.4, 0);
+		//player->SetSpeed(-0.4, 0);
 		//Lấy width, height của map hiện tại
-		CMap* map = CTiledMapSets::GetInstance()->Get(id);
-		int widthMap, heightMap;
-		map->GetMapWidth(widthMap);
-		map->GetMapHeight(heightMap);
+		//CMap* map = CTiledMapSets::GetInstance()->Get(id);
+		//int widthMap, heightMap;
+		//map->GetMapWidth(widthMap);
+		//map->GetMapHeight(heightMap);
 		//Lấy width, height của map trước
-		map = CTiledMapSets::GetInstance()->Get(id_pre_map);
-		int widthPreMap, heightPreMap;
-		map->GetMapWidth(widthPreMap);
-		map->GetMapHeight(heightPreMap);
-		float player_x, player_y;
-		player->GetPosition(player_x, player_y);
+		//map = CTiledMapSets::GetInstance()->Get(id_pre_map);
+		//int widthPreMap, heightPreMap;
+		//map->GetMapWidth(widthPreMap);
+		//map->GetMapHeight(heightPreMap);
+		//player->GetPosition(player_x, player_y);
 		//Sau hiệu ứng di chuyển camera sang màn thì tiến hành chuyển màn
 		//if (player_x <= -(widthPreMap / 3))
-		{
+		{ 
 			// switch scene
 			game->SwitchScene(game->GetSceneId());
 			game->SetIsPreMap(false);
@@ -549,11 +646,25 @@ void CPlayScene::Update(DWORD dt)
 
 
 	}
+	else
+		game->SetRenderingNextMap(false);
 	// Update camera to follow main character
 	float cx = 0, cy = 0;
 	if (player != NULL)
 	{
-		player->GetPosition(cx, cy);
+		if (player->Is_Human)
+		{
+			for (int i = 0; i < player->GetComponentObjects().size(); i++)
+			{
+				if (dynamic_cast<CHuman*>(player->GetComponentObjects()[i]))
+				{
+					CHuman* human = dynamic_cast<CHuman*>(player->GetComponentObjects()[i]);
+					human->GetPosition(cx, cy);
+				}
+			}
+		}
+		else
+			player->GetPosition(cx, cy);
 	}
 	
 	
@@ -562,40 +673,51 @@ void CPlayScene::Update(DWORD dt)
 	map->GetMapWidth(widthMap);
 	map->GetMapHeight(heightMap);
 	
-	if (cx < game->GetScreenWidth() / 2)
+	if (cx <= (float)game->GetScreenWidth() / 2)
 	{
 		cx = 0;
 		cy = 0;
-		
-		isRenderNextMap = false;//Không tạo hiệu ứng
-		isRenderPreMap = true;
-
 	}
-	else if (widthMap - cx < game->GetScreenWidth() / 2)
+	else if (widthMap - cx <= (float)game->GetScreenWidth() / 2)
 	{
-		cx -= game->GetScreenWidth() / 2;
-		//cx = widthMap - game->GetScreenWidth();
-		//Nếu đi gần hết map của scene hiện tại và gần nhất với portal thì đánh dấu để render tiled map của scene tiếp theo portal gần nhất đó
-		isRenderNextMap = true;
-		isRenderPreMap = false;//Không tạo hiệu ứng
+		if(game->GetIsNextMap())//nếu player va chạm portal
+			cx -= (float)game->GetScreenWidth() / 2;
+		else
+			cx = widthMap - game->GetScreenWidth();
 	}
 	else
 	{
-		cx -= game->GetScreenWidth() / 2;
-		isRenderNextMap = false;//Không tạo hiệu ứng
-		isRenderPreMap = false;//Không tạo hiệu ứng
+		cx -= (float)game->GetScreenWidth() / 2;
 	}
 	//Xử lý camera theo trục y
-	cy = heightMap - game->GetScreenHeight();
+	cy = game->GetScreenHeight();
+
 	if (player)
 	{
 		float player_x, player_y;
-		player->GetPosition(player_x, player_y);
-		float height = player_y - cy;
-		if (height <= (game->GetScreenHeight() / 6))
+		player_x = 0;
+		player_y = 0;
+		if (player->Is_Human)
 		{
-			height = ((game->GetScreenHeight() / 5) )- height;
-			cy -= height;
+			for (int i = 0; i < player->GetComponentObjects().size(); i++)
+			{
+				if (dynamic_cast<CHuman*>(player->GetComponentObjects()[i]))
+				{
+					CHuman* human = dynamic_cast<CHuman*>(player->GetComponentObjects()[i]);
+					human->GetPosition(player_x, player_y);
+				}
+			}
+		}
+		else
+			player->GetPosition(player_x, player_y);
+
+		float height = player_y - cy;
+
+		if (height >= ((float)game->GetScreenHeight() / 6))
+		{
+			height += (float)(game->GetScreenHeight() / 8);
+
+			cy += height;
 		}
 			
 		
@@ -607,8 +729,8 @@ void CPlayScene::Render()
 {
 	//Vẽ tiled map của scene hiện tại
 	CTiledMapSets::GetInstance()->Get(id)->Render();
-	//Vẽ tiled map của scene tiếp theo nếu thỏa điều kiện
-	if (isRenderNextMap && id_next_map != -1 && CTiledMapSets::GetInstance()->Get(id_next_map))
+	//Tạo hiệu ứng vẽ tiled map của scene tiếp theo nếu thỏa điều kiện
+	if (id_next_map != -1 && CTiledMapSets::GetInstance()->Get(id_next_map)&& CGame::GetInstance()->GetRenderingNextMap())
 	{
 		CMap* map = CTiledMapSets::GetInstance()->Get(id);
 		int widthMap, heightMap;
@@ -619,9 +741,9 @@ void CPlayScene::Render()
 		int widthNextMap, heightNextMap;
 		map->GetMapWidth(widthNextMap);
 		map->GetMapHeight(heightNextMap);
-		CTiledMapSets::GetInstance()->Get(id_next_map)->Render(widthMap, heightMap - heightNextMap);
+		CTiledMapSets::GetInstance()->Get(id_next_map)->Render(widthMap, heightMap<= heightNextMap? 0: heightMap- heightNextMap);
 	}
-	else if (isRenderPreMap && id_pre_map != -1 && CTiledMapSets::GetInstance()->Get(id_pre_map))
+	/*else if (isRenderPreMap && id_pre_map != -1 && CTiledMapSets::GetInstance()->Get(id_pre_map))
 	{
 		CMap* map = CTiledMapSets::GetInstance()->Get(id);
 		int widthMap, heightMap;
@@ -633,7 +755,7 @@ void CPlayScene::Render()
 		map->GetMapWidth(widthPreMap);
 		map->GetMapHeight(heightPreMap);
 		CTiledMapSets::GetInstance()->Get(id_pre_map)->Render(-widthPreMap, heightMap - heightPreMap);
-	}
+	}*/
 	//Vẽ tất cả các object hiện tại nếu thỏa điều kiện
 	if (player->GetState() != MAIN_CHARACTER_STATE_NONE_COLLISION)
 	{
@@ -641,10 +763,12 @@ void CPlayScene::Render()
 			objects[i]->Render();
 		//Vẽ player object
 		player->Render();
-		//Vẽ các object thành phần của player object
-		for (int i = 0; i < player->GetComponentObjects().size(); i++)
-			player->GetComponentObjects()[i]->Render();
+
+		//Vẽ Hub objects
+		for (int i = 0; i < hub_objects.size(); i++)
+			hub_objects[i]->Render();
 	}
+	
 	
 	
 }
@@ -656,6 +780,7 @@ CMap* CPlayScene::GetMap()
 
 void CPlayScene::GetNextMap()
 {
+	sprites_next_map = new CSprites();
 	ifstream f;
 	f.open(sceneFilePath);
 
@@ -670,8 +795,8 @@ void CPlayScene::GetNextMap()
 		if (line == "[MAP]") {
 			section = SCENE_SECTION_MAP; continue;
 		}
-		if (line == "[GRID]") {
-			section = SCENE_SECTION_GRID; continue;
+		if (line == "[SPRITES]") {
+			section = SCENE_SECTION_SPRITES; continue;
 		}
 		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
 
@@ -689,14 +814,35 @@ void CPlayScene::GetNextMap()
 			tiledMap->LoadMap(path.c_str());
 			break;
 		}
+		case SCENE_SECTION_SPRITES:
+		{
+			vector<string> tokens = split(line);
+
+			if (tokens.size() < 6) return; // skip invalid lines
+
+			int ID = atoi(tokens[0].c_str());
+			int l = atoi(tokens[1].c_str());
+			int t = atoi(tokens[2].c_str());
+			int r = atoi(tokens[3].c_str());
+			int b = atoi(tokens[4].c_str());
+			int texID = atoi(tokens[5].c_str());
+
+			LPDIRECT3DTEXTURE9 tex = CTextures::GetInstance()->Get(texID);
+			if (tex == NULL)
+			{
+				DebugOut(L"[ERROR] Texture ID %d not found!\n", texID);
+				return;
+			}
+			
+			sprites_next_map->Add(ID, l, t, r, b, tex);
+			break;
+		}
 			
 		
 		}
 	}
 
 	f.close();
-	//Texture for bounding box
-	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 
 	DebugOut(L"[INFO] Done loading next map resources %s\n", sceneFilePath);
 
@@ -708,6 +854,8 @@ void CPlayScene::Unload()
 {
 	//for (int i = 0; i < objects.size(); i++)
 		//delete objects[i];
+	CGame::GetInstance()->SetRenderingNextMap(false);
+	sprites_next_map = NULL;
 
 	objects.clear();
 	
@@ -716,6 +864,7 @@ void CPlayScene::Unload()
 	isRenderPreMap = false;
 	initNextMap = true;
 	initGridFlag = true;
+	hub_objects.clear();
 	CGrid::GetInstance()->Unload();
 
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
@@ -736,6 +885,9 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_Z:
 		player->SetState(MAIN_CHARACTER_STATE_BARREL_FIRE);
 		break;
+	case DIK_M:
+		player->SetState(MAIN_CHARACTER_STATE_HUMAN);
+		break;
 	}
 }
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
@@ -753,8 +905,11 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 	
 	if (game->IsKeyDown(DIK_UP))
 	{
-		//DebugOut(L"[INFO] KeyDown: DIK_UP\n");
 		player->SetState(MAIN_CHARACTER_STATE_UP_BARREL);
+	}
+	else if (game->IsKeyDown(DIK_DOWN))
+	{
+		player->SetState(MAIN_CHARACTER_STATE_DOWN_BARREL);
 	}
 	else if (game->IsKeyDown(DIK_RIGHT))
 		player->SetState(MAIN_CHARACTER_STATE_RUN_RIGHT);

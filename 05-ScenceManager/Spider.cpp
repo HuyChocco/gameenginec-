@@ -8,9 +8,9 @@ CSpider::CSpider() :CEnemyObject()
 void CSpider::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	left = x;
-	top = y;
+	top = y- SPIDER_BBOX_HEIGHT;
 	right = x + SPIDER_BBOX_WIDTH;
-	bottom = y + SPIDER_BBOX_HEIGHT;
+	bottom = y;
 }
 
 void CSpider::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -19,7 +19,7 @@ void CSpider::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt);
 
 	// Simple fall down
-	vy += 0.002f * dt;
+	vy -= 0.002f * dt;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -41,10 +41,6 @@ void CSpider::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 		// TODO: This is a very ugly designed function!!!!
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
-
-		// how to push back Mario if collides with a moving objects, what if Mario is pushed this way into another object?
-		//if (rdx != 0 && rdx!=dx)
-		//	x += nx*abs(rdx); 
 
 		// block every object first!
 		x += min_tx * dx + nx * 0.4f;
@@ -69,7 +65,7 @@ void CSpider::Render()
 			ani = SPIDER_ANI_MOVE_LEFT;
 
 		animation_set->at(ani)->Render(x, y);
-		//RenderBoundingBox();
+		RenderBoundingBox();
 	}
 
 }
@@ -87,12 +83,10 @@ void CSpider::SetState(int state)
 		{
 			vx = SPIDER_MOVE_SPEED;
 		}
-
 		else
 		{
 			vx = -SPIDER_MOVE_SPEED;
 		}
-
 		break;
 	case SPIDER_STATE_DIE:
 		break;

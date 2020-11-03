@@ -3,6 +3,9 @@
 #include <d3dx9.h>
 #include "KeyEventHandler.h"
 #include "Map.h"
+
+
+
 class CScene
 {
 protected:
@@ -11,8 +14,9 @@ protected:
 	LPCWSTR sceneFilePath;
 
 	//Bổ sung
-	float pre_player_x;
-	float pre_player_y;
+
+	int type_scence;
+	
 
 public: 
 	CScene(int id, LPCWSTR filePath);
@@ -26,11 +30,9 @@ public:
 	virtual CMap* GetMap() { return NULL; }
 	virtual void GetNextMap() {  }
 
-	void SetPrePlayerX(float x) { pre_player_x = x; }
-	void SetPrePlayerY(float y) { pre_player_y = y; }
+	void SetTypeScence(int type) { this->type_scence = type; }
+	int GetTypeScence() { return this->type_scence; }
 
-	float GetPrePlayerX() { return pre_player_x; }
-	float GetPrePlayerY() { return pre_player_y; }
 };
 typedef CScene * LPSCENE;
 
