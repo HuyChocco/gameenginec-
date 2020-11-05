@@ -1,4 +1,6 @@
+﻿
 #include "Floater.h"
+#include "Weapon.h"
 
 CFloater::CFloater(int _item) :CEnemyObject()
 {
@@ -81,6 +83,7 @@ void CFloater::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					SetState(FLOATER_STATE_MOVE_CHANGE_DIRECTION_Y);
 					isBeingUp = true;
 					time_moving = 0;
+					SetState(FLOATER_STATE_ATTACK);
 				}
 			}
 
@@ -130,6 +133,10 @@ void CFloater::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
+	for (int i = 0; i < list_weapon.size(); i++)
+	{
+		list_weapon[i]->Update(dt, coObjects);
+	}
 	
 }
 
@@ -141,6 +148,7 @@ void CFloater::Render()
 		int ani = -1;
 		switch (state)
 		{
+		case FLOATER_STATE_ATTACK:
 		case FLOATER_STATE_MOVE_CHANGE_DIRECTION_X:
 		case FLOATER_STATE_MOVE_CHANGE_DIRECTION_Y:
 		case FLOATER_STATE_IDLE:
@@ -161,6 +169,10 @@ void CFloater::Render()
 			RenderBoundingBox();
 		}
 		
+	}
+	for (int i = 0; i < list_weapon.size(); i++)
+	{
+		list_weapon[i]->Render();
 	}
 
 }
@@ -189,6 +201,21 @@ void CFloater::SetState(int state)
 		break;
 	case FLOATER_STATE_MOVE_CHANGE_DIRECTION_Y:
 		vy = -vy;
+		break;
+	case FLOATER_STATE_ATTACK:
+		{
+			if (isDisplay)
+			{
+				CWeapon* weapon = new CWeapon(WEAPON_TYPE_ENEMY_FLOATER);// Khởi tạo weapon
+				weapon->SetDirection(nx);
+				weapon->SetPosition(x+FLOATER_BBOX_WIDTH/2, y);
+				weapon->SetState(WEAPON_FLOATER_STATE_FLY);
+				if(player)
+					weapon->SetPlayerObject(player);
+				list_weapon.push_back(weapon);
+			}
+			
+		}
 		break;
 	case FLOATER_STATE_DIE:
 		isDisplay = false;

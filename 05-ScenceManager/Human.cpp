@@ -41,13 +41,14 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		if (dynamic_cast<CFloater*>(coObjects->at(i))) {
 			CFloater* floater = dynamic_cast<CFloater*>(coObjects->at(i));
-
 			float x_enemy, y_enemy;
 			floater->GetPosition(x_enemy, y_enemy);
 			if (x > x_enemy)
 				floater->SetDirection(1);
 			else
 				floater->SetDirection(-1);
+			if(isBeingHuman)
+				floater->SetPlayerObject(this);
 
 
 
@@ -128,6 +129,11 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		// turn off collision when die 
 		if (state != HUMAN_STATE_DIE)
 			CalcPotentialCollisions(coObjects, coEvents);
+		if (isAttacked)
+		{
+			StartUntouchable();
+			isAttacked = false;
+		}
 		// reset untouchable timer if untouchable time has passed
 		if (untouchable == 1)
 		{
@@ -180,6 +186,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					x += dx;
 					y += dy;
 				}
+				//Outdoor enemies
 				else if (dynamic_cast<CWorm*>(e->obj))
 				{
 					CWorm* worm = dynamic_cast<CWorm*>(e->obj);
@@ -414,14 +421,12 @@ void CHuman::Render()
 				ani = HUMAN_ANI_SMALL_WALKING;
 				flip = false;
 			}
-
-
 		}
 
 		int alpha = 255;
 		if (untouchable)
 			alpha = 128;
-		animation_set->at(ani)->Render(x, y, flip);
+		animation_set->at(ani)->Render(x, y, flip, alpha);
 		
 		RenderBoundingBox();
 	}

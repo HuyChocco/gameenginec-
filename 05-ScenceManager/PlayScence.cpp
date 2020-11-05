@@ -558,6 +558,7 @@ void CPlayScene::Update(DWORD dt)
 	if (player == NULL) return;
 	else
 	{
+		coObjects.push_back(player);
 		player->Update(dt, &coObjects);
 		
 	}

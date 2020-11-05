@@ -50,15 +50,15 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		for (UINT i = 0; i < coObjects->size(); i++)
 		{
 			if (dynamic_cast<CFloater*>(coObjects->at(i))) {
-				CFloater* floater = dynamic_cast<CFloater*>(coObjects->at(i));
-				
-					float x_enemy, y_enemy;
-					floater->GetPosition(x_enemy, y_enemy);
-					if (x > x_enemy)
-						floater->SetDirection(1);
-					else
-						floater->SetDirection(-1);
 					
+				CFloater* floater = dynamic_cast<CFloater*>(coObjects->at(i));
+				float x_enemy, y_enemy;
+				floater->GetPosition(x_enemy, y_enemy);
+				if (x > x_enemy)
+					floater->SetDirection(1);
+				else
+					floater->SetDirection(-1);
+				floater->SetPlayerObject(this);
 				
 
 			}
@@ -129,6 +129,11 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		// turn off collision when die 
 		if (state != MAIN_CHARACTER_STATE_NONE_COLLISION && MAIN_CHARACTER_STATE_DIE)
 			CalcPotentialCollisions(coObjects, coEvents);
+		if (isAttacked)
+		{
+			StartUntouchable();
+			isAttacked = false;
+		}
 		// reset untouchable timer if untouchable time has passed
 		if (untouchable == 1)
 		{
@@ -391,20 +396,28 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (dynamic_cast<CHuman*>(componentObjects[i]))
 			{
 				CHuman* human_object = dynamic_cast<CHuman*>(componentObjects[i]);
+				human_object->SetIsBeingHuman(true);
 				human_object->Update(dt, coObjects);
 			}
 		}
 		//Chạy hàm cập nhật cho tất cả đối tượng thành phần, kể cả Human
 		else
 		{
+			if (dynamic_cast<CHuman*>(componentObjects[i]))
+			{
+				CHuman* human_object = dynamic_cast<CHuman*>(componentObjects[i]);
+				human_object->SetIsBeingHuman(false);
+			}
 			componentObjects[i]->SetPosition(x, y);
-			componentObjects[i]->Update(dt, coObjects);
+			if (!dynamic_cast<CHuman*>(componentObjects[i]))
+				componentObjects[i]->Update(dt, coObjects);
 		}
 		
 	}
 
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+	
 	
 }
 
@@ -414,7 +427,6 @@ void CMainCharacter::Render()
 	CGame* game = CGame::GetInstance();
 	if (!game->GetCurrentScene()->GetTypeScence() == OVER_WORLD)
 	{
-		
 		animation_set->at(0)->Render(x, y, alpha);
 		// Vẽ các đối tượng weapon của nhân vật chính
 		{
@@ -424,14 +436,11 @@ void CMainCharacter::Render()
 					list_weapon[i]->Render();
 			}
 		}
-
 		//Vẽ các object thành phần của player object
 		for (int i = 0; i < componentObjects.size(); i++)
 		{
-			
-			componentObjects[i]->SetUntouchable(untouchable);
-			
-			
+			if (!dynamic_cast<CHuman*>(componentObjects[i]))
+				componentObjects[i]->SetUntouchable(untouchable);
 			//Chỉ Render đối tượng CHuman
 			if (Is_Human)
 			{

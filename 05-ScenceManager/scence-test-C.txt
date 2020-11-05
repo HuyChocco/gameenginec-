@@ -296,6 +296,11 @@
 100013	252	102	260	118	1
 # bullet_explosion
 100014	296	102	312	118	1
+# Floater
+# bullet
+100015	252	102	260	118	1
+# bullet_explosion
+100016	296	102	312	118	1
 # Hub objects
 # PowerHub - Text
 800001	175	219	183	235	55
@@ -419,6 +424,11 @@ Map-Blaster-Master-Area-2-C.txt
 4007	100013	100
 # Bullet_explosion
 4008	100014	100
+# Floater
+# Bullet
+4009	100015	100
+# Bullet_explosion
+4010	100016	100
 # ==== HUB =========
 # PowerHub - Text
 100000	800001	100
@@ -452,8 +462,8 @@ Map-Blaster-Master-Area-2-C.txt
 11	8000	8001	8002	8003
 # JUMPERS
 12	9000	9001
-# WEAPON Player-horizontal Player-vertical Player-explode Big human-bullet Big human-explosion Cannon-bullet Cannon-explosion Eyeball-bullet Eyeball-explosion
-7	4000	4001	4002	4003	4004	4005	4006	4007	4008
+# WEAPON Player-horizontal Player-vertical Player-explode Big human-bullet Big human-explosion Cannon-bullet Cannon-explosion Eyeball-bullet Eyeball-explosion	Floater-bullet	Floater-explosion
+7	4000	4001	4002	4003	4004	4005	4006	4007	4008	4009	4010
 #Insect
 13	10000	10001
 #Orbs
@@ -524,7 +534,7 @@ Map-Blaster-Master-Area-2-C.txt
 # --- SCENE PORTAL ----
 # object_id 	type	l	t	ani_set_id	r	b	scene_id	type_portal: 1-Next scene 0-Previous scene	next_portal_id
 1000	50	33	129	2	63	96	2	0	1001
-1001	50	448	129	2	480	99	6	1	1000
+1001	50	448	129	2	480	99	5	1	1000
 # cellx celly id_object...
 [GRID]
 0	0	100	101	102	103

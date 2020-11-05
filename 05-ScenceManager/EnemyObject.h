@@ -13,6 +13,7 @@ protected:
 	bool isEnable;
 	bool isDisplay;
 	bool hasItem;
+	CGameObject* player;
 public:
 	CEnemyObject();
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom) = 0;
@@ -22,5 +23,6 @@ public:
 	void LostBlood(int _blood) { this->blood -= _blood; }
 
 	int GetBlood() { return this->blood; }
+	void SetPlayerObject(CGameObject* _player) { this->player = _player; }
 
 };

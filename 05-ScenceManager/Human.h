@@ -55,6 +55,7 @@ class CHuman : public CGameObject
 	bool isGoingUp;
 	bool isGoingDown;
 	DWORD untouchable_start;
+	bool isBeingHuman;
 public:
 	CHuman(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
@@ -71,4 +72,5 @@ public:
 	void SetGoingDown(bool flag) { isGoingDown = flag; }
 	bool GetGoingUp() { return isGoingUp; }
 	bool GetGoingDown() { return isGoingDown; }
+	void SetIsBeingHuman(bool _flag) { isBeingHuman = _flag; }
 };
