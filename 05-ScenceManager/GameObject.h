@@ -68,6 +68,8 @@ public:
 	//D3DXVECTOR2 delta;
 
 	int untouchable;
+
+	bool isAttacked;
 public: 
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
@@ -106,6 +108,7 @@ public:
 	int GetID() { return this->id; }
 	void SetID(int _id) { this->id = _id; }
 	void SetUntouchable(int flag) { untouchable = flag; }
+	void SetIsAttacked(bool _isAttacked) { isAttacked = _isAttacked; }
 	~CGameObject();
 };
 

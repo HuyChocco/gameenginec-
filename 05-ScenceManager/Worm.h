@@ -7,6 +7,7 @@
 #define WORM_BBOX_HEIGHT 9
 
 #define WORM_STATE_MOVE 100
+#define WORM_STATE_JUMP 101
 
 #define WORM_STATE_DIE 200
 
@@ -20,7 +21,7 @@
 
 class CWorm :public CEnemyObject
 {
-	
+	bool startMoving;
 public:
 	CWorm(int _item);
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);

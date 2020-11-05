@@ -17,8 +17,13 @@
 #include "Dome.h"
 #include "Cannon.h"
 #include "Jumper.h"
+<<<<<<< HEAD
 #include "Insect.h"
 #define JUMPER_ROUNDING_DISTANCE_X 100
+=======
+
+#define JUMPER_ROUNDING_DISTANCE_X 50
+>>>>>>> master
 #define JUMPER_ROUNDING_DISTANCE_Y 40
 CMainCharacter::CMainCharacter(float x, float y) : CGameObject()
 {
@@ -50,15 +55,15 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		for (UINT i = 0; i < coObjects->size(); i++)
 		{
 			if (dynamic_cast<CFloater*>(coObjects->at(i))) {
-				CFloater* floater = dynamic_cast<CFloater*>(coObjects->at(i));
-				
-					float x_enemy, y_enemy;
-					floater->GetPosition(x_enemy, y_enemy);
-					if (x > x_enemy)
-						floater->SetDirection(1);
-					else
-						floater->SetDirection(-1);
 					
+				CFloater* floater = dynamic_cast<CFloater*>(coObjects->at(i));
+				float x_enemy, y_enemy;
+				floater->GetPosition(x_enemy, y_enemy);
+				if (x > x_enemy)
+					floater->SetDirection(1);
+				else
+					floater->SetDirection(-1);
+				floater->SetPlayerObject(this);
 				
 
 			}
@@ -142,6 +147,11 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		// turn off collision when die 
 		if (state != MAIN_CHARACTER_STATE_NONE_COLLISION && MAIN_CHARACTER_STATE_DIE)
 			CalcPotentialCollisions(coObjects, coEvents);
+		if (isAttacked)
+		{
+			StartUntouchable();
+			isAttacked = false;
+		}
 		// reset untouchable timer if untouchable time has passed
 		if (untouchable == 1)
 		{
@@ -188,8 +198,6 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (dynamic_cast<CBrick*>(e->obj)) // if e->obj is CBrick 
 				{
 					//CBrick* brick = dynamic_cast<CBrick*>(e->obj);
-
-
 					if (e->ny > 0)
 					{
 						Is_On_Ground = true;
@@ -219,123 +227,163 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 
 				}
+				//Outdoor enemies
 				else if (dynamic_cast<CWorm*>(e->obj))
 				{
 					CWorm* worm = dynamic_cast<CWorm*>(e->obj);
+					float vxWorm, vyWorm;
+					worm->GetSpeed(vxWorm, vyWorm);
 					if (worm->GetState() != STATE_ITEM)
 					{
 						StartUntouchable();
-						float vxWorm, vyWorm;
-						worm->GetSpeed(vxWorm, vyWorm);
 						if (e->ny != 0)
 						{
-							y += vyWorm * dt;
-							//y += dy;
+							y -= 2*vyWorm * dt;
 						}
 						else
 							x += dx;
 					}
 					else
+					{
+						if (e->ny != 0)
+						{
+							y -= 2*vy*dt;
+						}
+						else
+							x += dx;
 						worm->SetState(WORM_STATE_DIE);
+					}
 					
 				}
 				else if (dynamic_cast<CFloater*>(e->obj))
 				{
 					CFloater* floater = dynamic_cast<CFloater*>(e->obj);
+					float vxFloater, vyFloater;
+					floater->GetSpeed(vxFloater, vyFloater);
 					if (floater->GetState() != STATE_ITEM)
 					{
 						StartUntouchable();
-						float vxFloater, vyFloater;
-						floater->GetSpeed(vxFloater, vyFloater);
+						
 						if (e->ny != 0)
 						{
-							y += vyFloater * dt;
-							//y += dy;
+							y -= 2*vyFloater * dt;
 						}
 						else
 							x += dx;
 					}
 					else
+					{
+						if (e->ny < 0)
+						{
+							y -= 2*vy*dt;
+						}
+						else
+							x += dx;
 						floater->SetState(FLOATER_STATE_DIE);
-
-				}
-				else if (dynamic_cast<CCannon*>(e->obj))
-				{
-					CCannon* cannon = dynamic_cast<CCannon*>(e->obj);
-					if (cannon->GetState() != STATE_ITEM)
-					{
-						StartUntouchable();
-						float vxCannon, vyCannon;
-						cannon->GetSpeed(vxCannon, vyCannon);
-						if (e->ny != 0)
-						{
-							y += vyCannon * dt;
-							//y += dy;
-						}
-						else
-							x += dx;
 					}
-					else
-						cannon->SetState(CANNON_STATE_DIE);
-
-				}
-				else if (dynamic_cast<CEyeball*>(e->obj))
-				{
-					CEyeball* eyeball = dynamic_cast<CEyeball*>(e->obj);
-					if (eyeball->GetState() != STATE_ITEM)
-					{
-						StartUntouchable();
-						float vxEyeball, vyEyeball;
-						eyeball->GetSpeed(vxEyeball, vyEyeball);
-						if (e->ny != 0)
-						{
-							y += vyEyeball * dt;
-							//y += dy;
-						}
-						else
-							x += dx;
-					}
-					else
-						eyeball->SetState(EYEBALL_STATE_DIE);
+						
 
 				}
 				else if (dynamic_cast<CDome*>(e->obj))
 				{
 					CDome* dome = dynamic_cast<CDome*>(e->obj);
+					float vxDome, vyDome;
+					dome->GetSpeed(vxDome, vyDome);
 					if (dome->GetState() != STATE_ITEM)
 					{
 						StartUntouchable();
-						float vxDome, vyEyeball;
-						dome->GetSpeed(vxDome, vyEyeball);
 						if (e->ny != 0)
 						{
-							y += vyEyeball * dt;
-							//y += dy;
+							y -= 2* vyDome * dt;
 						}
 						else
 							x += dx;
 					}
 					else
+					{
+						if (e->ny < 0)
+						{
+							y -= 2*vy*dt;
+						}
+						else
+							x += dx;
 						dome->SetState(DOME_STATE_DIE);
+					}
+						
 
 				}
 				else if (dynamic_cast<CJumper*>(e->obj))
 				{
 					CJumper* jumper = dynamic_cast<CJumper*>(e->obj);
+					float vxJumper, vyJumper;
+					jumper->GetSpeed(vxJumper, vyJumper);
 					if (jumper->GetState() != STATE_ITEM)
 					{
 						StartUntouchable();
-						float vxJumper, vyJumper;
-						jumper->GetSpeed(vxJumper, vyJumper);
 						if (e->ny != 0)
 						{
-							y += vyJumper * dt;
-							//y += dy;
+							y -= 2*vyJumper*dt;
 						}
 						else
 							x += dx;
 					}
 					else
+					{
+						if (e->ny < 0)
+						{
+							y -= 2*vy * dt;
+						}
+						else
+							x += dx;
+						jumper->SetState(DOME_STATE_DIE);
+					}
+		
+
+				}
+				//Indoor enemies
+				else if (dynamic_cast<CCannon*>(e->obj))
+				{
+					CCannon* cannon = dynamic_cast<CCannon*>(e->obj);
+					float vxCannon, vyCannon;
+					cannon->GetSpeed(vxCannon, vyCannon);
+					if (cannon->GetState() != STATE_ITEM)
+					{
+						StartUntouchable();
+						if (e->ny != 0)
+						{
+							y += vyCannon * dt;
+						}
+						else
+							x += dx;
+					}
+					else
+					{
+						if (e->ny != 0)
+						{
+							y += dy;
+						}
+						else
+							x += dx;
+						cannon->SetState(CANNON_STATE_DIE);
+					}
+			}
+				else if (dynamic_cast<CEyeball*>(e->obj))
+				{
+					CEyeball* eyeball = dynamic_cast<CEyeball*>(e->obj);
+					float vxEyeball, vyEyeball;
+					eyeball->GetSpeed(vxEyeball, vyEyeball);
+					if (eyeball->GetState() != STATE_ITEM)
+					{
+						StartUntouchable();
+						if (e->ny != 0)
+						{
+							y += vyEyeball * dt;
+						}
+						else
+							x += dx;
+					}
+					else
+<<<<<<< HEAD
 						jumper->SetState(JUMPER_STATE_DIE);
 
 				}
@@ -357,9 +405,20 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else
 					insect->SetState(INSECT_STATE_DIE);
+=======
+					{
+						if (e->ny != 0)
+						{
+							y += dy;
+						}
+						else
+							x += dx;
+						eyeball->SetState(EYEBALL_STATE_DIE);
+>>>>>>> master
 
-				}
+					}
 			}
+		}
 
 		}
 	}
@@ -379,20 +438,28 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (dynamic_cast<CHuman*>(componentObjects[i]))
 			{
 				CHuman* human_object = dynamic_cast<CHuman*>(componentObjects[i]);
+				human_object->SetIsBeingHuman(true);
 				human_object->Update(dt, coObjects);
 			}
 		}
-		//Chạy hàm cập nhật cho tất cả đối tượng thành phần
+		//Chạy hàm cập nhật cho tất cả đối tượng thành phần, kể cả Human
 		else
 		{
+			if (dynamic_cast<CHuman*>(componentObjects[i]))
+			{
+				CHuman* human_object = dynamic_cast<CHuman*>(componentObjects[i]);
+				human_object->SetIsBeingHuman(false);
+			}
 			componentObjects[i]->SetPosition(x, y);
-			componentObjects[i]->Update(dt, coObjects);
+			if (!dynamic_cast<CHuman*>(componentObjects[i]))
+				componentObjects[i]->Update(dt, coObjects);
 		}
 		
 	}
 
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+	
 	
 }
 
@@ -402,7 +469,6 @@ void CMainCharacter::Render()
 	CGame* game = CGame::GetInstance();
 	if (!game->GetCurrentScene()->GetTypeScence() == OVER_WORLD)
 	{
-		
 		animation_set->at(0)->Render(x, y, alpha);
 		// Vẽ các đối tượng weapon của nhân vật chính
 		{
@@ -412,14 +478,11 @@ void CMainCharacter::Render()
 					list_weapon[i]->Render();
 			}
 		}
-
 		//Vẽ các object thành phần của player object
 		for (int i = 0; i < componentObjects.size(); i++)
 		{
-			
-			componentObjects[i]->SetUntouchable(untouchable);
-			
-			
+			if (!dynamic_cast<CHuman*>(componentObjects[i]))
+				componentObjects[i]->SetUntouchable(untouchable);
 			//Chỉ Render đối tượng CHuman
 			if (Is_Human)
 			{

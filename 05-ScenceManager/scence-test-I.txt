@@ -5,6 +5,7 @@
 33	textures\NES-Blaster-Master-Area-2.png	255	255	255
 44	textures\NES-Blaster-Master-Area-2-Overworld1.png	255	255	255
 55	textures\sophia.png	255	255	255
+66	textures\Items-Objects.png	255	255	255
 # id	left	top	right	bottom	texture_id
 [SPRITES]
 # tiled map sprites
@@ -175,12 +176,6 @@
 10013	208	3	232	35	1
 10014	233	3	257	35	1
 10015	258	3	282	35	1
-#bullet_sofia
-10016	135	183	139	187	55
-#bullet_explosion
-10017	155	181	162	189	55
-10018	171	178	187	191	55
-10019	192	177	208	193	55
 # SOFIA left Wheel 
 20001	3	21	10	28	1
 20002	12	21	19	28	1
@@ -211,13 +206,6 @@
 60004	30	12	37	19	1
 # Main character empty sprite
 70001	0	0	0	0	1
-# Enemy 1
-#Walk left 
-80001	91	2	103	26	2
-80002	108	1	121	26	2
-#Walk right
-80003	133	1	145	26	2
-80004	150	2	162	26	2
 # WORM
 #move left 
 110001	46	412	62	421	2
@@ -225,56 +213,69 @@
 #move right
 110003	172	412	189	421	2
 110004	191	412	207	421	2
-# SPIDER
+# FLOATER-SPIDER
 #move left 
 120001	84	407	101	421	2
 120002	104	406	121	421	2
 #move right
 120003	132	406	149	421	2
 120004	152	407	169	421	2
-# WEAPON_PLAYER
-#fly_horizontal
+# DOMES
+#move left
+140001	87	425	105	441	2
+140002	67	424	85	441	2
+#move right
+140003	149	425	167	441	2
+140004	169	424	187	441	2
+#di chuyen ngang ben trai
+140005	51	441	67	459	2
+140006	50	461	67	479	2
+#nam ngua
+140007	67	479	85	495	2
+140008	87	479	105	496	2
+# JUMPERS
+#move left
+150001	105	500	122	525	2
+150002	87	499	102	525	2
+150003	69	500	84	525	2
+#move right
+150004	132	500	149	525	2
+150005	152	499	167	525	2
+150006	170	500	185	525	2
+# WEAPON
+# Main character
+# fly_horizontal
 100001	91	20	114	27	1
-#fly_vertical
+# fly_vertical
 100002	116	20	123	43	1
-#explode
+# explode
 100003	140	101	148	109	1
 100004	149	97	165	113	1
 100005	166	97	182	113	1
 100006	183	93	207	117	1
-# DOMES
-#Moveup_onleft
-130001	50	461	66	479	2
-130002	51	441	67	459	2
-#Movedown_onleft
-130003	132	441	148	459	2
-130004	133	461	149	479	2
-#Movetup_onright
-130005	187	461	203	479	2
-130006	187	441	203	459	2
-#Movedown_onright
-130007	132	441	148	459	2
-130008	132	461	148	479	2
-#Moveright_ontop
-130009	67	424	85	440	2
-130010	87	425	105	441	2
-#Moveleft_ontop
-130011	169	424	187	440	2
-130012	149	425	167	441	2
-#Moveright_onbot
-130013	149	479	167	496	2
-130014	169	479	187	496	2
-#Moveleft_onbot
-130015	87	479	105	496	2
-130016	67	479	85	496	2
-# INSECT
-#move left 
-140001	104	530	122	545	2
-140002	84	533	102	548	2
-#move right
-140003	132	530	150	545	2
-140004	152	533	170	548	2
-# Hub objects
+# Human-Sofia
+# bullet
+100007	135	183	139	187	55
+# bullet_explosion
+100008	155	181	162	189	55
+100009	171	178	187	191	55
+100010	192	177	208	193	55
+# Cannon
+# bullet
+100011	252	102	260	118	1
+# bullet_explosion
+100012	296	102	312	118	1
+# Eyeball
+# bullet
+100013	252	102	260	118	1
+# bullet_explosion
+100014	296	102	312	118	1
+# Floater
+# bullet
+100015	252	102	260	118	1
+# bullet_explosion
+100016	296	102	312	118	1
+# HUB OBJECTS
 # PowerHub - Text
 800001	175	219	183	235	55
 # PowerHub
@@ -283,6 +284,9 @@
 800003	154	221	162	253	55
 # Hov-Text
 800004	112	240	120	256	55
+# ITEMS
+# P
+900000	255	109	271	125	66
 # path
 [MAP]
 Map-Blaster-Master-Area-2-I.txt
@@ -295,17 +299,13 @@ Map-Blaster-Master-Area-2-I.txt
 601	10002	100	10003	100	10004	100
 #crawl left
 602	10005	100	10006	100
-#BIG-SOFIA
-#move left
+# BIG-SOFIA
+# move left
 603	10007	100	10008	100	10009	100
-#move up
+# move up
 604	10010	100	10011	100	10012	100
-#move down
+# move down
 605	10013	100	10014	100	10015	100
-#bullet
-606	10016	100
-#bullet_explosion
-607	10017	100	10018	100	10019	100
 # ==== SOFIA WHEEL =========
 #idle-of left-wheel
 700	20002	100
@@ -331,65 +331,73 @@ Map-Blaster-Master-Area-2-I.txt
 # ==== MAIN CHARACTER =========
 #idle
 2000	70001	100
-# ==== ENEMY 1 =========
-#Walk left
-3000	80001	100	80002	100
-#Walk right
-3001	80003	100	80004	100
+# === ENEMY DOMES ===
+#walk left
+8000	140001	100	140002	100
+#walk right
+8001	140003	100	140004	100
+#di chuyen ngang ben trai
+8002	140005	100	140006	100
+#nam ngua
+8003	140007	100	140008	100
 # ==== ENEMY WORM =========
 #Walk left
 5000	110001	100	110002	100
 #Walk right
 5001	110003	100	110004	100
-# ==== ENEMY SPIDER =========
+# ==== ENEMY FLOATER-SPIDER =========
 #Walk left
 6000	120001	100	120002	100
 #Walk right
 6001	120003	100	120004	100
-#
+# === JUMPERS ======
+#walk left
+9000	150001	100	150002	100	150003	100
+#walk right
+9001	150004	100	150005	100	150006	100
 # ==== WEAPON =========
-#left
+# Main Character
+# left
 4000	100001	100
-#Up
+# Up
 4001	100002	100
-#explode
+# explode
 4002	100003	100	100004	100	100005	100
-# ==== ENEMY DOME=========
-#Walk left on top
-6001	130011	100	130012	100
-#Walk right on top 
-6002	130009	100	130010	100
-#Walk left on bot
-6003	130015	100	130016	100
-#Walk right on bot 
-6004	130013	100	130014	100
-#Walk up on left
-6005	130001	100	130002	100
-#Walk down on left
-6006	130003	100	130004	100
-#Walk up on right
-6007	130005	100	130006	100
-#Walk down on right
-6008	130007	100	130008	100
-# ==== ENEMY INSECT =========
-#Walk left
-7000	140001	100	140002	100
-#Walk right
-7001	140003	100	140004	100
-# id	ani1	ani2	ani3
-#
+# Human-Sofia
+# Bullet
+4003	100007	100
+# Bullet_explosion
+4004	100008	100	100009	100	100010	100
+# Cannon
+# Bullet
+4005	100011	100
+# Bullet_explosion
+4006	100012	100
+# Eyeball
+# Bullet
+4007	100013	100
+# Bullet_explosion
+4008	100014	100
+# Floater
+# Bullet
+4009	100015	100
+# Bullet_explosion
+4010	100016	100
 # ==== HUB =========
-#PowerHub - Text
+# PowerHub - Text
 100000	800001	100
-#PowerHub
+# PowerHub
 100001	800002	100
-#GunHub
+# GunHub
 100002	800003	100
-#Hov - text
+# Hov - text
 100003	800004	100
+# ITEMS
+# P
+900000	900000	100
 [ANIMATION_SETS]
 # SOFIA 
-1	600	601	602	603	604	605	606	607
+1	600	601	602	603	604	605
 # MAIN_CHARACTER 
 2	2000
 # WHEEL 
@@ -398,20 +406,21 @@ Map-Blaster-Master-Area-2-I.txt
 4	900	901
 # BARREL
 5	800	801	802
-# ENEMY 1
-6	3000	3001
 # WORM - ENEMY
 8	5000	5001
-# SPIDER - ENEMY
+# FLOATER-SPIDER - ENEMY
 9	6000	6001
-# WEAPON
-7	4000	4001	4002
+# DOMES
+11	8000	8001	8002	8003
+# JUMPERS
+12	9000	9001
+# WEAPON Player-horizontal Player-vertical Player-explode Big human-bullet Big human-explosion Cannon-bullet Cannon-explosion Eyeball-bullet Eyeball-explosion	Floater-bullet	Floater-explosion
+7	4000	4001	4002	4003	4004	4005	4006	4007	4008	4009	4010
 # HUB
 100	100000	100001	100002	100003
-# DOMES - ENEMY
-10	6001	6002	6003	6004	6005	6006	6007	6008
-# INSECT - ENEMY
-11	7000	7001
+# ITEMS
+# P
+200	900000
 [OBJECTS]
 # object_id  type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Worm, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Cabin, 8= Barrel, 9= Main character, 10= Spider, 11=Human
@@ -447,10 +456,10 @@ Map-Blaster-Master-Area-2-I.txt
 #18	20	47.6667	158.33301
 #19	20	47	288.0
 # WORM - ENEMY
-19	3	129.75	792.75	8
-20	3	194.75	728.0	8
+19	3	129.75	792.75	8	1
+20	3	194.75	728.0	8	1
 21	3	128.25	663.75	8
-22	3	284.25	499.75	8
+22	3	284.25	499.75	8	1
 23	3	332.25	560.0	8
 24	3	256.0	282.5	8
 25	3	195.75	216.25	8
@@ -522,8 +531,8 @@ Map-Blaster-Master-Area-2-I.txt
 # --- SCENE PORTAL ----
 # object_id 	type	l	t	ani_set_id	r	b	scene_id	type_portal: 1-Next scene 0-Previous scene
 #1000	50	47.75	888.5	2	57.25	863.5	4	1
-#1001	50	47.3333	120.0	2	57.3333	96.66669	4	1
-1002	50	454	118.66699	2	464	95.33368	4	1	1001	
+1001	50	47.3333	120.0	2	57.3333	96.66669	7	1	1000
+1002	50	454	118.66699	2	464	95.33368	5	0	1000	
 # cellx celly id_object...
 [GRID]
 0	0	100	101	109	1000

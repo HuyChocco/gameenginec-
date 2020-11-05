@@ -296,6 +296,11 @@
 100013	252	102	260	118	1
 # bullet_explosion
 100014	296	102	312	118	1
+# Floater
+# bullet
+100015	252	102	260	118	1
+# bullet_explosion
+100016	296	102	312	118	1
 # HUB OBJECTS
 # PowerHub - Text
 800001	175	219	183	235	55
@@ -420,6 +425,11 @@ Map-Blaster-Master-Area-2-B.txt
 4007	100013	100
 # Bullet_explosion
 4008	100014	100
+# Floater
+# Bullet
+4009	100015	100
+# Bullet_explosion
+4010	100016	100
 # ==== HUB =========
 # PowerHub - Text
 100000	800001	100
@@ -459,8 +469,8 @@ Map-Blaster-Master-Area-2-B.txt
 15	12000	12001
 # DASHERS
 16	13000	13001
-# WEAPON Player-horizontal Player-vertical Player-explode Big human-bullet Big human-explosion Cannon-bullet Cannon-explosion Eyeball-bullet Eyeball-explosion
-7	4000	4001	4002	4003	4004	4005	4006	4007	4008
+# WEAPON Player-horizontal Player-vertical Player-explode Big human-bullet Big human-explosion Cannon-bullet Cannon-explosion Eyeball-bullet Eyeball-explosion	Floater-bullet	Floater-explosion
+7	4000	4001	4002	4003	4004	4005	4006	4007	4008	4009	4010
 # HUB
 100	100000	100001	100002	100003
 # ITEMS
@@ -493,8 +503,13 @@ Map-Blaster-Master-Area-2-B.txt
 11	3	280	1180	8
 # FLOATERS
 13	12	104	145	9	1
+<<<<<<< HEAD
 14	12	136	180	9
 15	12	136	108	9
+=======
+14	12	136	180	9	1
+15	12	136	108	9	1
+>>>>>>> master
 # DOMES
 16	13	308	108	11
 17	13	161	1196	11

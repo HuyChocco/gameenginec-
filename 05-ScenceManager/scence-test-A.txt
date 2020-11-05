@@ -270,6 +270,11 @@
 100013	252	102	260	118	1
 # bullet_explosion
 100014	296	102	312	118	1
+# Floater
+# bullet
+100015	252	102	260	118	1
+# bullet_explosion
+100016	296	102	312	118	1
 # HUB OBJECTS
 # PowerHub - Text
 800001	175	219	183	235	55
@@ -281,7 +286,7 @@
 800004	112	240	120	256	55
 # ITEMS
 # P
-900000	255	109	271	125	66	
+900000	255	109	271	125	66
 # path
 [MAP]
 Map-Blaster-Master-Area-2-A.txt
@@ -373,6 +378,11 @@ Map-Blaster-Master-Area-2-A.txt
 4007	100013	100
 # Bullet_explosion
 4008	100014	100
+# Floater
+# Bullet
+4009	100015	100
+# Bullet_explosion
+4010	100016	100
 # ==== HUB =========
 # PowerHub - Text
 100000	800001	100
@@ -406,8 +416,8 @@ Map-Blaster-Master-Area-2-A.txt
 11	8000	8001	8002	8003
 # JUMPERS
 12	9000	9001
-# WEAPON Player-horizontal Player-vertical Player-explode Big human-bullet Big human-explosion Cannon-bullet Cannon-explosion Eyeball-bullet Eyeball-explosion
-7	4000	4001	4002	4003	4004	4005	4006	4007	4008
+# WEAPON Player-horizontal Player-vertical Player-explode Big human-bullet Big human-explosion Cannon-bullet Cannon-explosion Eyeball-bullet Eyeball-explosion	Floater-bullet	Floater-explosion
+7	4000	4001	4002	4003	4004	4005	4006	4007	4008	4009	4010
 # HUB
 100	100000	100001	100002	100003
 # ITEMS
@@ -444,7 +454,7 @@ Map-Blaster-Master-Area-2-A.txt
 13	13	410	202	11	1
 14	13	80	120	11
 # JUMPERS
-15	14	100	204	12	1
+#15	14	100	204	12	1
 # MAP OBJECT LIST
 # BRICK 
 # object_id 	type	l	t	ani_set_id	r	b	
@@ -467,7 +477,7 @@ Map-Blaster-Master-Area-2-A.txt
 116	1	817	207	2	850	158
 117	1	880	208	2	913	127
 118	1	2	223	2	1024	209
-119 	1	2	210	2	7	80
+119 	1	0	210	2	0	80
 120	1	2	18	2	1024	0
 121	1	978	206	2	1022	79
 # --- SCENE PORTAL ----
@@ -475,12 +485,12 @@ Map-Blaster-Master-Area-2-A.txt
 1000	50	965	121.5	2	977	80.5	2	1	1000
 # cellx celly id_object...
 [GRID]
-0	0	10	104	105	118	119	15
-0	1	106	107	108	118	11
+0	0	10	104	105	119	15	118
+0	1	106	107	108	11	118
 0	2	108	109	110	118
-0	3	111	112	113	118	13
+0	3	111	112	113	13
 0	4	113	114	115	118
-0	5	116	117	118	12
+0	5	116	117	12	118
 0	6	118	121
 1	0	100	120	119
 1	1	100	120

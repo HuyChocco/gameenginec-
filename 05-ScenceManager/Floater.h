@@ -9,6 +9,7 @@
 #define FLOATER_STATE_MOVE 100
 #define FLOATER_STATE_MOVE_CHANGE_DIRECTION_X 101
 #define FLOATER_STATE_MOVE_CHANGE_DIRECTION_Y 102
+#define FLOATER_STATE_ATTACK 103
 
 #define FLOATER_STATE_DIE 200
 
@@ -25,6 +26,7 @@ class CFloater :public CEnemyObject
 	bool isBeingDown;
 	bool isBeingUp;
 	bool isRepeat;
+	vector<CGameObject*> list_weapon;
 public:
 	CFloater(int _item);
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);

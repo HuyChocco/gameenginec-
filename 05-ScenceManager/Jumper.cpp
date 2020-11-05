@@ -111,15 +111,8 @@ void CJumper::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 								time_moving = 0;
 							}
 						}
-					}
-					
-					
-					
+					}	
 				}
-			}
-			else if (dynamic_cast<CWorm*>(e->obj))
-			{
-				x += dx;
 			}
 			
 		}
