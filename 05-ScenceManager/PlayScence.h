@@ -17,6 +17,7 @@
 #include "Floater.h"
 #include "Dome.h"
 #include "Jumper.h"
+#include "Insect.h"
 //bo sung
 #include "MainCharacter.h"
 #include "BarrelObject.h"

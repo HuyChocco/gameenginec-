@@ -17,6 +17,7 @@
 #include "Floater.h"
 #include "Dome.h"
 #include "Jumper.h"
+#include "Insect.h"
 #define JUMPER_ROUNDING_DISTANCE_X 100
 #define JUMPER_ROUNDING_DISTANCE_Y 40
 CHuman::CHuman(float x, float y) : CGameObject()
@@ -112,6 +113,20 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (abs(x - x_jumper) < JUMPER_ROUNDING_DISTANCE_X && abs(y - y_jumper) < JUMPER_ROUNDING_DISTANCE_Y)
 					jumper->SetState(JUMPER_STATE_JUMP);
 			}
+
+		}
+
+		if (dynamic_cast<CInsect*>(coObjects->at(i))) {
+			CInsect* insect = dynamic_cast<CInsect*>(coObjects->at(i));
+
+			float x_enemy, y_enemy;
+			insect->GetPosition(x_enemy, y_enemy);
+			/*if (x > x_enemy)
+				insect->SetDirection(1);
+			else
+				insect->SetDirection(-1);*/
+
+
 
 		}
 	}

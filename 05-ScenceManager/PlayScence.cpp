@@ -48,6 +48,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define OBJECT_TYPE_FLOATER	12
 #define OBJECT_TYPE_DOME	13
 #define OBJECT_TYPE_JUMPER	14
+#define OBJECT_TYPE_INSECT	15
 #define OBJECT_TYPE_CANNON	19
 #define OBJECT_TYPE_EYEBALL	20
 
@@ -241,6 +242,16 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		if (tokens.size() > 5)
 			item = atoi(tokens[5].c_str());
 		obj = new CJumper(item);
+		LPANIMATION_SET ani_set = animation_sets->Get(200);
+		obj->SetAnimationItemSet(ani_set);
+	}
+	break;
+	case OBJECT_TYPE_INSECT:
+	{
+		int item = 0;
+		if (tokens.size() > 5)
+			item = atoi(tokens[5].c_str());
+		obj = new CInsect(item);
 		LPANIMATION_SET ani_set = animation_sets->Get(200);
 		obj->SetAnimationItemSet(ani_set);
 	}

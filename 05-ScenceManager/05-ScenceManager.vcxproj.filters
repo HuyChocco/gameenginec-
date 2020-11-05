@@ -138,11 +138,11 @@
     <ClCompile Include="Jumper.cpp">
       <Filter>Source Files\EnemyObjects</Filter>
     </ClCompile>
+    <ClCompile Include="Insect.cpp">
+      <Filter>Source Files\EnemyObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Brick.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -250,6 +250,9 @@
     </ClInclude>
     <ClInclude Include="Skull.h">
       <Filter>Header Files\EnemyObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Brick.h">
+      <Filter>Header Files\MainCharacterObjects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

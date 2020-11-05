@@ -17,7 +17,7 @@
 #include "Dome.h"
 #include "Cannon.h"
 #include "Jumper.h"
-
+#include "Insect.h"
 #define JUMPER_ROUNDING_DISTANCE_X 100
 #define JUMPER_ROUNDING_DISTANCE_Y 40
 CMainCharacter::CMainCharacter(float x, float y) : CGameObject()
@@ -117,6 +117,19 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						jumper->SetState(JUMPER_STATE_JUMP);
 				}
 				
+			}
+			if (dynamic_cast<CInsect*>(coObjects->at(i))) {
+				CInsect* insect = dynamic_cast<CInsect*>(coObjects->at(i));
+
+				float x_insect, y_insect;
+				insect->GetPosition(x_insect, y_insect);
+				if (x > x_insect)
+					insect->SetDirection(1);
+				else
+					insect->SetDirection(-1);
+
+
+
 			}
 		}
 		
@@ -323,7 +336,27 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							x += dx;
 					}
 					else
-						jumper->SetState(DOME_STATE_DIE);
+						jumper->SetState(JUMPER_STATE_DIE);
+
+				}
+				else if (dynamic_cast<CInsect*>(e->obj))
+				{
+				CInsect* insect = dynamic_cast<CInsect*>(e->obj);
+				if (insect->GetState() != STATE_ITEM)
+				{
+					StartUntouchable();
+					float vxInsect, vyInsect;
+					insect->GetSpeed(vxInsect, vyInsect);
+					if (e->ny != 0)
+					{
+						y += vyInsect * dt;
+						//y += dy;
+					}
+					else
+						x += dx;
+				}
+				else
+					insect->SetState(INSECT_STATE_DIE);
 
 				}
 			}

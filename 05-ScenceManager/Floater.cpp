@@ -1,8 +1,8 @@
-#include "Floater.h"
+﻿#include "Floater.h"
 
 CFloater::CFloater(int _item) :CEnemyObject()
 {
-	SetState(FLOATER_STATE_MOVE);
+	SetState(FLOATER_STATE_MOVE);// vx > 0
 	this->blood = 1;
 	item = _item;
 	time_moving = 0;
@@ -41,46 +41,46 @@ void CFloater::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	
 
 	time_moving += dt;
-	if (isRepeat)
+	if (isRepeat) // nếu isRepeat = true thì vào 
 	{
-		if (time_moving >= TIME_CHANGE_DIRECTION)
+		if (time_moving >= TIME_CHANGE_DIRECTION) // nếu thời gian vẽ frame > thời gian đi trục x số frame = thời gian trục x /time_moving : vẽ trục x xong
 		{
-			SetState(FLOATER_STATE_MOVE_CHANGE_DIRECTION_Y);
-			isBeingDown = false;
-			time_moving = 0;
-			isRepeat = false;
+			SetState(FLOATER_STATE_MOVE_CHANGE_DIRECTION_Y); // cho chạy trục y vy =- vy : chạy ngược lại : chạy xuống lúc đầu
+			isBeingDown = false; // đang xuống  = false
+			time_moving = 0; // chạy xong bắt đầu đếm lại
+			isRepeat = false; // lặp lại = false
 		}
 	}
-	else
+	else // nếu isRepeat = false
 	{
-		if (!isBeingDown)
+		if (!isBeingDown) // nếu đang xuống = false
 		{
-			if (time_moving >= TIME_CHANGE_DIRECTION)
+			if (time_moving >= TIME_CHANGE_DIRECTION)// nếu thời gian vẽ frame > thời gian vẽ trục y : vẽ trục y xong
 			{
-				SetState(FLOATER_STATE_MOVE_CHANGE_DIRECTION_X);
-				isBeingDown = true;
-				time_moving = 0;
+				SetState(FLOATER_STATE_MOVE_CHANGE_DIRECTION_X);// cho chạy trục x vx = -vx
+				isBeingDown = true;// đi xuống = true
+				time_moving = 0;// lặp lại
 			}
 		}
-		else
+		else // nếu đang xuống = true
 		{
-			if (isBeingUp)
+			if (isBeingUp) // đang đi lên = true
 			{
-				if (time_moving >= TIME_CHANGE_DIRECTION)
+				if (time_moving >= TIME_CHANGE_DIRECTION) // nếu thời gian vẽ > vẽ trục y 
 				{
-					SetState(FLOATER_STATE_MOVE_CHANGE_DIRECTION_X);
-					isBeingUp = false;
-					time_moving = 0;
-					isRepeat = true;
+					SetState(FLOATER_STATE_MOVE_CHANGE_DIRECTION_X); // vẽ trục x vx = -vx
+					isBeingUp = false;// đang lên = false
+					time_moving = 0;// đếm lại
+					isRepeat = true;// lặp lại = true
 				}
 			}
-			else
+			else// đang đi lên = false
 			{
-				if (time_moving >= TIME_CHANGE_DIRECTION)
+				if (time_moving >= TIME_CHANGE_DIRECTION)// nếu vẽ xong trục x
 				{
-					SetState(FLOATER_STATE_MOVE_CHANGE_DIRECTION_Y);
-					isBeingUp = true;
-					time_moving = 0;
+					SetState(FLOATER_STATE_MOVE_CHANGE_DIRECTION_Y);// cho vẽ trục y vy = -vy
+					isBeingUp = true;// đang lên = true
+					time_moving = 0;// 
 				}
 			}
 
