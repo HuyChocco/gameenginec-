@@ -4,7 +4,7 @@
 2	textures\BlasterMaster-Enemies.png	255	0	255
 33	textures\NES-Blaster-Master-Area-2.png	255	255	255
 50	textures\NES-BlasterMaster-Dungeon.png	255	255	255
-
+55	textures\sophia.png	255	255	255
 # id	left	top	right	bottom	texture_id
 [SPRITES]
 # tiled map sprites
@@ -87,11 +87,16 @@
 # Crawl left - Bo ben trai
 10005	39	30	55	46	1
 10006	56	30	72	46	1
-# SOFIA Wheel 
+# SOFIA left Wheel 
 20001	3	21	10	28	1
 20002	12	21	19	28	1
 20003	21	21	28	28	1
 20004	30	21	37	28	1
+# SOFIA right Wheel 
+200003	21	21	28	28	1
+200004	30	21	37	28	1
+200001	3	21	10	28	1
+200002	12	21	19	28	1
 # SOFIA Barrel
 #down-left
 30001	3	3	10	10	1
@@ -138,7 +143,7 @@
 100002	116	20	123	43	1
 # path
 [MAP]
-overworld-25.txt
+map-overworld-28.txt
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 # ==== ENEMY CANNONS =========
@@ -159,10 +164,12 @@ overworld-25.txt
 #crawl left
 602	10005	100	10006	100
 # ==== SOFIA WHEEL =========
-#idle
+#idle-of left-wheel
 700	20002	100
-#right
+#left-wheel
 701	20001	100	20002	100	20003	100	20004	100
+#right-wheel
+702	200003	100	200004	100	200001	100	200002	100
 # ==== SOFIA BARREL =========
 #idle
 800	30002	100
@@ -210,7 +217,7 @@ overworld-25.txt
 # MAIN_CHARACTER 
 2	2000
 # WHEEL 
-3	700	701
+3	700	701	702
 # CABIN
 4	900	901
 # BARREL
@@ -226,8 +233,9 @@ overworld-25.txt
 [OBJECTS]
 # object_id  type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Worm, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Cabin, 8= Barrel, 9= Main character, 10= Spider, 11=Human
+# type: 12 = Floater, 13 = Domes, 14 = Jumpers, 15 = Insect,16 = Orbs, 17 = Skulls, 18 = Dashers, 500 = PowerHub, 501 = GunHub
 # MAIN_CHARACTER need to be created first!
-1	9	17	115	2
+1	9	100	115	2
 # MAIN OBJECTS LIST
 # HUMAN
 2	11	17	115	1
@@ -249,69 +257,57 @@ overworld-25.txt
 12	10	420	120	9
 # MAP OBJECT LIST
 # BRICK 
-# object_id 	type	l	t	ani_set_id	r	b	
-#phia tren ben trai
-120	1	1.5	-1	2	151.75	95.75
-#phia tren ben phai	
-121	1	168	1	2	319.5	94.5
+# object_id 	type	l	t	ani_set_id	r	b
+#phia tren ben trai	
+120	1	1.5	320	2	151.75	224.25
+#phia tren ben phai
+121	1	168	319	2	319.5	225.5
 #phia tren
-122	1	58.3333	0.6667	2	256.6673	94.6667	
+122	1	58.3333	319.3333	2	256.6673	225.3333
 #ben trai nua tren
-123	1	1	0.5	2	63.0455	174.955
+123	1	1	319.5	2	63.0455	145.045
 #ben trai nua duoi
-124	1	0.363636	207.091	2	62.909136	320.091
+124	1	0.363636	112.909	2	62.909136	0
 #ben trai
-125	1	0.333333	0.333367	2	63.33333	320.333367
+125	1	0.333333	319.666633	2	63.33333	0
 #ben phai nua tren
-126	1	256.5	0	2	321	176
+126	1	256.5	320	2	321	144
 #ben phai nua duoi
-127	1	256.5	208.125	2	318.5	319.5
+127	1	256.5	111.875	2	318.5	0.5
 #ben phai
-128	1	256.327	85.9609	2	319.339	318.9499
+128	1	256.327	234.0391	2	319.339	1.0501
 #phia duoi ben trai
-129	1	0.388963	256.327	2	143.915963	319.728	
+129	1	0.388963	63.673	2	143.915963	0.272
 #phia duoi ben phai
-130	1	177.367	256.327	2	318.95	319.339
+130	1	177.367	63.673	2	318.95	0.661
 #phia duoi
-131	1	31.506	257.008	2	318.561	320.1171
+131	1	31.506	62.992	2	318.561	0
 #da chan
-132	1	58.7334	159.808	2	275.3854	207.3174
-#
-# Item		l	t		r	b
-250	1	79.6667	127.333		96.3337	143.666
-251	1	112	160.167		128.6667	176.5
-252	1	112	95.8333		128.6667	112.1663
-253	1	175.333	127.5		192	143.833
-254	1	208	126.833		224.6667	143.166
-255	1	176.333	191.167		192.9997	207.5
-256	1	143.667	191.833		335.5	208.166
-257	1	80	222.833		96.6667	239.166
-258	1	207.667	223.167		224.3337	239.5
-#
-#Spikes		l	t		r	b
-366	1	63.5679	96.3615	2	255.1599	128.009
-367	1	223.265	125.635	2	255.16	175.8112
-368	1	175.422	191.759	2	207.7059	256.3269	
-369	1	204.595	208.292	2	255.6654	256.2611
-370	1	127.929	159.864	2	191.7592	192.0317
-371	1	63.8003	224.821	2	144.502	256.1601
-372	1	63.6588	114.744	2	96.1797	230.939
-#
+132	1	58.7334	160.192	2	275.3854	112.6826
+#spikes		l	t		r	b
+362	1	64.1789	224.3151	2	143.9163	144.5121
+363	1	95.6849	180.751	2	143.8001	63.92
+364	1	63.8406	113.85	2	143.9164	63.8303
+365	1	175.887	223.9261	2	254.7452	192.3545
+366	1	175.811	195.143	2	192.1475	63.689
+367	1	177.756	161.303	2	255.1597	128.2918
+368	1	224.003	204.867	2	254.7714	63.673
+369	1	182.813	98.291	2	240.3795	63.7388
 # --- SCENE PORTAL ----
-# object_id 	type	l	t	ani_set_id	r	b	scene_id	type_portal: 1-Next scene 0-Previous scene	next_portal_id
+# object_id     type    l    t    ani_set_id    r    b    scene_id    type_portal: 1-Next scene 0-Previous scene    next_portal_id
 #cong ben trai
-1001	50	55	175	2	68.5	207	5	1	9
+#1001	50	55	145	2	68.5	113	5	1	9
 #cong ben phai
-1002	50	251.268	176.2	2	266.0486	207.706	6	1	9
+#1002	50	251.268	143.8	2	266.0486	112.294	6	1	9
 #cong phia tren
-1003	50	152	70.5	2	168		102	7	1	9
+#1003	50	152	249.5	2	168	218	7	1	9
 #cong phia duoi
-1004	50	143.876	256.367	2	177.2508	283.2055	8	1	9
+#1004	50	143.876	63.633	2	177.2508	36.7945	8	1	9
 # cellx celly id_object...
 [GRID]
-0	0	122	125	366	372
-1	0	125	366	372	370	371
-2	0	125	129	1004	371
-0	1	122	126	366
-1	1	126	127	1002	366	367	370	368	369
-2	1	127	130	1004	368	369
+0	0	20	25	62	3
+1	0	25	62	63	64		
+2	0	25	29	63	64	4
+0	1	21	28	65	68
+1	1	28	65	68	66	67	69
+2	1	30	28	69	68	66	4
