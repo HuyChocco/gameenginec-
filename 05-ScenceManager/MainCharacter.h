@@ -8,6 +8,7 @@
 #define MAIN_CHARACTER_RUN_SPEED		0.15f 
 //0.1f
 #define MAIN_CHARACTER_JUMP_SPEED_Y		0.5f
+#define HUMAN_SMALL_JUMP_SPEED_Y		0.4f
 #define MAIN_CHARACTER_JUMP_DEFLECT_SPEED 0.2f
 #define MAIN_CHARACTER_GRAVITY			0.002f
 #define MAIN_CHARACTER_DIE_DEFLECT_SPEED	 0.5f
@@ -20,6 +21,7 @@
 #define MAIN_CHARACTER_STATE_JUMP			300
 #define MAIN_CHARACTER_STATE_DIE				400
 #define MAIN_CHARACTER_STATE_UP_BARREL				500
+#define MAIN_CHARACTER_STATE_DOWN_BARREL				501
 #define MAIN_CHARACTER_STATE_NONE_COLLISION			600
 #define MAIN_CHARACTER_STATE_HUMAN					800
 //#define MAIN_CHARACTER_STATE_DOWN_BARREL				600
@@ -44,7 +46,7 @@
 
 #define MAIN_CHARACTER_BBOX_WIDTH  24
 #define MAIN_CHARACTER_BBOX_HEIGHT 16
-
+#define MAIN_CHARACTER_UNTOUCHABLE_TIME 500
 class CMainCharacter: public CGameObject
 {
 	int level;
@@ -58,7 +60,10 @@ class CMainCharacter: public CGameObject
 	vector<LPGAMEOBJECT> componentObjects;
 	vector<CWeapon*> list_weapon;
 
-	
+	int blood;
+	int alive;
+	int heart;
+	int score;
 	
 public:
 
@@ -83,4 +88,6 @@ public:
 	
 	float GetStartX() { return start_x; }
 	float GetStartY() { return start_y; }
+
+	void CollisionItem(int item);
 };

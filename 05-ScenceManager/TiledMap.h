@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <unordered_map>
 #include "Map.h"
 #include "Sprites.h"
@@ -23,6 +23,9 @@ class CTiledRow
 public:
 	int currentCell;
 	vector<LPTILEDCELL> tiled_row;
+
+	//bổ sung
+	vector<LPTILEDCELL> tiled_row_next_map;
 public:
 	void Add(int spriteId);
 
@@ -38,6 +41,7 @@ class CTiledMap :public CMap
 protected:
 	int textureId;
 	unordered_map<int, LPTILEDROW> tiledmap_row_set;
+	unordered_map<int, LPTILEDROW> tiledmap_row_set_next_map;
 	void _ParseSection_SPRITE_ID_CELLS(string line,int lineCount);
 
 	void _ParseSection_MAP_WIDTH(string line);

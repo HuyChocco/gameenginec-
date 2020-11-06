@@ -29,7 +29,7 @@ void CWheelObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (is_Right_Wheel) //right wheel - bánh xe bên phải
 	{
 		x += 17;
-		y += 9;
+		y -= (MAIN_CHARACTER_BBOX_HEIGHT - 6);
 		
 		
 	}
@@ -37,13 +37,13 @@ void CWheelObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	else if (is_Middle_Wheel) //middle wheel - bánh nằm ở giữa trái và phải
 	{
 		x += 9;
-		y += 7;
+		y -= 7;
 		if (vx != 0) //Add effect if running
 		{
 			StartUpEffect();
 			if (GetTickCount() - up_effect_start > WHEEL_EFFECT_TIME)
 			{
-				y -= 1;
+				y += 1;
 			}	
 		}
 		if (state == MAIN_CHARACTER_STATE_UP_BARREL) // Nhân vật đưa nòng súng lên
@@ -53,7 +53,7 @@ void CWheelObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	else // left wheel - bánh xe bên trái
 	{
-		y += 9;
+		y -= (MAIN_CHARACTER_BBOX_HEIGHT-6);
 		
 	}
 		
@@ -63,6 +63,9 @@ void CWheelObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CWheelObject::Render()
 {
+	int alpha = 255;
+	if (untouchable)
+		alpha = 128;
 	int ani = -1;
 	int flip = false;
 	if (nx > 0)
@@ -74,20 +77,34 @@ void CWheelObject::Render()
 	if (is_Middle_Wheel) // Bánh xe ở giữa
 	{
 		ani = WHEEL_ANI_IDLE; //Animation chỉ có 1 frame duy nhất
-		animation_set->at(ani)->Render(x, y);
-	}	
+		animation_set->at(ani)->Render(x, y,false,alpha);
+	}
+	else if (is_Right_Wheel) // Bánh xe bên phải
+	{
+		ani = WHEEL_ANI_RIGHT_WHEEL; //Animation chỉ có 1 frame duy nhất
+		if (vx == 0) // Nhân vật đứng yên
+		{
+			animation_set->at(ani)->isPause = true; //Dừng animation 
+			animation_set->at(ani)->Render(x, y, flip,alpha); // Vẽ frame đang bị tạm dừng
+		}
+		else // Nhân vật di chuyển
+		{
+			animation_set->at(ani)->isPause = false; // Tiếp tục animation đã dừng trước đó
+			animation_set->at(ani)->Render(x, y, flip,alpha);
+		}
+	}
 	else
 	{
 			ani = WHEEL_ANI_IDLE_RUN;
 			if (vx==0) // Nhân vật đứng yên
 			{
 				animation_set->at(ani)->isPause = true; //Dừng animation 
-				animation_set->at(ani)->Render(x, y, flip); // Vẽ frame đang bị tạm dừng
+				animation_set->at(ani)->Render(x, y, flip,alpha); // Vẽ frame đang bị tạm dừng
 			}
 			else // Nhân vật di chuyển
 			{
 				animation_set->at(ani)->isPause = false; // Tiếp tục animation đã dừng trước đó
-				animation_set->at(ani)->Render(x, y, flip);
+				animation_set->at(ani)->Render(x, y, flip,alpha);
 			}
 			
 		

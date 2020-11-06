@@ -18,7 +18,7 @@
 #define HUMAN_SMALL_CRAWL_BBOX_WIDTH  16
 #define HUMAN_SMALL_CRAWL_BBOX_HEIGHT 16
 
-#define HUMAN_WALKING_SPEED		0.15f 
+#define HUMAN_WALKING_SPEED		0.1f 
 
 #define HUMAN_JUMP_SPEED_Y		0.5f
 #define HUMAN_JUMP_DEFLECT_SPEED 0.2f
@@ -34,7 +34,10 @@
 #define HUMAN_ANI_BIG_IDLE		0
 #define HUMAN_ANI_SMALL_IDLE		0
 
-#define HUMAN_ANI_BIG_WALKING			5
+#define HUMAN_ANI_BIG_WALKING			3
+#define HUMAN_ANI_BIG_WALKING_UP			4
+#define HUMAN_ANI_BIG_WALKING_DOWN			5
+
 #define HUMAN_ANI_SMALL_WALKING		1
 #define HUMAN_ANI_SMALL_CRAWLING		2
 
@@ -47,18 +50,27 @@ class CHuman : public CGameObject
 	float start_x;			// initial position of Human at scene
 	float start_y;
 	bool is_on_ground;
-	
+	bool is_set_level;
+
+	bool isGoingUp;
+	bool isGoingDown;
+	DWORD untouchable_start;
+	bool isBeingHuman;
 public:
 	CHuman(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
 
 	void SetState(int state);
-	void SetLevel(int l) { level = l; }
-	
+	void SetLevel(int l) { level = l; is_set_level = true; }
+	int GetLevel() { return level; }
 	void Reset();
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
-
-
+	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
+	void SetGoingUp(bool flag) { isGoingUp = flag; }
+	void SetGoingDown(bool flag) { isGoingDown = flag; }
+	bool GetGoingUp() { return isGoingUp; }
+	bool GetGoingDown() { return isGoingDown; }
+	void SetIsBeingHuman(bool _flag) { isBeingHuman = _flag; }
 };

@@ -12,6 +12,14 @@
 #include "EnemyObject1.h"
 #include "Worm.h"
 #include "Spider.h"
+#include "Eyeball.h"
+#include "Floater.h"
+#include "Dome.h"
+#include "Cannon.h"
+#include "Jumper.h"
+
+#define JUMPER_ROUNDING_DISTANCE_X 50
+#define JUMPER_ROUNDING_DISTANCE_Y 40
 CMainCharacter::CMainCharacter(float x, float y) : CGameObject()
 {
 
@@ -41,63 +49,101 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		// Xử lý di chuyển của các đối tượng enemy theo đối tượng nhân vật chính
 		for (UINT i = 0; i < coObjects->size(); i++)
 		{
-			if (dynamic_cast<CEnemyObject1*>(coObjects->at(i))) {
-				CEnemyObject1* enemy1_object = dynamic_cast<CEnemyObject1*>(coObjects->at(i));
-				if (enemy1_object->GetState() != ENEMY1_STATE_DIE)
-				{
+			if (dynamic_cast<CFloater*>(coObjects->at(i))) {
+					
+				CFloater* floater = dynamic_cast<CFloater*>(coObjects->at(i));
+				float x_enemy, y_enemy;
+				floater->GetPosition(x_enemy, y_enemy);
+				if (x > x_enemy)
+					floater->SetDirection(1);
+				else
+					floater->SetDirection(-1);
+				floater->SetPlayerObject(this);
+				
+
+			}
+			else if (dynamic_cast<CDome*>(coObjects->at(i))) {
+				CDome* dome = dynamic_cast<CDome*>(coObjects->at(i));
+				
 					float x_enemy, y_enemy;
-					enemy1_object->GetPosition(x_enemy, y_enemy);
+					dome->GetPosition(x_enemy, y_enemy);
 					if (x > x_enemy)
-						enemy1_object->SetDirection(1);
+						dome->SetDirection(1);
 					else
-						enemy1_object->SetDirection(-1);
-					enemy1_object->SetState(ENEMY1_STATE_WALKING);
-				}
+						dome->SetDirection(-1);
+				
 
 			}
 			else if (dynamic_cast<CWorm*>(coObjects->at(i))) {
 				CWorm* worm = dynamic_cast<CWorm*>(coObjects->at(i));
-				if (worm->GetState() != WORM_STATE_DIE)
-				{
+				
 					float x_worm, y_worm;
 					worm->GetPosition(x_worm, y_worm);
 					if (x > x_worm)
 						worm->SetDirection(1);
 					else
 						worm->SetDirection(-1);
-					worm->SetState(WORM_STATE_MOVE);
-				}
 
 			}
-			else if (dynamic_cast<CSpider*>(coObjects->at(i))) {
-				CSpider* spider = dynamic_cast<CSpider*>(coObjects->at(i));
-				if (spider->GetState() != SPIDER_STATE_DIE)
-				{
-					float x_spider, y_spider;
-					spider->GetPosition(x_spider, y_spider);
-					if (x > x_spider)
-						spider->SetDirection(1);
+			else if (dynamic_cast<CEyeball*>(coObjects->at(i))) {
+				CEyeball* eyeball = dynamic_cast<CEyeball*>(coObjects->at(i));
+
+					float x_eyeball, y_eyeball;
+					eyeball->GetPosition(x_eyeball, y_eyeball);
+					if (x > x_eyeball)
+						eyeball->SetDirection(1);
 					else
-						spider->SetDirection(-1);
-					spider->SetState(SPIDER_STATE_MOVE);
-				}
+						eyeball->SetDirection(-1);
+					if (y > y_eyeball)
+						eyeball->SetDirectionY(1);//Up
+					else
+						eyeball->SetDirectionY(-1);//Down
+			}
+			else if (dynamic_cast<CCannon*>(coObjects->at(i))) {
+				CCannon* cannon = dynamic_cast<CCannon*>(coObjects->at(i));
+			}
+			else if (dynamic_cast<CJumper*>(coObjects->at(i))) {
+				CJumper* jumper = dynamic_cast<CJumper*>(coObjects->at(i));
 
+				float x_jumper, y_jumper;
+				jumper->GetPosition(x_jumper, y_jumper);
+				if (x > x_jumper)
+					jumper->SetDirection(1);
+				else
+					jumper->SetDirection(-1);
+				if (jumper->GetState() != STATE_ITEM)
+				{
+					if (abs(x - x_jumper) < JUMPER_ROUNDING_DISTANCE_X && abs(y - y_jumper) < JUMPER_ROUNDING_DISTANCE_Y)
+						jumper->SetState(JUMPER_STATE_JUMP);
+				}
+				
 			}
 		}
-		//Render list of weapon objects
-		if (list_weapon.size() > 0)
-		{
-			for (int i = 0; i < list_weapon.size(); i++)
-				list_weapon[i]->Update(dt, coObjects);
-		}
+		
 		// Simple fall down
 		if (state != MAIN_CHARACTER_STATE_NONE_COLLISION)
-			vy += MAIN_CHARACTER_GRAVITY * dt;
+			//vy += MAIN_CHARACTER_GRAVITY * dt;
+			vy -= MAIN_CHARACTER_GRAVITY * dt;
 
 		coEvents.clear();
 		// turn off collision when die 
 		if (state != MAIN_CHARACTER_STATE_NONE_COLLISION && MAIN_CHARACTER_STATE_DIE)
 			CalcPotentialCollisions(coObjects, coEvents);
+		if (isAttacked)
+		{
+			StartUntouchable();
+			isAttacked = false;
+		}
+		// reset untouchable timer if untouchable time has passed
+		if (untouchable == 1)
+		{
+			
+			if (GetTickCount() - untouchable_start > MAIN_CHARACTER_UNTOUCHABLE_TIME)
+			{
+				untouchable = 0;
+				untouchable_start = 0;
+			}
+		}
 		// No collision occured, proceed normally
 		if (coEvents.size() == 0)
 		{
@@ -134,9 +180,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (dynamic_cast<CBrick*>(e->obj)) // if e->obj is CBrick 
 				{
 					//CBrick* brick = dynamic_cast<CBrick*>(e->obj);
-
-
-					if (e->ny < 0)
+					if (e->ny > 0)
 					{
 						Is_On_Ground = true;
 					}
@@ -165,11 +209,183 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 
 				}
+				//Outdoor enemies
+				else if (dynamic_cast<CWorm*>(e->obj))
+				{
+					CWorm* worm = dynamic_cast<CWorm*>(e->obj);
+					float vxWorm, vyWorm;
+					worm->GetSpeed(vxWorm, vyWorm);
+					if (worm->GetState() != STATE_ITEM)
+					{
+						StartUntouchable();
+						if (e->ny != 0)
+						{
+							y -= 2*vyWorm * dt;
+						}
+						else
+							x += dx;
+					}
+					else
+					{
+						if (e->ny != 0)
+						{
+							y -= 2*vy*dt;
+						}
+						else
+							x += dx;
+						worm->SetState(WORM_STATE_DIE);
+					}
+					
+				}
+				else if (dynamic_cast<CFloater*>(e->obj))
+				{
+					CFloater* floater = dynamic_cast<CFloater*>(e->obj);
+					float vxFloater, vyFloater;
+					floater->GetSpeed(vxFloater, vyFloater);
+					if (floater->GetState() != STATE_ITEM)
+					{
+						StartUntouchable();
+						
+						if (e->ny != 0)
+						{
+							y -= 2*vyFloater * dt;
+						}
+						else
+							x += dx;
+					}
+					else
+					{
+						if (e->ny < 0)
+						{
+							y -= 2*vy*dt;
+						}
+						else
+							x += dx;
+						floater->SetState(FLOATER_STATE_DIE);
+					}
+						
+
+				}
+				else if (dynamic_cast<CDome*>(e->obj))
+				{
+					CDome* dome = dynamic_cast<CDome*>(e->obj);
+					float vxDome, vyDome;
+					dome->GetSpeed(vxDome, vyDome);
+					if (dome->GetState() != STATE_ITEM)
+					{
+						StartUntouchable();
+						if (e->ny != 0)
+						{
+							y -= 2* vyDome * dt;
+						}
+						else
+							x += dx;
+					}
+					else
+					{
+						if (e->ny < 0)
+						{
+							y -= 2*vy*dt;
+						}
+						else
+							x += dx;
+						dome->SetState(DOME_STATE_DIE);
+					}
+						
+
+				}
+				else if (dynamic_cast<CJumper*>(e->obj))
+				{
+					CJumper* jumper = dynamic_cast<CJumper*>(e->obj);
+					float vxJumper, vyJumper;
+					jumper->GetSpeed(vxJumper, vyJumper);
+					if (jumper->GetState() != STATE_ITEM)
+					{
+						StartUntouchable();
+						if (e->ny != 0)
+						{
+							y -= 2*vyJumper*dt;
+						}
+						else
+							x += dx;
+					}
+					else
+					{
+						if (e->ny < 0)
+						{
+							y -= 2*vy * dt;
+						}
+						else
+							x += dx;
+						jumper->SetState(DOME_STATE_DIE);
+					}
+		
+
+				}
+				//Indoor enemies
+				else if (dynamic_cast<CCannon*>(e->obj))
+				{
+					CCannon* cannon = dynamic_cast<CCannon*>(e->obj);
+					float vxCannon, vyCannon;
+					cannon->GetSpeed(vxCannon, vyCannon);
+					if (cannon->GetState() != STATE_ITEM)
+					{
+						StartUntouchable();
+						if (e->ny != 0)
+						{
+							y += vyCannon * dt;
+						}
+						else
+							x += dx;
+					}
+					else
+					{
+						if (e->ny != 0)
+						{
+							y += dy;
+						}
+						else
+							x += dx;
+						cannon->SetState(CANNON_STATE_DIE);
+					}
 			}
+				else if (dynamic_cast<CEyeball*>(e->obj))
+				{
+					CEyeball* eyeball = dynamic_cast<CEyeball*>(e->obj);
+					float vxEyeball, vyEyeball;
+					eyeball->GetSpeed(vxEyeball, vyEyeball);
+					if (eyeball->GetState() != STATE_ITEM)
+					{
+						StartUntouchable();
+						if (e->ny != 0)
+						{
+							y += vyEyeball * dt;
+						}
+						else
+							x += dx;
+					}
+					else
+					{
+						if (e->ny != 0)
+						{
+							y += dy;
+						}
+						else
+							x += dx;
+						eyeball->SetState(EYEBALL_STATE_DIE);
+
+					}
+			}
+		}
 
 		}
 	}
-	
+	//Update list of weapon objects
+	if (list_weapon.size() > 0)
+	{
+		for (int i = 0; i < list_weapon.size(); i++)
+			list_weapon[i]->Update(dt, coObjects);
+	}
 	//Cập nhật vị trí cho các đối tượng thành phần như bánh xe, cabin, human...
 	//Chạy hàm cập nhật của các đối tượng thành phần
 	for (int i = 0; i < componentObjects.size(); i++)
@@ -180,14 +396,21 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (dynamic_cast<CHuman*>(componentObjects[i]))
 			{
 				CHuman* human_object = dynamic_cast<CHuman*>(componentObjects[i]);
+				human_object->SetIsBeingHuman(true);
 				human_object->Update(dt, coObjects);
 			}
 		}
-		//Chạy hàm cập nhật cho tất cả đối tượng thành phần
+		//Chạy hàm cập nhật cho tất cả đối tượng thành phần, kể cả Human
 		else
 		{
+			if (dynamic_cast<CHuman*>(componentObjects[i]))
+			{
+				CHuman* human_object = dynamic_cast<CHuman*>(componentObjects[i]);
+				human_object->SetIsBeingHuman(false);
+			}
 			componentObjects[i]->SetPosition(x, y);
-			componentObjects[i]->Update(dt, coObjects);
+			if (!dynamic_cast<CHuman*>(componentObjects[i]))
+				componentObjects[i]->Update(dt, coObjects);
 		}
 		
 	}
@@ -195,19 +418,54 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	
+	
 }
 
 void CMainCharacter::Render()
 {
-	
 	int alpha = 255;
-	
-	animation_set->at(0)->Render(x, y, alpha);
-	RenderBoundingBox();
-
-	// Vẽ các đối tượng weapon của nhân vật chính
-	if (!Is_Human)
+	CGame* game = CGame::GetInstance();
+	if (!game->GetCurrentScene()->GetTypeScence() == OVER_WORLD)
 	{
+		animation_set->at(0)->Render(x, y, alpha);
+		// Vẽ các đối tượng weapon của nhân vật chính
+		{
+			if (list_weapon.size() > 0)
+			{
+				for (int i = 0; i < list_weapon.size(); i++)
+					list_weapon[i]->Render();
+			}
+		}
+		//Vẽ các object thành phần của player object
+		for (int i = 0; i < componentObjects.size(); i++)
+		{
+			if (!dynamic_cast<CHuman*>(componentObjects[i]))
+				componentObjects[i]->SetUntouchable(untouchable);
+			//Chỉ Render đối tượng CHuman
+			if (Is_Human)
+			{
+				componentObjects[i]->Render();
+			}
+			//Render các đối tượng thành phần không phải CHuman
+			else
+			{
+				if (!dynamic_cast<CHuman*>(componentObjects[i]))
+					componentObjects[i]->Render();
+			}
+		}
+		//RenderBoundingBox();
+
+	}
+	
+	else
+	{
+		Is_Human = true;
+		for (int i = 0; i < componentObjects.size(); i++)
+		{
+			//Chỉ Render đối tượng CHuman
+			if (dynamic_cast<CHuman*>(componentObjects[i]))
+				componentObjects[i]->Render();
+		}
 		if (list_weapon.size() > 0)
 		{
 			for (int i = 0; i < list_weapon.size(); i++)
@@ -215,22 +473,6 @@ void CMainCharacter::Render()
 		}
 	}
 	
-	//Vẽ các object thành phần của player object
-	for (int i = 0; i < componentObjects.size(); i++)
-	{
-		//Chỉ Render đối tượng CHuman
-		if (Is_Human)
-		{
-			componentObjects[i]->Render();
-		}
-		//Render các đối tượng thành phần không phải CHuman
-		else
-		{
-			if (!dynamic_cast<CHuman*>(componentObjects[i]))
-				componentObjects[i]->Render();
-		}
-	}
-		
 	
 	
 }
@@ -253,7 +495,7 @@ void CMainCharacter::SetState(int state)
 		// TODO: need to check if MAIN_CHARACTER is *current* on a platform before allowing to jump again
 		if (Is_On_Ground)
 		{
-			vy = -MAIN_CHARACTER_JUMP_SPEED_Y;
+			vy = MAIN_CHARACTER_JUMP_SPEED_Y;
 			Is_On_Ground = false;
 		}
 		break;
@@ -264,6 +506,8 @@ void CMainCharacter::SetState(int state)
 		//vy = -MAIN_CHARACTER_DIE_DEFLECT_SPEED;
 		break;
 	case MAIN_CHARACTER_STATE_UP_BARREL:
+		break;
+	case MAIN_CHARACTER_STATE_DOWN_BARREL:
 		break;
 	case MAIN_CHARACTER_STATE_BARREL_FIRE:
 		break;
@@ -298,24 +542,70 @@ void CMainCharacter::SetState(int state)
 		
 		if (state == MAIN_CHARACTER_STATE_BARREL_FIRE)//Nhân vật bắn
 		{
-			if (dynamic_cast<CBarrelObject*>(componentObjects[i]))
+			if (Is_Human)
 			{
-				float x_barrel_object, y_barrel_object;
-				//Lấy vị trí x, y của đối tượng nòng sóng
-				dynamic_cast<CBarrelObject*>(componentObjects[i])->GetPosition(x_barrel_object, y_barrel_object);
-				//Nếu nòng sóng đang giơ lên
-				if (dynamic_cast<CBarrelObject*>(componentObjects[i])->GetIsBarrelUp() == true)
+				CWeapon* weapon = new CWeapon(WEAPON_TYPE_BIG_HUMAN);// Khởi tạo weapon theo x,y của human
+				float x_human, y_human;
+				//Lấy vị trí x, y của đối tượng human
+				if (dynamic_cast<CHuman*>(componentObjects[i]))
 				{
+					dynamic_cast<CHuman*>(componentObjects[i])->GetPosition(x_human, y_human);
 					
-					CWeapon* weapon = new CWeapon(x_barrel_object, y_barrel_object, nx, state, true);// Khởi tạo weapon theo x,y của barrel
+					if (dynamic_cast<CHuman*>(componentObjects[i])->GetGoingUp())
+					{
+						weapon->SetPosition(x_human + HUMAN_BIG_BBOX_WIDTH / 2, y_human);
+						weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY_UP);
+					}
+						
+					else if (dynamic_cast<CHuman*>(componentObjects[i])->GetGoingDown())
+					{
+						weapon->SetPosition(x_human+ HUMAN_BIG_BBOX_WIDTH/2, y_human);
+						weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY_DOWN);
+					}
+					
+					else
+					{
+						if (dynamic_cast<CHuman*>(componentObjects[i])->GetLevel() == HUMAN_LEVEL_BIG)
+						{
+							weapon->SetPosition(x_human, y_human - HUMAN_BIG_BBOX_HEIGHT / 2);
+							weapon->SetDirection(nx);
+							weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY);
+						}
+						else
+						{
+							weapon->SetPosition(x_human, y_human - HUMAN_SMALL_BBOX_HEIGHT / 2);
+							weapon->SetDirection(nx);
+							weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY);
+						}
+						
+					}
 					list_weapon.push_back(weapon);
 				}
-				else
+				
+			}
+			else
+			{
+				if (dynamic_cast<CBarrelObject*>(componentObjects[i]))
 				{
-					CWeapon* weapon = new CWeapon(x_barrel_object, y_barrel_object, nx, state, false);// Khởi tạo weapon theo x,y của barrel
-					list_weapon.push_back(weapon);
+					float x_barrel_object, y_barrel_object;
+					//Lấy vị trí x, y của đối tượng nòng sóng
+					dynamic_cast<CBarrelObject*>(componentObjects[i])->GetPosition(x_barrel_object, y_barrel_object);
+					//Nếu nòng sóng đang giơ lên
+					if (dynamic_cast<CBarrelObject*>(componentObjects[i])->GetIsBarrelUp() == true)
+					{
+
+						CWeapon* weapon = new CWeapon(x_barrel_object, y_barrel_object, nx, state, true);// Khởi tạo weapon theo x,y của barrel
+						list_weapon.push_back(weapon);
+					}
+					else
+					{
+						CWeapon* weapon = new CWeapon(x_barrel_object, y_barrel_object, nx, state, false);// Khởi tạo weapon theo x,y của barrel
+						list_weapon.push_back(weapon);
+					}
 				}
 			}
+			
+			
 		}
 	}
 	
@@ -326,9 +616,9 @@ void CMainCharacter::SetState(int state)
 void CMainCharacter::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	left = x;
-	top = y;
+	top = y - MAIN_CHARACTER_BBOX_HEIGHT;
 	right = x + MAIN_CHARACTER_BBOX_WIDTH;
-	bottom = y + MAIN_CHARACTER_BBOX_HEIGHT;
+	bottom = y ;
 	
 }
 
@@ -353,3 +643,41 @@ vector<LPGAMEOBJECT> CMainCharacter::GetComponentObjects()
 	return componentObjects;
 }
 
+void CMainCharacter::CollisionItem(int item)
+{
+	/*
+		0: whip item
+		1: knife item
+		2: axe item
+		3: bomerang item
+		4: small heart
+		5: big heart
+		6: fire
+	*/
+	if (item == 0)
+	{
+		
+	}
+	else if (item == 1)
+	{
+		
+	}
+	else if (item == 2)
+	{
+		
+	}
+	else if (item == 3)
+	{
+		
+	}
+	else if (item == 4)
+	{
+		
+	}
+	else if (item == 5)
+	{
+		
+	}
+	//else
+		
+}

@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "Game.h"
+#include "TiledMap.h"
 #define CELL_WIDTH	160
 #define CELL_HEIGHT	120
 

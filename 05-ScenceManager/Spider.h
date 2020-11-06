@@ -17,7 +17,7 @@
 #define SPIDER_ANI_MOVE_RIGHT 1
 class CSpider :public CEnemyObject
 {
-
+	
 public:
 	CSpider();
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);

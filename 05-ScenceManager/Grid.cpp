@@ -31,8 +31,11 @@ void CGrid::Add(LPGAMEOBJECT object, int xCell, int yCell)
 
 vector<LPGAMEOBJECT> CGrid::GetList()
 {
+	int heightMap;
+	
 	CGame* game = CGame::GetInstance();
-
+	CTiledMapSets::GetInstance()->Get(game->GetCurrentScenceID())->GetMapHeight(heightMap);
+	
 	float x, y;
 	game->GetCamPos(x,y);
 	
@@ -40,8 +43,8 @@ vector<LPGAMEOBJECT> CGrid::GetList()
 	int startX = x / CELL_WIDTH;
 	int endX = (x + game->GetScreenWidth()) / CELL_WIDTH;
 
-	int startY = y / CELL_HEIGHT;
-	int endY = (y + game->GetScreenHeight()) / CELL_HEIGHT;
+	int startY =(heightMap - y) / CELL_HEIGHT;
+	int endY = (heightMap -y + game->GetScreenHeight()) / CELL_HEIGHT;
 	if (endY == numRow)
 		endY -= 1;
 	if (endX == numCol)
