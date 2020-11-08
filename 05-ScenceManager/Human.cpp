@@ -17,6 +17,7 @@
 #include "Floater.h"
 #include "Dome.h"
 #include "Jumper.h"
+#include "Teleporter.h"
 #define JUMPER_ROUNDING_DISTANCE_X 50
 #define JUMPER_ROUNDING_DISTANCE_Y 40
 CHuman::CHuman(float x, float y) : CGameObject()
@@ -92,6 +93,23 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				eyeball->SetDirectionY(1);//Up
 			else
 				eyeball->SetDirectionY(-1);//Down
+
+
+
+		}
+		else if (dynamic_cast<CTeleporter*>(coObjects->at(i))) {
+			CTeleporter* teleporter = dynamic_cast<CTeleporter*>(coObjects->at(i));
+
+			float x_teleporter, y_teleporter;
+			teleporter->GetPosition(x_teleporter, y_teleporter);
+			if (x > x_teleporter)
+				teleporter->SetDirection(1);
+			else
+				teleporter->SetDirection(-1);
+			if (y > y_teleporter)
+				teleporter->SetDirectionY(1);//Up
+			else
+				teleporter->SetDirectionY(-1);//Down
 
 
 
@@ -352,6 +370,33 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						eyeball->SetState(EYEBALL_STATE_DIE);
 
 					}
+				}
+				else if (dynamic_cast<CTeleporter*>(e->obj))
+				{
+				CTeleporter* teleporter = dynamic_cast<CTeleporter*>(e->obj);
+				float vxTeleporter, vyTeleporter;
+				teleporter->GetSpeed(vxTeleporter, vyTeleporter);
+				if (teleporter->GetState() != STATE_ITEM)
+				{
+					StartUntouchable();
+					if (e->ny != 0)
+					{
+						y += vyTeleporter * dt;
+					}
+					else
+						x += dx;
+				}
+				else
+				{
+					if (e->ny != 0)
+					{
+						y += dy;
+					}
+					else
+						x += dx;
+					teleporter->SetState(TELEPORTER_STATE_DIE);
+
+				}
 				}
 			}
 		}

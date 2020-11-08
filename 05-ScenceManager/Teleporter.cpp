@@ -1,8 +1,13 @@
 ﻿#include "Teleporter.h"
+#include "Weapon.h"
+#include "Spike.h"
 
 CTeleporter::CTeleporter(int _item) :CEnemyObject()
 {
 	SetState(TELEPORTER_STATE_IDLE);
+	timeWaitingToMove = 0;
+	timeMoving = 0;
+	item = _item;
 	this->blood = 1;
 	isEnable = true;
 	isDisplay = true;
@@ -35,19 +40,49 @@ void CTeleporter::GetBoundingBox(float& left, float& top, float& right, float& b
 
 void CTeleporter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if (this->blood < 0)
+	if (isEnable)
 	{
-		if (item > 0)
-			SetState(STATE_ITEM);
-		else
-			SetState(TELEPORTER_STATE_DIE);
-	}
-	//if (isEnable)
-	{
+		if (this->blood < 0)
+		{
+			if (item > 0)
+				SetState(STATE_ITEM);
+			else
+				SetState(TELEPORTER_STATE_DIE);
+		}
+		// Calculate dx, dy 
+		CGameObject::Update(dt);
+
+		if (!isMoving)
+			timeWaitingToMove += dt;
+
+		if (timeWaitingToMove >= TIME_START_MOVING)
+		{
+			SetState(TELEPORTER_STATE_MOVE);
+			isStartMoving = true;
+
+		}
+
+		if (isStartMoving)
+		{
+			timeMoving += dt;
+			if (timeMoving >= TIME_MOVING)
+			{
+				SetState(TELEPORTER_STATE_UNCLOAK);
+				isStartMoving = false;
+				timeWaitingToMove = 0;
+				isMoving = false;
+				timeMoving = 0;
+			}
+			x += dx;
+			y += dy;
+		}
 		for (int i = 0; i < list_weapon.size(); i++)
 		{
 			list_weapon[i]->Update(dt, coObjects);
 		}
+
+
+
 	}
 
 }
@@ -56,40 +91,40 @@ void CTeleporter::Render()
 {
 	if (isEnable)
 	{
-
 		int ani = -1;
-		if (!isFireVertical)
+		bool flip = false;
+		if (nx > 0)
 		{
-			ani = TELEPORTER_STATE_UNCLOAK;
-			animation_set->at(ani)->Render(x, y);
-
-			if (animation_set->at(ani)->isFinish)
-			{
-				isFireVertical = !isFireVertical;
-				animation_set->at(ani)->isFinish = false;
-				SetState(TELEPORTER_STATE_UNCLOAK);
-			}
-
+			flip = true;
 		}
 		else
+			flip = false;
+		ani = TELEPORTER_ANI_LEFT;
+		switch (state)
 		{
-			ani = TELEPORTER_STATE_ATTACK;
-			animation_set->at(ani)->Render(x, y);
-
+		case TELEPORTER_STATE_MOVE:
+			break;
+		case TELEPORTER_STATE_UNCLOAK:
+		{
+			ani = TELEPORTER_ANI_ATTACK;
 			if (animation_set->at(ani)->isFinish)
 			{
-				isFireVertical = !isFireVertical;
 				animation_set->at(ani)->isFinish = false;
 				SetState(TELEPORTER_STATE_ATTACK);
 			}
 		}
+		break;
+		case TELEPORTER_STATE_IDLE:
+			break;
+		}
+		animation_set->at(ani)->Render(x, y, flip);
 		RenderBoundingBox();
+		for (int i = 0; i < list_weapon.size(); i++)
+		{
+			list_weapon[i]->Render();
+		}
+	}
 
-	}
-	for (int i = 0; i < list_weapon.size(); i++)
-	{
-		list_weapon[i]->Render();
-	}
 }
 
 void CTeleporter::SetState(int state)
@@ -99,13 +134,54 @@ void CTeleporter::SetState(int state)
 	{
 	case TELEPORTER_STATE_IDLE:
 		vx = 0;
+		vy = 0;
+		break;
+	case TELEPORTER_STATE_MOVE:
+		if (nx > 0)
+		{
+			vx = TELEPORTER_MOVE_SPEED;
+		}
+		else
+		{
+			vx = -TELEPORTER_MOVE_SPEED;
+		}
+
+		if (ny > 0)
+		{
+			vy = TELEPORTER_MOVE_SPEED;
+		}
+		else
+		{
+			vy = -TELEPORTER_MOVE_SPEED;
+		}
 		break;
 	case TELEPORTER_STATE_DIE:
-		isDisplay = false;
 		isEnable = false;
+		isDisplay = false;
+		break;
+	case TELEPORTER_STATE_CLOAK:
+		vx = 0;
+		vy = 0;
+		break;
+	case TELEPORTER_STATE_ATTACK:
+	{
+		CWeapon* weapon = new CWeapon(WEAPON_TYPE_ENEMY_TELEPORTER);// Khởi tạo weapon
+		weapon->SetPosition(x, y);
+		weapon->SetState(WEAPON_TELEPORTER_STATE_FLY);
+		list_weapon.push_back(weapon);
+	}
+
+	break;
+	case STATE_ITEM:
+		if (item > 0)
+		{
+			hasItem = true;
+		}
+		vy = 0;
+		vx = 0;
+		isDisplay = false;
 		break;
 	default:
 		break;
 	}
 }
-
