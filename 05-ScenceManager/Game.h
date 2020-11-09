@@ -12,6 +12,7 @@
 
 #include "Scence.h"
 #include <unordered_map>
+
 using namespace std;
 
 #define KEYBOARD_BUFFER_SIZE 1024
@@ -132,6 +133,8 @@ public:
 	int GetNextPortalId() { return this->next_portal_id; }
 
 	int GetCurrentScenceID() { return current_scene; }
+
+	int RandomItem(int _item);
 	~CGame();
 };
 

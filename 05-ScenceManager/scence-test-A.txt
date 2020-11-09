@@ -5,6 +5,7 @@
 33	textures\NES-Blaster-Master-Area-2.png	255	255	255
 44	textures\NES-Blaster-Master-Area-2-Overworld.png	255	255	255
 55	textures\sophia.png	255	255	255
+66	textures\Items-Objects.png	255	255	255
 # id	left	top	right	bottom	texture_id
 [SPRITES]
 # tiled map sprites
@@ -175,12 +176,6 @@
 10013	208	3	232	35	1
 10014	233	3	257	35	1
 10015	258	3	282	35	1
-#bullet_sofia
-10016	135	183	139	187	55
-#bullet_explosion
-10017	155	181	162	189	55
-10018	171	178	187	191	55
-10019	192	177	208	193	55
 # SOFIA left Wheel 
 20001	3	21	10	28	1
 20002	12	21	19	28	1
@@ -211,13 +206,6 @@
 60004	30	12	37	19	1
 # Main character empty sprite
 70001	0	0	0	0	1
-# Enemy 1
-#Walk left 
-80001	91	2	103	26	2
-80002	108	1	121	26	2
-#Walk right
-80003	133	1	145	26	2
-80004	150	2	162	26	2
 # WORM
 #move left 
 110001	46	412	62	421	2
@@ -239,17 +227,55 @@
 #move right
 140003	149	425	167	441	2
 140004	169	424	187	441	2
-# WEAPON_PLAYER
-#fly_horizontal
+#di chuyen ngang ben trai
+140005	51	441	67	459	2
+140006	50	461	67	479	2
+#nam ngua
+140007	67	479	85	495	2
+140008	87	479	105	496	2
+# JUMPERS
+#move left
+150001	105	500	122	525	2
+150002	87	499	102	525	2
+150003	69	500	84	525	2
+#move right
+150004	132	500	149	525	2
+150005	152	499	167	525	2
+150006	170	500	185	525	2
+# WEAPON
+# Main character
+# fly_horizontal
 100001	91	20	114	27	1
-#fly_vertical
+# fly_vertical
 100002	116	20	123	43	1
-#explode
+# explode
 100003	140	101	148	109	1
 100004	149	97	165	113	1
 100005	166	97	182	113	1
 100006	183	93	207	117	1
-# Hub objects
+# Human-Sofia
+# bullet
+100007	135	183	139	187	55
+# bullet_explosion
+100008	155	181	162	189	55
+100009	171	178	187	191	55
+100010	192	177	208	193	55
+# Cannon
+# bullet
+100011	252	102	260	118	1
+# bullet_explosion
+100012	296	102	312	118	1
+# Eyeball
+# bullet
+100013	252	102	260	118	1
+# bullet_explosion
+100014	296	102	312	118	1
+# Floater
+# bullet
+100015	252	102	260	118	1
+# bullet_explosion
+100016	296	102	312	118	1
+# HUB OBJECTS
 # PowerHub - Text
 800001	175	219	183	235	55
 # PowerHub
@@ -257,7 +283,10 @@
 # GunHub
 800003	154	221	162	253	55
 # Hov-Text
-800004	112	240	120	256	55	
+800004	112	240	120	256	55
+# ITEMS
+# P
+900000	255	109	271	125	66
 # path
 [MAP]
 Map-Blaster-Master-Area-2-A.txt
@@ -270,17 +299,13 @@ Map-Blaster-Master-Area-2-A.txt
 601	10002	100	10003	100	10004	100
 #crawl left
 602	10005	100	10006	100
-#BIG-SOFIA
-#move left
+# BIG-SOFIA
+# move left
 603	10007	100	10008	100	10009	100
-#move up
+# move up
 604	10010	100	10011	100	10012	100
-#move down
+# move down
 605	10013	100	10014	100	10015	100
-#bullet
-606	10016	100
-#bullet_explosion
-607	10017	100	10018	100	10019	100
 # ==== SOFIA WHEEL =========
 #idle-of left-wheel
 700	20002	100
@@ -306,43 +331,75 @@ Map-Blaster-Master-Area-2-A.txt
 # ==== MAIN CHARACTER =========
 #idle
 2000	70001	100
-# === DOMES ===
+# === ENEMY DOMES ===
 #walk left
 8000	140001	100	140002	100
 #walk right
 8001	140003	100	140004	100
+#di chuyen ngang ben trai
+8002	140005	100	140006	100
+#nam ngua
+8003	140007	100	140008	100
 # ==== ENEMY WORM =========
 #Walk left
 5000	110001	100	110002	100
 #Walk right
 5001	110003	100	110004	100
-# ==== ENEMY SPIDER =========
+# ==== ENEMY FLOATER-SPIDER =========
 #Walk left
 6000	120001	100	120002	100
 #Walk right
 6001	120003	100	120004	100
-#
+# === JUMPERS ======
+#walk left
+9000	150001	100	150002	100	150003	100
+#walk right
+9001	150004	100	150005	100	150006	100
 # ==== WEAPON =========
-#left
+# Main Character
+# left
 4000	100001	100
-#Up
+# Up
 4001	100002	100
-#explode
+# explode
 4002	100003	100	100004	100	100005	100
+# Human-Sofia
+# Bullet
+4003	100007	100
+# Bullet_explosion
+4004	100008	100	100009	100	100010	100
+# Cannon
+# Bullet
+4005	100011	100
+# Bullet_explosion
+4006	100012	100
+# Eyeball
+# Bullet
+4007	100013	100
+# Bullet_explosion
+4008	100014	100
+# Floater
+# Bullet
+4009	100015	100
+# Bullet_explosion
+4010	100016	100
 # ==== HUB =========
-#PowerHub - Text
+# PowerHub - Text
 100000	800001	100
-#PowerHub
+# PowerHub
 100001	800002	100
-#GunHub
+# GunHub
 100002	800003	100
-#Hov - text
+# Hov - text
 100003	800004	100
+# ITEMS
+# P
+900000	900000	100
 # id	ani1	ani2	ani3
 #
 [ANIMATION_SETS]
 # SOFIA 
-1	600	601	602	603	604	605	606	607
+1	600	601	602	603	604	605
 # MAIN_CHARACTER 
 2	2000
 # WHEEL 
@@ -351,18 +408,21 @@ Map-Blaster-Master-Area-2-A.txt
 4	900	901
 # BARREL
 5	800	801	802
-# ENEMY 1
-6	3000	3001
 # WORM - ENEMY
 8	5000	5001
 # FLOATER-SPIDER - ENEMY
 9	6000	6001
 # DOMES
-11	8000	8001
-# WEAPON
-7	4000	4001	4002
+11	8000	8001	8002	8003
+# JUMPERS
+12	9000	9001
+# WEAPON Player-horizontal Player-vertical Player-explode Big human-bullet Big human-explosion Cannon-bullet Cannon-explosion Eyeball-bullet Eyeball-explosion	Floater-bullet	Floater-explosion
+7	4000	4001	4002	4003	4004	4005	4006	4007	4008	4009	4010
 # HUB
 100	100000	100001	100002	100003
+# ITEMS
+# P
+200	900000
 [OBJECTS]
 # object_id  type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Worm, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Cabin, 8= Barrel, 9= Main character, 10= Spider, 11=Human
@@ -386,13 +446,15 @@ Map-Blaster-Master-Area-2-A.txt
 9	500	10	100	100
 # ENEMY LIST
 # WORM
-10	3	149	204	8
+10	3	149	204	8	1
 11	3	212	204	8
 # FLOATER
-12	12	923	197	9
-#12	12	790	156	9
+12	12	923	197	9	1
 # DOMES
-#13	13	80	120	11
+13	13	410	202	11	1
+14	13	80	120	11
+# JUMPERS
+#15	14	100	204	12	1
 # MAP OBJECT LIST
 # BRICK 
 # object_id 	type	l	t	ani_set_id	r	b	
@@ -415,7 +477,7 @@ Map-Blaster-Master-Area-2-A.txt
 116	1	817	207	2	850	158
 117	1	880	208	2	913	127
 118	1	2	223	2	1024	209
-119 	1	2	210	2	7	80
+119 	1	0	210	2	0	80
 120	1	2	18	2	1024	0
 121	1	978	206	2	1022	79
 # --- SCENE PORTAL ----
@@ -423,12 +485,12 @@ Map-Blaster-Master-Area-2-A.txt
 1000	50	965	121.5	2	977	80.5	2	1	1000
 # cellx celly id_object...
 [GRID]
-0	0	10	13	104	105	118	119
-0	1	106	107	108	118	11
+0	0	10	104	105	119	15	118
+0	1	106	107	108	11	118
 0	2	108	109	110	118
-0	3	111	112	113	118
+0	3	111	112	113	13
 0	4	113	114	115	118
-0	5	116	117	118	12
+0	5	116	117	12	118
 0	6	118	121
 1	0	100	120	119
 1	1	100	120

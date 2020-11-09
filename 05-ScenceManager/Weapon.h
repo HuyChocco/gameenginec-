@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include "Game.h"
+
 #define WEAPON_BBOX_WIDTH 24
 #define WEAPON_BBOX_HEIGHT 8
 
@@ -12,10 +13,14 @@
 #define WEAPON_EYEBALL_BBOX_WIDTH 8
 #define WEAPON_EYEBALL_BBOX_HEIGHT 16
 
+#define WEAPON_FLOATER_BBOX_WIDTH 8
+#define WEAPON_FLOATER_BBOX_HEIGHT 16
+
 #define WEAPON_BIG_HUMAN_BBOX_WIDTH 4
 #define WEAPON_BIG_HUMAN_BBOX_HEIGHT 4
 
 #define WEAPON_STATE_NONE		100 //General
+#define WEAPON_ANI_SETS_ID 7
 
 //Player
 #define WEAPON_STATE_FIRE		700
@@ -32,33 +37,38 @@
 #define WEAPON_EYEBALL_STATE_FLY		700
 #define WEAPON_EYEBALL_STATE_EXPLODE		701
 
-#define WEAPON_ANI_SETS_ID 7
-#define WEAPON_ANI_SETS_ID_CANNONS 10
-#define WEAPON_ANI_SETS_ID_EYEBALL 11
-#define WEAPON_ANI_SETS_ID_HUMAN 1
+//Enemy Floater
+#define WEAPON_FLOATER_STATE_FLY		700
+#define WEAPON_FLOATER_STATE_EXPLODE		701
+
 //Big Human
 #define WEAPON_BIG_HUMAN_STATE_FLY		800
 #define WEAPON_BIG_HUMAN_STATE_EXPLODE		801
 #define WEAPON_BIG_HUMAN_STATE_FLY_UP		802
 #define WEAPON_BIG_HUMAN_STATE_FLY_DOWN		803
 
-#define WEAPON_ANI_BIG_HUMAN 6
-#define WEAPON_ANI_EXPLODE_BIG_HUMAN 7
+#define WEAPON_ANI_BIG_HUMAN 3
+#define WEAPON_ANI_EXPLODE_BIG_HUMAN 4
 //Player
 #define WEAPON_ANI_FLY_HORIZONTAL 0
 #define WEAPON_ANI_FLY_VERTICAL 1
 #define WEAPON_ANI_EXPLODE 2
 
 //Enemy_Cannons
-#define WEAPON_ANI_ENEMY_CANNONS 2
-#define WEAPON_ANI_EXPLODE_ENEMY_CANNONS 3
+#define WEAPON_ANI_ENEMY_CANNONS 5
+#define WEAPON_ANI_EXPLODE_ENEMY_CANNONS 6
 //Enemy_Eyeball
-#define WEAPON_ANI_ENEMY_EYEBALL 2
-#define WEAPON_ANI_EXPLODE_ENEMY_EYEBALL 3
+#define WEAPON_ANI_ENEMY_EYEBALL 7
+#define WEAPON_ANI_EXPLODE_ENEMY_EYEBALL 8
+//Enemy_Floater
+#define WEAPON_ANI_ENEMY_FLOATER 9
+#define WEAPON_ANI_EXPLODE_ENEMY_FLOATER 10
 //Player
 #define WEAPON_FLY_SPEED 0.3f;
 
 #define WEAPON_CANNONS_FLY_SPEED 0.15f;
+#define WEAPON_EYEBALL_FLY_SPEED 0.15f;
+#define WEAPON_FLOATER_FLY_SPEED 0.05f;
 #define WEAPON_BIG_HUMAN_FLY_SPEED 0.15f;
 
 #define TIME_ENABLE_FIRE			1000
@@ -67,6 +77,8 @@
 #define WEAPON_TYPE_ENEMY_CANNONS			2
 #define WEAPON_TYPE_ENEMY_EYEBALL			3
 #define WEAPON_TYPE_BIG_HUMAN			4
+#define WEAPON_TYPE_ENEMY_FLOATER			5
+
 class CWeapon : public CGameObject
 {
 	int dame = 0;
@@ -78,6 +90,7 @@ class CWeapon : public CGameObject
 
 	bool isBurning;
 	bool isAttacked;
+	CGameObject* player;
 public:
 	CWeapon(int type);
 	CWeapon(float x, float y, int nx, int state,bool isBarrelUp);
@@ -94,4 +107,6 @@ public:
 
 	int GetDame() { return this->dame; }
 	//void SetAttack(bool flag) { isAttacked = flag; }
+	void SetPlayerObject(CGameObject* _player) { this->player = _player; }
+
 };

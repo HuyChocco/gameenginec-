@@ -47,6 +47,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define OBJECT_TYPE_SPIDER	10
 #define OBJECT_TYPE_FLOATER	12
 #define OBJECT_TYPE_DOME	13
+#define OBJECT_TYPE_JUMPER	14
 #define OBJECT_TYPE_CANNON	19
 #define OBJECT_TYPE_EYEBALL	20
 
@@ -184,12 +185,66 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		DebugOut(L"[INFO] Player object created!\n");
 		return;
 		break;
-	case OBJECT_TYPE_ENEMY1: obj = new CEnemyObject1(); break;
-	case OBJECT_TYPE_WORM: obj = new CWorm(); break;
-	case OBJECT_TYPE_FLOATER: obj = new CFloater(); break;
-	case OBJECT_TYPE_CANNON: obj = new CCannon(); break;
-	case OBJECT_TYPE_EYEBALL: obj = new CEyeball(); break;
-	case OBJECT_TYPE_DOME: obj = new CDome(); break;
+	case  OBJECT_TYPE_WORM:
+	{
+		int item = 0;
+		if(tokens.size()>5)
+			item = atoi(tokens[5].c_str());
+		obj = new CWorm(item);
+		LPANIMATION_SET ani_set = animation_sets->Get(200);
+		obj->SetAnimationItemSet(ani_set);
+	}
+		break;
+	case OBJECT_TYPE_FLOATER:
+	{
+		int item = 0;
+		if (tokens.size() > 5)
+			item = atoi(tokens[5].c_str());
+		obj = new CFloater(item);
+		LPANIMATION_SET ani_set = animation_sets->Get(200);
+		obj->SetAnimationItemSet(ani_set);
+	}
+		break;
+	case OBJECT_TYPE_CANNON:
+	{
+		int item = 0;
+		if (tokens.size() > 5)
+			item = atoi(tokens[5].c_str());
+		obj = new CCannon(item);
+		LPANIMATION_SET ani_set = animation_sets->Get(200);
+		obj->SetAnimationItemSet(ani_set);
+	}
+		 break;
+	case OBJECT_TYPE_EYEBALL:
+	{
+		int item = 0;
+		if (tokens.size() > 5)
+			item = atoi(tokens[5].c_str());
+		obj = new CEyeball(item);
+		LPANIMATION_SET ani_set = animation_sets->Get(200);
+		obj->SetAnimationItemSet(ani_set);
+	}
+		 break;
+	case OBJECT_TYPE_DOME: 
+	{
+		int item = 0;
+		if (tokens.size() > 5)
+			item = atoi(tokens[5].c_str());
+		obj = new CDome(item);
+		LPANIMATION_SET ani_set = animation_sets->Get(200);
+		obj->SetAnimationItemSet(ani_set);
+	}
+		break;
+	case OBJECT_TYPE_JUMPER:
+	{
+		int item = 0;
+		if (tokens.size() > 5)
+			item = atoi(tokens[5].c_str());
+		obj = new CJumper(item);
+		LPANIMATION_SET ani_set = animation_sets->Get(200);
+		obj->SetAnimationItemSet(ani_set);
+	}
+	break;
 	case OBJECT_TYPE_SPIKE:
 	{
 		float r = atof(tokens[5].c_str());
@@ -503,6 +558,7 @@ void CPlayScene::Update(DWORD dt)
 	if (player == NULL) return;
 	else
 	{
+		coObjects.push_back(player);
 		player->Update(dt, &coObjects);
 		
 	}
@@ -658,7 +714,7 @@ void CPlayScene::Update(DWORD dt)
 
 		float height = player_y - cy;
 
-		if (height >= ((float)game->GetScreenHeight() / 6))
+		if (height >= ((float)game->GetScreenHeight() / 12))
 		{
 			height += (float)(game->GetScreenHeight() / 8);
 

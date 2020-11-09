@@ -63,6 +63,9 @@ void CWheelObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CWheelObject::Render()
 {
+	int alpha = 255;
+	if (untouchable)
+		alpha = 128;
 	int ani = -1;
 	int flip = false;
 	if (nx > 0)
@@ -74,7 +77,7 @@ void CWheelObject::Render()
 	if (is_Middle_Wheel) // Bánh xe ở giữa
 	{
 		ani = WHEEL_ANI_IDLE; //Animation chỉ có 1 frame duy nhất
-		animation_set->at(ani)->Render(x, y);
+		animation_set->at(ani)->Render(x, y,false,alpha);
 	}
 	else if (is_Right_Wheel) // Bánh xe bên phải
 	{
@@ -82,12 +85,12 @@ void CWheelObject::Render()
 		if (vx == 0) // Nhân vật đứng yên
 		{
 			animation_set->at(ani)->isPause = true; //Dừng animation 
-			animation_set->at(ani)->Render(x, y, flip); // Vẽ frame đang bị tạm dừng
+			animation_set->at(ani)->Render(x, y, flip,alpha); // Vẽ frame đang bị tạm dừng
 		}
 		else // Nhân vật di chuyển
 		{
 			animation_set->at(ani)->isPause = false; // Tiếp tục animation đã dừng trước đó
-			animation_set->at(ani)->Render(x, y, flip);
+			animation_set->at(ani)->Render(x, y, flip,alpha);
 		}
 	}
 	else
@@ -96,12 +99,12 @@ void CWheelObject::Render()
 			if (vx==0) // Nhân vật đứng yên
 			{
 				animation_set->at(ani)->isPause = true; //Dừng animation 
-				animation_set->at(ani)->Render(x, y, flip); // Vẽ frame đang bị tạm dừng
+				animation_set->at(ani)->Render(x, y, flip,alpha); // Vẽ frame đang bị tạm dừng
 			}
 			else // Nhân vật di chuyển
 			{
 				animation_set->at(ani)->isPause = false; // Tiếp tục animation đã dừng trước đó
-				animation_set->at(ani)->Render(x, y, flip);
+				animation_set->at(ani)->Render(x, y, flip,alpha);
 			}
 			
 		

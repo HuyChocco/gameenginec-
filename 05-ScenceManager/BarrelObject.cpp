@@ -71,6 +71,9 @@ void CBarrelObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CBarrelObject::Render()
 {
+	int alpha = 255;
+	if (untouchable)
+		alpha = 128;
 	bool flip = false;
 	int ani = 0;//default
 	if (nx > 0)
@@ -98,7 +101,7 @@ void CBarrelObject::Render()
 
 	
 	
-	animation_set->at(ani)->Render(x, y, flip);
+	animation_set->at(ani)->Render(x, y, flip,alpha);
 	
 }
 

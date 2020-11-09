@@ -54,6 +54,8 @@ class CHuman : public CGameObject
 
 	bool isGoingUp;
 	bool isGoingDown;
+	DWORD untouchable_start;
+	bool isBeingHuman;
 public:
 	CHuman(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
@@ -65,9 +67,10 @@ public:
 	void Reset();
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
-
+	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
 	void SetGoingUp(bool flag) { isGoingUp = flag; }
 	void SetGoingDown(bool flag) { isGoingDown = flag; }
 	bool GetGoingUp() { return isGoingUp; }
 	bool GetGoingDown() { return isGoingDown; }
+	void SetIsBeingHuman(bool _flag) { isBeingHuman = _flag; }
 };

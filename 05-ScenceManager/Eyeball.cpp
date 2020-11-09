@@ -1,22 +1,37 @@
 ﻿#include "Eyeball.h"
 #include "Weapon.h"
 #include "Spike.h"
-CEyeball::CEyeball() :CEnemyObject()
+CEyeball::CEyeball(int _item) :CEnemyObject()
 {
 	SetState(EYEBALL_STATE_IDLE);
 	timeWaitingToMove = 0;
 	timeMoving = 0;
-
+	item = _item;
 	this->blood = 1;
+	isEnable = true;
+	isDisplay = true;
 }
 
 void CEyeball::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (state != EYEBALL_STATE_DIE)
+	if (isEnable)
 	{
 		left = x;
-		top = y - EYEBALL_BBOX_HEIGHT;
-		right = x + EYEBALL_BBOX_WIDTH;
+		if (state != STATE_ITEM)
+		{
+			top = y - EYEBALL_BBOX_HEIGHT;
+			right = x + EYEBALL_BBOX_WIDTH;
+		}
+		else
+		{
+			if (item == 1)
+			{
+				top = y - ITEM_P_BBOX_HEIGHT;
+
+				right = x + ITEM_P_BBOX_WIDTH;
+			}
+
+		}
 		bottom = y;
 	}
 	
@@ -24,8 +39,15 @@ void CEyeball::GetBoundingBox(float& left, float& top, float& right, float& bott
 
 void CEyeball::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if (state != EYEBALL_STATE_DIE)
+	if (isEnable)
 	{
+		if (this->blood < 0)
+		{
+			if (item > 0)
+				SetState(STATE_ITEM);
+			else
+				SetState(EYEBALL_STATE_DIE);
+		}
 		// Calculate dx, dy 
 		CGameObject::Update(dt);
 		
@@ -66,7 +88,7 @@ void CEyeball::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CEyeball::Render()
 {
-	if (state != EYEBALL_STATE_DIE)
+	if (isEnable)
 	{
 		int ani = -1;
 		bool flip = false;
@@ -133,6 +155,8 @@ void CEyeball::SetState(int state)
 		}
 		break;
 	case EYEBALL_STATE_DIE:
+		isEnable = false;
+		isDisplay = false;
 		break;
 	case EYEBALL_STATE_CLOSE_EYE:
 		vx = 0;
@@ -146,6 +170,15 @@ void CEyeball::SetState(int state)
 			list_weapon.push_back(weapon);
 		}
 		
+		break;
+	case STATE_ITEM:
+		if (item > 0)
+		{
+			hasItem = true;
+		}
+		vy = 0;
+		vx = 0;
+		isDisplay = false;
 		break;
 	default:
 		break;
