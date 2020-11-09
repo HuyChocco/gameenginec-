@@ -130,12 +130,14 @@
     <ClCompile Include="CabinObject.cpp" />
     <ClCompile Include="Cannon.cpp" />
     <ClCompile Include="Dome.cpp" />
+    <ClCompile Include="EndingScence.cpp" />
     <ClCompile Include="EnemyObject.cpp" />
     <ClCompile Include="Eyeball.cpp" />
     <ClCompile Include="Floater.cpp" />
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="GunHub.cpp" />
     <ClCompile Include="Human.cpp" />
+    <ClCompile Include="IntroScence.cpp" />
     <ClCompile Include="Jumper.cpp" />
     <ClCompile Include="Koopas.cpp" />
     <ClCompile Include="MainCharacter.cpp" />
@@ -165,6 +167,7 @@
     <ClInclude Include="CabinObject.h" />
     <ClInclude Include="Cannon.h" />
     <ClInclude Include="Dome.h" />
+    <ClInclude Include="EndingScence.h" />
     <ClInclude Include="EnemyObject.h" />
     <ClInclude Include="Eyeball.h" />
     <ClInclude Include="Floater.h" />
@@ -173,6 +176,7 @@
     <ClInclude Include="HovHub.h" />
     <ClInclude Include="Human.h" />
     <ClInclude Include="Insect.h" />
+    <ClInclude Include="IntroScence.h" />
     <ClInclude Include="Jumper.h" />
     <ClInclude Include="Koopas.h" />
     <ClInclude Include="MainCharacter.h" />
