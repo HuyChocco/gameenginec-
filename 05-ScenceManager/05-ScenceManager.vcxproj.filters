@@ -138,6 +138,9 @@
     <ClCompile Include="Jumper.cpp">
       <Filter>Source Files\EnemyObjects</Filter>
     </ClCompile>
+	<ClCompile Include="Orb.cpp">
+	    <Filter>Source Files\EnemyObjects</Filter>
+	</ClCompile>
     <ClCompile Include="IntroScence.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

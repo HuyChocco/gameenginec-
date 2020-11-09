@@ -344,6 +344,25 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		
 
 				}
+				else if (dynamic_cast<COrb*>(e->obj))
+				{
+					COrb* orb = dynamic_cast<COrb*>(e->obj);
+					if (orb->GetState() != STATE_ITEM)
+					{
+						StartUntouchable();
+						float vxOrb, vyOrb;
+						orb->GetSpeed(vxOrb, vyOrb);
+						if (e->ny != 0)
+						{
+							y -= 2*vyOrb * dt;
+						}
+						else
+							x += dx;
+					}
+					else
+						orb->SetState(ORB_STATE_DIE);
+
+				}
 				//Indoor enemies
 				else if (dynamic_cast<CCannon*>(e->obj))
 				{
@@ -398,26 +417,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 					}
 			}
-				else if (dynamic_cast<COrb*>(e->obj))
-				{
-				COrb* orb = dynamic_cast<COrb*>(e->obj);
-				if (orb->GetState() != STATE_ITEM)
-				{
-					StartUntouchable();
-					float vxOrb, vyOrb;
-					orb->GetSpeed(vxOrb, vyOrb);
-					if (e->ny != 0)
-					{
-						y += vyOrb * dt;
-						//y += dy;
-					}
-					else
-						x += dx;
-				}
-				else
-					orb->SetState(ORB_STATE_DIE);
-
-				}
+			
 		}
 
 		}
