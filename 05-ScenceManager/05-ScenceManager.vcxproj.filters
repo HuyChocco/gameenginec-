@@ -138,9 +138,11 @@
     <ClCompile Include="Jumper.cpp">
       <Filter>Source Files\EnemyObjects</Filter>
     </ClCompile>
-	<ClCompile Include="Orb.cpp">
+    <ClCompile Include="Teleporter.cpp">
+      <Filter>Source Files\EnemyObjects</Filter>
+    <ClCompile Include="Orb.cpp">
 	    <Filter>Source Files\EnemyObjects</Filter>
-	</ClCompile>
+	  </ClCompile>
     <ClCompile Include="IntroScence.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -260,6 +262,8 @@
     <ClInclude Include="Skull.h">
       <Filter>Header Files\EnemyObjects</Filter>
     </ClInclude>
+    <ClInclude Include="Teleporter.h">
+      <Filter>Header Files\EnemyObjects</Filter>
     <ClInclude Include="IntroScence.h">
       <Filter>Header Files</Filter>
     </ClInclude>

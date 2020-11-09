@@ -14,6 +14,7 @@
 #include "Cannon.h"
 #include "Spike.h"
 #include "Eyeball.h"
+#include "Teleporter.h"
 #include "Floater.h"
 #include "Dome.h"
 #include "Jumper.h"

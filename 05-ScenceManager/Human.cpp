@@ -17,7 +17,9 @@
 #include "Floater.h"
 #include "Dome.h"
 #include "Jumper.h"
+#include "Teleporter.h"
 #include "Orb.h"
+
 #define JUMPER_ROUNDING_DISTANCE_X 50
 #define JUMPER_ROUNDING_DISTANCE_Y 40
 #define ORB_ROUNDING_DISTANCE_X 120
@@ -58,15 +60,12 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 		else if (dynamic_cast<CDome*>(coObjects->at(i))) {
 			CDome* dome = dynamic_cast<CDome*>(coObjects->at(i));
-
 			float x_enemy, y_enemy;
 			dome->GetPosition(x_enemy, y_enemy);
 			if (x > x_enemy)
 				dome->SetDirection(1);
 			else
 				dome->SetDirection(-1);
-
-
 		}
 		else if (dynamic_cast<CWorm*>(coObjects->at(i))) {
 			CWorm* worm = dynamic_cast<CWorm*>(coObjects->at(i));
@@ -77,10 +76,6 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				worm->SetDirection(1);
 			else
 				worm->SetDirection(-1);
-			
-
-
-
 		}
 		else if (dynamic_cast<CEyeball*>(coObjects->at(i))) {
 			CEyeball* eyeball = dynamic_cast<CEyeball*>(coObjects->at(i));
@@ -95,9 +90,20 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				eyeball->SetDirectionY(1);//Up
 			else
 				eyeball->SetDirectionY(-1);//Down
+		}
+		else if (dynamic_cast<CTeleporter*>(coObjects->at(i))) {
+			CTeleporter* teleporter = dynamic_cast<CTeleporter*>(coObjects->at(i));
 
-
-
+			float x_teleporter, y_teleporter;
+			teleporter->GetPosition(x_teleporter, y_teleporter);
+			if (x > x_teleporter)
+				teleporter->SetDirection(1);
+			else
+				teleporter->SetDirection(-1);
+			if (y > y_teleporter)
+				teleporter->SetDirectionY(1);//Up
+			else
+				teleporter->SetDirectionY(-1);//Down
 		}
 		else if (dynamic_cast<CCannon*>(coObjects->at(i))) {
 			CCannon* cannon = dynamic_cast<CCannon*>(coObjects->at(i));
@@ -393,7 +399,35 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 					}
 				}
-				
+
+				else if (dynamic_cast<CTeleporter*>(e->obj))
+				{
+				CTeleporter* teleporter = dynamic_cast<CTeleporter*>(e->obj);
+				float vxTeleporter, vyTeleporter;
+				teleporter->GetSpeed(vxTeleporter, vyTeleporter);
+				if (teleporter->GetState() != STATE_ITEM)
+				{
+					StartUntouchable();
+					if (e->ny != 0)
+					{
+						y += vyTeleporter * dt;
+					}
+					else
+						x += dx;
+				}
+				else
+				{
+					if (e->ny != 0)
+					{
+						y += dy;
+					}
+					else
+						x += dx;
+					teleporter->SetState(TELEPORTER_STATE_DIE);
+
+				}
+				}
+
 			}
 		}
 
