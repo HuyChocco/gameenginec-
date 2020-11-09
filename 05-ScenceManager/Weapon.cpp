@@ -13,6 +13,7 @@
 #include "Portal.h"
 #include "Spike.h"
 #include "Jumper.h"
+#include "Orb.h"
 
 
 
@@ -180,6 +181,28 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 							if (!isAttacked)
 							{
 								jumper->LostBlood(GetDame());
+								isAttacked = true;
+							}
+						}
+					}
+
+				}
+				else if (dynamic_cast<COrb*>(colliable_object->at(i)))
+				{
+					COrb* orb = dynamic_cast<COrb*>(colliable_object->at(i));
+					if (orb->GetState() != STATE_ITEM)
+					{
+						float l1, t1, r1, b1, l2, t2, r2, b2;
+						GetBoundingBox(l1, t1, r1, b1);
+						orb->GetBoundingBox(l2, t2, r2, b2);
+
+						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+						{
+							SetState(WEAPON_STATE_EXPLODE);
+							isBurning = true;
+							if (!isAttacked)
+							{
+								orb->LostBlood(GetDame());
 								isAttacked = true;
 							}
 						}
@@ -398,6 +421,28 @@ if (jumper->GetState() != STATE_ITEM)
 		}
 	}
 }
+
+				}
+				else if (dynamic_cast<COrb*>(colliable_object->at(i)))
+				{
+					COrb* orb = dynamic_cast<COrb*>(colliable_object->at(i));
+					if (orb->GetState() != STATE_ITEM)
+					{
+						float l1, t1, r1, b1, l2, t2, r2, b2;
+						GetBoundingBox(l1, t1, r1, b1);
+						orb->GetBoundingBox(l2, t2, r2, b2);
+
+						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+						{
+							SetState(WEAPON_STATE_EXPLODE);
+							isBurning = true;
+							if (!isAttacked)
+							{
+								orb->LostBlood(GetDame());
+								isAttacked = true;
+							}
+						}
+					}
 
 				}
 				else if (dynamic_cast<CWorm*>(colliable_object->at(i)))
