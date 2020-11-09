@@ -140,6 +140,7 @@
     </ClCompile>
     <ClCompile Include="Teleporter.cpp">
       <Filter>Source Files\EnemyObjects</Filter>
+	</ClCompile>
     <ClCompile Include="Orb.cpp">
 	    <Filter>Source Files\EnemyObjects</Filter>
 	  </ClCompile>
@@ -264,6 +265,7 @@
     </ClInclude>
     <ClInclude Include="Teleporter.h">
       <Filter>Header Files\EnemyObjects</Filter>
+	</ClInclude>
     <ClInclude Include="IntroScence.h">
       <Filter>Header Files</Filter>
     </ClInclude>
