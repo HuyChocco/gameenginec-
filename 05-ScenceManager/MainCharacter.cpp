@@ -17,9 +17,12 @@
 #include "Dome.h"
 #include "Cannon.h"
 #include "Jumper.h"
+#include "Orb.h"
 
 #define JUMPER_ROUNDING_DISTANCE_X 50
 #define JUMPER_ROUNDING_DISTANCE_Y 40
+#define ORB_ROUNDING_DISTANCE_X 120
+#define ORB_ROUNDING_DISTANCE_Y 110
 CMainCharacter::CMainCharacter(float x, float y) : CGameObject()
 {
 
@@ -117,6 +120,25 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						jumper->SetState(JUMPER_STATE_JUMP);
 				}
 				
+			}
+			else if (dynamic_cast<COrb*>(coObjects->at(i))) {
+				COrb* orb = dynamic_cast<COrb*>(coObjects->at(i));
+				int type = orb->GetType();
+				if (type != 1)
+				{
+					float x_orb, y_orb;
+					orb->GetPosition(x_orb, y_orb);
+					if (x > x_orb)
+						orb->SetDirection(1);
+					else
+						orb->SetDirection(-1);
+					if (orb->GetState() != STATE_ITEM)
+					{
+						if (abs(x - x_orb) < ORB_ROUNDING_DISTANCE_X && abs(y - y_orb) < ORB_ROUNDING_DISTANCE_Y)
+							orb->SetState(ORB_STATE_ATTACK);
+						else orb->SetState(ORB_STATE_IDLE);
+					}
+				}
 			}
 		}
 		
@@ -376,6 +398,26 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 					}
 			}
+				else if (dynamic_cast<COrb*>(e->obj))
+				{
+				COrb* orb = dynamic_cast<COrb*>(e->obj);
+				if (orb->GetState() != STATE_ITEM)
+				{
+					StartUntouchable();
+					float vxOrb, vyOrb;
+					orb->GetSpeed(vxOrb, vyOrb);
+					if (e->ny != 0)
+					{
+						y += vyOrb * dt;
+						//y += dy;
+					}
+					else
+						x += dx;
+				}
+				else
+					orb->SetState(ORB_STATE_DIE);
+
+				}
 		}
 
 		}
