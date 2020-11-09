@@ -5,6 +5,8 @@
 #include "Utils.h"
 
 #include "PlayScence.h"
+#include "IntroScence.h"
+#include "EndingScence.h"
 
 CGame * CGame::__instance = NULL;
 
@@ -442,6 +444,9 @@ CGame *CGame::GetInstance()
 #define GAME_FILE_SECTION_SETTINGS 1
 #define GAME_FILE_SECTION_SCENES 2
 
+#define INTRO_SCENCE_ID 0
+#define ENDING_SCENCE_ID 100
+
 void CGame::_ParseSection_SETTINGS(string line)
 {
 	vector<string> tokens = split(line);
@@ -461,7 +466,13 @@ void CGame::_ParseSection_SCENES(string line)
 	int id = atoi(tokens[0].c_str());
 	LPCWSTR path = ToLPCWSTR(tokens[1]);
 	int type_scence= atoi(tokens[2].c_str());
-	LPSCENE scene = new CPlayScene(id, path);
+	LPSCENE scene;
+	if(id==INTRO_SCENCE_ID)
+		scene = new CIntroScence(id, path);
+	else if(id == ENDING_SCENCE_ID)
+		scene = new CEndingScence(id, path);
+	else
+		scene = new CPlayScene(id, path);
 	if (type_scence == OVER_WORLD)
 		scene->SetTypeScence(OVER_WORLD);
 	else if((type_scence == WORLD))

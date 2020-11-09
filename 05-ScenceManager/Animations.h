@@ -32,6 +32,7 @@ public:
 	bool isFinish = false;
 	bool isRepeat = true;
 	bool isHubObject = false;
+	bool isIntroEndScence = false;
 	CAnimation(int defaultTime = 100) { this->defaultTime = defaultTime; lastFrameTime = -1; currentFrame = -1; }
 	void Add(int spriteId, DWORD time = 0);
 	//Bổ sung

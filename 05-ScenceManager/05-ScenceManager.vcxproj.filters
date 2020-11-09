@@ -140,6 +140,11 @@
     </ClCompile>
     <ClCompile Include="Insect.cpp">
       <Filter>Source Files\EnemyObjects</Filter>
+    <ClCompile Include="IntroScence.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EndingScence.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -252,7 +257,12 @@
       <Filter>Header Files\EnemyObjects</Filter>
     </ClInclude>
     <ClInclude Include="Brick.h">
-      <Filter>Header Files\MainCharacterObjects</Filter>
+      <Filter>Header Files</Filter>
+    <ClInclude Include="IntroScence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EndingScence.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
