@@ -356,7 +356,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						StartUntouchable();
 						if (e->ny != 0)
 						{
-							y += vyCannon * dt;
+							y += dy;
 						}
 						else
 							x += dx;
@@ -382,7 +382,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						StartUntouchable();
 						if (e->ny != 0)
 						{
-							y += vyEyeball * dt;
+							y += dy;
 						}
 						else
 							x += dx;
@@ -399,33 +399,32 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 					}
 				}
-
 				else if (dynamic_cast<CTeleporter*>(e->obj))
 				{
-				CTeleporter* teleporter = dynamic_cast<CTeleporter*>(e->obj);
-				float vxTeleporter, vyTeleporter;
-				teleporter->GetSpeed(vxTeleporter, vyTeleporter);
-				if (teleporter->GetState() != STATE_ITEM)
-				{
-					StartUntouchable();
-					if (e->ny != 0)
+					CTeleporter* teleporter = dynamic_cast<CTeleporter*>(e->obj);
+					float vxTeleporter, vyTeleporter;
+					teleporter->GetSpeed(vxTeleporter, vyTeleporter);
+					if (teleporter->GetState() != STATE_ITEM)
 					{
-						y += vyTeleporter * dt;
+						StartUntouchable();
+						if (e->ny != 0)
+						{
+							y += dy;
+						}
+						else
+							x += dx;
 					}
 					else
-						x += dx;
-				}
-				else
-				{
-					if (e->ny != 0)
 					{
-						y += dy;
-					}
-					else
-						x += dx;
-					teleporter->SetState(TELEPORTER_STATE_DIE);
+						if (e->ny != 0)
+						{
+							y += dy;
+						}
+						else
+							x += dx;
+						teleporter->SetState(TELEPORTER_STATE_DIE);
 
-				}
+					}
 				}
 
 			}
@@ -445,6 +444,9 @@ void CHuman::Render()
 	{
 		if (level == HUMAN_LEVEL_BIG)
 		{
+			int alpha = 255;
+			if (untouchable)
+				alpha = 128;
 			switch (state)
 			{
 			case MAIN_CHARACTER_STATE_RUN_RIGHT:
@@ -465,12 +467,12 @@ void CHuman::Render()
 			if (vx == 0 && vy==0) // Nhân vật đứng yên
 			{
 				animation_set->at(ani)->isPause = true; //Dừng animation 
-				animation_set->at(ani)->Render(x, y, flip); // Vẽ frame đang bị tạm dừng
+				animation_set->at(ani)->Render(x, y, flip,alpha); // Vẽ frame đang bị tạm dừng
 			}
 			else // Nhân vật di chuyển
 			{
 				animation_set->at(ani)->isPause = false; // Tiếp tục animation đã dừng trước đó
-				animation_set->at(ani)->Render(x, y, flip);
+				animation_set->at(ani)->Render(x, y, flip,alpha);
 			}
 			RenderBoundingBox();
 			return;
