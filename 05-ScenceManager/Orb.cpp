@@ -92,10 +92,18 @@ void COrb::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						SetState(ORB_STATE_CHANGE_DIRECTION);
 					}
 				}
+				else if (dynamic_cast<COrb*>(e->obj))
+				{
+					x += dx;
+				}
 			}
 			else if (type == ORB_TYPE_SPECIAL)
 			{
 				SetState(ORB_STATE_ATTACK);
+				if (dynamic_cast<COrb*>(e->obj))
+				{
+					x += dx;
+				}
 			}
 		}
 
@@ -189,7 +197,6 @@ void COrb::SetState(int state)
 		break;
 	case STATE_ITEM:
 		vx = 0;
-		//vy = 0;
 		isDisplay = false;
 		break;
 	default:
