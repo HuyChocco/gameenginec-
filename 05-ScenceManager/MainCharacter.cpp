@@ -354,7 +354,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						orb->GetSpeed(vxOrb, vyOrb);
 						if (e->ny != 0)
 						{
-							y -= 2*vyOrb * dt;
+							y -= 4*vyOrb * dt;
 						}
 						else
 							x += dx;
