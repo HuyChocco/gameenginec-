@@ -49,7 +49,7 @@ void CAnimation::Render(float x, float y, bool flip, int alpha)
 			
 		}
 		if(isHubObject||isIntroEndScence)
-			frames[currentFrame]->GetSprite()->DrawWithoutTransformation(x, y, alpha, flip);
+			frames[currentFrame]->GetSprite()->DrawWithoutTransformation(x, y, alpha, flip);	                     	
 		else
 			frames[currentFrame]->GetSprite()->Draw(x, y, alpha, flip);
 	
