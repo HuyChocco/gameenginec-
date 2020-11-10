@@ -641,7 +641,7 @@ void CWeapon::Render()
 		int flip = false;
 		switch (state)
 		{
-		case WEAPON_EYEBALL_STATE_FLY:
+		case WEAPON_TELEPORTER_STATE_FLY:
 			ani = WEAPON_ANI_ENEMY_TELEPORTER;
 			break;
 		case WEAPON_STATE_EXPLODE:
@@ -809,8 +809,8 @@ void CWeapon::SetState(int state)
 	{
 		switch (state)
 		{
-		case WEAPON_EYEBALL_STATE_FLY:
-			vx = WEAPON_EYEBALL_FLY_SPEED;
+		case WEAPON_TELEPORTER_STATE_FLY:
+			vx = WEAPON_TELEPORTER_FLY_SPEED;
 			this->dame = 1;
 			break;
 		}

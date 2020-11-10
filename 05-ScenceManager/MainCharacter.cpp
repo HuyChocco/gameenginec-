@@ -17,6 +17,7 @@
 #include "Dome.h"
 #include "Cannon.h"
 #include "Jumper.h"
+#include "Teleporter.h"
 
 #define JUMPER_ROUNDING_DISTANCE_X 50
 #define JUMPER_ROUNDING_DISTANCE_Y 40
@@ -375,6 +376,33 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						eyeball->SetState(EYEBALL_STATE_DIE);
 
 					}
+			}
+				else if (dynamic_cast<CTeleporter*>(e->obj))
+				{
+				CTeleporter* teleporter = dynamic_cast<CTeleporter*>(e->obj);
+				float vxTeleporter, vyTeleporter;
+				teleporter->GetSpeed(vxTeleporter, vyTeleporter);
+				if (teleporter->GetState() != STATE_ITEM)
+				{
+					StartUntouchable();
+					if (e->ny != 0)
+					{
+						y += vyTeleporter * dt;
+					}
+					else
+						x += dx;
+				}
+				else
+				{
+					if (e->ny != 0)
+					{
+						y += dy;
+					}
+					else
+						x += dx;
+					teleporter->SetState(TELEPORTER_STATE_DIE);
+
+				}
 			}
 		}
 
