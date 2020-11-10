@@ -137,6 +137,7 @@
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="GunHub.cpp" />
     <ClCompile Include="Human.cpp" />
+    <ClCompile Include="Insect.cpp" />
     <ClCompile Include="IntroScence.cpp" />
     <ClCompile Include="Jumper.cpp" />
     <ClCompile Include="Koopas.cpp" />
