@@ -16,6 +16,7 @@
 #include "Floater.h"
 #include "Dome.h"
 #include "Cannon.h"
+#include "Orb.h"
 #include "Jumper.h"
 #include "Teleporter.h"
 
