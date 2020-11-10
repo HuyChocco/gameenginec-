@@ -100,6 +100,20 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					else
 						eyeball->SetDirectionY(-1);//Down
 			}
+			else if (dynamic_cast<CTeleporter*>(coObjects->at(i))) {
+				CTeleporter* teleporter = dynamic_cast<CTeleporter*>(coObjects->at(i));
+
+				float x_teleporter, y_teleporter;
+				teleporter->GetPosition(x_teleporter, y_teleporter);
+				if (x > x_teleporter)
+					teleporter->SetDirection(1);
+				else
+					teleporter->SetDirection(-1);
+				if (y > y_teleporter)
+					teleporter->SetDirectionY(1);//Up
+				else
+					teleporter->SetDirectionY(-1);//Down
+			}
 			else if (dynamic_cast<CCannon*>(coObjects->at(i))) {
 				CCannon* cannon = dynamic_cast<CCannon*>(coObjects->at(i));
 			}
