@@ -65,6 +65,7 @@ class CMainCharacter: public CGameObject
 	int heart;
 	int score;
 	
+	bool canChangeState;
 public:
 
 	//Bo sung property

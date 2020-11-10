@@ -438,8 +438,15 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (dynamic_cast<CHuman*>(componentObjects[i]))
 			{
 				CHuman* human_object = dynamic_cast<CHuman*>(componentObjects[i]);
+				float human_x = 0;
+				float human_y = 0;
 				human_object->SetIsBeingHuman(true);
 				human_object->Update(dt, coObjects);
+				human_object->GetPosition(human_x, human_y);
+				if (this->x <= human_x && human_x<=(this->x + MAIN_CHARACTER_BBOX_WIDTH) && this->y <= human_y&& human_y <= (this->y + MAIN_CHARACTER_BBOX_HEIGHT))
+					canChangeState = true;
+				else
+					canChangeState = false;
 			}
 		}
 		//Chạy hàm cập nhật cho tất cả đối tượng thành phần, kể cả Human
@@ -557,7 +564,13 @@ void CMainCharacter::SetState(int state)
 		break;
 	case MAIN_CHARACTER_STATE_HUMAN:
 		vx = 0;
-		Is_Human = !Is_Human;
+		if (Is_Human)
+		{
+			if (canChangeState)
+				Is_Human = false;
+		}
+		else if(!Is_Human)
+			Is_Human = true;
 		break;
 	default:
 		
