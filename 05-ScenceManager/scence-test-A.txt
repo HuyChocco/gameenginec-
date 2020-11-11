@@ -186,24 +186,19 @@
 200004	30	21	37	28	1
 200001	3	21	10	28	1
 200002	12	21	19	28	1
-# SOFIA Barrel
-#down-left
-30001	3	3	10	10	1
-#horizontal
-30002	12	3	19	10	1
-#up-left
-30003	21	3	28	10	1
-#straight
-30004	30	3	37	10	1
-# SOFIA Cabin
-50001	39	3	54	10	1
-# SOFIA Cabin Up
-50002	73	3	88	18	1
-# SOFIA Middle Wheel
-60001	3	12	10	19	1
-60002	12	12	19	19	1
-60003	21	12	28	19	1
-60004	30	12	37	19	1
+# SOFIA Vehicle
+# nằm ngang, đóng nắp cabin
+300001	72	24	98	40	55
+# xoay
+300002	116	24	134	40	55
+# mở nắp cabin
+300003	30	16	56	40	55
+# đưa nóng súng lên 1
+300004	30	58	55	82	55
+# đưa nòng súng lên 2
+300005	114	59	138	81	55
+# đưa nòng súng lên 3
+300006	71	56	92	82	55
 # Main character empty sprite
 70001	0	0	0	0	1
 # WORM
@@ -286,7 +281,7 @@
 800004	112	240	120	256	55
 # ITEMS
 # P
-900000	255	109	271	125	66
+900000	87	240	103	256	55
 # path
 [MAP]
 Map-Blaster-Master-Area-2-A.txt
@@ -313,21 +308,15 @@ Map-Blaster-Master-Area-2-A.txt
 701	20001	100	20002	100	20003	100	20004	100
 #right-wheel
 702	200003	100	200004	100	200001	100	200002	100
-# ==== SOFIA BARREL =========
-#idle
-800	30002	100
-#down-left
-801	30001	100
-#up-left
-802	30003	100	30004	100
-# ==== SOFIA CABIN =========
-#idle
-900	50001	100
-#up
-901	50002	100
-# ==== SOFIA MIDDLE WHEEL =========
-#idle
-1000	60001	100
+# ==== SOFIA VEHICLE =========
+# di chuyển ngang bình thường
+800	300001	100
+# xoay ngang
+801	300001	100	300002	100
+# mở nắp cabin
+802	300003	100
+# đưa nòng súng lên
+803	300004	100	300005	100	300006	100
 # ==== MAIN CHARACTER =========
 #idle
 2000	70001	100
@@ -404,10 +393,8 @@ Map-Blaster-Master-Area-2-A.txt
 2	2000
 # WHEEL 
 3	700	701	702
-# CABIN
-4	900	901
-# BARREL
-5	800	801	802
+# SOFIA VEHICLE
+4	800	801	802	803
 # WORM - ENEMY
 8	5000	5001
 # FLOATER-SPIDER - ENEMY
@@ -425,7 +412,7 @@ Map-Blaster-Master-Area-2-A.txt
 200	900000
 [OBJECTS]
 # object_id  type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Worm, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Cabin, 8= Barrel, 9= Main character, 10= Spider, 11=Human
+# type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Worm, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Vehicle, 8= Barrel, 9= Main character, 10= Spider, 11=Human
 # type: 12 = Floater, 13 = Domes, 14 = Jumpers, 15 = Insect,16 = Orbs, 17 = Skulls, 18 = Dashers, 500 = PowerHub, 501 = GunHub
 # MAIN_CHARACTER need to be created first!
 1	9	0	200	2
@@ -434,14 +421,10 @@ Map-Blaster-Master-Area-2-A.txt
 2	11	17	115	1
 # WHEEL_LEFT
 3	4	18	132	3
-# WHEEL_MIDDLE
-4	5	25	125	3
 # WHEEL_RIGHT
-5	6	32	132	3
-# CABIN
-6	7	25	118	4
-# BARREL
-7	8	17	118	5
+4	6	32	132	3
+# SOFIA VEHICLE
+5	7	25	118	4
 # HUB LIST - x,y theo trục màn hình
 9	500	10	100	100
 # ENEMY LIST

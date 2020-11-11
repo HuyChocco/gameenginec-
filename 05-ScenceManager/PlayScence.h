@@ -25,7 +25,7 @@
 #include "WheelObject.h"
 #include "CabinObject.h"
 #include "Human.h"
-
+#include "Vehicle.h"
 
 #include "TiledMap.h"
 #include "Grid.h"

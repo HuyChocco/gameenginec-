@@ -153,6 +153,9 @@
     <ClCompile Include="Insect.cpp">
       <Filter>Source Files\EnemyObjects</Filter>
     </ClCompile>
+    <ClCompile Include="Vehicle.cpp">
+      <Filter>Source Files\MainCharacterObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Brick.h">
@@ -274,6 +277,9 @@
     </ClInclude>
     <ClInclude Include="EndingScence.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vehicle.h">
+      <Filter>Header Files\MainCharacterObjects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -5,6 +5,8 @@
 #include "CabinObject.h"
 #include "Weapon.h"
 #include "Human.h"
+#include "Vehicle.h"
+
 #define MAIN_CHARACTER_RUN_SPEED		0.15f 
 //0.1f
 #define MAIN_CHARACTER_JUMP_SPEED_Y		0.5f
@@ -21,7 +23,8 @@
 #define MAIN_CHARACTER_STATE_JUMP			300
 #define MAIN_CHARACTER_STATE_DIE				400
 #define MAIN_CHARACTER_STATE_UP_BARREL				500
-#define MAIN_CHARACTER_STATE_DOWN_BARREL				501
+#define MAIN_CHARACTER_STATE_STRAIGHT_BARREL				501
+#define MAIN_CHARACTER_STATE_DOWN_BARREL				502
 #define MAIN_CHARACTER_STATE_NONE_COLLISION			600
 #define MAIN_CHARACTER_STATE_HUMAN					800
 //#define MAIN_CHARACTER_STATE_DOWN_BARREL				600
@@ -44,8 +47,11 @@
 #define	MAIN_CHARACTER_LEVEL_BIG		2
 
 
-#define MAIN_CHARACTER_BBOX_WIDTH  24
+#define MAIN_CHARACTER_BBOX_WIDTH  26
 #define MAIN_CHARACTER_BBOX_HEIGHT 16
+#define MAIN_CHARACTER_STATE_BARREL_UP_BBOX_WIDTH  26
+#define MAIN_CHARACTER_STATE_BARREL_UP_BBOX_HEIGHT 34
+#define MAIN_CHARACTER_CHANGE_BBOX_HEIGHT 18
 #define MAIN_CHARACTER_UNTOUCHABLE_TIME 500
 class CMainCharacter: public CGameObject
 {
@@ -66,6 +72,8 @@ class CMainCharacter: public CGameObject
 	int score;
 	
 	bool canChangeState;
+	bool isStateStraightBarrel;
+	bool doIncreaseYValue;
 public:
 
 	//Bo sung property

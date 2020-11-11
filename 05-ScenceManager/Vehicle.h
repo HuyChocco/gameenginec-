@@ -1,0 +1,37 @@
+#pragma once
+#include "./GameObject.h"
+#include "./MainCharacter.h"
+#define VEHICLE_ANI_MOVE	0
+#define VEHICLE_ANI_XOAY	1
+#define VEHICLE_ANI_MO_CABIN	2
+#define VEHICLE_ANI_NONG_SUNG	3
+class CVehicle : public CGameObject
+{
+	int level;
+	DWORD up_effect_start;
+
+	float start_x;			// initial position of CABIN at scene
+	float start_y;
+
+	bool is_barrel_up;
+	int vehicle_nx;
+
+	bool isBarrelStraight;
+public:
+	
+	CVehicle(float x = 0.0f, float y = 0.0f);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
+	virtual void Render();
+
+	void SetState(int state);
+	void SetLevel(int l) { level = l; }
+	void StartUpEffect() { y -= 1; up_effect_start = GetTickCount(); }
+
+	void Reset();
+
+	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+
+	bool GetIsBarrelUp() { return is_barrel_up; }
+	bool GetIsBarrelStraight() { return isBarrelStraight; }
+
+};

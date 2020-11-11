@@ -477,7 +477,35 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CHuman* human_object = dynamic_cast<CHuman*>(componentObjects[i]);
 				human_object->SetIsBeingHuman(false);
 			}
-			componentObjects[i]->SetPosition(x, y);
+			if (dynamic_cast<CVehicle*>(componentObjects[i]))
+			{
+				CVehicle* vehicle = dynamic_cast<CVehicle*>(componentObjects[i]);
+				float vehicle_x, vehicle_y;
+				vehicle->GetPosition(vehicle_x, vehicle_y);
+
+				if (vehicle->GetIsBarrelUp())
+				{
+					if (vehicle->GetIsBarrelStraight() == false)
+					{
+						y += 0.04 * dt;
+						isStateStraightBarrel = false;
+					}
+					else
+						isStateStraightBarrel = true;
+					vehicle->SetPosition(x, y);
+				}
+				else
+				{
+					isStateStraightBarrel = false;
+					vehicle->SetPosition(x, y);
+				}
+					
+			}
+			else if(dynamic_cast<CWheelObject*>(componentObjects[i]))
+			{
+				componentObjects[i]->SetPosition(x, y);
+			}
+
 			if (!dynamic_cast<CHuman*>(componentObjects[i]))
 				componentObjects[i]->Update(dt, coObjects);
 		}
@@ -496,6 +524,7 @@ void CMainCharacter::Render()
 	CGame* game = CGame::GetInstance();
 	if (!game->GetCurrentScene()->GetTypeScence() == OVER_WORLD)
 	{
+		
 		animation_set->at(0)->Render(x, y, alpha);
 		// Vẽ các đối tượng weapon của nhân vật chính
 		{
@@ -522,7 +551,7 @@ void CMainCharacter::Render()
 					componentObjects[i]->Render();
 			}
 		}
-		//RenderBoundingBox();
+		RenderBoundingBox();
 
 	}
 	
@@ -572,9 +601,12 @@ void CMainCharacter::SetState(int state)
 		vx = 0;
 		break;
 	case MAIN_CHARACTER_STATE_DIE:
-		//vy = -MAIN_CHARACTER_DIE_DEFLECT_SPEED;
 		break;
 	case MAIN_CHARACTER_STATE_UP_BARREL:
+		vy = 0;
+		break;
+	case MAIN_CHARACTER_STATE_STRAIGHT_BARREL:
+		vy = 0;
 		break;
 	case MAIN_CHARACTER_STATE_DOWN_BARREL:
 		break;
@@ -593,7 +625,6 @@ void CMainCharacter::SetState(int state)
 			Is_Human = true;
 		break;
 	default:
-		
 		break;
 
 	}
@@ -660,21 +691,21 @@ void CMainCharacter::SetState(int state)
 			}
 			else
 			{
-				if (dynamic_cast<CBarrelObject*>(componentObjects[i]))
+				if (dynamic_cast<CVehicle*>(componentObjects[i]))
 				{
-					float x_barrel_object, y_barrel_object;
+					float x_vehicle_object, y_vehicle_object;
 					//Lấy vị trí x, y của đối tượng nòng sóng
-					dynamic_cast<CBarrelObject*>(componentObjects[i])->GetPosition(x_barrel_object, y_barrel_object);
+					dynamic_cast<CVehicle*>(componentObjects[i])->GetPosition(x_vehicle_object, y_vehicle_object);
 					//Nếu nòng sóng đang giơ lên
-					if (dynamic_cast<CBarrelObject*>(componentObjects[i])->GetIsBarrelUp() == true)
+					if (dynamic_cast<CVehicle*>(componentObjects[i])->GetIsBarrelUp() == true)
 					{
 
-						CWeapon* weapon = new CWeapon(x_barrel_object, y_barrel_object, nx, state, true);// Khởi tạo weapon theo x,y của barrel
+						CWeapon* weapon = new CWeapon(x+MAIN_CHARACTER_BBOX_WIDTH / 2, y+10, nx, state, true);// Khởi tạo weapon theo x,y của barrel
 						list_weapon.push_back(weapon);
 					}
 					else
 					{
-						CWeapon* weapon = new CWeapon(x_barrel_object, y_barrel_object, nx, state, false);// Khởi tạo weapon theo x,y của barrel
+						CWeapon* weapon = new CWeapon(x, y, nx, state, false);// Khởi tạo weapon theo x,y của barrel
 						list_weapon.push_back(weapon);
 					}
 				}
@@ -690,10 +721,21 @@ void CMainCharacter::SetState(int state)
 
 void CMainCharacter::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	left = x;
-	top = y - MAIN_CHARACTER_BBOX_HEIGHT;
-	right = x + MAIN_CHARACTER_BBOX_WIDTH;
-	bottom = y ;
+	if (isStateStraightBarrel)
+	{
+		left = x;
+		top = y - MAIN_CHARACTER_STATE_BARREL_UP_BBOX_HEIGHT;
+		right = x + MAIN_CHARACTER_STATE_BARREL_UP_BBOX_WIDTH;
+		bottom = y;
+	}
+	else
+	{
+		left = x;
+		top = y - MAIN_CHARACTER_BBOX_HEIGHT;
+		right = x + MAIN_CHARACTER_BBOX_WIDTH;
+		bottom = y;
+	}
+	
 	
 }
 

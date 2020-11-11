@@ -6,6 +6,8 @@
 #define WHEEL_ANI_RIGHT_WHEEL		2
 #define WHEEL_ANI_IDLE_RUN			1
 #define WHEEL_EFFECT_TIME 1000
+#define WHEEL_BBOX_WIDTH 8
+#define WHEEL_BBOX_HEIGHT 8
 class CWheelObject : public CGameObject
 {
 	int level;
@@ -32,4 +34,6 @@ public:
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	void SetIsRightWheel();
 	void SetIsMiddleWheel();
+
+	bool GetIsRightWheel() { return is_Right_Wheel; }
 };
