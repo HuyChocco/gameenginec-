@@ -312,7 +312,7 @@ Map-Blaster-Master-Area-2-A.txt
 # di chuyển ngang bình thường
 800	300001	100
 # xoay ngang
-801	300001	100	300002	100
+801	300001	200	300002	200
 # mở nắp cabin
 802	300003	100
 # đưa nòng súng lên

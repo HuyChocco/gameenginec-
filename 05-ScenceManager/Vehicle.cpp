@@ -19,11 +19,22 @@ CVehicle::CVehicle(float x, float y) : CGameObject()
 
 	this->x = x;
 	this->y = y;
+	y_delta = 0;
 }
 
 void CVehicle::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	
+	// Calculate dx, dy 
+	CGameObject::Update(dt);
+	this->dt = dt;
+	x = player_x;
+	y = player_y;
+	if (is_barrel_up&&!isBarrelStraight&&!is_firing)
+		y_delta = 15 ;
+	else if (isBarrelStraight)
+		y_delta = y_delta;
+	else
+		y_delta = 0;
 }
 
 void CVehicle::Render()
@@ -49,12 +60,16 @@ void CVehicle::Render()
 		ani = VEHICLE_ANI_NONG_SUNG;
 		animation_set->at(ani)->isRepeat = false;
 		is_barrel_up = true;//flag to determine suitable animation
-		animation_set->at(ani)->Render(x, y, flip, alpha);
 		if (animation_set->at(ani)->isFinish)
 			isBarrelStraight = true;
 		else
+		{
 			isBarrelStraight = false;
-		
+		}
+		if(nx>0)
+			animation_set->at(ani)->Render(x - 4, y + y_delta, flip, alpha);
+		else
+			animation_set->at(ani)->Render(x + 8, y + y_delta, flip, alpha);
 	}
 	break;
 	default:
@@ -92,12 +107,24 @@ void CVehicle::SetState(int state)
 	CGameObject::SetState(state);
 	switch (state)
 	{
-	case MAIN_CHARACTER_STATE_STRAIGHT_BARREL:
-	case MAIN_CHARACTER_STATE_UP_BARREL:
-		break;
-	default:
+	case MAIN_CHARACTER_STATE_IDLE:
+	case MAIN_CHARACTER_STATE_RUN_LEFT:
+	case MAIN_CHARACTER_STATE_RUN_RIGHT:
 		is_barrel_up = false;
 		isBarrelStraight = false;
+		is_firing = false;
+		break;
+	case MAIN_CHARACTER_STATE_BARREL_FIRE:
+		is_firing = true;
+		break;
+	case MAIN_CHARACTER_STATE_STRAIGHT_BARREL:
+	case MAIN_CHARACTER_STATE_UP_BARREL:
+		is_barrel_up = true;
+		vy = 0.04;
+		is_firing = false;
+		break;
+	default:
+		is_firing = false;
 		break;
 	}
 }

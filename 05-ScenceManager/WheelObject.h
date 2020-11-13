@@ -8,18 +8,23 @@
 #define WHEEL_EFFECT_TIME 1000
 #define WHEEL_BBOX_WIDTH 8
 #define WHEEL_BBOX_HEIGHT 8
+#define WHEEL_PUSH_EFFECT_TIME 300
 class CWheelObject : public CGameObject
 {
 	int level;
 	DWORD up_effect_start;
-
+	DWORD push_effect_time;
 	float start_x;			// initial position of WHEEL at scene
 	float start_y;
 
 	bool is_Right_Wheel;
 	bool is_Middle_Wheel;
 
-	bool beingUp;
+	bool is_being_up;
+
+	float x_delta;
+	bool is_start_push_effect;
+	bool is_end_push_effect;
 public:
 	CWheelObject(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);

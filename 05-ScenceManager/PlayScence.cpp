@@ -301,7 +301,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_WHEEL_LEFT:
 	{
 		obj = new CWheelObject();
-		obj->SetPosition(x, y);
+		float _x, _y;
 		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
 		obj->SetID(object_id);
 		if (player != NULL)
@@ -309,6 +309,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 			DebugOut(L"[INFO] Player object has been Created Already!\n");
 			player->AddComponentObject(obj);
+			player->GetPosition(_x, _y);
+			obj->SetPosition(_x, _y);
 			return;
 		}
 		break;
@@ -318,13 +320,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CWheelObject();
 		CWheelObject* obj_right_wheel =(CWheelObject*) obj;
 		obj_right_wheel->SetIsRightWheel();
-		obj->SetPosition(x, y);
+		float _x, _y;
 		obj->SetID(object_id);
 		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
 		if (player != NULL)
 		{
 			DebugOut(L"[INFO] Player object has been Created Already!\n");
 			player->AddComponentObject(obj);
+			player->GetPosition(_x, _y);
+			obj->SetPosition(_x, _y);
 		}
 		return;
 		break;
@@ -332,13 +336,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_VEHICLE: 
 	{
 		obj = new CVehicle();
-		obj->SetPosition(x, y);
+		float _x, _y;
 		obj->SetID(object_id);
 		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
 		if (player != NULL)
 		{
 			DebugOut(L"[INFO] Player object has been Created Already!\n");
 			player->AddComponentObject(obj);
+			player->GetPosition(_x, _y);
+			obj->SetPosition(_x, _y);
 		}
 		return;
 		break;

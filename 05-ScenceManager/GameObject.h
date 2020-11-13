@@ -70,6 +70,8 @@ public:
 	int untouchable;
 
 	bool isAttacked;
+	float player_x;
+	float player_y;
 public: 
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
@@ -109,6 +111,7 @@ public:
 	void SetID(int _id) { this->id = _id; }
 	void SetUntouchable(int flag) { untouchable = flag; }
 	void SetIsAttacked(bool _isAttacked) { isAttacked = _isAttacked; }
+	void SetPlayerPosition(float _x, float _y) { player_x = _x; player_y = _y; }
 	~CGameObject();
 };
 

@@ -17,6 +17,9 @@ class CVehicle : public CGameObject
 	int vehicle_nx;
 
 	bool isBarrelStraight;
+
+	float y_delta;
+	bool is_firing;
 public:
 	
 	CVehicle(float x = 0.0f, float y = 0.0f);

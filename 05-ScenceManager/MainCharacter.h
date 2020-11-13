@@ -74,6 +74,8 @@ class CMainCharacter: public CGameObject
 	bool canChangeState;
 	bool isStateStraightBarrel;
 	bool doIncreaseYValue;
+	bool isStartFire;
+	bool isBeingUpBarrel;
 public:
 
 	//Bo sung property

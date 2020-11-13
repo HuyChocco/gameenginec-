@@ -200,10 +200,13 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						Is_On_Ground = true;
 					}
+					else
+						Is_On_Ground = false;
 				}
 				// Nếu là portal object thì thực hiện chuyển cảnh
 				else if (dynamic_cast<CPortal*>(e->obj))
 				{
+					Is_On_Ground = false;
 					CPortal* p = dynamic_cast<CPortal*>(e->obj);
 					//Nếu portal là đối tượng chuyển next scene
 					if (p->GetType() == 1)
@@ -228,6 +231,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				//Outdoor enemies
 				else if (dynamic_cast<CWorm*>(e->obj))
 				{
+					Is_On_Ground = false;
 					CWorm* worm = dynamic_cast<CWorm*>(e->obj);
 					float vxWorm, vyWorm;
 					worm->GetSpeed(vxWorm, vyWorm);
@@ -255,6 +259,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else if (dynamic_cast<CFloater*>(e->obj))
 				{
+					Is_On_Ground = false;
 					CFloater* floater = dynamic_cast<CFloater*>(e->obj);
 					float vxFloater, vyFloater;
 					floater->GetSpeed(vxFloater, vyFloater);
@@ -284,6 +289,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else if (dynamic_cast<CDome*>(e->obj))
 				{
+					Is_On_Ground = false;
 					CDome* dome = dynamic_cast<CDome*>(e->obj);
 					float vxDome, vyDome;
 					dome->GetSpeed(vxDome, vyDome);
@@ -312,6 +318,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else if (dynamic_cast<CJumper*>(e->obj))
 				{
+					Is_On_Ground = false;
 					CJumper* jumper = dynamic_cast<CJumper*>(e->obj);
 					float vxJumper, vyJumper;
 					jumper->GetSpeed(vxJumper, vyJumper);
@@ -340,6 +347,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else if (dynamic_cast<COrb*>(e->obj))
 				{
+					Is_On_Ground = false;
 					COrb* orb = dynamic_cast<COrb*>(e->obj);
 					if (orb->GetState() != STATE_ITEM)
 					{
@@ -360,6 +368,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				//Indoor enemies
 				else if (dynamic_cast<CCannon*>(e->obj))
 				{
+					Is_On_Ground = false;
 					CCannon* cannon = dynamic_cast<CCannon*>(e->obj);
 					float vxCannon, vyCannon;
 					cannon->GetSpeed(vxCannon, vyCannon);
@@ -386,6 +395,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 				else if (dynamic_cast<CEyeball*>(e->obj))
 				{
+					Is_On_Ground = false;
 					CEyeball* eyeball = dynamic_cast<CEyeball*>(e->obj);
 					float vxEyeball, vyEyeball;
 					eyeball->GetSpeed(vxEyeball, vyEyeball);
@@ -413,30 +423,31 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 				else if (dynamic_cast<CTeleporter*>(e->obj))
 				{
-				CTeleporter* teleporter = dynamic_cast<CTeleporter*>(e->obj);
-				float vxTeleporter, vyTeleporter;
-				teleporter->GetSpeed(vxTeleporter, vyTeleporter);
-				if (teleporter->GetState() != STATE_ITEM)
-				{
-					StartUntouchable();
-					if (e->ny != 0)
+					Is_On_Ground = false;
+					CTeleporter* teleporter = dynamic_cast<CTeleporter*>(e->obj);
+					float vxTeleporter, vyTeleporter;
+					teleporter->GetSpeed(vxTeleporter, vyTeleporter);
+					if (teleporter->GetState() != STATE_ITEM)
 					{
-						y += vyTeleporter * dt;
+						StartUntouchable();
+						if (e->ny != 0)
+						{
+							y += vyTeleporter * dt;
+						}
+						else
+							x += dx;
 					}
 					else
-						x += dx;
-				}
-				else
-				{
-					if (e->ny != 0)
 					{
-						y += dy;
-					}
-					else
-						x += dx;
-					teleporter->SetState(TELEPORTER_STATE_DIE);
+						if (e->ny != 0)
+						{
+							y += dy;
+						}
+						else
+							x += dx;
+						teleporter->SetState(TELEPORTER_STATE_DIE);
 
-				}
+					}
 			}
 		}
 
@@ -476,38 +487,14 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			{
 				CHuman* human_object = dynamic_cast<CHuman*>(componentObjects[i]);
 				human_object->SetIsBeingHuman(false);
+				human_object->Update(dt, coObjects);
 			}
-			if (dynamic_cast<CVehicle*>(componentObjects[i]))
+			else
 			{
-				CVehicle* vehicle = dynamic_cast<CVehicle*>(componentObjects[i]);
-				float vehicle_x, vehicle_y;
-				vehicle->GetPosition(vehicle_x, vehicle_y);
-
-				if (vehicle->GetIsBarrelUp())
-				{
-					if (vehicle->GetIsBarrelStraight() == false)
-					{
-						y += 0.04 * dt;
-						isStateStraightBarrel = false;
-					}
-					else
-						isStateStraightBarrel = true;
-					vehicle->SetPosition(x, y);
-				}
-				else
-				{
-					isStateStraightBarrel = false;
-					vehicle->SetPosition(x, y);
-				}
-					
-			}
-			else if(dynamic_cast<CWheelObject*>(componentObjects[i]))
-			{
-				componentObjects[i]->SetPosition(x, y);
-			}
-
-			if (!dynamic_cast<CHuman*>(componentObjects[i]))
+				componentObjects[i]->SetPlayerPosition(x, y);
 				componentObjects[i]->Update(dt, coObjects);
+			}
+				
 		}
 		
 	}
@@ -603,14 +590,13 @@ void CMainCharacter::SetState(int state)
 	case MAIN_CHARACTER_STATE_DIE:
 		break;
 	case MAIN_CHARACTER_STATE_UP_BARREL:
-		vy = 0;
 		break;
 	case MAIN_CHARACTER_STATE_STRAIGHT_BARREL:
-		vy = 0;
 		break;
 	case MAIN_CHARACTER_STATE_DOWN_BARREL:
 		break;
 	case MAIN_CHARACTER_STATE_BARREL_FIRE:
+		vy = 0;
 		break;
 	case MAIN_CHARACTER_STATE_NONE_COLLISION:
 		break;
@@ -643,7 +629,8 @@ void CMainCharacter::SetState(int state)
 		{
 			componentObjects[i]->SetState(state);
 			componentObjects[i]->SetDirection(nx);
-			componentObjects[i]->SetSpeed(vx, vy);
+			if(dynamic_cast<CWheelObject*>(componentObjects[i]))
+				componentObjects[i]->SetSpeed(vx, vy);
 		}
 		
 		if (state == MAIN_CHARACTER_STATE_BARREL_FIRE)//Nhân vật bắn
@@ -656,19 +643,19 @@ void CMainCharacter::SetState(int state)
 				if (dynamic_cast<CHuman*>(componentObjects[i]))
 				{
 					dynamic_cast<CHuman*>(componentObjects[i])->GetPosition(x_human, y_human);
-					
+
 					if (dynamic_cast<CHuman*>(componentObjects[i])->GetGoingUp())
 					{
 						weapon->SetPosition(x_human + HUMAN_BIG_BBOX_WIDTH / 2, y_human);
 						weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY_UP);
 					}
-						
+
 					else if (dynamic_cast<CHuman*>(componentObjects[i])->GetGoingDown())
 					{
-						weapon->SetPosition(x_human+ HUMAN_BIG_BBOX_WIDTH/2, y_human);
+						weapon->SetPosition(x_human + HUMAN_BIG_BBOX_WIDTH / 2, y_human);
 						weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY_DOWN);
 					}
-					
+
 					else
 					{
 						if (dynamic_cast<CHuman*>(componentObjects[i])->GetLevel() == HUMAN_LEVEL_BIG)
@@ -683,14 +670,15 @@ void CMainCharacter::SetState(int state)
 							weapon->SetDirection(nx);
 							weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY);
 						}
-						
+
 					}
 					list_weapon.push_back(weapon);
 				}
-				
+
 			}
 			else
 			{
+				isStartFire = true;
 				if (dynamic_cast<CVehicle*>(componentObjects[i]))
 				{
 					float x_vehicle_object, y_vehicle_object;
@@ -700,7 +688,7 @@ void CMainCharacter::SetState(int state)
 					if (dynamic_cast<CVehicle*>(componentObjects[i])->GetIsBarrelUp() == true)
 					{
 
-						CWeapon* weapon = new CWeapon(x+MAIN_CHARACTER_BBOX_WIDTH / 2, y+10, nx, state, true);// Khởi tạo weapon theo x,y của barrel
+						CWeapon* weapon = new CWeapon(x + MAIN_CHARACTER_BBOX_WIDTH / 2, y + 10, nx, state, true);// Khởi tạo weapon theo x,y của barrel
 						list_weapon.push_back(weapon);
 					}
 					else
@@ -710,9 +698,19 @@ void CMainCharacter::SetState(int state)
 					}
 				}
 			}
-			
-			
+
+
 		}
+		else if (state == MAIN_CHARACTER_STATE_UP_BARREL)
+		{
+			isBeingUpBarrel = true;
+		}
+		else
+		{
+			isStartFire = false;
+			isBeingUpBarrel = false;
+		}
+		
 	}
 	
 	
@@ -721,14 +719,14 @@ void CMainCharacter::SetState(int state)
 
 void CMainCharacter::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (isStateStraightBarrel)
+	/*if (state == MAIN_CHARACTER_STATE_UP_BARREL)
 	{
 		left = x;
 		top = y - MAIN_CHARACTER_STATE_BARREL_UP_BBOX_HEIGHT;
 		right = x + MAIN_CHARACTER_STATE_BARREL_UP_BBOX_WIDTH;
 		bottom = y;
 	}
-	else
+	else*/
 	{
 		left = x;
 		top = y - MAIN_CHARACTER_BBOX_HEIGHT;
