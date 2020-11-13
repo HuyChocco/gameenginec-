@@ -56,10 +56,11 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 //Main character objects
 #define OBJECT_TYPE_MAIN_CHARACTER	9
 #define OBJECT_TYPE_WHEEL_LEFT	4
-#define OBJECT_TYPE_WHEEL_RIGHT	5
-#define OBJECT_TYPE_WHEEL_MIDDLE	6
-#define OBJECT_TYPE_CABIN	7
-#define OBJECT_TYPE_BARREL	8
+
+#define OBJECT_TYPE_WHEEL_RIGHT	6
+
+#define OBJECT_TYPE_VEHICLE	7
+
 #define OBJECT_TYPE_HUMAN	11
 
 #define OBJECT_TYPE_POWERHUB	500
@@ -300,7 +301,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_WHEEL_LEFT:
 	{
 		obj = new CWheelObject();
-		obj->SetPosition(x, y);
+		float _x, _y;
 		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
 		obj->SetID(object_id);
 		if (player != NULL)
@@ -308,24 +309,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 			DebugOut(L"[INFO] Player object has been Created Already!\n");
 			player->AddComponentObject(obj);
+			player->GetPosition(_x, _y);
+			obj->SetPosition(_x, _y);
 			return;
 		}
-		break;
-	}
-	case OBJECT_TYPE_WHEEL_MIDDLE: 
-	{
-		obj = new CWheelObject();
-		CWheelObject* obj_middle_wheel = (CWheelObject*)obj;
-		obj_middle_wheel->SetIsMiddleWheel();
-		obj->SetPosition(x, y);
-		obj->SetID(object_id);
-		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
-		if (player != NULL)
-		{
-			DebugOut(L"[INFO] Player object has been Created Already!\n");
-			player->AddComponentObject(obj);
-		}
-		return;
 		break;
 	}
 	case OBJECT_TYPE_WHEEL_RIGHT:
@@ -333,41 +320,31 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CWheelObject();
 		CWheelObject* obj_right_wheel =(CWheelObject*) obj;
 		obj_right_wheel->SetIsRightWheel();
-		obj->SetPosition(x, y);
+		float _x, _y;
 		obj->SetID(object_id);
 		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
 		if (player != NULL)
 		{
 			DebugOut(L"[INFO] Player object has been Created Already!\n");
 			player->AddComponentObject(obj);
+			player->GetPosition(_x, _y);
+			obj->SetPosition(_x, _y);
 		}
 		return;
 		break;
 	}
-	case OBJECT_TYPE_CABIN: 
+	case OBJECT_TYPE_VEHICLE: 
 	{
-		obj = new CCabinObject();
-		obj->SetPosition(x, y);
+		obj = new CVehicle();
+		float _x, _y;
 		obj->SetID(object_id);
 		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
 		if (player != NULL)
 		{
 			DebugOut(L"[INFO] Player object has been Created Already!\n");
 			player->AddComponentObject(obj);
-		}
-		return;
-		break;
-	}
-	case OBJECT_TYPE_BARREL: 
-	{
-		obj = new CBarrelObject(); 
-		obj->SetPosition(x, y);
-		obj->SetID(object_id);
-		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
-		if (player != NULL)
-		{
-			DebugOut(L"[INFO] Player object has been Created Already!\n");
-			player->AddComponentObject(obj);
+			player->GetPosition(_x, _y);
+			obj->SetPosition(_x, _y);
 		}
 		return;
 		break;

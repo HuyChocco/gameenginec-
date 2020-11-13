@@ -635,7 +635,7 @@ void CWeapon::Render()
 			}
 			else
 				animation_set->at(ani)->Render(x, y, flip);
-			//RenderBoundingBox();
+			RenderBoundingBox();
 		}
 	}
 	else if (typeWeapon == WEAPON_TYPE_ENEMY_CANNONS)
