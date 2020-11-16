@@ -4,13 +4,13 @@ start	0
 #id	path	type_scence: 0-world 1-overworld
 [SCENES]
 0	intro-scence.txt	0
-1	scence-test-A.txt	0
-2	scence-test-B.txt	0
-3	scence-test-C.txt	0
-4	scence-test-D.txt	0
-5	scence-test-E.txt	0
-6	scence-test-I.txt	0
-7	scence-test-K.txt	0
+1	scence-A.txt	0
+2	scence-B.txt	0
+3	scence-C.txt	0
+4	scence-D.txt	0
+5	scence-E.txt	0
+6	scence-I.txt	0
+7	scence-K.txt	0
 8	scence-test-overworld-1.txt	1
 9	scence-test-overworld-2.txt	1
 10	scence-test-overworld-3.txt	1

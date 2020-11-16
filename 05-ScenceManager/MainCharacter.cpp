@@ -538,7 +538,7 @@ void CMainCharacter::Render()
 					componentObjects[i]->Render();
 			}
 		}
-		RenderBoundingBox();
+		//RenderBoundingBox();
 
 	}
 	
