@@ -26,10 +26,12 @@ class CJumper :public CEnemyObject
 	bool isMovingLeft;
 	bool isMovingRight;
 	bool isOnGround;
+	bool isJumping;
 public:
 	CJumper(int _item);
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 	virtual void SetState(int state);
+	void SetIsJumping(bool _flag) { isJumping = _flag; }
 };

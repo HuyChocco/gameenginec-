@@ -295,7 +295,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	{
 		float r = atof(tokens[5].c_str());
 		float b = atof(tokens[6].c_str());
-		obj = new CBrick(x, y, r, b);
+		if (tokens.size() > 7)
+		{
+			int type = atoi(tokens[7].c_str());
+			obj = new CBrick(x, y, r, b,type);
+		}
+		else
+			obj = new CBrick(x, y, r, b);
 		break;
 	}
 	case OBJECT_TYPE_WHEEL_LEFT:
@@ -718,9 +724,9 @@ void CPlayScene::Update(DWORD dt)
 
 		float height = player_y - cy;
 
-		if (height >= ((float)game->GetScreenHeight() / 12))
+		if (height >= ((float)game->GetScreenHeight() / 20))
 		{
-			height += (float)(game->GetScreenHeight() / 8);
+			height += (float)(game->GetScreenHeight() / 3);
 
 			cy += height;
 		}

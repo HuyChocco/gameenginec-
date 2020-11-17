@@ -231,14 +231,43 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 				else if (dynamic_cast<CBrick*>(colliable_object->at(i)))
 				{
 					CBrick* brick = dynamic_cast<CBrick*>(colliable_object->at(i));
-					float l1, t1, r1, b1, l2, t2, r2, b2;
-					GetBoundingBox(l1, t1, r1, b1);
-					brick->GetBoundingBox(l2, t2, r2, b2);
-
-					if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+					if (brick->GetType() == BRICK_TYPE_NORMAL) //Default brick type
 					{
-						SetState(WEAPON_STATE_EXPLODE);
-						isBurning = true;
+						float l1, t1, r1, b1, l2, t2, r2, b2;
+						GetBoundingBox(l1, t1, r1, b1);
+						brick->GetBoundingBox(l2, t2, r2, b2);
+
+						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+						{
+							SetState(WEAPON_STATE_EXPLODE);
+							isBurning = true;
+						}
+					}
+					else if (brick->GetType() == BRICK_TYPE_DESTRUCTIBLE_1) //Destructible brick type
+					{
+						float l1, t1, r1, b1, l2, t2, r2, b2;
+						GetBoundingBox(l1, t1, r1, b1);
+						brick->GetBoundingBox(l2, t2, r2, b2);
+
+						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+						{
+							SetState(WEAPON_STATE_EXPLODE);
+							isBurning = true;
+							brick->SetState(BRICK_STATE_NONE);
+						}
+					}
+					else if (brick->GetType() == BRICK_TYPE_DESTRUCTIBLE_2) //Destructible brick type
+					{
+						float l1, t1, r1, b1, l2, t2, r2, b2;
+						GetBoundingBox(l1, t1, r1, b1);
+						brick->GetBoundingBox(l2, t2, r2, b2);
+
+						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+						{
+							SetState(WEAPON_STATE_EXPLODE);
+							isBurning = true;
+							brick->SetState(BRICK_STATE_NONE);
+						}
 					}
 				}
 			}

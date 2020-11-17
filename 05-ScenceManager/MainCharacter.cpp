@@ -21,7 +21,7 @@
 #include "Teleporter.h"
 
 #define JUMPER_ROUNDING_DISTANCE_X 50
-#define JUMPER_ROUNDING_DISTANCE_Y 40
+#define JUMPER_ROUNDING_DISTANCE_Y 20
 CMainCharacter::CMainCharacter(float x, float y) : CGameObject()
 {
 
@@ -130,7 +130,13 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (jumper->GetState() != STATE_ITEM)
 				{
 					if (abs(x - x_jumper) < JUMPER_ROUNDING_DISTANCE_X && abs(y - y_jumper) < JUMPER_ROUNDING_DISTANCE_Y)
+					{
 						jumper->SetState(JUMPER_STATE_JUMP);
+						jumper->SetIsJumping(true);
+					}
+						
+					else
+						jumper->SetIsJumping(false);
 				}
 				
 			}
@@ -354,9 +360,13 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						StartUntouchable();
 						float vxOrb, vyOrb;
 						orb->GetSpeed(vxOrb, vyOrb);
-						if (e->ny != 0)
+						if (e->ny == 1)
 						{
-							y -= 4*vyOrb * dt;
+							y += dy;
+						}
+						else if (e->ny == -1)
+						{
+							y -= 4 * vyOrb * dt;
 						}
 						else
 							x += dx;
@@ -487,6 +497,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			{
 				CHuman* human_object = dynamic_cast<CHuman*>(componentObjects[i]);
 				human_object->SetIsBeingHuman(false);
+				human_object->SetPosition(x, y);
 				human_object->Update(dt, coObjects);
 			}
 			else
