@@ -21,7 +21,7 @@
 #include "Orb.h"
 
 #define JUMPER_ROUNDING_DISTANCE_X 50
-#define JUMPER_ROUNDING_DISTANCE_Y 40
+#define JUMPER_ROUNDING_DISTANCE_Y 20
 #define ORB_ROUNDING_DISTANCE_X 120
 #define ORB_ROUNDING_DISTANCE_Y 110
 CHuman::CHuman(float x, float y) : CGameObject()
@@ -120,7 +120,13 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (jumper->GetState() != STATE_ITEM)
 			{
 				if (abs(x - x_jumper) < JUMPER_ROUNDING_DISTANCE_X && abs(y - y_jumper) < JUMPER_ROUNDING_DISTANCE_Y)
+				{
 					jumper->SetState(JUMPER_STATE_JUMP);
+					jumper->SetIsJumping(true);
+				}
+				
+				else
+					jumper->SetIsJumping(false);
 			}
 
 		}

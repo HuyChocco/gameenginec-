@@ -156,6 +156,9 @@
     <ClCompile Include="Vehicle.cpp">
       <Filter>Source Files\MainCharacterObjects</Filter>
     </ClCompile>
+    <ClCompile Include="Stair.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Brick.h">
@@ -280,6 +283,9 @@
     </ClInclude>
     <ClInclude Include="Vehicle.h">
       <Filter>Header Files\MainCharacterObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Stair.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
