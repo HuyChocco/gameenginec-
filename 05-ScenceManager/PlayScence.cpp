@@ -49,8 +49,10 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define OBJECT_TYPE_DOME	13
 #define OBJECT_TYPE_JUMPER	14
 #define OBJECT_TYPE_INSECT	15
+#define OBJECT_TYPE_ORB		16
 #define OBJECT_TYPE_CANNON	19
 #define OBJECT_TYPE_EYEBALL	20
+#define OBJECT_TYPE_TELEPORTER 33
 
 //Main character objects
 #define OBJECT_TYPE_MAIN_CHARACTER	9
@@ -226,6 +228,16 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetAnimationItemSet(ani_set);
 	}
 		 break;
+	case OBJECT_TYPE_TELEPORTER:
+	{
+		int item = 0;
+		if (tokens.size() > 5)
+			item = atoi(tokens[5].c_str());
+		obj = new CTeleporter(item);
+		LPANIMATION_SET ani_set = animation_sets->Get(200);
+		obj->SetAnimationItemSet(ani_set);
+	}
+	break;
 	case OBJECT_TYPE_DOME: 
 	{
 		int item = 0;
@@ -252,6 +264,21 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		if (tokens.size() > 5)
 			item = atoi(tokens[5].c_str());
 		obj = new CInsect(item);
+		LPANIMATION_SET ani_set = animation_sets->Get(200);
+		obj->SetAnimationItemSet(ani_set);
+	}
+	break;
+	case OBJECT_TYPE_ORB:
+	{
+		int item = 0;
+		int type = 0;
+		if (tokens.size() > 6)
+		{
+			type = atoi(tokens[5].c_str());
+			item = atoi(tokens[6].c_str());
+		}
+
+		obj = new COrb(item, type);
 		LPANIMATION_SET ani_set = animation_sets->Get(200);
 		obj->SetAnimationItemSet(ani_set);
 	}
@@ -569,7 +596,7 @@ void CPlayScene::Update(DWORD dt)
 	if (player == NULL) return;
 	else
 	{
-		coObjects.push_back(player);
+		//coObjects.push_back(player);
 		player->Update(dt, &coObjects);
 		
 	}

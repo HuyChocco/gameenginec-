@@ -45,7 +45,7 @@ void CInsect::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	time_change += dt;
 	if (!isMovingRight)
 	{
-		if (!isBeingUp) 
+		if (!isBeingUp)
 		{
 			if (time_moving > TIME_CHANGE_DIRECTION_Y)
 			{
@@ -187,7 +187,7 @@ void CInsect::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					SetState(INSECT_STATE_MOVE_LEFT);
 				}
-				
+
 			}
 			else if (dynamic_cast<CWorm*>(e->obj))
 			{
@@ -209,7 +209,7 @@ void CInsect::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					SetState(INSECT_STATE_MOVE_LEFT);
 				}
 			}
-	
+
 
 		}*/
 
@@ -228,24 +228,24 @@ void CInsect::Render()
 		int ani = -1;
 		switch (state)
 		{
-		
-		
+
+
 		case INSECT_STATE_IDLE:
 		case INSECT_STATE_MOVE:
 			if (vx > 0 || nx > 0)
 				ani = INSECT_ANI_MOVE_RIGHT;
-			else if (vx <0 || nx <0)
+			else if (vx < 0 || nx < 0)
 				ani = INSECT_ANI_MOVE_LEFT;
 			break;
-		
-		case INSECT_STATE_MOVE_DIRECTION_Y_RIGHT :
-			
-				ani = INSECT_ANI_MOVE_RIGHT;
-				break;
+
+		case INSECT_STATE_MOVE_DIRECTION_Y_RIGHT:
+
+			ani = INSECT_ANI_MOVE_RIGHT;
+			break;
 		case INSECT_STATE_MOVE_DIRECTION_Y_LEFT:
-				ani = INSECT_ANI_MOVE_LEFT;
+			ani = INSECT_ANI_MOVE_LEFT;
 			break;
-		
+
 		case INSECT_STATE_MOVE_UP_RIGHT:
 
 			ani = INSECT_ANI_MOVE_RIGHT;
@@ -285,12 +285,12 @@ void CInsect::SetState(int state)
 		}
 		else
 		{
-			vy= -INSECT_MOVE_SPEED;
+			vy = -INSECT_MOVE_SPEED;
 		}
 		vx = INSECT_MOVE_SPEED;
-	
+
 		break;
-		
+
 	case INSECT_STATE_MOVE_DIRECTION_Y_RIGHT:
 		vy = -INSECT_MOVE_SPEED;
 		vx = INSECT_MOVE_SPEED;
@@ -311,7 +311,7 @@ void CInsect::SetState(int state)
 		isDisplay = false;
 		isEnable = false;
 		break;
-	
+
 	case STATE_ITEM:
 		vx = 0;
 		vy = 0;

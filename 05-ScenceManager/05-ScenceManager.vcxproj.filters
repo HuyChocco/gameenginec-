@@ -138,16 +138,26 @@
     <ClCompile Include="Jumper.cpp">
       <Filter>Source Files\EnemyObjects</Filter>
     </ClCompile>
-    <ClCompile Include="Insect.cpp">
+    <ClCompile Include="Teleporter.cpp">
       <Filter>Source Files\EnemyObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Orb.cpp">
+      <Filter>Source Files\EnemyObjects</Filter>
+    </ClCompile>
     <ClCompile Include="IntroScence.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="EndingScence.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Insect.cpp">
+      <Filter>Source Files\EnemyObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Brick.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -256,8 +266,9 @@
     <ClInclude Include="Skull.h">
       <Filter>Header Files\EnemyObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Brick.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Teleporter.h">
+      <Filter>Header Files\EnemyObjects</Filter>
+    </ClInclude>
     <ClInclude Include="IntroScence.h">
       <Filter>Header Files</Filter>
     </ClInclude>

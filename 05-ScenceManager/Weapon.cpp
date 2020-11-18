@@ -8,18 +8,16 @@
 #include "Eyeball.h"
 #include "Dome.h"
 #include "Floater.h"
-
+#include "Teleporter.h"
 #include "Brick.h"
 #include "Portal.h"
 #include "Spike.h"
 #include "Jumper.h"
-<<<<<<< HEAD
 #include "Insect.h"
-=======
+#include "Orb.h"
 
 
 
->>>>>>> master
 CWeapon::CWeapon(int type)
 {
 	isAttacked = false;
@@ -32,6 +30,11 @@ CWeapon::CWeapon(int type)
 		this->timeAttack = 0.0f;
 		SetTypeWeapon(WEAPON_TYPE_ENEMY_CANNONS);
 		
+	}
+	else if (type == WEAPON_TYPE_ENEMY_TELEPORTER)
+	{
+		this->timeAttack = 0.0f;
+		SetTypeWeapon(WEAPON_TYPE_ENEMY_TELEPORTER);
 	}
 	else if (type == WEAPON_TYPE_ENEMY_EYEBALL)
 	{
@@ -207,6 +210,28 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 					}
 
 				}
+				else if (dynamic_cast<COrb*>(colliable_object->at(i)))
+				{
+					COrb* orb = dynamic_cast<COrb*>(colliable_object->at(i));
+					if (orb->GetState() != STATE_ITEM)
+					{
+						float l1, t1, r1, b1, l2, t2, r2, b2;
+						GetBoundingBox(l1, t1, r1, b1);
+						orb->GetBoundingBox(l2, t2, r2, b2);
+
+						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+						{
+							SetState(WEAPON_STATE_EXPLODE);
+							isBurning = true;
+							if (!isAttacked)
+							{
+								orb->LostBlood(GetDame());
+								isAttacked = true;
+							}
+						}
+					}
+
+				}
 				else if (dynamic_cast<CSpike*>(colliable_object->at(i)))
 				{
 
@@ -297,6 +322,33 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 				}
 			}
 		}
+		else if (type_weapon == WEAPON_TYPE_ENEMY_TELEPORTER)
+		{
+		for (UINT i = 0; i < colliable_object->size(); i++)
+		{
+			if (dynamic_cast<CBrick*>(colliable_object->at(i)))
+			{
+				CBrick* brick = dynamic_cast<CBrick*>(colliable_object->at(i));
+				float l1, t1, r1, b1, l2, t2, r2, b2;
+				GetBoundingBox(l1, t1, r1, b1);
+				brick->GetBoundingBox(l2, t2, r2, b2);
+
+				if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+				{
+					SetState(WEAPON_STATE_EXPLODE);
+					isBurning = true;
+				}
+			}
+			else if (dynamic_cast<CPortal*>(colliable_object->at(i)))
+			{
+
+			}
+			else if (dynamic_cast<CSpike*>(colliable_object->at(i)))
+			{
+
+			}
+		}
+		}
 		else if (type_weapon == WEAPON_TYPE_BIG_HUMAN)
 		{
 		for (UINT i = 0; i < colliable_object->size(); i++)
@@ -375,23 +427,45 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 				else if (dynamic_cast<CJumper*>(colliable_object->at(i)))
 				{
 					CJumper* jumper = dynamic_cast<CJumper*>(colliable_object->at(i));
-if (jumper->GetState() != STATE_ITEM)
-{
-	float l1, t1, r1, b1, l2, t2, r2, b2;
-	GetBoundingBox(l1, t1, r1, b1);
-	jumper->GetBoundingBox(l2, t2, r2, b2);
+					if (jumper->GetState() != STATE_ITEM)
+					{
+						float l1, t1, r1, b1, l2, t2, r2, b2;
+						GetBoundingBox(l1, t1, r1, b1);
+						jumper->GetBoundingBox(l2, t2, r2, b2);
 
-	if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
-	{
-		SetState(WEAPON_STATE_EXPLODE);
-		isBurning = true;
-		if (!isAttacked)
-		{
-			jumper->LostBlood(GetDame());
-			isAttacked = true;
-		}
-	}
-}
+						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+						{
+							SetState(WEAPON_STATE_EXPLODE);
+							isBurning = true;
+							if (!isAttacked)
+							{
+								jumper->LostBlood(GetDame());
+								isAttacked = true;
+							}
+						}
+					}
+
+				}
+				else if (dynamic_cast<COrb*>(colliable_object->at(i)))
+				{
+					COrb* orb = dynamic_cast<COrb*>(colliable_object->at(i));
+					if (orb->GetState() != STATE_ITEM)
+					{
+						float l1, t1, r1, b1, l2, t2, r2, b2;
+						GetBoundingBox(l1, t1, r1, b1);
+						orb->GetBoundingBox(l2, t2, r2, b2);
+
+						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+						{
+							SetState(WEAPON_STATE_EXPLODE);
+							isBurning = true;
+							if (!isAttacked)
+							{
+								orb->LostBlood(GetDame());
+								isAttacked = true;
+							}
+						}
+					}
 
 				}
 				else if (dynamic_cast<CWorm*>(colliable_object->at(i)))
@@ -440,26 +514,51 @@ if (jumper->GetState() != STATE_ITEM)
 				}
 				else if (dynamic_cast<CEyeball*>(colliable_object->at(i)))
 				{
-				CEyeball* eyeball = dynamic_cast<CEyeball*>(colliable_object->at(i));
-				if (eyeball->GetState() != STATE_ITEM)
-				{
-					float l1, t1, r1, b1, l2, t2, r2, b2;
-					GetBoundingBox(l1, t1, r1, b1);
-					eyeball->GetBoundingBox(l2, t2, r2, b2);
-
-					if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+					CEyeball* eyeball = dynamic_cast<CEyeball*>(colliable_object->at(i));
+					if (eyeball->GetState() != STATE_ITEM)
 					{
-						SetState(WEAPON_STATE_EXPLODE);
+						float l1, t1, r1, b1, l2, t2, r2, b2;
+						GetBoundingBox(l1, t1, r1, b1);
+						eyeball->GetBoundingBox(l2, t2, r2, b2);
 
-						isBurning = true;
-						if (!isAttacked)
+						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
 						{
-							eyeball->LostBlood(GetDame());
-							isAttacked = true;
-						}
+							SetState(WEAPON_STATE_EXPLODE);
 
+							isBurning = true;
+							if (!isAttacked)
+							{
+								eyeball->LostBlood(GetDame());
+								isAttacked = true;
+							}
+
+						}
 					}
+
+
 				}
+				else if (dynamic_cast<CTeleporter*>(colliable_object->at(i)))
+				{
+					CTeleporter* tele = dynamic_cast<CTeleporter*>(colliable_object->at(i));
+					if (tele->GetState() != STATE_ITEM)
+					{
+						float l1, t1, r1, b1, l2, t2, r2, b2;
+						GetBoundingBox(l1, t1, r1, b1);
+						tele->GetBoundingBox(l2, t2, r2, b2);
+
+						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+						{
+							SetState(WEAPON_STATE_EXPLODE);
+
+							isBurning = true;
+							if (!isAttacked)
+							{
+								tele->LostBlood(GetDame());
+								isAttacked = true;
+							}
+
+						}
+					}
 
 				}
 			}
@@ -627,6 +726,39 @@ void CWeapon::Render()
 			//RenderBoundingBox();
 		}
 	}
+	else if (typeWeapon == WEAPON_TYPE_ENEMY_TELEPORTER)
+	{
+	if (state != WEAPON_STATE_NONE)
+	{
+		int ani = WEAPON_ANI_ENEMY_TELEPORTER;
+		int flip = false;
+		switch (state)
+		{
+		case WEAPON_EYEBALL_STATE_FLY:
+			ani = WEAPON_ANI_ENEMY_TELEPORTER;
+			break;
+		case WEAPON_STATE_EXPLODE:
+			ani = WEAPON_ANI_EXPLODE_ENEMY_TELEPORTER;
+			break;
+		default:
+			break;
+		}
+		if (state == WEAPON_STATE_EXPLODE)
+		{
+			float l, t, r, b;
+			GetBoundingBox(l, t, r, b);
+			animation_set->at(ani)->Render(x, y, flip);
+			if (animation_set->at(ani)->isFinish)
+			{
+				animation_set->at(ani)->isFinish = false;
+				SetState(WEAPON_STATE_NONE);
+			}
+		}
+		else
+			animation_set->at(ani)->Render(x, y, flip);
+		//RenderBoundingBox();
+	}
+	}
 	else if (typeWeapon == WEAPON_TYPE_ENEMY_FLOATER)
 	{
 		if (state != WEAPON_STATE_NONE)
@@ -766,6 +898,16 @@ void CWeapon::SetState(int state)
 			break;
 		}
 	}
+	else if (type_weapon == WEAPON_TYPE_ENEMY_TELEPORTER)
+	{
+		switch (state)
+		{
+		case WEAPON_EYEBALL_STATE_FLY:
+			vx = WEAPON_EYEBALL_FLY_SPEED;
+			this->dame = 1;
+			break;
+		}
+	}
 	else if (type_weapon == WEAPON_TYPE_BIG_HUMAN)
 	{
 		switch (state)
@@ -850,6 +992,13 @@ void CWeapon::GetBoundingBox(float& left, float& top, float& right, float& botto
 		left = x;
 		top = y - WEAPON_EYEBALL_BBOX_HEIGHT;
 		right = x + WEAPON_EYEBALL_BBOX_WIDTH;
+		bottom = y;
+	}
+	else if (typeWeapon == WEAPON_TYPE_ENEMY_TELEPORTER)
+	{
+		left = x;
+		top = y - WEAPON_TELEPORTER_BBOX_HEIGHT;
+		right = x + WEAPON_TELEPORTER_BBOX_WIDTH;
 		bottom = y;
 	}
 	else if (typeWeapon == WEAPON_TYPE_ENEMY_FLOATER)

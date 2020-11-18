@@ -6,6 +6,7 @@
 #include "Textures.h"
 #include "Sprites.h"
 
+#define SCENCE_ID_START	1
 
 using namespace std;
 
@@ -219,8 +220,12 @@ void CIntroScence::Update(DWORD dt)
 
 void CIntroScence::Render()
 {
+	CGame* game = CGame::GetInstance();
 	CAnimationSets::GetInstance()->Get(0)->at(0)->isIntroEndScence = true;
 	CAnimationSets::GetInstance()->Get(0)->at(0)->Render(0, 0);
+	if(CAnimationSets::GetInstance()->Get(0)->at(0)->isFinish)
+		game->SwitchScene(SCENCE_ID_START);
+
 }
 
 
@@ -240,7 +245,13 @@ void CIntroScenceKeyHandler::OnKeyDown(int KeyCode)
 }
 void CIntroScenceKeyHandler::OnKeyUp(int KeyCode)
 {
-
+	CGame* game=CGame::GetInstance();
+	switch (KeyCode)
+	{
+	case DIK_A:
+		game->SwitchScene(SCENCE_ID_START);
+		break;
+	}
 }
 
 void CIntroScenceKeyHandler::KeyState(BYTE* states)

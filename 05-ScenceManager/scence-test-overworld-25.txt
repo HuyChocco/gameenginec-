@@ -68,9 +68,9 @@
 #chuan bi ban doc
 162	41	607	67	629	2	
 # TELEPROTERS
-154	159	568	175	584	2
+154	159	568	183	600	2
 #khong co ao choang
-155	132	568	148	584	2
+155	132	568	156	600	2
 # ENEMY EYEBALLS
 #phai
 150	136	550	152	566	2
@@ -201,9 +201,9 @@ map-overworld-25.txt
 1161	161	300	162	300
 # ==== ENEMY TELEPORTERS =========
 #bien hinh
-1152	154	100	155	50	154	50	155	50	154	50	155	100
+1152	154	100	155	50	154	50	155	50
 #sau khi bien hinh va tan cong
-1153	155	100		
+1153	155	100
 # ==== ENEMY EYEBALLS =========
 1150	150	100	151	100
 # nham mat chuan bi ban
@@ -286,6 +286,11 @@ map-overworld-25.txt
 4007	100013	100
 # Bullet_explosion
 4008	100014	100
+# Teleporter
+# Bullet
+4009	100013	100
+# Bullet_explosion
+4010	100014	100
 # ==== HUB =========
 #PowerHub - Text
 100000	800001	100
@@ -315,17 +320,20 @@ map-overworld-25.txt
 # SPIDER - ENEMY
 9	6000	6001
 # WEAPON
-7	4000	4001	4002	4003	4004	4005	4006	4007	4008
+7	4000	4001	4002	4003	4004	4005	4006	4007	4008	4009	4010
 # CANNONS
 10	1160	1161
 # EYEBALLS
 11	1150	1151
+# TELEPORTER
+12	1152	1153
 # HUB
 100	100000	100001	100002	100003
 [OBJECTS]
 # object_id  type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Worm, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Cabin, 8= Barrel, 9= Main character, 10= Spider, 11=Human
 # type: 12 = Floater, 13 = Domes, 14 = Jumpers, 15 = Insect,16 = Orbs, 17 = Skulls, 18 = Dashers, 500 = PowerHub, 501 = GunHub, 19=Cannon, 20= Eyeball, 21 = Spike
+# type: 33 = Teleporter
 # MAIN_CHARACTER need to be created first!
 1	9	100	150	2
 # MAIN OBJECTS LIST
@@ -353,6 +361,8 @@ map-overworld-25.txt
 13	19	160	140	10
 # EYEBALL
 14	20	200	200	11
+# TELEPORTER
+20	33	120	140	12
 # MAP OBJECT LIST
 # BRICK 
 # object_id 	type	l	t	ani_set_id	r	b	
@@ -412,7 +422,7 @@ map-overworld-25.txt
 # cellx celly id_object...
 [GRID]
 2	0	122	125	366	372
-1	0	125	366	372	370	371	13	14
+1	0	125	366	372	370	371	13	14	20
 0	0	125	129	1004	371
 2	1	122	126	366
 1	1	126	127	1002	366	367	370	368	369

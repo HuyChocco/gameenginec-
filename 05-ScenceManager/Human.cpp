@@ -17,13 +17,13 @@
 #include "Floater.h"
 #include "Dome.h"
 #include "Jumper.h"
-<<<<<<< HEAD
-#include "Insect.h"
-#define JUMPER_ROUNDING_DISTANCE_X 100
-=======
+#include "Teleporter.h"
+#include "Orb.h"
+
 #define JUMPER_ROUNDING_DISTANCE_X 50
->>>>>>> master
 #define JUMPER_ROUNDING_DISTANCE_Y 40
+#define ORB_ROUNDING_DISTANCE_X 120
+#define ORB_ROUNDING_DISTANCE_Y 110
 CHuman::CHuman(float x, float y) : CGameObject()
 {
 	level = HUMAN_LEVEL_SMALL;
@@ -60,15 +60,12 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 		else if (dynamic_cast<CDome*>(coObjects->at(i))) {
 			CDome* dome = dynamic_cast<CDome*>(coObjects->at(i));
-
 			float x_enemy, y_enemy;
 			dome->GetPosition(x_enemy, y_enemy);
 			if (x > x_enemy)
 				dome->SetDirection(1);
 			else
 				dome->SetDirection(-1);
-
-
 		}
 		else if (dynamic_cast<CWorm*>(coObjects->at(i))) {
 			CWorm* worm = dynamic_cast<CWorm*>(coObjects->at(i));
@@ -79,10 +76,6 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				worm->SetDirection(1);
 			else
 				worm->SetDirection(-1);
-			
-
-
-
 		}
 		else if (dynamic_cast<CEyeball*>(coObjects->at(i))) {
 			CEyeball* eyeball = dynamic_cast<CEyeball*>(coObjects->at(i));
@@ -97,9 +90,20 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				eyeball->SetDirectionY(1);//Up
 			else
 				eyeball->SetDirectionY(-1);//Down
+		}
+		else if (dynamic_cast<CTeleporter*>(coObjects->at(i))) {
+			CTeleporter* teleporter = dynamic_cast<CTeleporter*>(coObjects->at(i));
 
-
-
+			float x_teleporter, y_teleporter;
+			teleporter->GetPosition(x_teleporter, y_teleporter);
+			if (x > x_teleporter)
+				teleporter->SetDirection(1);
+			else
+				teleporter->SetDirection(-1);
+			if (y > y_teleporter)
+				teleporter->SetDirectionY(1);//Up
+			else
+				teleporter->SetDirectionY(-1);//Down
 		}
 		else if (dynamic_cast<CCannon*>(coObjects->at(i))) {
 			CCannon* cannon = dynamic_cast<CCannon*>(coObjects->at(i));
@@ -120,19 +124,24 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 
 		}
-
-		if (dynamic_cast<CInsect*>(coObjects->at(i))) {
-			CInsect* insect = dynamic_cast<CInsect*>(coObjects->at(i));
-
-			float x_enemy, y_enemy;
-			insect->GetPosition(x_enemy, y_enemy);
-			/*if (x > x_enemy)
-				insect->SetDirection(1);
-			else
-				insect->SetDirection(-1);*/
-
-
-
+		else if (dynamic_cast<COrb*>(coObjects->at(i))) {
+			COrb* orb = dynamic_cast<COrb*>(coObjects->at(i));
+			int type = orb->GetType();
+			if (type != 1)
+			{
+				float x_orb, y_orb;
+				orb->GetPosition(x_orb, y_orb);
+				if (x > x_orb)
+					orb->SetDirection(1);
+				else
+					orb->SetDirection(-1);
+				if (orb->GetState() != STATE_ITEM)
+				{
+					if (abs(x - x_orb) < ORB_ROUNDING_DISTANCE_X && abs(y - y_orb) < ORB_ROUNDING_DISTANCE_Y)
+						orb->SetState(ORB_STATE_ATTACK);
+					else orb->SetState(ORB_STATE_IDLE);
+				}
+			}
 		}
 	}
 	// Simple fall down
@@ -318,6 +327,24 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 
 				}
+				else if (dynamic_cast<COrb*>(e->obj))
+				{
+					COrb* orb = dynamic_cast<COrb*>(e->obj);
+					if (orb->GetState() != STATE_ITEM)
+					{
+						StartUntouchable();
+						float vxOrb, vyOrb;
+						orb->GetSpeed(vxOrb, vyOrb);
+						if (e->ny != 0)
+						{
+							y -= 2*vyOrb * dt;
+						}
+						else
+							x += dx;
+					}
+					else
+						orb->SetState(ORB_STATE_DIE);
+				}
 				//Indoor enemies
 				else if (dynamic_cast<CCannon*>(e->obj))
 				{
@@ -329,7 +356,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						StartUntouchable();
 						if (e->ny != 0)
 						{
-							y += vyCannon * dt;
+							y += dy;
 						}
 						else
 							x += dx;
@@ -355,7 +382,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						StartUntouchable();
 						if (e->ny != 0)
 						{
-							y += vyEyeball * dt;
+							y += dy;
 						}
 						else
 							x += dx;
@@ -372,6 +399,34 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 					}
 				}
+				else if (dynamic_cast<CTeleporter*>(e->obj))
+				{
+					CTeleporter* teleporter = dynamic_cast<CTeleporter*>(e->obj);
+					float vxTeleporter, vyTeleporter;
+					teleporter->GetSpeed(vxTeleporter, vyTeleporter);
+					if (teleporter->GetState() != STATE_ITEM)
+					{
+						StartUntouchable();
+						if (e->ny != 0)
+						{
+							y += dy;
+						}
+						else
+							x += dx;
+					}
+					else
+					{
+						if (e->ny != 0)
+						{
+							y += dy;
+						}
+						else
+							x += dx;
+						teleporter->SetState(TELEPORTER_STATE_DIE);
+
+					}
+				}
+
 			}
 		}
 
@@ -389,6 +444,9 @@ void CHuman::Render()
 	{
 		if (level == HUMAN_LEVEL_BIG)
 		{
+			int alpha = 255;
+			if (untouchable)
+				alpha = 128;
 			switch (state)
 			{
 			case MAIN_CHARACTER_STATE_RUN_RIGHT:
@@ -409,12 +467,12 @@ void CHuman::Render()
 			if (vx == 0 && vy==0) // Nhân vật đứng yên
 			{
 				animation_set->at(ani)->isPause = true; //Dừng animation 
-				animation_set->at(ani)->Render(x, y, flip); // Vẽ frame đang bị tạm dừng
+				animation_set->at(ani)->Render(x, y, flip,alpha); // Vẽ frame đang bị tạm dừng
 			}
 			else // Nhân vật di chuyển
 			{
 				animation_set->at(ani)->isPause = false; // Tiếp tục animation đã dừng trước đó
-				animation_set->at(ani)->Render(x, y, flip);
+				animation_set->at(ani)->Render(x, y, flip,alpha);
 			}
 			RenderBoundingBox();
 			return;
