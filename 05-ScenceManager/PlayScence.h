@@ -18,7 +18,10 @@
 #include "Floater.h"
 #include "Dome.h"
 #include "Jumper.h"
+<<<<<<< HEAD
 #include "Insect.h"
+=======
+>>>>>>> master
 #include "Orb.h"
 //bo sung
 #include "MainCharacter.h"
@@ -26,7 +29,7 @@
 #include "WheelObject.h"
 #include "CabinObject.h"
 #include "Human.h"
-
+#include "Vehicle.h"
 
 #include "TiledMap.h"
 #include "Grid.h"

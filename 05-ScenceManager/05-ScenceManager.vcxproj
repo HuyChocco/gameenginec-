@@ -147,6 +147,10 @@
     <ClCompile Include="Portal.cpp" />
     <ClCompile Include="PowerHub.cpp" />
     <ClCompile Include="Spike.cpp" />
+<<<<<<< HEAD
+=======
+    <ClCompile Include="Stair.cpp" />
+>>>>>>> master
     <ClCompile Include="Teleporter.cpp" />
     <ClCompile Include="TiledMap.cpp" />
     <ClCompile Include="Utils.cpp" />
@@ -159,6 +163,7 @@
     <ClCompile Include="Scence.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Textures.cpp" />
+    <ClCompile Include="Vehicle.cpp" />
     <ClCompile Include="Weapon.cpp" />
     <ClCompile Include="WheelObject.cpp" />
     <ClCompile Include="Worm.cpp" />
@@ -189,6 +194,10 @@
     <ClInclude Include="PowerHub.h" />
     <ClInclude Include="Skull.h" />
     <ClInclude Include="Spike.h" />
+<<<<<<< HEAD
+=======
+    <ClInclude Include="Stair.h" />
+>>>>>>> master
     <ClInclude Include="Teleporter.h" />
     <ClInclude Include="TiledMap.h" />
     <ClInclude Include="Utils.h" />
@@ -201,6 +210,7 @@
     <ClInclude Include="Scence.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Textures.h" />
+    <ClInclude Include="Vehicle.h" />
     <ClInclude Include="Weapon.h" />
     <ClInclude Include="WheelObject.h" />
     <ClInclude Include="Worm.h" />

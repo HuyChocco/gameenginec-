@@ -94,7 +94,22 @@ void COrb::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else if (dynamic_cast<COrb*>(e->obj))
 				{
+<<<<<<< HEAD
 					x += dx;
+=======
+					float vxOrb, vyOrb;
+					dynamic_cast<COrb*>(e->obj)->GetSpeed(vxOrb, vyOrb);
+					if (e->ny == 1)
+					{
+						y += dy;
+					}
+					else if (e->ny == -1)
+					{
+						y -= 4 * vyOrb * dt;
+					}
+					else
+						x += dx;
+>>>>>>> master
 				}
 			}
 			else if (type == ORB_TYPE_SPECIAL)
@@ -102,7 +117,22 @@ void COrb::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				SetState(ORB_STATE_ATTACK);
 				if (dynamic_cast<COrb*>(e->obj))
 				{
+<<<<<<< HEAD
 					x += dx;
+=======
+					float vxOrb, vyOrb;
+					dynamic_cast<COrb*>(e->obj)->GetSpeed(vxOrb, vyOrb);
+					if (e->ny == 1)
+					{
+						y += dy;
+					}
+					else if (e->ny == -1)
+					{
+						y -= 4 * vyOrb * dt;
+					}
+					else
+						x += dx;
+>>>>>>> master
 				}
 			}
 		}
@@ -151,7 +181,11 @@ void COrb::Render()
 		if (isDisplay)
 		{
 			animation_set->at(ani)->Render(x, y);
+<<<<<<< HEAD
 			RenderBoundingBox();
+=======
+			//RenderBoundingBox();
+>>>>>>> master
 		}
 
 	}

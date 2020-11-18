@@ -13,7 +13,10 @@
 #include "Portal.h"
 #include "Spike.h"
 #include "Jumper.h"
+<<<<<<< HEAD
 #include "Insect.h"
+=======
+>>>>>>> master
 #include "Orb.h"
 
 
@@ -188,6 +191,7 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 					}
 
 				}
+<<<<<<< HEAD
 				else if (dynamic_cast<CInsect*>(colliable_object->at(i)))
 				{
 					CInsect* insect = dynamic_cast<CInsect*>(colliable_object->at(i));
@@ -210,6 +214,8 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 					}
 
 				}
+=======
+>>>>>>> master
 				else if (dynamic_cast<COrb*>(colliable_object->at(i)))
 				{
 					COrb* orb = dynamic_cast<COrb*>(colliable_object->at(i));
@@ -254,14 +260,43 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 				else if (dynamic_cast<CBrick*>(colliable_object->at(i)))
 				{
 					CBrick* brick = dynamic_cast<CBrick*>(colliable_object->at(i));
-					float l1, t1, r1, b1, l2, t2, r2, b2;
-					GetBoundingBox(l1, t1, r1, b1);
-					brick->GetBoundingBox(l2, t2, r2, b2);
-
-					if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+					if (brick->GetType() == BRICK_TYPE_NORMAL) //Default brick type
 					{
-						SetState(WEAPON_STATE_EXPLODE);
-						isBurning = true;
+						float l1, t1, r1, b1, l2, t2, r2, b2;
+						GetBoundingBox(l1, t1, r1, b1);
+						brick->GetBoundingBox(l2, t2, r2, b2);
+
+						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+						{
+							SetState(WEAPON_STATE_EXPLODE);
+							isBurning = true;
+						}
+					}
+					else if (brick->GetType() == BRICK_TYPE_DESTRUCTIBLE_1) //Destructible brick type
+					{
+						float l1, t1, r1, b1, l2, t2, r2, b2;
+						GetBoundingBox(l1, t1, r1, b1);
+						brick->GetBoundingBox(l2, t2, r2, b2);
+
+						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+						{
+							SetState(WEAPON_STATE_EXPLODE);
+							isBurning = true;
+							brick->SetState(BRICK_STATE_NONE);
+						}
+					}
+					else if (brick->GetType() == BRICK_TYPE_DESTRUCTIBLE_2) //Destructible brick type
+					{
+						float l1, t1, r1, b1, l2, t2, r2, b2;
+						GetBoundingBox(l1, t1, r1, b1);
+						brick->GetBoundingBox(l2, t2, r2, b2);
+
+						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+						{
+							SetState(WEAPON_STATE_EXPLODE);
+							isBurning = true;
+							brick->SetState(BRICK_STATE_NONE);
+						}
 					}
 				}
 			}
@@ -524,6 +559,7 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
 						{
 							SetState(WEAPON_STATE_EXPLODE);
+<<<<<<< HEAD
 
 							isBurning = true;
 							if (!isAttacked)
@@ -532,6 +568,16 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 								isAttacked = true;
 							}
 
+=======
+
+							isBurning = true;
+							if (!isAttacked)
+							{
+								eyeball->LostBlood(GetDame());
+								isAttacked = true;
+							}
+
+>>>>>>> master
 						}
 					}
 
@@ -658,7 +704,7 @@ void CWeapon::Render()
 			}
 			else
 				animation_set->at(ani)->Render(x, y, flip);
-			//RenderBoundingBox();
+			RenderBoundingBox();
 		}
 	}
 	else if (typeWeapon == WEAPON_TYPE_ENEMY_CANNONS)
@@ -734,7 +780,11 @@ void CWeapon::Render()
 		int flip = false;
 		switch (state)
 		{
+<<<<<<< HEAD
 		case WEAPON_EYEBALL_STATE_FLY:
+=======
+		case WEAPON_TELEPORTER_STATE_FLY:
+>>>>>>> master
 			ani = WEAPON_ANI_ENEMY_TELEPORTER;
 			break;
 		case WEAPON_STATE_EXPLODE:
@@ -902,8 +952,13 @@ void CWeapon::SetState(int state)
 	{
 		switch (state)
 		{
+<<<<<<< HEAD
 		case WEAPON_EYEBALL_STATE_FLY:
 			vx = WEAPON_EYEBALL_FLY_SPEED;
+=======
+		case WEAPON_TELEPORTER_STATE_FLY:
+			vx = WEAPON_TELEPORTER_FLY_SPEED;
+>>>>>>> master
 			this->dame = 1;
 			break;
 		}

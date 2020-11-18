@@ -92,25 +92,29 @@ void CJumper::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					isOnGround = true;
 					if (isOnGround)
 					{
-						time_moving += dt;
-						if (!isMovingRight)
+						if (!isJumping)
 						{
-							if (time_moving > TIME_CHANGE_DIRECTION)
+							time_moving += dt;
+							if (!isMovingRight)
 							{
-								SetState(JUMPER_STATE_MOVE_LEFT);
-								isMovingRight = true;
-								time_moving = 0;
+								if (time_moving > TIME_CHANGE_DIRECTION)
+								{
+									SetState(JUMPER_STATE_MOVE_LEFT);
+									isMovingRight = true;
+									time_moving = 0;
+								}
+							}
+							else
+							{
+								if (time_moving > TIME_CHANGE_DIRECTION)
+								{
+									SetState(JUMPER_STATE_MOVE_RIGHT);
+									isMovingRight = false;
+									time_moving = 0;
+								}
 							}
 						}
-						else
-						{
-							if (time_moving > TIME_CHANGE_DIRECTION)
-							{
-								SetState(JUMPER_STATE_MOVE_RIGHT);
-								isMovingRight = false;
-								time_moving = 0;
-							}
-						}
+						
 					}	
 				}
 			}
@@ -130,6 +134,7 @@ void CJumper::Render()
 	{
 
 		int ani = -1;
+		bool flip = false;
 		switch (state)
 		{
 		case JUMPER_STATE_MOVE_RIGHT:

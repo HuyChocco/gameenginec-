@@ -47,6 +47,7 @@ CIntroScence::CIntroScence(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_JUMPER	14
 #define OBJECT_TYPE_CANNON	19
 #define OBJECT_TYPE_EYEBALL	20
+#define OBJECT_TYPE_TELEPORTER	33
 
 //Main character objects
 #define OBJECT_TYPE_MAIN_CHARACTER	9
