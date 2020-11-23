@@ -10,7 +10,7 @@
 #define MAIN_CHARACTER_RUN_SPEED		0.15f 
 //0.1f
 #define MAIN_CHARACTER_JUMP_SPEED_Y		0.5f
-#define HUMAN_SMALL_JUMP_SPEED_Y		0.5f
+#define HUMAN_SMALL_JUMP_SPEED_Y		0.4f
 #define MAIN_CHARACTER_JUMP_DEFLECT_SPEED 0.2f
 #define MAIN_CHARACTER_GRAVITY			0.002f
 #define MAIN_CHARACTER_DIE_DEFLECT_SPEED	 0.5f
@@ -82,7 +82,7 @@ public:
 	bool Is_On_Ground;
 	bool Is_Human;
 	CMainCharacter(float x = 0.0f, float y = 0.0f);
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL);
 	virtual void Render();
 
 	void SetState(int state);

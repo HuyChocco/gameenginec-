@@ -40,7 +40,6 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 //Map objects
 #define OBJECT_TYPE_BRICK	1
 #define OBJECT_TYPE_SPIKE	21
-#define OBJECT_TYPE_STAIR	22
 
 //Enemy objects
 #define OBJECT_TYPE_ENEMY1	2
@@ -49,6 +48,10 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define OBJECT_TYPE_FLOATER	12
 #define OBJECT_TYPE_DOME	13
 #define OBJECT_TYPE_JUMPER	14
+<<<<<<< HEAD
+#define OBJECT_TYPE_INSECT	15
+=======
+>>>>>>> master
 #define OBJECT_TYPE_ORB		16
 #define OBJECT_TYPE_CANNON	19
 #define OBJECT_TYPE_EYEBALL	20
@@ -259,6 +262,19 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetAnimationItemSet(ani_set);
 	}
 	break;
+<<<<<<< HEAD
+	case OBJECT_TYPE_INSECT:
+	{
+		int item = 0;
+		if (tokens.size() > 5)
+			item = atoi(tokens[5].c_str());
+		obj = new CInsect(item);
+		LPANIMATION_SET ani_set = animation_sets->Get(200);
+		obj->SetAnimationItemSet(ani_set);
+	}
+	break;
+=======
+>>>>>>> master
 	case OBJECT_TYPE_ORB:
 	{
 		int item = 0;
@@ -303,13 +319,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		}
 		else
 			obj = new CBrick(x, y, r, b);
-		break;
-	}
-	case OBJECT_TYPE_STAIR:
-	{
-		float r = atof(tokens[5].c_str());
-		float b = atof(tokens[6].c_str());
-		obj = new CStair(x, y, r, b);
 		break;
 	}
 	case OBJECT_TYPE_WHEEL_LEFT:
@@ -906,9 +915,6 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_M:
 		player->SetState(MAIN_CHARACTER_STATE_HUMAN);
-		break;
-	case DIK_DOWN:
-		player->SetState(MAIN_CHARACTER_STATE_DOWN_BARREL);
 		break;
 	}
 }

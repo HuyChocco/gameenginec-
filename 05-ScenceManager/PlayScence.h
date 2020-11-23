@@ -5,7 +5,6 @@
 #include "GameObject.h"
 
 #include "Brick.h"
-#include "Stair.h"
 #include "Mario.h"
 #include "Goomba.h"
 #include "Koopas.h"
@@ -19,6 +18,10 @@
 #include "Floater.h"
 #include "Dome.h"
 #include "Jumper.h"
+<<<<<<< HEAD
+#include "Insect.h"
+=======
+>>>>>>> master
 #include "Orb.h"
 //bo sung
 #include "MainCharacter.h"

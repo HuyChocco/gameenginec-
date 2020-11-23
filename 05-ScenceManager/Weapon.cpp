@@ -13,6 +13,10 @@
 #include "Portal.h"
 #include "Spike.h"
 #include "Jumper.h"
+
+#include "Insect.h"
+
+
 #include "Orb.h"
 
 
@@ -181,6 +185,28 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 							if (!isAttacked)
 							{
 								jumper->LostBlood(GetDame());
+								isAttacked = true;
+							}
+						}
+					}
+
+				}
+				else if (dynamic_cast<CInsect*>(colliable_object->at(i)))
+				{
+					CInsect* insect = dynamic_cast<CInsect*>(colliable_object->at(i));
+					if (insect->GetState() != STATE_ITEM)
+					{
+						float l1, t1, r1, b1, l2, t2, r2, b2;
+						GetBoundingBox(l1, t1, r1, b1);
+						insect->GetBoundingBox(l2, t2, r2, b2);
+
+						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+						{
+							SetState(WEAPON_STATE_EXPLODE);
+							isBurning = true;
+							if (!isAttacked)
+							{
+								insect->LostBlood(GetDame());
 								isAttacked = true;
 							}
 						}
@@ -530,14 +556,18 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
 						{
 							SetState(WEAPON_STATE_EXPLODE);
-
 							isBurning = true;
 							if (!isAttacked)
 							{
 								eyeball->LostBlood(GetDame());
 								isAttacked = true;
 							}
-
+							isBurning = true;
+							if (!isAttacked)
+							{
+								eyeball->LostBlood(GetDame());
+								isAttacked = true;
+							}
 						}
 					}
 

@@ -1,5 +1,5 @@
 [SETTINGS]
-start	0
+start	4
 #scene list
 #id	path	type_scence: 0-world 1-overworld
 [SCENES]
