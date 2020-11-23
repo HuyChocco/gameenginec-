@@ -194,7 +194,7 @@ void COrb::SetState(int state)
 	case ORB_STATE_CHANGE_DIRECTION:
 		vx = -vx;
 		if (vx > 0)
-		{			
+		{
 			nx = 1;
 		}
 		else
@@ -207,7 +207,7 @@ void COrb::SetState(int state)
 		{
 			vx = 0.07f;
 		}
-		else 
+		else
 		{
 			vx = -0.07f;
 		}

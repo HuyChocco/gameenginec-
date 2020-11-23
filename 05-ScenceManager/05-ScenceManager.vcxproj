@@ -148,6 +148,7 @@
     <ClCompile Include="Orb.cpp" />
     <ClCompile Include="Portal.cpp" />
     <ClCompile Include="PowerHub.cpp" />
+    <ClCompile Include="Skull.cpp" />
     <ClCompile Include="Spike.cpp" />
     <ClCompile Include="Stair.cpp" />
     <ClCompile Include="Teleporter.cpp" />

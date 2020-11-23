@@ -53,7 +53,7 @@
 #define MAIN_CHARACTER_STATE_BARREL_UP_BBOX_HEIGHT 34
 #define MAIN_CHARACTER_CHANGE_BBOX_HEIGHT 18
 #define MAIN_CHARACTER_UNTOUCHABLE_TIME 500
-class CMainCharacter: public CGameObject
+class CMainCharacter : public CGameObject
 {
 	int level;
 	int untouchable;
@@ -70,7 +70,7 @@ class CMainCharacter: public CGameObject
 	int alive;
 	int heart;
 	int score;
-	
+
 	bool canChangeState;
 	bool isStateStraightBarrel;
 	bool doIncreaseYValue;
@@ -88,7 +88,7 @@ public:
 	void SetState(int state);
 	void SetLevel(int l) { level = l; }
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount(); }
-	
+
 	void Reset();
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
@@ -96,7 +96,7 @@ public:
 	void AddComponentObject(CGameObject* object);
 	vector<LPGAMEOBJECT> GetComponentObjects();
 	void ClearObjects() { componentObjects.clear(); list_weapon.clear(); }
-	
+
 	float GetStartX() { return start_x; }
 	float GetStartY() { return start_y; }
 

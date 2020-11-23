@@ -19,6 +19,8 @@
 #include "Floater.h"
 #include "Dome.h"
 #include "Jumper.h"
+#include "Insect.h"
+#include "SKull.h"
 #include "Orb.h"
 //bo sung
 #include "MainCharacter.h"
@@ -32,16 +34,16 @@
 #include "Grid.h"
 
 
-class CPlayScene: public CScene
+class CPlayScene : public CScene
 {
-protected: 
+protected:
 	//CMario *player;	
 	CMainCharacter* player;// A play scene has to have player, right? 
 
 	vector<LPGAMEOBJECT> objects;
 
 	vector<LPGAMEOBJECT> hub_objects;
-	
+
 	void _ParseSection_TEXTURES(string line);
 	void _ParseSection_SPRITES(string line);
 	void _ParseSection_ANIMATIONS(string line);
@@ -52,14 +54,14 @@ protected:
 	void _ParseSection_GRID(string line);
 
 	CMap* tiledMap;
-	int id_next_map=-1;
+	int id_next_map = -1;
 	int id_pre_map = -1;
 	LPCWSTR tiled_map_file_path_next;
 	CSprites* sprites_next_map;
 
 
 
-public: 
+public:
 	bool isRenderNextMap = false;
 	bool isRenderPreMap = false;
 	bool initNextMap = true;
@@ -79,7 +81,7 @@ public:
 	virtual CMap* GetMap();
 	virtual void GetNextMap();
 
-	
+
 	CSprites* GetSpritesNextMap() { return sprites_next_map; }
 
 
@@ -87,10 +89,10 @@ public:
 
 class CPlayScenceKeyHandler : public CScenceKeyHandler
 {
-public: 
-	virtual void KeyState(BYTE *states);
+public:
+	virtual void KeyState(BYTE* states);
 	virtual void OnKeyDown(int KeyCode);
 	virtual void OnKeyUp(int KeyCode);
-	CPlayScenceKeyHandler(CScene *s) :CScenceKeyHandler(s) {};
+	CPlayScenceKeyHandler(CScene* s) :CScenceKeyHandler(s) {};
 };
 
