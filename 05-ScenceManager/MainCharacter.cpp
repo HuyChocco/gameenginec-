@@ -35,14 +35,14 @@ CMainCharacter::CMainCharacter(float x, float y) : CGameObject()
 
 void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-
-
+	
+	
 
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
 
 	// reset untouchable timer if untouchable time has passed
-
+	
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 	//Chỉ xét va chạm cho Main Character khi không phải ở state Human
@@ -52,7 +52,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		for (UINT i = 0; i < coObjects->size(); i++)
 		{
 			if (dynamic_cast<CFloater*>(coObjects->at(i))) {
-
+					
 				CFloater* floater = dynamic_cast<CFloater*>(coObjects->at(i));
 				float x_enemy, y_enemy;
 				floater->GetPosition(x_enemy, y_enemy);
@@ -61,45 +61,45 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else
 					floater->SetDirection(-1);
 				floater->SetPlayerObject(this);
-
+				
 
 			}
 			else if (dynamic_cast<CDome*>(coObjects->at(i))) {
 				CDome* dome = dynamic_cast<CDome*>(coObjects->at(i));
-
-				float x_enemy, y_enemy;
-				dome->GetPosition(x_enemy, y_enemy);
-				if (x > x_enemy)
-					dome->SetDirection(1);
-				else
-					dome->SetDirection(-1);
-
+				
+					float x_enemy, y_enemy;
+					dome->GetPosition(x_enemy, y_enemy);
+					if (x > x_enemy)
+						dome->SetDirection(1);
+					else
+						dome->SetDirection(-1);
+				
 
 			}
 			else if (dynamic_cast<CWorm*>(coObjects->at(i))) {
 				CWorm* worm = dynamic_cast<CWorm*>(coObjects->at(i));
-
-				float x_worm, y_worm;
-				worm->GetPosition(x_worm, y_worm);
-				if (x > x_worm)
-					worm->SetDirection(1);
-				else
-					worm->SetDirection(-1);
+				
+					float x_worm, y_worm;
+					worm->GetPosition(x_worm, y_worm);
+					if (x > x_worm)
+						worm->SetDirection(1);
+					else
+						worm->SetDirection(-1);
 
 			}
 			else if (dynamic_cast<CEyeball*>(coObjects->at(i))) {
 				CEyeball* eyeball = dynamic_cast<CEyeball*>(coObjects->at(i));
 
-				float x_eyeball, y_eyeball;
-				eyeball->GetPosition(x_eyeball, y_eyeball);
-				if (x > x_eyeball)
-					eyeball->SetDirection(1);
-				else
-					eyeball->SetDirection(-1);
-				if (y > y_eyeball)
-					eyeball->SetDirectionY(1);//Up
-				else
-					eyeball->SetDirectionY(-1);//Down
+					float x_eyeball, y_eyeball;
+					eyeball->GetPosition(x_eyeball, y_eyeball);
+					if (x > x_eyeball)
+						eyeball->SetDirection(1);
+					else
+						eyeball->SetDirection(-1);
+					if (y > y_eyeball)
+						eyeball->SetDirectionY(1);//Up
+					else
+						eyeball->SetDirectionY(-1);//Down
 			}
 			else if (dynamic_cast<CTeleporter*>(coObjects->at(i))) {
 				CTeleporter* teleporter = dynamic_cast<CTeleporter*>(coObjects->at(i));
@@ -134,14 +134,14 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						jumper->SetState(JUMPER_STATE_JUMP);
 						jumper->SetIsJumping(true);
 					}
-
+						
 					else
 						jumper->SetIsJumping(false);
 				}
-
+				
 			}
 		}
-
+		
 		// Simple fall down
 		if (state != MAIN_CHARACTER_STATE_NONE_COLLISION)
 			//vy += MAIN_CHARACTER_GRAVITY * dt;
@@ -159,7 +159,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		// reset untouchable timer if untouchable time has passed
 		if (untouchable == 1)
 		{
-
+			
 			if (GetTickCount() - untouchable_start > MAIN_CHARACTER_UNTOUCHABLE_TIME)
 			{
 				untouchable = 0;
@@ -246,7 +246,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						StartUntouchable();
 						if (e->ny != 0)
 						{
-							y -= 2 * vyWorm * dt;
+							y -= 2*vyWorm * dt;
 						}
 						else
 							x += dx;
@@ -255,13 +255,13 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						if (e->ny != 0)
 						{
-							y -= 2 * vy * dt;
+							y -= 2*vy*dt;
 						}
 						else
 							x += dx;
 						worm->SetState(WORM_STATE_DIE);
 					}
-
+					
 				}
 				else if (dynamic_cast<CFloater*>(e->obj))
 				{
@@ -272,10 +272,10 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					if (floater->GetState() != STATE_ITEM)
 					{
 						StartUntouchable();
-
+						
 						if (e->ny != 0)
 						{
-							y -= 2 * vyFloater * dt;
+							y -= 2*vyFloater * dt;
 						}
 						else
 							x += dx;
@@ -284,13 +284,13 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						if (e->ny < 0)
 						{
-							y -= 2 * vy * dt;
+							y -= 2*vy*dt;
 						}
 						else
 							x += dx;
 						floater->SetState(FLOATER_STATE_DIE);
 					}
-
+						
 
 				}
 				else if (dynamic_cast<CDome*>(e->obj))
@@ -304,7 +304,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						StartUntouchable();
 						if (e->ny != 0)
 						{
-							y -= 2 * vyDome * dt;
+							y -= 2* vyDome * dt;
 						}
 						else
 							x += dx;
@@ -313,13 +313,13 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						if (e->ny < 0)
 						{
-							y -= 2 * vy * dt;
+							y -= 2*vy*dt;
 						}
 						else
 							x += dx;
 						dome->SetState(DOME_STATE_DIE);
 					}
-
+						
 
 				}
 				else if (dynamic_cast<CJumper*>(e->obj))
@@ -333,7 +333,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						StartUntouchable();
 						if (e->ny != 0)
 						{
-							y -= 2 * vyJumper * dt;
+							y -= 2*vyJumper*dt;
 						}
 						else
 							x += dx;
@@ -342,13 +342,13 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						if (e->ny < 0)
 						{
-							y -= 2 * vy * dt;
+							y -= 2*vy * dt;
 						}
 						else
 							x += dx;
 						jumper->SetState(DOME_STATE_DIE);
 					}
-
+		
 
 				}
 				else if (dynamic_cast<COrb*>(e->obj))
@@ -402,7 +402,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							x += dx;
 						cannon->SetState(CANNON_STATE_DIE);
 					}
-				}
+			}
 				else if (dynamic_cast<CEyeball*>(e->obj))
 				{
 					Is_On_Ground = false;
@@ -430,7 +430,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						eyeball->SetState(EYEBALL_STATE_DIE);
 
 					}
-				}
+			}
 				else if (dynamic_cast<CTeleporter*>(e->obj))
 				{
 					Is_On_Ground = false;
@@ -458,8 +458,8 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						teleporter->SetState(TELEPORTER_STATE_DIE);
 
 					}
-				}
 			}
+		}
 
 		}
 	}
@@ -484,7 +484,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				human_object->SetIsBeingHuman(true);
 				human_object->Update(dt, coObjects);
 				human_object->GetPosition(human_x, human_y);
-				if (this->x <= human_x && human_x <= (this->x + MAIN_CHARACTER_BBOX_WIDTH) && this->y <= human_y && human_y <= (this->y + MAIN_CHARACTER_BBOX_HEIGHT))
+				if (this->x <= human_x && human_x<=(this->x + MAIN_CHARACTER_BBOX_WIDTH) && this->y <= human_y&& human_y <= (this->y + MAIN_CHARACTER_BBOX_HEIGHT))
 					canChangeState = true;
 				else
 					canChangeState = false;
@@ -505,15 +505,15 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				componentObjects[i]->SetPlayerPosition(x, y);
 				componentObjects[i]->Update(dt, coObjects);
 			}
-
+				
 		}
-
+		
 	}
 
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
-
-
+	
+	
 }
 
 void CMainCharacter::Render()
@@ -522,7 +522,7 @@ void CMainCharacter::Render()
 	CGame* game = CGame::GetInstance();
 	if (!game->GetCurrentScene()->GetTypeScence() == OVER_WORLD)
 	{
-
+		
 		animation_set->at(0)->Render(x, y, alpha);
 		// Vẽ các đối tượng weapon của nhân vật chính
 		{
@@ -552,7 +552,7 @@ void CMainCharacter::Render()
 		//RenderBoundingBox();
 
 	}
-
+	
 	else
 	{
 		Is_Human = true;
@@ -568,15 +568,15 @@ void CMainCharacter::Render()
 				list_weapon[i]->Render();
 		}
 	}
-
-
-
+	
+	
+	
 }
 
 void CMainCharacter::SetState(int state)
 {
 	CGameObject::SetState(state);
-
+	
 	switch (state)
 	{
 	case MAIN_CHARACTER_STATE_RUN_RIGHT:
@@ -618,7 +618,7 @@ void CMainCharacter::SetState(int state)
 			if (canChangeState)
 				Is_Human = false;
 		}
-		else if (!Is_Human)
+		else if(!Is_Human)
 			Is_Human = true;
 		break;
 	default:
@@ -640,10 +640,10 @@ void CMainCharacter::SetState(int state)
 		{
 			componentObjects[i]->SetState(state);
 			componentObjects[i]->SetDirection(nx);
-			if (dynamic_cast<CWheelObject*>(componentObjects[i]))
+			if(dynamic_cast<CWheelObject*>(componentObjects[i]))
 				componentObjects[i]->SetSpeed(vx, vy);
 		}
-
+		
 		if (state == MAIN_CHARACTER_STATE_BARREL_FIRE)//Nhân vật bắn
 		{
 			if (Is_Human)
@@ -721,10 +721,10 @@ void CMainCharacter::SetState(int state)
 			isStartFire = false;
 			isBeingUpBarrel = false;
 		}
-
+		
 	}
-
-
+	
+	
 
 }
 
@@ -744,8 +744,8 @@ void CMainCharacter::GetBoundingBox(float& left, float& top, float& right, float
 		right = x + MAIN_CHARACTER_BBOX_WIDTH;
 		bottom = y;
 	}
-
-
+	
+	
 }
 
 /*
@@ -782,28 +782,28 @@ void CMainCharacter::CollisionItem(int item)
 	*/
 	if (item == 0)
 	{
-
+		
 	}
 	else if (item == 1)
 	{
-
+		
 	}
 	else if (item == 2)
 	{
-
+		
 	}
 	else if (item == 3)
 	{
-
+		
 	}
 	else if (item == 4)
 	{
-
+		
 	}
 	else if (item == 5)
 	{
-
+		
 	}
 	//else
-
+		
 }
