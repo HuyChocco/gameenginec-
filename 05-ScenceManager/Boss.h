@@ -1,10 +1,11 @@
 #pragma once
 #include "EnemyObject.h"
-#define BOSS_MOVE_SPEED 0.03f;
+#include "Game.h"
+#define BOSS_MOVE_SPEED 0.05f;
 #define BOSS_GRAVITY 0.002f;
 
-#define BOSS_BBOX_WIDTH 18
-#define BOSS_BBOX_HEIGHT 15
+#define BOSS_BBOX_WIDTH 60
+#define BOSS_BBOX_HEIGHT 64
 
 #define BOSS_STATE_MOVE 100
 #define BOSS_STATE_MOVE_CHANGE_DIRECTION_X 101
