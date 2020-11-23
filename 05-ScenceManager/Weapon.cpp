@@ -13,11 +13,10 @@
 #include "Portal.h"
 #include "Spike.h"
 #include "Jumper.h"
-<<<<<<< HEAD
+
 #include "Insect.h"
 #include "Skull.h"
-=======
->>>>>>> master
+
 #include "Orb.h"
 
 
@@ -192,7 +191,7 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 					}
 
 				}
-<<<<<<< HEAD
+
 				else if (dynamic_cast<CInsect*>(colliable_object->at(i)))
 				{
 					CInsect* insect = dynamic_cast<CInsect*>(colliable_object->at(i));
@@ -237,8 +236,7 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 				}
 
 				}
-=======
->>>>>>> master
+
 				else if (dynamic_cast<COrb*>(colliable_object->at(i)))
 				{
 					COrb* orb = dynamic_cast<COrb*>(colliable_object->at(i));
@@ -843,9 +841,6 @@ void CWeapon::Render()
 	}
 	else if (typeWeapon == WEAPON_TYPE_ENEMY_TELEPORTER)
 	{
-<<<<<<< HEAD
-		if (state != WEAPON_STATE_NONE)
-=======
 	if (state != WEAPON_STATE_NONE)
 	{
 		int ani = WEAPON_ANI_ENEMY_TELEPORTER;
@@ -862,36 +857,20 @@ void CWeapon::Render()
 			break;
 		}
 		if (state == WEAPON_STATE_EXPLODE)
->>>>>>> master
 		{
-			int ani = WEAPON_ANI_ENEMY_TELEPORTER;
-			int flip = false;
-			switch (state)
+			float l, t, r, b;
+			GetBoundingBox(l, t, r, b);
+			animation_set->at(ani)->Render(x, y, flip);
+			if (animation_set->at(ani)->isFinish)
 			{
-			case WEAPON_TELEPORTER_STATE_FLY:
-				ani = WEAPON_ANI_ENEMY_TELEPORTER;
-				break;
-			case WEAPON_STATE_EXPLODE:
-				ani = WEAPON_ANI_EXPLODE_ENEMY_TELEPORTER;
-				break;
-			default:
-				break;
+				animation_set->at(ani)->isFinish = false;
+				SetState(WEAPON_STATE_NONE);
 			}
-			if (state == WEAPON_STATE_EXPLODE)
-			{
-				float l, t, r, b;
-				GetBoundingBox(l, t, r, b);
-				animation_set->at(ani)->Render(x, y, flip);
-				if (animation_set->at(ani)->isFinish)
-				{
-					animation_set->at(ani)->isFinish = false;
-					SetState(WEAPON_STATE_NONE);
-				}
-			}
-			else
-				animation_set->at(ani)->Render(x, y, flip);
-			//RenderBoundingBox();
 		}
+		else
+			animation_set->at(ani)->Render(x, y, flip);
+		//RenderBoundingBox();
+	}
 	}
 	else if (typeWeapon == WEAPON_TYPE_ENEMY_FLOATER)
 	{

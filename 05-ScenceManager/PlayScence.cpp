@@ -49,10 +49,9 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_FLOATER	12
 #define OBJECT_TYPE_DOME	13
 #define OBJECT_TYPE_JUMPER	14
-<<<<<<< HEAD
+
 #define OBJECT_TYPE_INSECT	15
-=======
->>>>>>> master
+
 #define OBJECT_TYPE_ORB		16
 #define OBJECT_TYPE_SKULL	17
 #define OBJECT_TYPE_CANNON	19
@@ -264,7 +263,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetAnimationItemSet(ani_set);
 	}
 	break;
-<<<<<<< HEAD
+
 	case OBJECT_TYPE_INSECT:
 	{
 		int item = 0;
@@ -285,8 +284,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetAnimationItemSet(ani_set);
 	}
 	break;
-=======
->>>>>>> master
+
 	case OBJECT_TYPE_ORB:
 	{
 		int item = 0;

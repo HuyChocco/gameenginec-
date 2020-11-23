@@ -149,7 +149,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 		else if (dynamic_cast<CStair*>(coObjects->at(i)))
 		{
-			float l1, t1, r1, b1, l2,t2,r2,b2;
+			float l1, t1, r1, b1, l2, t2, r2, b2;
 			GetBoundingBox(l1, t1, r1, b1);
 			dynamic_cast<CStair*>(coObjects->at(i))->GetBoundingBox(l2, t2, r2, b2);
 			if (isStateClimb)
@@ -159,23 +159,13 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 		}
 	}
-<<<<<<< HEAD
 	// Simple fall down
-	if (level == HUMAN_LEVEL_SMALL)
+	if (level == HUMAN_LEVEL_SMALL && !isStateClimb)
 	{
 		vy -= HUMAN_GRAVITY * dt;
 	}
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
-=======
-		// Simple fall down
-		if(level==HUMAN_LEVEL_SMALL&&!isStateClimb)
-		{
-			vy -= HUMAN_GRAVITY * dt;
-		}
-		vector<LPCOLLISIONEVENT> coEvents;
-		vector<LPCOLLISIONEVENT> coEventsResult;
->>>>>>> master
 
 	coEvents.clear();
 
@@ -226,53 +216,38 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 
-<<<<<<< HEAD
 			LPCOLLISIONEVENT e = coEventsResult[i];
 			if (dynamic_cast<CBrick*>(e->obj))
 			{
 				if (e->ny > 0)
 				{
 					is_on_ground = true;
-=======
-				LPCOLLISIONEVENT e = coEventsResult[i];
-				if (dynamic_cast<CBrick*>(e->obj)) 
-				{
-					if (e->ny > 0)
-					{
-						is_on_ground = true;
-					}
 				}
-				else if (dynamic_cast<CStair*>(e->obj))
+			}
+			else if (dynamic_cast<CStair*>(e->obj))
+			{
+				float l, t, r, b;
+				dynamic_cast<CStair*>(e->obj)->GetBoundingBox(l, t, r, b);
+				if (isBeingHuman)
 				{
-					float l, t, r, b;
-					dynamic_cast<CStair*>(e->obj)->GetBoundingBox(l, t, r, b);
-					if (isBeingHuman)
-					{
-						SetState(HUMAN_STATE_CLIMB);
-						SetPosition(l+((r-l)/2)-6,y);
-					}
-						
+					SetState(HUMAN_STATE_CLIMB);
+					SetPosition(l + ((r - l) / 2) - 6, y);
 				}
-				else if (dynamic_cast<CSpike*>(e->obj))
-				{
-					x += dx;
-					y += dy;
-					float l1, t1, r1, b1, l2, t2, r2, b2;
-					GetBoundingBox(l1, t1, r1, b1);
-					b1 = b1-((b1-t1) / 2);
-					dynamic_cast<CSpike*>(e->obj)->GetBoundingBox(l2, t2, r2, b2);
 
-					if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
-					{
-						StartUntouchable();
-					}
->>>>>>> master
-				}
 			}
 			else if (dynamic_cast<CSpike*>(e->obj))
 			{
 				x += dx;
 				y += dy;
+				float l1, t1, r1, b1, l2, t2, r2, b2;
+				GetBoundingBox(l1, t1, r1, b1);
+				b1 = b1 - ((b1 - t1) / 2);
+				dynamic_cast<CSpike*>(e->obj)->GetBoundingBox(l2, t2, r2, b2);
+
+				if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+				{
+					StartUntouchable();
+				}
 			}
 			//Outdoor enemies
 			else if (dynamic_cast<CWorm*>(e->obj))
@@ -543,7 +518,7 @@ void CHuman::Render()
 			if (vx == 0)
 			{
 
-				
+
 				if (nx > 0)
 				{
 					if (isStateCrawl)
@@ -556,7 +531,7 @@ void CHuman::Render()
 						flip = true;
 						ani = HUMAN_ANI_SMALL_IDLE;
 					}
-					
+
 				}
 				else
 				{
@@ -574,13 +549,13 @@ void CHuman::Render()
 						flip = false;
 						ani = HUMAN_ANI_SMALL_IDLE;
 					}
-					
+
 				}
 				animation_set->at(ani)->isPause = true; //Dừng animation
 			}
 			else if (vx > 0)
 			{
-				
+
 				if (isStateCrawl)
 				{
 					flip = false;
@@ -592,7 +567,7 @@ void CHuman::Render()
 					ani = HUMAN_ANI_SMALL_WALKING;
 				}
 				animation_set->at(ani)->isPause = false; // Tiếp tục animation đã dừng trước đó
-				
+
 			}
 			else if (vx < 0)
 			{
@@ -611,7 +586,7 @@ void CHuman::Render()
 
 			if (isStateClimb)
 			{
-				if (vy!=0)
+				if (vy != 0)
 				{
 					ani = HUMAN_ANI_SMALL_CLIMBING;
 					animation_set->at(ani)->isPause = false;
@@ -622,7 +597,7 @@ void CHuman::Render()
 					animation_set->at(ani)->isPause = true;
 				}
 			}
-			
+
 		}
 
 		int alpha = 255;
@@ -647,22 +622,22 @@ void CHuman::SetState(int state)
 	{
 	case MAIN_CHARACTER_STATE_RUN_RIGHT:
 		//if (!isStateClimb)
-		{
-			vx = HUMAN_WALKING_SPEED;
-			nx = 1;
-			isGoingUp = false;
-			isGoingDown = false;
-		}
-		break;
+	{
+		vx = HUMAN_WALKING_SPEED;
+		nx = 1;
+		isGoingUp = false;
+		isGoingDown = false;
+	}
+	break;
 	case MAIN_CHARACTER_STATE_RUN_LEFT:
 		//if (!isStateClimb)
-		{
-			vx = -HUMAN_WALKING_SPEED;
-			nx = -1;
-			isGoingUp = false;
-			isGoingDown = false;
-		}
-		break;
+	{
+		vx = -HUMAN_WALKING_SPEED;
+		nx = -1;
+		isGoingUp = false;
+		isGoingDown = false;
+	}
+	break;
 	case MAIN_CHARACTER_STATE_JUMP:
 		// TODO: need to check if HUMAN is *current* on a platform before allowing to jump again
 		if (level == HUMAN_LEVEL_SMALL)
@@ -682,10 +657,10 @@ void CHuman::SetState(int state)
 			vy = 0;
 		else if (level == HUMAN_LEVEL_SMALL)
 		{
-			if(isStateClimb)
+			if (isStateClimb)
 				vy = 0;
 		}
-			
+
 		break;
 	case MAIN_CHARACTER_STATE_UP_BARREL:
 		if (level == HUMAN_LEVEL_BIG)
@@ -694,8 +669,6 @@ void CHuman::SetState(int state)
 			isGoingDown = false;
 			vy = HUMAN_WALKING_SPEED;
 		}
-<<<<<<< HEAD
-=======
 		else if (level == HUMAN_LEVEL_SMALL)
 		{
 			if (isStateCrawl)
@@ -707,9 +680,8 @@ void CHuman::SetState(int state)
 			{
 				vy = 0.04f;
 			}
-			
+
 		}
->>>>>>> master
 		break;
 	case MAIN_CHARACTER_STATE_DOWN_BARREL:
 		if (level == HUMAN_LEVEL_BIG)
@@ -718,18 +690,15 @@ void CHuman::SetState(int state)
 			isGoingDown = true;
 			vy = -HUMAN_WALKING_SPEED;
 		}
-<<<<<<< HEAD
-=======
 		else if (level == HUMAN_LEVEL_SMALL)
 		{
-			if(!isStateClimb)
+			if (!isStateClimb)
 				isStateCrawl = true;
 			if (isStateClimb)
 			{
 				vy = -0.04f;
 			}
 		}
->>>>>>> master
 		break;
 	case MAIN_CHARACTER_STATE_DIE:
 		break;
@@ -755,11 +724,6 @@ void CHuman::GetBoundingBox(float& left, float& top, float& right, float& bottom
 	}
 	else
 	{
-<<<<<<< HEAD
-		top = y - HUMAN_SMALL_BBOX_HEIGHT;
-		right = x + HUMAN_SMALL_BBOX_WIDTH;
-		bottom = y;
-=======
 		if (isStateCrawl)
 		{
 			top = y - HUMAN_SMALL_CRAWL_BBOX_HEIGHT;
@@ -772,8 +736,7 @@ void CHuman::GetBoundingBox(float& left, float& top, float& right, float& bottom
 			right = x + HUMAN_SMALL_BBOX_WIDTH;
 			bottom = y;
 		}
-		
->>>>>>> master
+
 	}
 }
 
