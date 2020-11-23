@@ -159,6 +159,12 @@
     <ClCompile Include="Stair.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BossScence.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Boss.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Brick.h">
@@ -285,6 +291,12 @@
       <Filter>Header Files\MainCharacterObjects</Filter>
     </ClInclude>
     <ClInclude Include="Stair.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BossScence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Boss.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -184,8 +184,6 @@ void CTiledMap::Render()
 		for (int c_index = 0; c_index < tiledmap_row_set[r_index]->tiled_row.size(); c_index++)
 		{
 			LPTILEDCELL cell = tiledmap_row_set[r_index]->tiled_row[c_index];
-			//cell->GetSprite()->Draw(c_index>0?c_index* TILED_MAP_SIZE - c_index : c_index * TILED_MAP_SIZE, r_index>0?r_index* TILED_MAP_SIZE - r_index : r_index * TILED_MAP_SIZE);
-			//cell->GetSprite()->Draw(c_index > 0 ? c_index * TILED_MAP_SIZE  : c_index * TILED_MAP_SIZE, r_index > 0 ? r_index * TILED_MAP_SIZE  : r_index * TILED_MAP_SIZE);
 			cell->GetSprite()->Draw(c_index > 0 ? c_index * TILED_MAP_SIZE : c_index * TILED_MAP_SIZE, r_index == 0 ? r_index * this->map_height : this->map_height-r_index * TILED_MAP_SIZE);
 		}
 	}
@@ -199,8 +197,6 @@ void CTiledMap::Render(float x, float y)
 		for (int c_index = 0; c_index < tiledmap_row_set_next_map[r_index]->tiled_row_next_map.size(); c_index++)
 		{
 			LPTILEDCELL cell = tiledmap_row_set_next_map[r_index]->tiled_row_next_map[c_index];
-			
-			//cell->GetSprite()->Draw(c_index * TILED_MAP_SIZE + x,  r_index * TILED_MAP_SIZE + y);
 			cell->GetSprite()->Draw(c_index * TILED_MAP_SIZE+x, r_index == 0 ? r_index * this->map_height+y : this->map_height - r_index * TILED_MAP_SIZE+y);
 		}
 	}
