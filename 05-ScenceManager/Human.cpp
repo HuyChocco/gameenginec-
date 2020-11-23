@@ -22,11 +22,11 @@
 #include "Orb.h"
 
 #define JUMPER_ROUNDING_DISTANCE_X 50
-<<<<<<< HEAD
+
 #define JUMPER_ROUNDING_DISTANCE_Y 40
-=======
+
 #define JUMPER_ROUNDING_DISTANCE_Y 20
->>>>>>> master
+
 #define ORB_ROUNDING_DISTANCE_X 120
 #define ORB_ROUNDING_DISTANCE_Y 110
 CHuman::CHuman(float x, float y) : CGameObject()

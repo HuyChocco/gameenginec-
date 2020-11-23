@@ -72,20 +72,17 @@ class CMainCharacter: public CGameObject
 	int score;
 	
 	bool canChangeState;
-<<<<<<< HEAD
-=======
 	bool isStateStraightBarrel;
 	bool doIncreaseYValue;
 	bool isStartFire;
 	bool isBeingUpBarrel;
->>>>>>> master
 public:
 
 	//Bo sung property
 	bool Is_On_Ground;
 	bool Is_Human;
 	CMainCharacter(float x = 0.0f, float y = 0.0f);
-	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL);
 	virtual void Render();
 
 	void SetState(int state);
