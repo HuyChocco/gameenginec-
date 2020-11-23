@@ -25,4 +25,5 @@ start	3
 19	scence-test-overworld-26.txt	1
 20	scence-test-overworld-27.txt	1
 21	scence-test-overworld-28.txt	1
+99	scence-overworld-boss.txt	1
 100	end-scence.txt	0

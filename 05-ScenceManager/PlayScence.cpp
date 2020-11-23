@@ -594,21 +594,17 @@ void CPlayScene::Update(DWORD dt)
 	vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-
 		coObjects.push_back(objects[i]);
-
 	}
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		objects[i]->Update(dt, &coObjects);
-
+			objects[i]->Update(dt, &coObjects);
 	}
 	if (player == NULL) return;
 	else
 	{
 		//coObjects.push_back(player);
 		player->Update(dt, &coObjects);
-
 	}
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
@@ -760,9 +756,9 @@ void CPlayScene::Update(DWORD dt)
 		else
 			player->GetPosition(player_x, player_y);
 
-		float height = player_y - cy;
+		float height = (player_y - cy);
 
-		if (height >= ((float)game->GetScreenHeight() / 20))
+		if (height >= ((float)game->GetScreenHeight() / 80))
 		{
 			height += (float)(game->GetScreenHeight() / 3);
 
@@ -772,6 +768,9 @@ void CPlayScene::Update(DWORD dt)
 
 	}
 	CGame::GetInstance()->SetCamPos(cx, cy);
+	//Vẽ Hub objects
+	for (int i = 0; i < hub_objects.size(); i++)
+		hub_objects[i]->Update(dt);
 }
 
 void CPlayScene::Render()
@@ -886,8 +885,6 @@ void CPlayScene::GetNextMap()
 			sprites_next_map->Add(ID, l, t, r, b, tex);
 			break;
 		}
-
-
 		}
 	}
 
