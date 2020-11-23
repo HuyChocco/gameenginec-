@@ -153,15 +153,12 @@
     <ClCompile Include="Insect.cpp">
       <Filter>Source Files\EnemyObjects</Filter>
     </ClCompile>
-<<<<<<< HEAD
-=======
     <ClCompile Include="Vehicle.cpp">
       <Filter>Source Files\MainCharacterObjects</Filter>
     </ClCompile>
     <ClCompile Include="Stair.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
->>>>>>> master
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Brick.h">

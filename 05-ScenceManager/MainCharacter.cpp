@@ -18,7 +18,7 @@
 #include "Cannon.h"
 #include "Orb.h"
 #include "Jumper.h"
-<<<<<<< HEAD
+
 #include "Insect.h"
 #include "Orb.h"
 
@@ -26,12 +26,12 @@
 #define JUMPER_ROUNDING_DISTANCE_Y 40
 #define ORB_ROUNDING_DISTANCE_X 120
 #define ORB_ROUNDING_DISTANCE_Y 110
-=======
+
 #include "Teleporter.h"
 
 #define JUMPER_ROUNDING_DISTANCE_X 50
 #define JUMPER_ROUNDING_DISTANCE_Y 20
->>>>>>> master
+
 CMainCharacter::CMainCharacter(float x, float y) : CGameObject()
 {
 
@@ -45,9 +45,6 @@ CMainCharacter::CMainCharacter(float x, float y) : CGameObject()
 
 void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	
-	
-
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
 
@@ -385,21 +382,18 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else if (dynamic_cast<COrb*>(e->obj))
 				{
-<<<<<<< HEAD
-=======
+
 					Is_On_Ground = false;
->>>>>>> master
 					COrb* orb = dynamic_cast<COrb*>(e->obj);
 					if (orb->GetState() != STATE_ITEM)
 					{
 						StartUntouchable();
 						float vxOrb, vyOrb;
 						orb->GetSpeed(vxOrb, vyOrb);
-<<<<<<< HEAD
+
 						if (e->ny != 0)
 						{
 							y -= 2*vyOrb * dt;
-=======
 						if (e->ny == 1)
 						{
 							y += dy;
@@ -407,7 +401,6 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						else if (e->ny == -1)
 						{
 							y -= 4 * vyOrb * dt;
->>>>>>> master
 						}
 						else
 							x += dx;
@@ -443,7 +436,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							x += dx;
 						cannon->SetState(CANNON_STATE_DIE);
 					}
-			}
+				}
 				else if (dynamic_cast<CEyeball*>(e->obj))
 				{
 					Is_On_Ground = false;
@@ -471,10 +464,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						eyeball->SetState(EYEBALL_STATE_DIE);
 
 					}
-			}
-<<<<<<< HEAD
-			
-=======
+				}
 				else if (dynamic_cast<CTeleporter*>(e->obj))
 				{
 					Is_On_Ground = false;
@@ -502,8 +492,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						teleporter->SetState(TELEPORTER_STATE_DIE);
 
 					}
-			}
->>>>>>> master
+				}
 		}
 
 		}
