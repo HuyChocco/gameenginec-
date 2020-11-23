@@ -237,32 +237,29 @@
 150004	132	500	149	525	2
 150005	152	499	167	525	2
 150006	170	500	185	525	2
-#Insect
+# INSECT
 #move left
 160001	104	530	122	548	2
 160002	84	533	102	548	2
 #move right
 160003	132	530	150	548	2
 160004	152	533	170	548	2
-#Orbs
+# ORBS
 #move left
 170001	98	387	116	405	2
 170002	78	387	96	405	2
 #move right
 170003	138	387	156	405	2
 170004	158	387	176	405	2
-#Skulls
+# SKULLS
 #walk left
-180001	62	527	80	548	2
-180002	42	530	60	548	2
+180001	42	530	60	548	2
 #walk right
-180003	174	527	192	548	2
-180004	194	530	212	548	2
-#Dasher
-#walk left
-190001	193	515	203	565	2
-#walk right
-190002	51	515	61	565	2
+180002	194	530	212	548	2
+#walk left attack
+180003	62	527	80	548	2
+#walk right attack
+180004	174	527	192	548	2
 # WEAPON
 # Main character
 # fly_horizontal
@@ -296,7 +293,14 @@
 100015	252	102	260	118	1
 # bullet_explosion
 100016	296	102	312	118	1
-# Hub objects
+#Skull
+#bullet_left
+100019	193	515	203	525	2
+#bullet_right
+100020	51	515	61	525	2
+#bullet_explosion
+100021	166	97	182	113	1
+# HUB OBJECTS
 # PowerHub - Text
 800001	175	219	183	235	55
 # PowerHub
@@ -307,7 +311,7 @@
 800004	112	240	120	256	55
 # ITEMS
 # P
-900000	87	240	103	256	55	
+900000	87	240	103	256	55
 # path
 [MAP]
 Map-Blaster-Master-Area-2-C.txt
@@ -370,26 +374,26 @@ Map-Blaster-Master-Area-2-C.txt
 9000	150001	100	150002	100	150003	100
 #walk right
 9001	150004	100	150005	100	150006	100
-# === Insect =====
+# === INSECT =====
 #walk left
 10000	160001	100	160002	100
 #walk right
 10001	160003	100	160004	100
-# === Orbs ====
+# === ORBS ====
 #walk left
 11000	170001	100	170002	100
 #walk right
 11001	170003	100	170004	100
-#=== Skulls ====
+#=== SKULLS ====
 #walk left
-12000	180001	100	180002	100
+120000	180001	100
 #walk right
-120001	180003	100	180004	100
-#=== Dashers =====
-#walk left
-130000	190001	100
-#walk right
-130001	190002	100
+120001	180002	100
+#walk left attack
+120002	180003	100
+#walk right attack
+120003	180004	100
+# id	ani1	ani2	ani3
 # ==== WEAPON =========
 # Main Character
 # left
@@ -418,6 +422,13 @@ Map-Blaster-Master-Area-2-C.txt
 4009	100015	100
 # Bullet_explosion
 4010	100016	100
+# Skull 
+# Bullet left
+4013	100019	100
+# Bullet right
+4014	100020	100
+#Bullet explosion
+4015	100021	100
 # ==== HUB =========
 # PowerHub - Text
 100000	800001	100
@@ -430,8 +441,6 @@ Map-Blaster-Master-Area-2-C.txt
 # ITEMS
 # P
 900000	900000	100
-# id	ani1	ani2	ani3
-#
 [ANIMATION_SETS]
 # SOFIA 
 1	600	601	602	603	604	605
@@ -449,16 +458,14 @@ Map-Blaster-Master-Area-2-C.txt
 11	8000	8001	8002	8003
 # JUMPERS
 12	9000	9001
-# WEAPON Player-horizontal Player-vertical Player-explode Big human-bullet Big human-explosion Cannon-bullet Cannon-explosion Eyeball-bullet Eyeball-explosion	Floater-bullet	Floater-explosion
-7	4000	4001	4002	4003	4004	4005	4006	4007	4008	4009	4010
-#Insect
+# INSECT
 13	10000	10001
-#Orbs
+# ORBS
 14	11000	11001
-#Skulls
-15	12000	12001
-#Dashers
-16	13000	13001
+# SKULLS
+15	120000	120001	120002	120003
+# WEAPON Player-horizontal Player-vertical Player-explode Big human-bullet Big human-explosion Cannon-bullet Cannon-explosion Eyeball-bullet Eyeball-explosion	Floater-bullet	Floater-explosion	Skull bullet left	Skull bullet right	Skull bullet explosion
+7	4000	4001	4002	4003	4004	4005	4006	4007	4008	4009	4010	4013	4014	4015
 # HUB
 100	100000	100001	100002	100003
 # ITEMS
@@ -469,7 +476,7 @@ Map-Blaster-Master-Area-2-C.txt
 # type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Worm, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Cabin, 8= Barrel, 9= Main character, 10= Spider, 11=Human
 # type: 12 = Floater, 13 = Domes, 14 = Jumpers, 15 = Insect,16 = Orbs, 17 = Skulls, 18 = Dashers, 500 = PowerHub, 501 = GunHub
 # MAIN_CHARACTER need to be created first!
-1	9	78	144.73	2
+1	9	65	144.73	2
 # MAIN OBJECTS LIST
 # HUMAN
 2	11	17	115	1
@@ -482,38 +489,25 @@ Map-Blaster-Master-Area-2-C.txt
 # HUB LIST - x,y theo trục màn hình
 9	500	10	100	100
 # ENEMY LIST
-# WORM
-10	3	149	204	8	1
-11	3	212	204	8
-# FLOATER
-12	12	923	197	9	1
-# DOMES
-13	13	410	202	11	1
-14	13	80	120	11
-# JUMPERS
-15	14	100	204	12	1
 # Skulls
-8	17	135	144	15
-9	17	263	144	15
-10	17	422	133	15
-# Dashers
-11	18	67	139	16
-12	18	187	138	16	
+8	17	150	140	15	1
+10	17	263	144	15	1
+11	17	422	133	15	1
+16	13	135	140	11	
 # MAP OBJECT LIST
 # BRICK 
 # object_id 	type	l	t	ani_set_id	r	b	
-100	1	30	177	2	48	146
+100	1	30	176	2	48	144
 101	1	15	146	2	30	127
-102	1	46	192	2	484	179
-103	1	94	178	2	113	144
-104	1	159	179	2	175	146
+102	1	46	192	2	484	176
+103	1	94	176	2	113	144
+104	1	159	179	2	175	144
 105	1	222	176	2	239	144
-106	1	286	176	2	304	146
-107	1	352	176	2	368	146
-108	1	415	176	2	432	146
+106	1	286	176	2	304	144
+107	1	352	176	2	368	144
+108	1	415	176	2	432	144
 109	1	480	176	2	495	96
-110	1	31	95	2	493	86
-
+110	1	31	97	2	493	86
 # --- SCENE PORTAL ----
 # object_id 	type	l	t	ani_set_id	r	b	scene_id	type_portal: 1-Next scene 0-Previous scene	next_portal_id
 1000	50	33	129	2	63	96	2	0	1001
@@ -524,6 +518,6 @@ Map-Blaster-Master-Area-2-C.txt
 0	1	104	105	106
 0	2	107	108	102
 0	3	109
-1	0	1000	110
-1	2	1001	110
-1	3	109
+1	0	1000	110	8
+1	2	1001	110	10
+1	3	109	11
