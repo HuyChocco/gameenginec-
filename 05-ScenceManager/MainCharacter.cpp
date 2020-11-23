@@ -520,6 +520,7 @@ void CMainCharacter::Render()
 {
 	int alpha = 255;
 	CGame* game = CGame::GetInstance();
+
 	if (!game->GetCurrentScene()->GetTypeScence() == OVER_WORLD)
 	{
 		
@@ -698,7 +699,6 @@ void CMainCharacter::SetState(int state)
 					//Nếu nòng sóng đang giơ lên
 					if (dynamic_cast<CVehicle*>(componentObjects[i])->GetIsBarrelUp() == true)
 					{
-
 						CWeapon* weapon = new CWeapon(x + MAIN_CHARACTER_BBOX_WIDTH / 2, y + 10, nx, state, true);// Khởi tạo weapon theo x,y của barrel
 						list_weapon.push_back(weapon);
 					}
@@ -709,8 +709,6 @@ void CMainCharacter::SetState(int state)
 					}
 				}
 			}
-
-
 		}
 		else if (state == MAIN_CHARACTER_STATE_UP_BARREL)
 		{
