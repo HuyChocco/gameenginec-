@@ -161,11 +161,8 @@
 10003	21	30	29	46	1
 10004	30	30	38	46	1
 # Crawl left - Bo ben trai
-10005	129	162	145	172	55
-10006	150	162	165	172	55
-# Climbing - leo cau thang
-10016	26	177	38	194	55
-10017	47	177	59	194	55
+10005	39	30	55	46	1
+10006	56	30	72	46	1
 # BIG-SOFIA
 # move left
 10007	208	69	232	101	1
@@ -297,8 +294,6 @@ Map-Blaster-Master-Area-2-A.txt
 601	10002	100	10003	100	10004	100
 #crawl left
 602	10005	100	10006	100
-#climb
-606	10016	100	10017	100
 # BIG-SOFIA
 # move left
 603	10007	100	10008	100	10009	100
@@ -393,7 +388,7 @@ Map-Blaster-Master-Area-2-A.txt
 #
 [ANIMATION_SETS]
 # SOFIA 
-1	600	601	602	603	604	605	606
+1	600	601	602	603	604	605
 # MAIN_CHARACTER 
 2	2000
 # WHEEL 
@@ -417,7 +412,7 @@ Map-Blaster-Master-Area-2-A.txt
 200	900000
 [OBJECTS]
 # object_id  type	x	y	ani_set_id	extra_settings per object type
-# type: 0 = Mario , 1 = Brick, 22=Stair, 2 = Enemy1, 3 = Worm, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Vehicle, 8= Barrel, 9= Main character, 10= Spider, 11=Human
+# type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Worm, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Vehicle, 8= Barrel, 9= Main character, 10= Spider, 11=Human
 # type: 12 = Floater, 13 = Domes, 14 = Jumpers, 15 = Insect,16 = Orbs, 17 = Skulls, 18 = Dashers, 500 = PowerHub, 501 = GunHub
 # MAIN_CHARACTER need to be created first!
 1	9	0	200	2
@@ -468,14 +463,12 @@ Map-Blaster-Master-Area-2-A.txt
 119 	1	0	210	2	0	80
 120	1	2	18	2	1024	0
 121	1	978	206	2	1022	79
-#Stair
-#122	22	40	130	2	60	100
 # --- SCENE PORTAL ----
 # object_id 	type	l	t	ani_set_id	r	b	scene_id	type_portal: 1-Next scene 0-Previous scene	next_portal_id
 1000	50	965	121.5	2	977	80.5	2	1	1000
 # cellx celly id_object...
 [GRID]
-0	0	10	104	105	119	15	118	122
+0	0	10	104	105	119	15	118
 0	1	106	107	108	11	118
 0	2	108	109	110	118
 0	3	111	112	113	13

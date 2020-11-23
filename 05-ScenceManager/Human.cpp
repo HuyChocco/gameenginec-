@@ -7,7 +7,6 @@
 
 #include "Portal.h"
 #include "Brick.h"
-#include "Stair.h"
 
 #include "Worm.h"
 #include "Spider.h"
@@ -59,6 +58,9 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				floater->SetDirection(-1);
 			if(isBeingHuman)
 				floater->SetPlayerObject(this);
+
+
+
 		}
 		else if (dynamic_cast<CDome*>(coObjects->at(i))) {
 			CDome* dome = dynamic_cast<CDome*>(coObjects->at(i));
@@ -151,23 +153,12 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 			}
 		}
-		else if (dynamic_cast<CStair*>(coObjects->at(i)))
-		{
-			float l1, t1, r1, b1, l2,t2,r2,b2;
-			GetBoundingBox(l1, t1, r1, b1);
-			dynamic_cast<CStair*>(coObjects->at(i))->GetBoundingBox(l2, t2, r2, b2);
-			if (isStateClimb)
-			{
-				if (!CGame::GetInstance()->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2))
-					isStateClimb = false;
-			}
-		}
 	}
-		// Simple fall down
-		if(level==HUMAN_LEVEL_SMALL&&!isStateClimb)
-		{
-			vy -= HUMAN_GRAVITY * dt;
-		}
+	// Simple fall down
+	if(level==HUMAN_LEVEL_SMALL)
+	{
+		vy -= HUMAN_GRAVITY * dt;
+	}
 		vector<LPCOLLISIONEVENT> coEvents;
 		vector<LPCOLLISIONEVENT> coEventsResult;
 
@@ -228,30 +219,10 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						is_on_ground = true;
 					}
 				}
-				else if (dynamic_cast<CStair*>(e->obj))
-				{
-					float l, t, r, b;
-					dynamic_cast<CStair*>(e->obj)->GetBoundingBox(l, t, r, b);
-					if (isBeingHuman)
-					{
-						SetState(HUMAN_STATE_CLIMB);
-						SetPosition(l+((r-l)/2)-6,y);
-					}
-						
-				}
 				else if (dynamic_cast<CSpike*>(e->obj))
 				{
 					x += dx;
 					y += dy;
-					float l1, t1, r1, b1, l2, t2, r2, b2;
-					GetBoundingBox(l1, t1, r1, b1);
-					b1 = b1-((b1-t1) / 2);
-					dynamic_cast<CSpike*>(e->obj)->GetBoundingBox(l2, t2, r2, b2);
-
-					if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
-					{
-						StartUntouchable();
-					}
 				}
 				//Outdoor enemies
 				else if (dynamic_cast<CWorm*>(e->obj))
@@ -500,8 +471,7 @@ void CHuman::Render()
 				ani = HUMAN_ANI_BIG_WALKING_UP;
 				break;
 			case MAIN_CHARACTER_STATE_DOWN_BARREL:
-				if (level == HUMAN_LEVEL_BIG)
-					ani = HUMAN_ANI_BIG_WALKING_DOWN;
+				ani = HUMAN_ANI_BIG_WALKING_DOWN;
 				break;
 			}
 			if (vx == 0 && vy==0) // Nhân vật đứng yên
@@ -522,86 +492,22 @@ void CHuman::Render()
 			if (vx == 0)
 			{
 
-				
+				ani = HUMAN_ANI_SMALL_IDLE;
 				if (nx > 0)
-				{
-					if (isStateCrawl)
-					{
-						ani = HUMAN_ANI_SMALL_CRAWLING;
-						flip = false;
-					}
-					else
-					{
-						flip = true;
-						ani = HUMAN_ANI_SMALL_IDLE;
-					}
-					
-				}
+					flip = true;
 				else
-				{
-					if (isStateCrawl)
-					{
-						flip = true;
-						ani = HUMAN_ANI_SMALL_CRAWLING;
-					}
-					else if (isStateClimb)
-					{
-						ani = HUMAN_ANI_SMALL_CLIMBING;
-					}
-					else
-					{
-						flip = false;
-						ani = HUMAN_ANI_SMALL_IDLE;
-					}
-					
-				}
-				animation_set->at(ani)->isPause = true; //Dừng animation
+					flip = false;
 			}
 			else if (vx > 0)
 			{
-				
-				if (isStateCrawl)
-				{
-					flip = false;
-					ani = HUMAN_ANI_SMALL_CRAWLING;
-				}
-				else
-				{
-					flip = true;
-					ani = HUMAN_ANI_SMALL_WALKING;
-				}
-				animation_set->at(ani)->isPause = false; // Tiếp tục animation đã dừng trước đó
-				
+				ani = HUMAN_ANI_SMALL_WALKING;
+				flip = true;
 			}
 			else if(vx<0)
 			{
-				if (isStateCrawl)
-				{
-					flip = true;
-					ani = HUMAN_ANI_SMALL_CRAWLING;
-				}
-				else
-				{
-					flip = false;
-					ani = HUMAN_ANI_SMALL_WALKING;
-				}
-				animation_set->at(ani)->isPause = false; // Tiếp tục animation đã dừng trước đó	
+				ani = HUMAN_ANI_SMALL_WALKING;
+				flip = false;
 			}
-
-			if (isStateClimb)
-			{
-				if (vy!=0)
-				{
-					ani = HUMAN_ANI_SMALL_CLIMBING;
-					animation_set->at(ani)->isPause = false;
-				}
-				else
-				{
-					ani = HUMAN_ANI_SMALL_CLIMBING;
-					animation_set->at(ani)->isPause = true;
-				}
-			}
-			
 		}
 
 		int alpha = 255;
@@ -625,22 +531,16 @@ void CHuman::SetState(int state)
 	switch (state)
 	{
 	case MAIN_CHARACTER_STATE_RUN_RIGHT:
-		//if (!isStateClimb)
-		{
-			vx = HUMAN_WALKING_SPEED;
-			nx = 1;
-			isGoingUp = false;
-			isGoingDown = false;
-		}
+		vx = HUMAN_WALKING_SPEED;
+		nx = 1;
+		isGoingUp = false;
+		isGoingDown = false;
 		break;
 	case MAIN_CHARACTER_STATE_RUN_LEFT:
-		//if (!isStateClimb)
-		{
-			vx = -HUMAN_WALKING_SPEED;
-			nx = -1;
-			isGoingUp = false;
-			isGoingDown = false;
-		}
+		vx = -HUMAN_WALKING_SPEED;
+		nx = -1;
+		isGoingUp = false;
+		isGoingDown = false;
 		break;
 	case MAIN_CHARACTER_STATE_JUMP:
 		// TODO: need to check if HUMAN is *current* on a platform before allowing to jump again
@@ -659,12 +559,6 @@ void CHuman::SetState(int state)
 		vx = 0;
 		if (level == HUMAN_LEVEL_BIG)
 			vy = 0;
-		else if (level == HUMAN_LEVEL_SMALL)
-		{
-			if(isStateClimb)
-				vy = 0;
-		}
-			
 		break;
 	case MAIN_CHARACTER_STATE_UP_BARREL:
 		if (level == HUMAN_LEVEL_BIG)
@@ -672,20 +566,7 @@ void CHuman::SetState(int state)
 			isGoingUp = true;
 			isGoingDown = false;
 			vy = HUMAN_WALKING_SPEED;
-		}
-		else if (level == HUMAN_LEVEL_SMALL)
-		{
-			if (isStateCrawl)
-			{
-				vy = 0.14f;//Tránh rớt va chạm khi chuyển state từ CRAWL->IDLE
-				isStateCrawl = false;
-			}
-			else if (isStateClimb)
-			{
-				vy = 0.04f;
-			}
-			
-		}
+		}	
 		break;
 	case MAIN_CHARACTER_STATE_DOWN_BARREL:
 		if (level == HUMAN_LEVEL_BIG)
@@ -693,23 +574,9 @@ void CHuman::SetState(int state)
 			isGoingUp = false;
 			isGoingDown = true;
 			vy = -HUMAN_WALKING_SPEED;
-		}
-		else if (level == HUMAN_LEVEL_SMALL)
-		{
-			if(!isStateClimb)
-				isStateCrawl = true;
-			if (isStateClimb)
-			{
-				vy = -0.04f;
-			}
-		}
+		}	
 		break;
 	case MAIN_CHARACTER_STATE_DIE:
-		break;
-	case HUMAN_STATE_CLIMB:
-		isStateClimb = true;
-		vy = 0;
-		vx = 0;
 		break;
 	}
 }
@@ -728,19 +595,9 @@ void CHuman::GetBoundingBox(float& left, float& top, float& right, float& bottom
 	}
 	else
 	{
-		if (isStateCrawl)
-		{
-			top = y - HUMAN_SMALL_CRAWL_BBOX_HEIGHT;
-			right = x + HUMAN_SMALL_CRAWL_BBOX_WIDTH;
-			bottom = y;
-		}
-		else
-		{
-			top = y - HUMAN_SMALL_BBOX_HEIGHT;
-			right = x + HUMAN_SMALL_BBOX_WIDTH;
-			bottom = y;
-		}
-		
+		top = y- HUMAN_SMALL_BBOX_HEIGHT;
+		right = x + HUMAN_SMALL_BBOX_WIDTH;
+		bottom = y ;
 	}
 }
 
