@@ -175,11 +175,12 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							}
 						}
 						else
-						{	
+						{
+							skull->time_moving += dt;
 							//skull->SetState(SKULL_STATE_MOVE_UP);
 							skull->SetState(SKULL_STATE_MOVE_RIGHT_ATTACK);
 							skull->SetIsAttack(true);
-							skull->time_moving += dt;
+							
 						}
 
 					}

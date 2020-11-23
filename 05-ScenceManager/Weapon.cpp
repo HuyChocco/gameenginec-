@@ -54,6 +54,11 @@ CWeapon::CWeapon(int type)
 		this->timeAttack = 0.0f;
 		SetTypeWeapon(WEAPON_TYPE_ENEMY_FLOATER);
 	}
+	else if (type == WEAPON_TYPE_ENEMY_SKULL)
+	{
+		this->timeAttack = 0.0f;
+		SetTypeWeapon(WEAPON_TYPE_ENEMY_SKULL);
+	}
 }
 CWeapon::CWeapon(float x, float y, int nx, int state, bool isBarrelUp)
 {
