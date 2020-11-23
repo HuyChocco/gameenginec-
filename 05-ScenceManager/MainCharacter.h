@@ -72,10 +72,13 @@ class CMainCharacter: public CGameObject
 	int score;
 	
 	bool canChangeState;
+<<<<<<< HEAD
+=======
 	bool isStateStraightBarrel;
 	bool doIncreaseYValue;
 	bool isStartFire;
 	bool isBeingUpBarrel;
+>>>>>>> master
 public:
 
 	//Bo sung property

@@ -147,7 +147,10 @@
     <ClCompile Include="Portal.cpp" />
     <ClCompile Include="PowerHub.cpp" />
     <ClCompile Include="Spike.cpp" />
+<<<<<<< HEAD
+=======
     <ClCompile Include="Stair.cpp" />
+>>>>>>> master
     <ClCompile Include="Teleporter.cpp" />
     <ClCompile Include="TiledMap.cpp" />
     <ClCompile Include="Utils.cpp" />
@@ -191,7 +194,10 @@
     <ClInclude Include="PowerHub.h" />
     <ClInclude Include="Skull.h" />
     <ClInclude Include="Spike.h" />
+<<<<<<< HEAD
+=======
     <ClInclude Include="Stair.h" />
+>>>>>>> master
     <ClInclude Include="Teleporter.h" />
     <ClInclude Include="TiledMap.h" />
     <ClInclude Include="Utils.h" />

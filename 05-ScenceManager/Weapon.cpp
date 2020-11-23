@@ -13,6 +13,10 @@
 #include "Portal.h"
 #include "Spike.h"
 #include "Jumper.h"
+<<<<<<< HEAD
+#include "Insect.h"
+=======
+>>>>>>> master
 #include "Orb.h"
 
 
@@ -187,6 +191,31 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 					}
 
 				}
+<<<<<<< HEAD
+				else if (dynamic_cast<CInsect*>(colliable_object->at(i)))
+				{
+					CInsect* insect = dynamic_cast<CInsect*>(colliable_object->at(i));
+					if (insect->GetState() != STATE_ITEM)
+					{
+						float l1, t1, r1, b1, l2, t2, r2, b2;
+						GetBoundingBox(l1, t1, r1, b1);
+						insect->GetBoundingBox(l2, t2, r2, b2);
+
+						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+						{
+							SetState(WEAPON_STATE_EXPLODE);
+							isBurning = true;
+							if (!isAttacked)
+							{
+								insect->LostBlood(GetDame());
+								isAttacked = true;
+							}
+						}
+					}
+
+				}
+=======
+>>>>>>> master
 				else if (dynamic_cast<COrb*>(colliable_object->at(i)))
 				{
 					COrb* orb = dynamic_cast<COrb*>(colliable_object->at(i));
@@ -530,6 +559,7 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
 						{
 							SetState(WEAPON_STATE_EXPLODE);
+<<<<<<< HEAD
 
 							isBurning = true;
 							if (!isAttacked)
@@ -538,6 +568,16 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 								isAttacked = true;
 							}
 
+=======
+
+							isBurning = true;
+							if (!isAttacked)
+							{
+								eyeball->LostBlood(GetDame());
+								isAttacked = true;
+							}
+
+>>>>>>> master
 						}
 					}
 
@@ -740,7 +780,11 @@ void CWeapon::Render()
 		int flip = false;
 		switch (state)
 		{
+<<<<<<< HEAD
+		case WEAPON_EYEBALL_STATE_FLY:
+=======
 		case WEAPON_TELEPORTER_STATE_FLY:
+>>>>>>> master
 			ani = WEAPON_ANI_ENEMY_TELEPORTER;
 			break;
 		case WEAPON_STATE_EXPLODE:
@@ -908,8 +952,13 @@ void CWeapon::SetState(int state)
 	{
 		switch (state)
 		{
+<<<<<<< HEAD
+		case WEAPON_EYEBALL_STATE_FLY:
+			vx = WEAPON_EYEBALL_FLY_SPEED;
+=======
 		case WEAPON_TELEPORTER_STATE_FLY:
 			vx = WEAPON_TELEPORTER_FLY_SPEED;
+>>>>>>> master
 			this->dame = 1;
 			break;
 		}
