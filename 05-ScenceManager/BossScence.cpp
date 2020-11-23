@@ -181,6 +181,16 @@ void CBossScence::_ParseSection_OBJECTS(string line)
 			return;
 			break;
 		}
+		case OBJECT_TYPE_BOSS:
+		{
+			int item = 0;
+			if (tokens.size() > 5)
+				item = atoi(tokens[5].c_str());
+			obj = new CBoss(item);
+			LPANIMATION_SET ani_set = animation_sets->Get(200);
+			obj->SetAnimationItemSet(ani_set);
+			break;
+		}
 		case OBJECT_TYPE_POWERHUB:
 		{
 			obj = new CPowerHub();
@@ -314,7 +324,7 @@ void CBossScence::Update(DWORD dt)
 		else
 			player->GetPosition(cx, cy);
 	}
-	CGame::GetInstance()->SetCamPos(0, 0);
+	CGame::GetInstance()->SetCamPos(0, cy = CGame::GetInstance()->GetScreenHeight());
 }
 
 void CBossScence::Render()

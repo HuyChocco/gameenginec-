@@ -43,53 +43,8 @@ void CBoss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 
 	time_moving += dt;
-	if (isRepeat)
-	{
-		if (time_moving >= TIME_CHANGE_DIRECTION)
-		{
-			SetState(BOSS_STATE_MOVE_CHANGE_DIRECTION_Y);
-			isBeingDown = false;
-			time_moving = 0;
-			isRepeat = false;
-		}
-	}
-	else
-	{
-		if (!isBeingDown)
-		{
-			if (time_moving >= TIME_CHANGE_DIRECTION)
-			{
-				SetState(BOSS_STATE_MOVE_CHANGE_DIRECTION_X);
-				isBeingDown = true;
-				time_moving = 0;
-			}
-		}
-		else
-		{
-			if (isBeingUp)
-			{
-				if (time_moving >= TIME_CHANGE_DIRECTION)
-				{
-					SetState(BOSS_STATE_MOVE_CHANGE_DIRECTION_X);
-					isBeingUp = false;
-					time_moving = 0;
-					isRepeat = true;
-				}
-			}
-			else
-			{
-				if (time_moving >= TIME_CHANGE_DIRECTION)
-				{
-					SetState(BOSS_STATE_MOVE_CHANGE_DIRECTION_Y);
-					isBeingUp = true;
-					time_moving = 0;
-					SetState(BOSS_STATE_ATTACK);
-				}
-			}
-
-		}
-	}
-
+	if (x<=0||x >= CGame::GetInstance()->GetScreenWidth()-60)
+		SetState(BOSS_STATE_MOVE_CHANGE_DIRECTION_X);
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
 
@@ -100,38 +55,10 @@ void CBoss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		else
 			SetState(BOSS_STATE_DIE);
 	}
+	
+	x += dx;
+	y += dy;
 
-	vector<LPCOLLISIONEVENT> coEvents;
-	vector<LPCOLLISIONEVENT> coEventsResult;
-
-	coEvents.clear();
-	if (isDisplay)
-		CalcPotentialCollisions(coObjects, coEvents);
-	// No collision occured, proceed normally
-	if (coEvents.size() == 0)
-	{
-		x += dx;
-		y += dy;
-	}
-	else
-	{
-		float min_tx, min_ty, nx = 0, ny;
-		float rdx = 0;
-		float rdy = 0;
-
-		// TODO: This is a very ugly designed function!!!!
-		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
-
-		// block every object first!
-		x += min_tx * dx + nx * 0.4f;
-		y += min_ty * dy + ny * 0.4f;
-
-		if (nx != 0) vx = -vx;
-		if (ny != 0) vy = -vy;
-
-	}
-	// clean up collision events
-	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
 	for (int i = 0; i < list_weapon.size(); i++)
 	{
@@ -153,10 +80,7 @@ void CBoss::Render()
 		case BOSS_STATE_MOVE_CHANGE_DIRECTION_Y:
 		case BOSS_STATE_IDLE:
 		case BOSS_STATE_MOVE:
-			if (nx > 0)
-				ani = BOSS_ANI_MOVE_RIGHT;
-			else
-				ani = BOSS_ANI_MOVE_LEFT;
+			ani = BOSS_ANI_MOVE_LEFT;
 			break;
 		case STATE_ITEM:
 			ani = item;
@@ -186,15 +110,7 @@ void CBoss::SetState(int state)
 		vx = 0;
 		break;
 	case BOSS_STATE_MOVE:
-		if (nx > 0)
-		{
-			vx = BOSS_MOVE_SPEED;
-		}
-		else
-		{
-			vx = -BOSS_MOVE_SPEED;
-		}
-		vy = -BOSS_MOVE_SPEED;
+		vx = BOSS_MOVE_SPEED;
 		break;
 	case BOSS_STATE_MOVE_CHANGE_DIRECTION_X:
 		vx = -vx;
