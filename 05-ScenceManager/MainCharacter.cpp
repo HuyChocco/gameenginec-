@@ -18,15 +18,21 @@
 #include "Cannon.h"
 #include "Orb.h"
 #include "Jumper.h"
+<<<<<<< HEAD
 #include "Insect.h"
 #include "Skull.h"
+=======
+>>>>>>> master
 #include "Teleporter.h"
 
 #define JUMPER_ROUNDING_DISTANCE_X 50
 #define JUMPER_ROUNDING_DISTANCE_Y 20
+<<<<<<< HEAD
 
 #define SKULL_ROUNDING_DISTANCE_X 2
 
+=======
+>>>>>>> master
 CMainCharacter::CMainCharacter(float x, float y) : CGameObject()
 {
 
@@ -145,6 +151,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 
 			}
+<<<<<<< HEAD
 			else if (dynamic_cast<CSkull*>(coObjects->at(i))) {
 				CSkull* skull = dynamic_cast<CSkull*>(coObjects->at(i));
 
@@ -186,6 +193,8 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 				}
 			}
+=======
+>>>>>>> master
 		}
 		// Simple fall down
 		if (state != MAIN_CHARACTER_STATE_NONE_COLLISION)
@@ -533,7 +542,11 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						eyeball->SetState(EYEBALL_STATE_DIE);
 
 					}
+<<<<<<< HEAD
 				}
+=======
+			}
+>>>>>>> master
 				else if (dynamic_cast<CTeleporter*>(e->obj))
 				{
 					Is_On_Ground = false;
@@ -563,6 +576,10 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 				}
 			}
+<<<<<<< HEAD
+=======
+		}
+>>>>>>> master
 
 		}
 	}

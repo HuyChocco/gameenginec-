@@ -118,8 +118,13 @@
     <ClCompile Include="Weapon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="Utils.cpp">
       <Filter>Header Files</Filter>
+=======
+    <ClCompile Include="Vehicle.cpp">
+      <Filter>Source Files\MainCharacterObjects</Filter>
+>>>>>>> master
     </ClCompile>
     <ClCompile Include="Skull.cpp">
       <Filter>Source Files\EnemyObjects</Filter>
