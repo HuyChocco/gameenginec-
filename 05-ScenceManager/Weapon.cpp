@@ -13,12 +13,10 @@
 #include "Portal.h"
 #include "Spike.h"
 #include "Jumper.h"
-
 #include "Insect.h"
 #include "Skull.h"
-
 #include "Orb.h"
-
+#include "Boss.h"
 
 
 CWeapon::CWeapon(int type)
@@ -221,27 +219,26 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 				}
 				else if (dynamic_cast<CSkull*>(colliable_object->at(i)))
 				{
-				CSkull* skull = dynamic_cast<CSkull*>(colliable_object->at(i));
-				if (skull->GetState() != STATE_ITEM)
-				{
-					float l1, t1, r1, b1, l2, t2, r2, b2;
-					GetBoundingBox(l1, t1, r1, b1);
-					skull->GetBoundingBox(l2, t2, r2, b2);
-
-					if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+					CSkull* skull = dynamic_cast<CSkull*>(colliable_object->at(i));
+					if (skull->GetState() != STATE_ITEM)
 					{
-						SetState(WEAPON_STATE_EXPLODE);
-						isBurning = true;
-						if (!isAttacked)
+						float l1, t1, r1, b1, l2, t2, r2, b2;
+						GetBoundingBox(l1, t1, r1, b1);
+						skull->GetBoundingBox(l2, t2, r2, b2);
+
+						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
 						{
-							skull->LostBlood(GetDame());
-							isAttacked = true;
+							SetState(WEAPON_STATE_EXPLODE);
+							isBurning = true;
+							if (!isAttacked)
+							{
+								skull->LostBlood(GetDame());
+								isAttacked = true;
+							}
 						}
 					}
-				}
 
 				}
-
 				else if (dynamic_cast<COrb*>(colliable_object->at(i)))
 				{
 					COrb* orb = dynamic_cast<COrb*>(colliable_object->at(i));
@@ -262,12 +259,9 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 							}
 						}
 					}
-
 				}
 				else if (dynamic_cast<CSpike*>(colliable_object->at(i)))
 				{
-
-
 				}
 				else if (dynamic_cast<CPortal*>(colliable_object->at(i)))
 				{
@@ -281,7 +275,6 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 						SetState(WEAPON_STATE_EXPLODE);
 						isBurning = true;
 					}
-
 				}
 				else if (dynamic_cast<CBrick*>(colliable_object->at(i)))
 				{
@@ -461,7 +454,6 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 							}
 						}
 					}
-
 				}
 				else if (dynamic_cast<CDome*>(colliable_object->at(i)))
 				{
@@ -483,7 +475,6 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 							}
 						}
 					}
-
 				}
 				else if (dynamic_cast<CJumper*>(colliable_object->at(i)))
 				{
@@ -505,7 +496,6 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 							}
 						}
 					}
-
 				}
 				else if (dynamic_cast<CInsect*>(colliable_object->at(i)))
 				{
@@ -527,7 +517,6 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 							}
 						}
 					}
-
 				}
 				else if (dynamic_cast<COrb*>(colliable_object->at(i)))
 				{
@@ -549,7 +538,6 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 							}
 						}
 					}
-
 				}
 				else if (dynamic_cast<CWorm*>(colliable_object->at(i)))
 				{
@@ -571,7 +559,6 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 							}
 						}
 					}
-
 				}
 				else if (dynamic_cast<CCannon*>(colliable_object->at(i)))
 				{
@@ -593,7 +580,6 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 							}
 						}
 					}
-
 				}
 				else if (dynamic_cast<CEyeball*>(colliable_object->at(i)))
 				{
@@ -617,8 +603,6 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 
 						}
 					}
-
-
 				}
 				else if (dynamic_cast<CTeleporter*>(colliable_object->at(i)))
 				{
@@ -639,10 +623,29 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 								tele->LostBlood(GetDame());
 								isAttacked = true;
 							}
-
 						}
 					}
+				}
+				else if (dynamic_cast<CBoss*>(colliable_object->at(i)))
+				{
+					CBoss* boss = dynamic_cast<CBoss*>(colliable_object->at(i));
+					if (boss->GetState() != STATE_ITEM)
+					{
+						float l1, t1, r1, b1, l2, t2, r2, b2;
+						GetBoundingBox(l1, t1, r1, b1);
+						boss->GetBoundingBox(l2, t2, r2, b2);
 
+						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+						{
+							SetState(WEAPON_STATE_EXPLODE);
+							isBurning = true;
+							if (!isAttacked)
+							{
+								boss->LostBlood(GetDame());
+								isAttacked = true;
+							}
+						}
+					}
 				}
 			}
 		}
@@ -693,38 +696,38 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 		else if (type_weapon == WEAPON_TYPE_ENEMY_SKULL)
 		{
 		
-		float l1, t1, r1, b1;
-		GetBoundingBox(l1, t1, r1, b1);
-		if (game->CheckCollision(l1, t1, r1, b1, l_player, t_player, r_player, b_player) == true)
-		{
-			SetState(WEAPON_STATE_EXPLODE);
-			isBurning = true;
-			player->SetIsAttacked(true);
-		}
-		for (UINT i = 0; i < colliable_object->size(); i++)
-		{
-			if (dynamic_cast<CBrick*>(colliable_object->at(i)))
+			float l1, t1, r1, b1;
+			GetBoundingBox(l1, t1, r1, b1);
+			if (game->CheckCollision(l1, t1, r1, b1, l_player, t_player, r_player, b_player) == true)
 			{
-				CBrick* brick = dynamic_cast<CBrick*>(colliable_object->at(i));
-				float l1, t1, r1, b1, l2, t2, r2, b2;
-				GetBoundingBox(l1, t1, r1, b1);
-				brick->GetBoundingBox(l2, t2, r2, b2);
-
-				if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+				SetState(WEAPON_STATE_EXPLODE);
+				isBurning = true;
+				player->SetIsAttacked(true);
+			}
+			for (UINT i = 0; i < colliable_object->size(); i++)
+			{
+				if (dynamic_cast<CBrick*>(colliable_object->at(i)))
 				{
-					SetState(WEAPON_STATE_EXPLODE);
-					isBurning = true;
+					CBrick* brick = dynamic_cast<CBrick*>(colliable_object->at(i));
+					float l1, t1, r1, b1, l2, t2, r2, b2;
+					GetBoundingBox(l1, t1, r1, b1);
+					brick->GetBoundingBox(l2, t2, r2, b2);
+
+					if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+					{
+						SetState(WEAPON_STATE_EXPLODE);
+						isBurning = true;
+					}
+				}
+				else if (dynamic_cast<CPortal*>(colliable_object->at(i)))
+				{
+
+				}
+				else if (dynamic_cast<CSpike*>(colliable_object->at(i)))
+				{
+
 				}
 			}
-			else if (dynamic_cast<CPortal*>(colliable_object->at(i)))
-			{
-
-			}
-			else if (dynamic_cast<CSpike*>(colliable_object->at(i)))
-			{
-
-			}
-		}
 		}
 	}
 

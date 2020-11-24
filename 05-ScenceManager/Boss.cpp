@@ -92,7 +92,6 @@ void CBoss::Render()
 			animation_set->at(ani)->Render(x, y);
 			RenderBoundingBox();
 		}
-
 	}
 	for (int i = 0; i < list_weapon.size(); i++)
 	{
