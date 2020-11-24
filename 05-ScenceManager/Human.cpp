@@ -7,6 +7,7 @@
 
 #include "Portal.h"
 #include "Brick.h"
+#include "Stair.h"
 
 #include "Worm.h"
 #include "Spider.h"
@@ -19,11 +20,13 @@
 #include "Jumper.h"
 #include "Teleporter.h"
 #include "Orb.h"
+#include "Skull.h"
 
 #define JUMPER_ROUNDING_DISTANCE_X 50
-#define JUMPER_ROUNDING_DISTANCE_Y 40
+#define JUMPER_ROUNDING_DISTANCE_Y 20
 #define ORB_ROUNDING_DISTANCE_X 120
 #define ORB_ROUNDING_DISTANCE_Y 110
+#define SKULL_ROUNDING_DISTANCE_X 2
 CHuman::CHuman(float x, float y) : CGameObject()
 {
 	level = HUMAN_LEVEL_SMALL;
@@ -52,11 +55,8 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				floater->SetDirection(1);
 			else
 				floater->SetDirection(-1);
-			if(isBeingHuman)
+			if (isBeingHuman)
 				floater->SetPlayerObject(this);
-
-
-
 		}
 		else if (dynamic_cast<CDome*>(coObjects->at(i))) {
 			CDome* dome = dynamic_cast<CDome*>(coObjects->at(i));
@@ -120,7 +120,13 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (jumper->GetState() != STATE_ITEM)
 			{
 				if (abs(x - x_jumper) < JUMPER_ROUNDING_DISTANCE_X && abs(y - y_jumper) < JUMPER_ROUNDING_DISTANCE_Y)
+				{
 					jumper->SetState(JUMPER_STATE_JUMP);
+					jumper->SetIsJumping(true);
+				}
+
+				else
+					jumper->SetIsJumping(false);
 			}
 
 		}
@@ -143,296 +149,394 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 			}
 		}
+		else if (dynamic_cast<CStair*>(coObjects->at(i)))
+		{
+			float l1, t1, r1, b1, l2, t2, r2, b2;
+			GetBoundingBox(l1, t1, r1, b1);
+			dynamic_cast<CStair*>(coObjects->at(i))->GetBoundingBox(l2, t2, r2, b2);
+			if (isStateClimb)
+			{
+				if (!CGame::GetInstance()->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2))
+					isStateClimb = false;
+			}
+		}
+		else if (dynamic_cast<CSkull*>(coObjects->at(i))) {
+			CSkull* skull = dynamic_cast<CSkull*>(coObjects->at(i));
+
+			float x_skull, y_skull;
+			skull->GetPosition(x_skull, y_skull);
+			if (x > x_skull)
+				skull->SetDirection(1);
+			else
+				skull->SetDirection(-1);
+			if (skull->GetState() != STATE_ITEM)
+			{
+				if (!skull->isAttacked) {
+					if (abs(x - x_skull) > SKULL_ROUNDING_DISTANCE_X) {
+						if (x < x_skull)
+						{
+							skull->SetState(SKULL_STATE_MOVE_LEFT);
+						}
+						else if (x > x_skull)
+						{
+							skull->SetState(SKULL_STATE_MOVE_RIGHT);
+						}
+					}
+					else
+					{
+						skull->time_moving += dt;
+						//skull->SetState(SKULL_STATE_MOVE_UP);
+						skull->SetState(SKULL_STATE_MOVE_RIGHT_ATTACK);
+						skull->SetIsAttack(true);
+
+					}
+
+				}
+				else
+				{
+					if (skull->time_moving < dt) {
+						skull->SetState(SKULL_STATE_MOVE_UP);
+					}
+				}
+
+			}
+		}
 	}
 	// Simple fall down
-	if(level==HUMAN_LEVEL_SMALL)
+	if (level == HUMAN_LEVEL_SMALL && !isStateClimb)
 	{
 		vy -= HUMAN_GRAVITY * dt;
 	}
-		vector<LPCOLLISIONEVENT> coEvents;
-		vector<LPCOLLISIONEVENT> coEventsResult;
+	vector<LPCOLLISIONEVENT> coEvents;
+	vector<LPCOLLISIONEVENT> coEventsResult;
 
-		coEvents.clear();
+	coEvents.clear();
 
-		// turn off collision when die 
-		if (state != HUMAN_STATE_DIE)
-			CalcPotentialCollisions(coObjects, coEvents);
-		if (isAttacked)
+	// turn off collision when die 
+	if (state != HUMAN_STATE_DIE)
+		CalcPotentialCollisions(coObjects, coEvents);
+	if (isAttacked)
+	{
+		StartUntouchable();
+		isAttacked = false;
+	}
+	// reset untouchable timer if untouchable time has passed
+	if (untouchable == 1)
+	{
+
+		if (GetTickCount() - untouchable_start > MAIN_CHARACTER_UNTOUCHABLE_TIME)
 		{
-			StartUntouchable();
-			isAttacked = false;
+			untouchable = 0;
+			untouchable_start = 0;
 		}
-		// reset untouchable timer if untouchable time has passed
-		if (untouchable == 1)
+	}
+	// No collision occured, proceed normally
+	if (coEvents.size() == 0)
+	{
+		x += dx;
+		y += dy;
+	}
+	else
+	{
+		float min_tx, min_ty, nx = 0, ny;
+		float rdx = 0;
+		float rdy = 0;
+
+		// TODO: This is a very ugly designed function!!!!
+		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
+
+		// block every object first!
+		x += min_tx * dx + nx * 0.4f;
+		y += min_ty * dy + ny * 0.4f;
+
+		if (nx != 0) vx = 0;
+		if (ny != 0) vy = 0;
+
+
+		//
+		// Collision logic with other objects
+		//
+		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 
-			if (GetTickCount() - untouchable_start > MAIN_CHARACTER_UNTOUCHABLE_TIME)
+			LPCOLLISIONEVENT e = coEventsResult[i];
+			if (dynamic_cast<CBrick*>(e->obj))
 			{
-				untouchable = 0;
-				untouchable_start = 0;
+				if (e->ny > 0)
+				{
+					is_on_ground = true;
+				}
 			}
-		}
-		// No collision occured, proceed normally
-		if (coEvents.size() == 0)
-		{
-			x += dx;
-			y += dy;
-		}
-		else
-		{
-			float min_tx, min_ty, nx = 0, ny;
-			float rdx = 0;
-			float rdy = 0;
-
-			// TODO: This is a very ugly designed function!!!!
-			FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny, rdx, rdy);
-
-			// block every object first!
-			x += min_tx * dx + nx * 0.4f;
-			y += min_ty * dy + ny * 0.4f;
-
-			if (nx != 0) vx = 0;
-			if (ny != 0) vy = 0;
-
-
-			//
-			// Collision logic with other objects
-			//
-			for (UINT i = 0; i < coEventsResult.size(); i++)
+			else if (dynamic_cast<CStair*>(e->obj))
 			{
-
-				LPCOLLISIONEVENT e = coEventsResult[i];
-				if (dynamic_cast<CBrick*>(e->obj)) 
+				float l, t, r, b;
+				dynamic_cast<CStair*>(e->obj)->GetBoundingBox(l, t, r, b);
+				if (isBeingHuman)
 				{
-					if (e->ny > 0)
-					{
-						is_on_ground = true;
-					}
-				}
-				else if (dynamic_cast<CSpike*>(e->obj))
-				{
-					x += dx;
-					y += dy;
-				}
-				//Outdoor enemies
-				else if (dynamic_cast<CWorm*>(e->obj))
-				{
-					CWorm* worm = dynamic_cast<CWorm*>(e->obj);
-					float vxWorm, vyWorm;
-					worm->GetSpeed(vxWorm, vyWorm);
-					if (worm->GetState() != STATE_ITEM)
-					{
-						StartUntouchable();
-						if (e->ny != 0)
-						{
-							y -= 2 * vyWorm * dt;
-						}
-						else
-							x += dx;
-					}
-					else
-					{
-						if (e->ny != 0)
-						{
-							y -= 2 * vy * dt;
-						}
-						else
-							x += dx;
-						worm->SetState(WORM_STATE_DIE);
-					}
-
-				}
-				else if (dynamic_cast<CFloater*>(e->obj))
-				{
-					CFloater* floater = dynamic_cast<CFloater*>(e->obj);
-					float vxFloater, vyFloater;
-					floater->GetSpeed(vxFloater, vyFloater);
-					if (floater->GetState() != STATE_ITEM)
-					{
-						StartUntouchable();
-
-						if (e->ny != 0)
-						{
-							y -= 2 * vyFloater * dt;
-						}
-						else
-							x += dx;
-					}
-					else
-					{
-						if (e->ny < 0)
-						{
-							y -= 2 * vy * dt;
-						}
-						else
-							x += dx;
-						floater->SetState(FLOATER_STATE_DIE);
-					}
-
-
-				}
-				else if (dynamic_cast<CDome*>(e->obj))
-				{
-					CDome* dome = dynamic_cast<CDome*>(e->obj);
-					float vxDome, vyDome;
-					dome->GetSpeed(vxDome, vyDome);
-					if (dome->GetState() != STATE_ITEM)
-					{
-						StartUntouchable();
-						if (e->ny != 0)
-						{
-							y -= 2 * vyDome * dt;
-						}
-						else
-							x += dx;
-					}
-					else
-					{
-						if (e->ny < 0)
-						{
-							y -= 2 * vy * dt;
-						}
-						else
-							x += dx;
-						dome->SetState(DOME_STATE_DIE);
-					}
-
-
-				}
-				else if (dynamic_cast<CJumper*>(e->obj))
-				{
-					CJumper* jumper = dynamic_cast<CJumper*>(e->obj);
-					float vxJumper, vyJumper;
-					jumper->GetSpeed(vxJumper, vyJumper);
-					if (jumper->GetState() != STATE_ITEM)
-					{
-						StartUntouchable();
-						if (e->ny != 0)
-						{
-							y -= 2 * vyJumper * dt;
-						}
-						else
-							x += dx;
-					}
-					else
-					{
-						if (e->ny < 0)
-						{
-							y -= 2 * vy * dt;
-						}
-						else
-							x += dx;
-						jumper->SetState(DOME_STATE_DIE);
-					}
-
-
-				}
-				else if (dynamic_cast<COrb*>(e->obj))
-				{
-					COrb* orb = dynamic_cast<COrb*>(e->obj);
-					if (orb->GetState() != STATE_ITEM)
-					{
-						StartUntouchable();
-						float vxOrb, vyOrb;
-						orb->GetSpeed(vxOrb, vyOrb);
-						if (e->ny != 0)
-						{
-							y -= 2*vyOrb * dt;
-						}
-						else
-							x += dx;
-					}
-					else
-						orb->SetState(ORB_STATE_DIE);
-				}
-				//Indoor enemies
-				else if (dynamic_cast<CCannon*>(e->obj))
-				{
-					CCannon* cannon = dynamic_cast<CCannon*>(e->obj);
-					float vxCannon, vyCannon;
-					cannon->GetSpeed(vxCannon, vyCannon);
-					if (cannon->GetState() != STATE_ITEM)
-					{
-						StartUntouchable();
-						if (e->ny != 0)
-						{
-							y += dy;
-						}
-						else
-							x += dx;
-					}
-					else
-					{
-						if (e->ny != 0)
-						{
-							y += dy;
-						}
-						else
-							x += dx;
-						cannon->SetState(CANNON_STATE_DIE);
-					}
-				}
-				else if (dynamic_cast<CEyeball*>(e->obj))
-				{
-					CEyeball* eyeball = dynamic_cast<CEyeball*>(e->obj);
-					float vxEyeball, vyEyeball;
-					eyeball->GetSpeed(vxEyeball, vyEyeball);
-					if (eyeball->GetState() != STATE_ITEM)
-					{
-						StartUntouchable();
-						if (e->ny != 0)
-						{
-							y += dy;
-						}
-						else
-							x += dx;
-					}
-					else
-					{
-						if (e->ny != 0)
-						{
-							y += dy;
-						}
-						else
-							x += dx;
-						eyeball->SetState(EYEBALL_STATE_DIE);
-
-					}
-				}
-				else if (dynamic_cast<CTeleporter*>(e->obj))
-				{
-					CTeleporter* teleporter = dynamic_cast<CTeleporter*>(e->obj);
-					float vxTeleporter, vyTeleporter;
-					teleporter->GetSpeed(vxTeleporter, vyTeleporter);
-					if (teleporter->GetState() != STATE_ITEM)
-					{
-						StartUntouchable();
-						if (e->ny != 0)
-						{
-							y += dy;
-						}
-						else
-							x += dx;
-					}
-					else
-					{
-						if (e->ny != 0)
-						{
-							y += dy;
-						}
-						else
-							x += dx;
-						teleporter->SetState(TELEPORTER_STATE_DIE);
-
-					}
+					SetState(HUMAN_STATE_CLIMB);
+					SetPosition(l + ((r - l) / 2) - 6, y);
 				}
 
 			}
-		}
+			else if (dynamic_cast<CSpike*>(e->obj))
+			{
+				x += dx;
+				y += dy;
+				float l1, t1, r1, b1, l2, t2, r2, b2;
+				GetBoundingBox(l1, t1, r1, b1);
+				b1 = b1 - ((b1 - t1) / 2);
+				dynamic_cast<CSpike*>(e->obj)->GetBoundingBox(l2, t2, r2, b2);
 
-		// clean up collision events
-		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
-	
+				if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+				{
+					StartUntouchable();
+				}
+			}
+			//Outdoor enemies
+			else if (dynamic_cast<CWorm*>(e->obj))
+			{
+				CWorm* worm = dynamic_cast<CWorm*>(e->obj);
+				float vxWorm, vyWorm;
+				worm->GetSpeed(vxWorm, vyWorm);
+				if (worm->GetState() != STATE_ITEM)
+				{
+					StartUntouchable();
+					if (e->ny != 0)
+					{
+						y -= 2 * vyWorm * dt;
+					}
+					else
+						x += dx;
+				}
+				else
+				{
+					if (e->ny != 0)
+					{
+						y -= 2 * vy * dt;
+					}
+					else
+						x += dx;
+					worm->SetState(WORM_STATE_DIE);
+				}
+
+			}
+			else if (dynamic_cast<CFloater*>(e->obj))
+			{
+				CFloater* floater = dynamic_cast<CFloater*>(e->obj);
+				float vxFloater, vyFloater;
+				floater->GetSpeed(vxFloater, vyFloater);
+				if (floater->GetState() != STATE_ITEM)
+				{
+					StartUntouchable();
+
+					if (e->ny != 0)
+					{
+						y -= 2 * vyFloater * dt;
+					}
+					else
+						x += dx;
+				}
+				else
+				{
+					if (e->ny < 0)
+					{
+						y -= 2 * vy * dt;
+					}
+					else
+						x += dx;
+					floater->SetState(FLOATER_STATE_DIE);
+				}
+
+
+			}
+			else if (dynamic_cast<CDome*>(e->obj))
+			{
+				CDome* dome = dynamic_cast<CDome*>(e->obj);
+				float vxDome, vyDome;
+				dome->GetSpeed(vxDome, vyDome);
+				if (dome->GetState() != STATE_ITEM)
+				{
+					StartUntouchable();
+					if (e->ny != 0)
+					{
+						y -= 2 * vyDome * dt;
+					}
+					else
+						x += dx;
+				}
+				else
+				{
+					if (e->ny < 0)
+					{
+						y -= 2 * vy * dt;
+					}
+					else
+						x += dx;
+					dome->SetState(DOME_STATE_DIE);
+				}
+
+
+			}
+			else if (dynamic_cast<CJumper*>(e->obj))
+			{
+				CJumper* jumper = dynamic_cast<CJumper*>(e->obj);
+				float vxJumper, vyJumper;
+				jumper->GetSpeed(vxJumper, vyJumper);
+				if (jumper->GetState() != STATE_ITEM)
+				{
+					StartUntouchable();
+					if (e->ny != 0)
+					{
+						y -= 2 * vyJumper * dt;
+					}
+					else
+						x += dx;
+				}
+				else
+				{
+					if (e->ny < 0)
+					{
+						y -= 2 * vy * dt;
+					}
+					else
+						x += dx;
+					jumper->SetState(DOME_STATE_DIE);
+				}
+
+
+			}
+			else if (dynamic_cast<COrb*>(e->obj))
+			{
+				COrb* orb = dynamic_cast<COrb*>(e->obj);
+				if (orb->GetState() != STATE_ITEM)
+				{
+					StartUntouchable();
+					float vxOrb, vyOrb;
+					orb->GetSpeed(vxOrb, vyOrb);
+					if (e->ny != 0)
+					{
+						y -= 2 * vyOrb * dt;
+					}
+					else
+						x += dx;
+				}
+				else
+					orb->SetState(ORB_STATE_DIE);
+			}
+			else if (dynamic_cast<CSkull*>(e->obj))
+			{
+				CSkull* skull = dynamic_cast<CSkull*>(e->obj);
+				float vxSkull, vySkull;
+				skull->GetSpeed(vxSkull, vySkull);
+				if (skull->GetState() != STATE_ITEM)
+				{
+					StartUntouchable();
+					if (e->ny != 0)
+					{
+						y += dy;
+					}
+					else
+						x += dx;
+				}
+				else
+				{
+					if (e->ny < 0)
+					{
+						y -= 2 * vy * dt;
+					}
+					else
+						x += dx;
+					skull->SetState(SKULL_STATE_DIE);
+				}
+			}
+			//Indoor enemies
+			else if (dynamic_cast<CCannon*>(e->obj))
+			{
+				CCannon* cannon = dynamic_cast<CCannon*>(e->obj);
+				float vxCannon, vyCannon;
+				cannon->GetSpeed(vxCannon, vyCannon);
+				if (cannon->GetState() != STATE_ITEM)
+				{
+					StartUntouchable();
+					if (e->ny != 0)
+					{
+						y += dy;
+					}
+					else
+						x += dx;
+				}
+				else
+				{
+					if (e->ny != 0)
+					{
+						y += dy;
+					}
+					else
+						x += dx;
+					cannon->SetState(CANNON_STATE_DIE);
+				}
+			}
+			else if (dynamic_cast<CEyeball*>(e->obj))
+			{
+				CEyeball* eyeball = dynamic_cast<CEyeball*>(e->obj);
+				float vxEyeball, vyEyeball;
+				eyeball->GetSpeed(vxEyeball, vyEyeball);
+				if (eyeball->GetState() != STATE_ITEM)
+				{
+					StartUntouchable();
+					if (e->ny != 0)
+					{
+						y += dy;
+					}
+					else
+						x += dx;
+				}
+				else
+				{
+					if (e->ny != 0)
+					{
+						y += dy;
+					}
+					else
+						x += dx;
+					eyeball->SetState(EYEBALL_STATE_DIE);
+
+				}
+			}
+			else if (dynamic_cast<CTeleporter*>(e->obj))
+			{
+				CTeleporter* teleporter = dynamic_cast<CTeleporter*>(e->obj);
+				float vxTeleporter, vyTeleporter;
+				teleporter->GetSpeed(vxTeleporter, vyTeleporter);
+				if (teleporter->GetState() != STATE_ITEM)
+				{
+					StartUntouchable();
+					if (e->ny != 0)
+					{
+						y += dy;
+					}
+					else
+						x += dx;
+				}
+				else
+				{
+					if (e->ny != 0)
+					{
+						y += dy;
+					}
+					else
+						x += dx;
+					teleporter->SetState(TELEPORTER_STATE_DIE);
+
+				}
+			}
+
+		}
+	}
+
+	// clean up collision events
+	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+
 }
 int ani = HUMAN_ANI_BIG_WALKING;
 int flip = false;
@@ -461,18 +565,19 @@ void CHuman::Render()
 				ani = HUMAN_ANI_BIG_WALKING_UP;
 				break;
 			case MAIN_CHARACTER_STATE_DOWN_BARREL:
-				ani = HUMAN_ANI_BIG_WALKING_DOWN;
+				if (level == HUMAN_LEVEL_BIG)
+					ani = HUMAN_ANI_BIG_WALKING_DOWN;
 				break;
 			}
-			if (vx == 0 && vy==0) // Nhân vật đứng yên
+			if (vx == 0 && vy == 0) // Nhân vật đứng yên
 			{
 				animation_set->at(ani)->isPause = true; //Dừng animation 
-				animation_set->at(ani)->Render(x, y, flip,alpha); // Vẽ frame đang bị tạm dừng
+				animation_set->at(ani)->Render(x, y, flip, alpha); // Vẽ frame đang bị tạm dừng
 			}
 			else // Nhân vật di chuyển
 			{
 				animation_set->at(ani)->isPause = false; // Tiếp tục animation đã dừng trước đó
-				animation_set->at(ani)->Render(x, y, flip,alpha);
+				animation_set->at(ani)->Render(x, y, flip, alpha);
 			}
 			RenderBoundingBox();
 			return;
@@ -482,36 +587,100 @@ void CHuman::Render()
 			if (vx == 0)
 			{
 
-				ani = HUMAN_ANI_SMALL_IDLE;
+
 				if (nx > 0)
-					flip = true;
+				{
+					if (isStateCrawl)
+					{
+						ani = HUMAN_ANI_SMALL_CRAWLING;
+						flip = false;
+					}
+					else
+					{
+						flip = true;
+						ani = HUMAN_ANI_SMALL_IDLE;
+					}
+
+				}
 				else
-					flip = false;
+				{
+					if (isStateCrawl)
+					{
+						flip = true;
+						ani = HUMAN_ANI_SMALL_CRAWLING;
+					}
+					else if (isStateClimb)
+					{
+						ani = HUMAN_ANI_SMALL_CLIMBING;
+					}
+					else
+					{
+						flip = false;
+						ani = HUMAN_ANI_SMALL_IDLE;
+					}
+
+				}
+				animation_set->at(ani)->isPause = true; //Dừng animation
 			}
 			else if (vx > 0)
 			{
-				ani = HUMAN_ANI_SMALL_WALKING;
-				flip = true;
+
+				if (isStateCrawl)
+				{
+					flip = false;
+					ani = HUMAN_ANI_SMALL_CRAWLING;
+				}
+				else
+				{
+					flip = true;
+					ani = HUMAN_ANI_SMALL_WALKING;
+				}
+				animation_set->at(ani)->isPause = false; // Tiếp tục animation đã dừng trước đó
+
 			}
-			else if(vx<0)
+			else if (vx < 0)
 			{
-				ani = HUMAN_ANI_SMALL_WALKING;
-				flip = false;
+				if (isStateCrawl)
+				{
+					flip = true;
+					ani = HUMAN_ANI_SMALL_CRAWLING;
+				}
+				else
+				{
+					flip = false;
+					ani = HUMAN_ANI_SMALL_WALKING;
+				}
+				animation_set->at(ani)->isPause = false; // Tiếp tục animation đã dừng trước đó	
 			}
+
+			if (isStateClimb)
+			{
+				if (vy != 0)
+				{
+					ani = HUMAN_ANI_SMALL_CLIMBING;
+					animation_set->at(ani)->isPause = false;
+				}
+				else
+				{
+					ani = HUMAN_ANI_SMALL_CLIMBING;
+					animation_set->at(ani)->isPause = true;
+				}
+			}
+
 		}
 
 		int alpha = 255;
 		if (untouchable)
 			alpha = 128;
 		animation_set->at(ani)->Render(x, y, flip, alpha);
-		
+
 		RenderBoundingBox();
 	}
-		
 
-	
-	
-	
+
+
+
+
 }
 
 void CHuman::SetState(int state)
@@ -521,17 +690,23 @@ void CHuman::SetState(int state)
 	switch (state)
 	{
 	case MAIN_CHARACTER_STATE_RUN_RIGHT:
+		//if (!isStateClimb)
+	{
 		vx = HUMAN_WALKING_SPEED;
 		nx = 1;
 		isGoingUp = false;
 		isGoingDown = false;
-		break;
+	}
+	break;
 	case MAIN_CHARACTER_STATE_RUN_LEFT:
+		//if (!isStateClimb)
+	{
 		vx = -HUMAN_WALKING_SPEED;
 		nx = -1;
 		isGoingUp = false;
 		isGoingDown = false;
-		break;
+	}
+	break;
 	case MAIN_CHARACTER_STATE_JUMP:
 		// TODO: need to check if HUMAN is *current* on a platform before allowing to jump again
 		if (level == HUMAN_LEVEL_SMALL)
@@ -549,6 +724,12 @@ void CHuman::SetState(int state)
 		vx = 0;
 		if (level == HUMAN_LEVEL_BIG)
 			vy = 0;
+		else if (level == HUMAN_LEVEL_SMALL)
+		{
+			if (isStateClimb)
+				vy = 0;
+		}
+
 		break;
 	case MAIN_CHARACTER_STATE_UP_BARREL:
 		if (level == HUMAN_LEVEL_BIG)
@@ -556,7 +737,20 @@ void CHuman::SetState(int state)
 			isGoingUp = true;
 			isGoingDown = false;
 			vy = HUMAN_WALKING_SPEED;
-		}	
+		}
+		else if (level == HUMAN_LEVEL_SMALL)
+		{
+			if (isStateCrawl)
+			{
+				vy = 0.14f;//Tránh rớt va chạm khi chuyển state từ CRAWL->IDLE
+				isStateCrawl = false;
+			}
+			else if (isStateClimb)
+			{
+				vy = 0.04f;
+			}
+
+		}
 		break;
 	case MAIN_CHARACTER_STATE_DOWN_BARREL:
 		if (level == HUMAN_LEVEL_BIG)
@@ -564,9 +758,23 @@ void CHuman::SetState(int state)
 			isGoingUp = false;
 			isGoingDown = true;
 			vy = -HUMAN_WALKING_SPEED;
-		}	
+		}
+		else if (level == HUMAN_LEVEL_SMALL)
+		{
+			if (!isStateClimb)
+				isStateCrawl = true;
+			if (isStateClimb)
+			{
+				vy = -0.04f;
+			}
+		}
 		break;
 	case MAIN_CHARACTER_STATE_DIE:
+		break;
+	case HUMAN_STATE_CLIMB:
+		isStateClimb = true;
+		vy = 0;
+		vx = 0;
 		break;
 	}
 }
@@ -575,19 +783,29 @@ void CHuman::GetBoundingBox(float& left, float& top, float& right, float& bottom
 {
 
 	left = x;
-	
+
 
 	if (level == HUMAN_LEVEL_BIG)
 	{
-		top = y- HUMAN_BIG_BBOX_HEIGHT;
+		top = y - HUMAN_BIG_BBOX_HEIGHT;
 		right = x + HUMAN_BIG_BBOX_WIDTH;
-		bottom = y ;
+		bottom = y;
 	}
 	else
 	{
-		top = y- HUMAN_SMALL_BBOX_HEIGHT;
-		right = x + HUMAN_SMALL_BBOX_WIDTH;
-		bottom = y ;
+		if (isStateCrawl)
+		{
+			top = y - HUMAN_SMALL_CRAWL_BBOX_HEIGHT;
+			right = x + HUMAN_SMALL_CRAWL_BBOX_WIDTH;
+			bottom = y;
+		}
+		else
+		{
+			top = y - HUMAN_SMALL_BBOX_HEIGHT;
+			right = x + HUMAN_SMALL_BBOX_WIDTH;
+			bottom = y;
+		}
+
 	}
 }
 

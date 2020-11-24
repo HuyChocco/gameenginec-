@@ -1,0 +1,168 @@
+# id	file_path	transparent_color_r	g	b
+[TEXTURES]
+1	textures\Jason-and-Sophia.png	0	57	115
+2	textures\BlasterMaster-Enemies.png	255	0	255
+33	textures\NES-Blaster-Master-Area-2.png	255	255	255
+50	textures\NES-BlasterMaster-Dungeon.png	255	255	255
+55	textures\sophia.png	255	255	255
+66	textures\bosses.png	255	0	255
+# id	left	top	right	bottom	texture_id
+[SPRITES]
+# tiled map sprites
+# BOSS
+10	84	440	144	500	66
+11	149	439	209	504	66
+12	215	440	275	500	66
+13	281	439	341	504	66
+# SOFIA Human
+#idle
+10001	3	30	11	46	1
+#move left
+10002	12	30	20	46	1
+10003	21	30	29	46	1
+10004	30	30	38	46	1
+# Crawl left - Bo ben trai
+10005	39	30	55	46	1
+10006	56	30	72	46	1
+# BIG-SOFIA
+# move left
+10007	208	69	232	101	1
+10008	233	69	257	101	1
+10009	258	69	282	101	1
+# move up
+10010	208	36	232	68	1
+10011	233	36	257	68	1
+10012	258	36	282	68	1
+# move down
+10013	208	3	232	35	1
+10014	233	3	257	35	1
+10015	258	3	282	35	1
+# Main character empty sprite
+70001	0	0	0	0	1
+# WEAPON
+# Main character
+# fly_horizontal
+100001	91	20	114	27	1
+# fly_vertical
+100002	116	20	123	43	1
+# explode
+100003	140	101	148	109	1
+100004	149	97	165	113	1
+100005	166	97	182	113	1
+100006	183	93	207	117	1
+# Human-Sofia
+# bullet
+100007	135	183	139	187	55
+# bullet_explosion
+100008	155	181	162	189	55
+100009	171	178	187	191	55
+100010	192	177	208	193	55
+# Cannon
+# bullet
+100011	252	102	260	118	1
+# bullet_explosion
+100012	296	102	312	118	1
+# Eyeball
+# bullet
+100013	252	102	260	118	1
+# bullet_explosion
+100014	296	102	312	118	1
+# HUB OBJECTS
+# PowerHub - Text
+800001	175	219	183	235	55
+# PowerHub
+800002	115	98	123	130	55
+# GunHub
+800003	154	221	162	253	55
+# Hov-Text
+800004	112	240	120	256	55
+# path
+[MAP]
+map-overworld-25.txt
+# ani_id	sprite1_id	time1	sprite2_id	time2	...
+[ANIMATIONS]
+# ==== BOSS =========
+# di chuyen
+100	10	100	11	100	12	100	13	100
+# ==== SOFIA HUMAN =========
+#idle
+600	10001	100
+#move left
+601	10002	100	10003	100	10004	100
+#crawl left
+602	10005	100	10006	100
+#BIG-SOFIA
+#move left
+603	10007	100	10008	100	10009	100
+#move up
+604	10010	100	10011	100	10012	100
+#move down
+605	10013	100	10014	100	10015	100
+# ==== MAIN CHARACTER =========
+#idle
+2000	70001	100
+# ==== WEAPON =========
+# Main Character
+# left
+4000	100001	100
+# Up
+4001	100002	100
+# explode
+4002	100003	100	100004	100	100005	100
+# Human-Sofia
+# Bullet
+4003	100007	100
+# Bullet_explosion
+4004	100008	100	100009	100	100010	100
+# Cannon
+# Bullet
+4005	100011	100
+# Bullet_explosion
+4006	100012	100
+# Eyeball
+# Bullet
+4007	100013	100
+# Bullet_explosion
+4008	100014	100
+# Teleporter
+# Bullet
+4009	100013	100
+# Bullet_explosion
+4010	100014	100
+# ==== HUB =========
+#PowerHub - Text
+100000	800001	100
+#PowerHub
+100001	800002	100
+#GunHub
+100002	800003	100
+#Hov - text
+100003	800004	100
+# id	ani1	ani2	ani3
+#
+[ANIMATION_SETS]
+# SOFIA 
+1	600	601	602	603	604	605
+# MAIN_CHARACTER 
+2	2000
+# BOSS
+3	100
+# WEAPON
+7	4000	4001	4002	4003	4004	4005	4006	4007	4008	4009	4010
+# HUB
+100	100000	100001	100002	100003
+[OBJECTS]
+# object_id  type	x	y	ani_set_id	extra_settings per object type
+# type: 0 = Mario , 1 = Brick, 2 = Boss,  500 = PowerHub, 501 = GunHub, 11= Human
+# MAIN_CHARACTER need to be created first!
+1	9	160	40	2
+# MAIN OBJECTS LIST
+# HUMAN
+2	11	17	115	1
+# HUB LIST - x,y theo trục màn hình
+9	500	10	100	100
+# BOSS ENEMY
+10	2	10	200	3	
+# MAP OBJECT LIST
+# cellx celly id_object...
+[GRID]

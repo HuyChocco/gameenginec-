@@ -20,45 +20,47 @@ CWheelObject::CWheelObject(float x, float y) : CGameObject()
 
 	is_Right_Wheel = false;
 	is_Middle_Wheel = false;
+	x_delta = 0;
+	push_effect_time = 0;
 }
 
 void CWheelObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	
 	CGameObject::Update(dt);
-	if (is_Right_Wheel) //right wheel - bánh xe bên phải
+	x = player_x;
+	y = player_y;
+	if (is_start_push_effect&&is_being_up && is_Right_Wheel)
 	{
-		x += 17;
-		y -= (MAIN_CHARACTER_BBOX_HEIGHT - 6);
-		
-		
-	}
-		
-	else if (is_Middle_Wheel) //middle wheel - bánh nằm ở giữa trái và phải
-	{
-		x += 9;
-		y -= 7;
-		if (vx != 0) //Add effect if running
+		push_effect_time += dt;
+		if(push_effect_time<=WHEEL_PUSH_EFFECT_TIME&&!is_end_push_effect)
+			x_delta -= 0.01 * dt;
+		else
 		{
-			StartUpEffect();
-			if (GetTickCount() - up_effect_start > WHEEL_EFFECT_TIME)
-			{
-				y += 1;
-			}	
-		}
-		if (state == MAIN_CHARACTER_STATE_UP_BARREL) // Nhân vật đưa nòng súng lên
-		{
-			y+=1;
+			is_end_push_effect = true;
+			push_effect_time = 0;
+			x_delta = x_delta;
 		}
 	}
-	else // left wheel - bánh xe bên trái
+		
+	else if (is_start_push_effect && is_being_up && !is_Right_Wheel)
 	{
-		y -= (MAIN_CHARACTER_BBOX_HEIGHT-6);
-		
+		push_effect_time += dt;
+		if (push_effect_time <= WHEEL_PUSH_EFFECT_TIME && !is_end_push_effect)
+			x_delta += 0.01 * dt;
+		else
+		{
+			is_end_push_effect = true;
+			push_effect_time = 0;
+			x_delta = x_delta;
+		}
 	}
-		
-
 	
+	else
+	{
+		push_effect_time = 0;
+		x_delta = 0;
+	}
+		
 }
 
 void CWheelObject::Render()
@@ -74,40 +76,35 @@ void CWheelObject::Render()
 	}
 	else
 		flip = true;
-	if (is_Middle_Wheel) // Bánh xe ở giữa
+	
+	if (is_Right_Wheel) // Bánh xe bên phải
 	{
-		ani = WHEEL_ANI_IDLE; //Animation chỉ có 1 frame duy nhất
-		animation_set->at(ani)->Render(x, y,false,alpha);
-	}
-	else if (is_Right_Wheel) // Bánh xe bên phải
-	{
+		
 		ani = WHEEL_ANI_RIGHT_WHEEL; //Animation chỉ có 1 frame duy nhất
 		if (vx == 0) // Nhân vật đứng yên
 		{
 			animation_set->at(ani)->isPause = true; //Dừng animation 
-			animation_set->at(ani)->Render(x, y, flip,alpha); // Vẽ frame đang bị tạm dừng
+			animation_set->at(ani)->Render(x+MAIN_CHARACTER_BBOX_WIDTH- WHEEL_BBOX_WIDTH+x_delta, y- MAIN_CHARACTER_BBOX_HEIGHT+ WHEEL_BBOX_HEIGHT, flip,alpha); // Vẽ frame đang bị tạm dừng
 		}
 		else // Nhân vật di chuyển
 		{
 			animation_set->at(ani)->isPause = false; // Tiếp tục animation đã dừng trước đó
-			animation_set->at(ani)->Render(x, y, flip,alpha);
+			animation_set->at(ani)->Render(x + MAIN_CHARACTER_BBOX_WIDTH - WHEEL_BBOX_WIDTH + x_delta, y - MAIN_CHARACTER_BBOX_HEIGHT + WHEEL_BBOX_HEIGHT, flip,alpha);
 		}
 	}
-	else
+	else //Bánh xe bên trái
 	{
 			ani = WHEEL_ANI_IDLE_RUN;
 			if (vx==0) // Nhân vật đứng yên
 			{
 				animation_set->at(ani)->isPause = true; //Dừng animation 
-				animation_set->at(ani)->Render(x, y, flip,alpha); // Vẽ frame đang bị tạm dừng
+				animation_set->at(ani)->Render(x + x_delta, y - MAIN_CHARACTER_BBOX_HEIGHT + WHEEL_BBOX_HEIGHT, flip,alpha); // Vẽ frame đang bị tạm dừng
 			}
 			else // Nhân vật di chuyển
 			{
 				animation_set->at(ani)->isPause = false; // Tiếp tục animation đã dừng trước đó
-				animation_set->at(ani)->Render(x, y, flip,alpha);
-			}
-			
-		
+				animation_set->at(ani)->Render(x + x_delta, y - MAIN_CHARACTER_BBOX_HEIGHT + WHEEL_BBOX_HEIGHT, flip,alpha);
+			}	
 	}
 		
 }
@@ -115,7 +112,18 @@ void CWheelObject::Render()
 void CWheelObject::SetState(int state)
 {
 	CGameObject::SetState(state);
-	
+	switch (state)
+	{
+	case MAIN_CHARACTER_STATE_UP_BARREL:
+		is_start_push_effect = true;
+		is_being_up = true;
+		break;
+	default:
+		is_start_push_effect = false;
+		is_being_up = false;
+		is_end_push_effect = false;
+		break;
+	}
 }
 
 void CWheelObject::GetBoundingBox(float& left, float& top, float& right, float& bottom)

@@ -1,6 +1,6 @@
-#include "Spike.h"
+#include "Stair.h"
 
-CSpike::CSpike(float l, float t, float r, float b)
+CStair::CStair(float l, float t, float r, float b)
 {
 	x = l;
 
@@ -11,7 +11,7 @@ CSpike::CSpike(float l, float t, float r, float b)
 	height = -(b - t + 1);
 }
 
-void CSpike::GetBoundingBox(float& l, float& t, float& r, float& b)
+void CStair::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	l = x;
 	t = y - height;
@@ -19,7 +19,7 @@ void CSpike::GetBoundingBox(float& l, float& t, float& r, float& b)
 	b = y;
 }
 
-void CSpike::Render()
+void CStair::Render()
 {
 	animation_set->at(0)->Render(x, y);
 	RenderBoundingBox();

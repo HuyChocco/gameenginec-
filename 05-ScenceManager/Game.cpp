@@ -7,6 +7,7 @@
 #include "PlayScence.h"
 #include "IntroScence.h"
 #include "EndingScence.h"
+#include "BossScence.h"
 
 CGame * CGame::__instance = NULL;
 
@@ -149,30 +150,7 @@ void CGame::DrawWithTransformation(float x, float y, LPDIRECT3DTEXTURE9 texture,
 	);
 	
 	spriteHandler->SetTransform(&matrix);
-	spriteHandler->Draw(texture, &r, NULL, NULL, D3DCOLOR_ARGB(alpha, 255, 255, 255));
-	/*float width = right - left;
-	float height = bottom - top;
-	int scale = 1;
-	D3DXVECTOR3 center= D3DXVECTOR3((width/2)*scale,(height/2)*scale,0);
-	RECT r;
-	r.left = left;
-	r.top = top;
-	r.right = right;
-	r.bottom = bottom;
-
-	D3DXMATRIX mt;
-	D3DXMatrixIdentity(&mt);
-	mt._22 = -1;
-	mt._41 = -this->cam_x;
-	mt._42 = this->cam_y;
-	D3DXVECTOR3 position = D3DXVECTOR3(x,y,0);
-
-	D3DXVECTOR4 vp_pos;
-	D3DXVec3Transform(&vp_pos, &position, &mt);
-
-	D3DXVECTOR3 pos(vp_pos.x, vp_pos.y, 0);
-
-	spriteHandler->Draw(texture, &r, &center, &pos, D3DCOLOR_ARGB(alpha, 255, 255, 255));*/
+	spriteHandler->Draw(texture, &r, NULL, NULL, D3DCOLOR_ARGB(alpha, 255,255,255));
 
 }
 void CGame::DrawWithoutTransformation(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, int alpha, bool flip)
@@ -445,6 +423,7 @@ CGame *CGame::GetInstance()
 #define GAME_FILE_SECTION_SCENES 2
 
 #define INTRO_SCENCE_ID 0
+#define BOSS_SCENCE_ID 99
 #define ENDING_SCENCE_ID 100
 
 void CGame::_ParseSection_SETTINGS(string line)
@@ -469,6 +448,8 @@ void CGame::_ParseSection_SCENES(string line)
 	LPSCENE scene;
 	if(id==INTRO_SCENCE_ID)
 		scene = new CIntroScence(id, path);
+	else if (id == BOSS_SCENCE_ID)
+		scene = new CBossScence(id, path);
 	else if(id == ENDING_SCENCE_ID)
 		scene = new CEndingScence(id, path);
 	else

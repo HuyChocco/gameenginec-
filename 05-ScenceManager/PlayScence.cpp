@@ -13,7 +13,7 @@
 
 using namespace std;
 
-CPlayScene::CPlayScene(int id, LPCWSTR filePath):
+CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath)
 {
 	key_handler = new CPlayScenceKeyHandler(this);
@@ -40,6 +40,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 //Map objects
 #define OBJECT_TYPE_BRICK	1
 #define OBJECT_TYPE_SPIKE	21
+#define OBJECT_TYPE_STAIR	22
 
 //Enemy objects
 #define OBJECT_TYPE_ENEMY1	2
@@ -48,7 +49,11 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define OBJECT_TYPE_FLOATER	12
 #define OBJECT_TYPE_DOME	13
 #define OBJECT_TYPE_JUMPER	14
+
+#define OBJECT_TYPE_INSECT	15
+
 #define OBJECT_TYPE_ORB		16
+#define OBJECT_TYPE_SKULL	17
 #define OBJECT_TYPE_CANNON	19
 #define OBJECT_TYPE_EYEBALL	20
 #define OBJECT_TYPE_TELEPORTER 33
@@ -56,10 +61,11 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 //Main character objects
 #define OBJECT_TYPE_MAIN_CHARACTER	9
 #define OBJECT_TYPE_WHEEL_LEFT	4
-#define OBJECT_TYPE_WHEEL_RIGHT	5
-#define OBJECT_TYPE_WHEEL_MIDDLE	6
-#define OBJECT_TYPE_CABIN	7
-#define OBJECT_TYPE_BARREL	8
+
+#define OBJECT_TYPE_WHEEL_RIGHT	6
+
+#define OBJECT_TYPE_VEHICLE	7
+
 #define OBJECT_TYPE_HUMAN	11
 
 #define OBJECT_TYPE_POWERHUB	500
@@ -101,7 +107,7 @@ void CPlayScene::_ParseSection_SPRITES(string line)
 	if (tex == NULL)
 	{
 		DebugOut(L"[ERROR] Texture ID %d not found!\n", texID);
-		return; 
+		return;
 	}
 
 	CSprites::GetInstance()->Add(ID, l, t, r, b, tex);
@@ -121,7 +127,7 @@ void CPlayScene::_ParseSection_ANIMATIONS(string line)
 	for (int i = 1; i < tokens.size(); i += 2)	// why i+=2 ?  sprite_id | frame_time  
 	{
 		int sprite_id = atoi(tokens[i].c_str());
-		int frame_time = atoi(tokens[i+1].c_str());
+		int frame_time = atoi(tokens[i + 1].c_str());
 		ani->Add(sprite_id, frame_time);
 	}
 
@@ -138,12 +144,12 @@ void CPlayScene::_ParseSection_ANIMATION_SETS(string line)
 
 	LPANIMATION_SET s = new CAnimationSet();
 
-	CAnimations *animations = CAnimations::GetInstance();
+	CAnimations* animations = CAnimations::GetInstance();
 
 	for (int i = 1; i < tokens.size(); i++)
 	{
 		int ani_id = atoi(tokens[i].c_str());
-		
+
 		LPANIMATION ani = animations->Get(ani_id);
 		s->push_back(ani);
 	}
@@ -152,7 +158,7 @@ void CPlayScene::_ParseSection_ANIMATION_SETS(string line)
 }
 
 /*
-	Parse a line in section [OBJECTS] 
+	Parse a line in section [OBJECTS]
 */
 void CPlayScene::_ParseSection_OBJECTS(string line)
 {
@@ -168,9 +174,9 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	int ani_set_id = atoi(tokens[4].c_str());
 
-	CAnimationSets * animation_sets = CAnimationSets::GetInstance();
+	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
 
-	CGameObject *obj = NULL;
+	CGameObject* obj = NULL;
 
 	switch (object_type)
 	{
@@ -180,7 +186,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			DebugOut(L"[ERROR] Player object was created before!\n");
 			return;
 		}
-		
+
 		player = new CMainCharacter(x, y);
 		player->SetPosition(x, y);
 		player->SetAnimationSet(animation_sets->Get(ani_set_id));
@@ -190,13 +196,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case  OBJECT_TYPE_WORM:
 	{
 		int item = 0;
-		if(tokens.size()>5)
+		if (tokens.size() > 5)
 			item = atoi(tokens[5].c_str());
 		obj = new CWorm(item);
 		LPANIMATION_SET ani_set = animation_sets->Get(200);
 		obj->SetAnimationItemSet(ani_set);
 	}
-		break;
+	break;
 	case OBJECT_TYPE_FLOATER:
 	{
 		int item = 0;
@@ -206,7 +212,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		LPANIMATION_SET ani_set = animation_sets->Get(200);
 		obj->SetAnimationItemSet(ani_set);
 	}
-		break;
+	break;
 	case OBJECT_TYPE_CANNON:
 	{
 		int item = 0;
@@ -216,7 +222,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		LPANIMATION_SET ani_set = animation_sets->Get(200);
 		obj->SetAnimationItemSet(ani_set);
 	}
-		 break;
+	break;
 	case OBJECT_TYPE_EYEBALL:
 	{
 		int item = 0;
@@ -226,7 +232,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		LPANIMATION_SET ani_set = animation_sets->Get(200);
 		obj->SetAnimationItemSet(ani_set);
 	}
-		 break;
+	break;
 	case OBJECT_TYPE_TELEPORTER:
 	{
 		int item = 0;
@@ -237,7 +243,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetAnimationItemSet(ani_set);
 	}
 	break;
-	case OBJECT_TYPE_DOME: 
+	case OBJECT_TYPE_DOME:
 	{
 		int item = 0;
 		if (tokens.size() > 5)
@@ -246,7 +252,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		LPANIMATION_SET ani_set = animation_sets->Get(200);
 		obj->SetAnimationItemSet(ani_set);
 	}
-		break;
+	break;
 	case OBJECT_TYPE_JUMPER:
 	{
 		int item = 0;
@@ -257,6 +263,28 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetAnimationItemSet(ani_set);
 	}
 	break;
+
+	case OBJECT_TYPE_INSECT:
+	{
+		int item = 0;
+		if (tokens.size() > 5)
+			item = atoi(tokens[5].c_str());
+		obj = new CInsect(item);
+		LPANIMATION_SET ani_set = animation_sets->Get(200);
+		obj->SetAnimationItemSet(ani_set);
+	}
+	break;
+	case OBJECT_TYPE_SKULL:
+	{
+		int item = 0;
+		if (tokens.size() > 5)
+			item = atoi(tokens[5].c_str());
+		obj = new CSkull(item);
+		LPANIMATION_SET ani_set = animation_sets->Get(200);
+		obj->SetAnimationItemSet(ani_set);
+	}
+	break;
+
 	case OBJECT_TYPE_ORB:
 	{
 		int item = 0;
@@ -279,7 +307,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CSpike(x, y, r, b);
 		break;
 	}
-	case OBJECT_TYPE_POWERHUB: 
+	case OBJECT_TYPE_POWERHUB:
 	{
 		obj = new CPowerHub();
 		obj->SetPosition(x, y);
@@ -289,18 +317,31 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		return;
 		break;
 	}
-	
-	case OBJECT_TYPE_BRICK: 
+
+	case OBJECT_TYPE_BRICK:
 	{
 		float r = atof(tokens[5].c_str());
 		float b = atof(tokens[6].c_str());
-		obj = new CBrick(x, y, r, b);
+		if (tokens.size() > 7)
+		{
+			int type = atoi(tokens[7].c_str());
+			obj = new CBrick(x, y, r, b, type);
+		}
+		else
+			obj = new CBrick(x, y, r, b);
+		break;
+	}
+	case OBJECT_TYPE_STAIR:
+	{
+		float r = atof(tokens[5].c_str());
+		float b = atof(tokens[6].c_str());
+		obj = new CStair(x, y, r, b);
 		break;
 	}
 	case OBJECT_TYPE_WHEEL_LEFT:
 	{
 		obj = new CWheelObject();
-		obj->SetPosition(x, y);
+		float _x, _y;
 		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
 		obj->SetID(object_id);
 		if (player != NULL)
@@ -308,66 +349,42 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 			DebugOut(L"[INFO] Player object has been Created Already!\n");
 			player->AddComponentObject(obj);
+			player->GetPosition(_x, _y);
+			obj->SetPosition(_x, _y);
 			return;
 		}
-		break;
-	}
-	case OBJECT_TYPE_WHEEL_MIDDLE: 
-	{
-		obj = new CWheelObject();
-		CWheelObject* obj_middle_wheel = (CWheelObject*)obj;
-		obj_middle_wheel->SetIsMiddleWheel();
-		obj->SetPosition(x, y);
-		obj->SetID(object_id);
-		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
-		if (player != NULL)
-		{
-			DebugOut(L"[INFO] Player object has been Created Already!\n");
-			player->AddComponentObject(obj);
-		}
-		return;
 		break;
 	}
 	case OBJECT_TYPE_WHEEL_RIGHT:
 	{
 		obj = new CWheelObject();
-		CWheelObject* obj_right_wheel =(CWheelObject*) obj;
+		CWheelObject* obj_right_wheel = (CWheelObject*)obj;
 		obj_right_wheel->SetIsRightWheel();
-		obj->SetPosition(x, y);
+		float _x, _y;
 		obj->SetID(object_id);
 		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
 		if (player != NULL)
 		{
 			DebugOut(L"[INFO] Player object has been Created Already!\n");
 			player->AddComponentObject(obj);
+			player->GetPosition(_x, _y);
+			obj->SetPosition(_x, _y);
 		}
 		return;
 		break;
 	}
-	case OBJECT_TYPE_CABIN: 
+	case OBJECT_TYPE_VEHICLE:
 	{
-		obj = new CCabinObject();
-		obj->SetPosition(x, y);
+		obj = new CVehicle();
+		float _x, _y;
 		obj->SetID(object_id);
 		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
 		if (player != NULL)
 		{
 			DebugOut(L"[INFO] Player object has been Created Already!\n");
 			player->AddComponentObject(obj);
-		}
-		return;
-		break;
-	}
-	case OBJECT_TYPE_BARREL: 
-	{
-		obj = new CBarrelObject(); 
-		obj->SetPosition(x, y);
-		obj->SetID(object_id);
-		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
-		if (player != NULL)
-		{
-			DebugOut(L"[INFO] Player object has been Created Already!\n");
-			player->AddComponentObject(obj);
+			player->GetPosition(_x, _y);
+			obj->SetPosition(_x, _y);
 		}
 		return;
 		break;
@@ -388,36 +405,36 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		break;
 	}
 	case OBJECT_TYPE_PORTAL:
-		{	
-			float r = atof(tokens[5].c_str());
-			float b = atof(tokens[6].c_str());
-			int scene_id = atoi(tokens[7].c_str());
-			int type = atoi(tokens[8].c_str());
-			int next_portal_id = atoi(tokens[9].c_str());
-			obj = new CPortal(x, y, r, b, scene_id, type, next_portal_id);
-			if (CGame::GetInstance()->GetIsPreMap())
+	{
+		float r = atof(tokens[5].c_str());
+		float b = atof(tokens[6].c_str());
+		int scene_id = atoi(tokens[7].c_str());
+		int type = atoi(tokens[8].c_str());
+		int next_portal_id = atoi(tokens[9].c_str());
+		obj = new CPortal(x, y, r, b, scene_id, type, next_portal_id);
+		if (CGame::GetInstance()->GetIsPreMap())
+		{
+			if (player != NULL)
 			{
-				if (player != NULL)
+				if (CGame::GetInstance()->GetNextPortalId() == object_id)
 				{
-					if (CGame::GetInstance()->GetNextPortalId() == object_id)
-					{
-						player->SetPosition((x - MAIN_CHARACTER_BBOX_WIDTH)-2, y);
-					}
+					player->SetPosition((x - MAIN_CHARACTER_BBOX_WIDTH) - 2, y);
 				}
 			}
-			else if (CGame::GetInstance()->GetIsNextMap())
-			{
-				if (player != NULL)
-				{
-					if (CGame::GetInstance()->GetNextPortalId() == object_id)
-					{
-						player->SetPosition(x+(r-x)+2, y);
-					}
-				}
-			}
-
 		}
-		break;
+		else if (CGame::GetInstance()->GetIsNextMap())
+		{
+			if (player != NULL)
+			{
+				if (CGame::GetInstance()->GetNextPortalId() == object_id)
+				{
+					player->SetPosition(x + (r - x) + 2, y);
+				}
+			}
+		}
+
+	}
+	break;
 	default:
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
@@ -448,7 +465,7 @@ void CPlayScene::_ParseSection_MAP(string line)
 	tiledMap = new CTiledMap();
 	tiledMap->LoadMap(path.c_str());
 	CTiledMapSets::GetInstance()->Add(id, tiledMap);
-	
+
 
 }
 
@@ -456,8 +473,8 @@ void CPlayScene::_ParseSection_GRID(string line)
 {
 	// check flag to init grid
 	if (initGridFlag)
-		{
-		int width, height; 
+	{
+		int width, height;
 		//CTiledMap::GetInstance()->GetMapWidth(width);
 		//CTiledMap::GetInstance()->GetMapHeight(height);
 		CTiledMapSets::GetInstance()->Get(id)->GetMapWidth(width);
@@ -507,7 +524,7 @@ void CPlayScene::Load()
 	f.open(sceneFilePath);
 
 	// current resource section flag
-	int section = SCENE_SECTION_UNKNOWN;					
+	int section = SCENE_SECTION_UNKNOWN;
 
 	char str[MAX_SCENE_LINE];
 	while (f.getline(str, MAX_SCENE_LINE))
@@ -517,21 +534,25 @@ void CPlayScene::Load()
 		if (line[0] == '#') continue;	// skip comment lines	
 
 		if (line == "[TEXTURES]") { section = SCENE_SECTION_TEXTURES; continue; }
-		if (line == "[SPRITES]") { 
-			section = SCENE_SECTION_SPRITES; continue; }
-		if (line == "[ANIMATIONS]") { 
-			section = SCENE_SECTION_ANIMATIONS; continue; }
-		if (line == "[ANIMATION_SETS]") { 
-			section = SCENE_SECTION_ANIMATION_SETS; continue; }
-		if (line == "[OBJECTS]") { 
-			section = SCENE_SECTION_OBJECTS; continue; }
+		if (line == "[SPRITES]") {
+			section = SCENE_SECTION_SPRITES; continue;
+		}
+		if (line == "[ANIMATIONS]") {
+			section = SCENE_SECTION_ANIMATIONS; continue;
+		}
+		if (line == "[ANIMATION_SETS]") {
+			section = SCENE_SECTION_ANIMATION_SETS; continue;
+		}
+		if (line == "[OBJECTS]") {
+			section = SCENE_SECTION_OBJECTS; continue;
+		}
 		if (line == "[MAP]") {
 			section = SCENE_SECTION_MAP; continue;
 		}
 		if (line == "[GRID]") {
 			section = SCENE_SECTION_GRID; continue;
 		}
-		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }	
+		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }
 
 		//
 		// data section
@@ -546,10 +567,10 @@ void CPlayScene::Load()
 			//bổ sung
 		case SCENE_SECTION_MAP: _ParseSection_MAP(line); break;
 		case SCENE_SECTION_GRID:
-			{
-				_ParseSection_GRID(line);
-				break;
-			}
+		{
+			_ParseSection_GRID(line);
+			break;
+		}
 		}
 	}
 
@@ -566,32 +587,28 @@ void CPlayScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
-	
+
 	// get objects from grid 
 	CGame* game = CGame::GetInstance();
 	objects = CGrid::GetInstance()->GetList();
 	vector<LPGAMEOBJECT> coObjects;
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-	
 		coObjects.push_back(objects[i]);
-		
 	}
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 			objects[i]->Update(dt, &coObjects);
-
 	}
 	if (player == NULL) return;
 	else
 	{
 		//coObjects.push_back(player);
 		player->Update(dt, &coObjects);
-		
 	}
-	
+
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
-	
+
 	//Thực hiện chuyển sang scene tiếp theo
 	if (game->GetIsNextMap() == true)
 	{
@@ -602,7 +619,7 @@ void CPlayScene::Update(DWORD dt)
 		//Get scene kế tiếp thông qua scene_id
 		LPSCENE s = game->GetScene(id_next_map);
 		//Nếu scene tiếp theo tồn tại và chưa load tiled map của scene tiếp theo
-		if (s && initNextMap )
+		if (s && initNextMap)
 		{
 			// Lấy tiled map tiếp theo
 			s->GetNextMap();
@@ -641,12 +658,12 @@ void CPlayScene::Update(DWORD dt)
 			game->SetIsNextMap(false);
 		}
 
-		
+
 	}
 	//Thực hiện chuyển về scene trước
 	else if (game->GetIsPreMap() == true)
 	{
-		
+
 		//float player_x, player_y;
 		//player->GetPosition(player_x, player_y);
 		//Không xét va chạm và render player lên màn hình
@@ -666,7 +683,7 @@ void CPlayScene::Update(DWORD dt)
 		//player->GetPosition(player_x, player_y);
 		//Sau hiệu ứng di chuyển camera sang màn thì tiến hành chuyển màn
 		//if (player_x <= -(widthPreMap / 3))
-		{ 
+		{
 			// switch scene
 			game->SwitchScene(game->GetSceneId());
 			game->SetIsPreMap(false);
@@ -694,13 +711,13 @@ void CPlayScene::Update(DWORD dt)
 		else
 			player->GetPosition(cx, cy);
 	}
-	
-	
+
+
 	CMap* map = CTiledMapSets::GetInstance()->Get(id);
 	int widthMap, heightMap;
 	map->GetMapWidth(widthMap);
 	map->GetMapHeight(heightMap);
-	
+
 	if (cx <= (float)game->GetScreenWidth() / 2)
 	{
 		cx = 0;
@@ -708,7 +725,7 @@ void CPlayScene::Update(DWORD dt)
 	}
 	else if (widthMap - cx <= (float)game->GetScreenWidth() / 2)
 	{
-		if(game->GetIsNextMap())//nếu player va chạm portal
+		if (game->GetIsNextMap())//nếu player va chạm portal
 			cx -= (float)game->GetScreenWidth() / 2;
 		else
 			cx = widthMap - game->GetScreenWidth();
@@ -739,18 +756,21 @@ void CPlayScene::Update(DWORD dt)
 		else
 			player->GetPosition(player_x, player_y);
 
-		float height = player_y - cy;
+		float height = (player_y - cy);
 
-		if (height >= ((float)game->GetScreenHeight() / 12))
+		if (height >= ((float)game->GetScreenHeight() / 80))
 		{
-			height += (float)(game->GetScreenHeight() / 8);
+			height += (float)(game->GetScreenHeight() / 3);
 
 			cy += height;
 		}
-			
-		
+
+
 	}
 	CGame::GetInstance()->SetCamPos(cx, cy);
+	//Vẽ Hub objects
+	for (int i = 0; i < hub_objects.size(); i++)
+		hub_objects[i]->Update(dt);
 }
 
 void CPlayScene::Render()
@@ -758,7 +778,7 @@ void CPlayScene::Render()
 	//Vẽ tiled map của scene hiện tại
 	CTiledMapSets::GetInstance()->Get(id)->Render();
 	//Tạo hiệu ứng vẽ tiled map của scene tiếp theo nếu thỏa điều kiện
-	if (id_next_map != -1 && CTiledMapSets::GetInstance()->Get(id_next_map)&& CGame::GetInstance()->GetRenderingNextMap())
+	if (id_next_map != -1 && CTiledMapSets::GetInstance()->Get(id_next_map) && CGame::GetInstance()->GetRenderingNextMap())
 	{
 		CMap* map = CTiledMapSets::GetInstance()->Get(id);
 		int widthMap, heightMap;
@@ -769,7 +789,7 @@ void CPlayScene::Render()
 		int widthNextMap, heightNextMap;
 		map->GetMapWidth(widthNextMap);
 		map->GetMapHeight(heightNextMap);
-		CTiledMapSets::GetInstance()->Get(id_next_map)->Render(widthMap, heightMap<= heightNextMap? 0: heightMap- heightNextMap);
+		CTiledMapSets::GetInstance()->Get(id_next_map)->Render(widthMap, heightMap <= heightNextMap ? 0 : heightMap - heightNextMap);
 	}
 	/*else if (isRenderPreMap && id_pre_map != -1 && CTiledMapSets::GetInstance()->Get(id_pre_map))
 	{
@@ -796,14 +816,14 @@ void CPlayScene::Render()
 		for (int i = 0; i < hub_objects.size(); i++)
 			hub_objects[i]->Render();
 	}
-	
-	
-	
+
+
+
 }
 
 CMap* CPlayScene::GetMap()
 {
-		return tiledMap;
+	return tiledMap;
 }
 
 void CPlayScene::GetNextMap()
@@ -833,7 +853,7 @@ void CPlayScene::GetNextMap()
 		//
 		switch (section)
 		{
-		case SCENE_SECTION_MAP: 
+		case SCENE_SECTION_MAP:
 		{
 			vector<string> tokens = split(line);
 			if (tokens.size() < 1) return; // skip invalid lines - an map must have at least path
@@ -861,12 +881,10 @@ void CPlayScene::GetNextMap()
 				DebugOut(L"[ERROR] Texture ID %d not found!\n", texID);
 				return;
 			}
-			
+
 			sprites_next_map->Add(ID, l, t, r, b, tex);
 			break;
 		}
-			
-		
 		}
 	}
 
@@ -886,7 +904,7 @@ void CPlayScene::Unload()
 	sprites_next_map = NULL;
 
 	objects.clear();
-	
+
 	player = NULL;
 	isRenderNextMap = false;
 	isRenderPreMap = false;
@@ -901,7 +919,7 @@ void CPlayScene::Unload()
 void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
-	CMainCharacter *player = ((CPlayScene*)scence)->GetPlayer();
+	CMainCharacter* player = ((CPlayScene*)scence)->GetPlayer();
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
@@ -916,21 +934,24 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_M:
 		player->SetState(MAIN_CHARACTER_STATE_HUMAN);
 		break;
+	case DIK_DOWN:
+		player->SetState(MAIN_CHARACTER_STATE_DOWN_BARREL);
+		break;
 	}
 }
 void CPlayScenceKeyHandler::OnKeyUp(int KeyCode)
 {
-	
+
 }
 
-void CPlayScenceKeyHandler::KeyState(BYTE *states)
+void CPlayScenceKeyHandler::KeyState(BYTE* states)
 {
-	CGame *game = CGame::GetInstance();
-	CMainCharacter *player = ((CPlayScene*)scence)->GetPlayer();
+	CGame* game = CGame::GetInstance();
+	CMainCharacter* player = ((CPlayScene*)scence)->GetPlayer();
 	//// disable control key when Mario die 
 	if (player->GetState() == MAIN_CHARACTER_STATE_DIE) return;
 	if (player->GetState() == MAIN_CHARACTER_STATE_NONE_COLLISION) return;
-	
+
 	if (game->IsKeyDown(DIK_UP))
 	{
 		player->SetState(MAIN_CHARACTER_STATE_UP_BARREL);
@@ -948,6 +969,6 @@ void CPlayScenceKeyHandler::KeyState(BYTE *states)
 		player->SetState(MAIN_CHARACTER_STATE_IDLE);
 		//DebugOut(L"[INFO] ELSE\n");
 	}
-		
+
 }
 
