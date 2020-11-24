@@ -280,7 +280,8 @@ void CBossScence::Load()
 	}
 
 	f.close();
-
+	//Texture for bounding box
+	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 	DebugOut(L"[INFO] Done loading boss scence resources %s\n", sceneFilePath);
 
 }
