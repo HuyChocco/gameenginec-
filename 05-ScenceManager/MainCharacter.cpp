@@ -18,6 +18,7 @@
 #include "Cannon.h"
 #include "Jumper.h"
 #include "Teleporter.h"
+#include "Orb.h"
 
 #define JUMPER_ROUNDING_DISTANCE_X 50
 #define JUMPER_ROUNDING_DISTANCE_Y 40
