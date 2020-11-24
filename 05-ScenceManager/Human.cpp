@@ -20,11 +20,13 @@
 #include "Jumper.h"
 #include "Teleporter.h"
 #include "Orb.h"
+#include "Skull.h"
 
 #define JUMPER_ROUNDING_DISTANCE_X 50
 #define JUMPER_ROUNDING_DISTANCE_Y 20
 #define ORB_ROUNDING_DISTANCE_X 120
 #define ORB_ROUNDING_DISTANCE_Y 110
+#define SKULL_ROUNDING_DISTANCE_X 2
 CHuman::CHuman(float x, float y) : CGameObject()
 {
 	level = HUMAN_LEVEL_SMALL;
@@ -156,6 +158,47 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			{
 				if (!CGame::GetInstance()->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2))
 					isStateClimb = false;
+			}
+		}
+		else if (dynamic_cast<CSkull*>(coObjects->at(i))) {
+			CSkull* skull = dynamic_cast<CSkull*>(coObjects->at(i));
+
+			float x_skull, y_skull;
+			skull->GetPosition(x_skull, y_skull);
+			if (x > x_skull)
+				skull->SetDirection(1);
+			else
+				skull->SetDirection(-1);
+			if (skull->GetState() != STATE_ITEM)
+			{
+				if (!skull->isAttacked) {
+					if (abs(x - x_skull) > SKULL_ROUNDING_DISTANCE_X) {
+						if (x < x_skull)
+						{
+							skull->SetState(SKULL_STATE_MOVE_LEFT);
+						}
+						else if (x > x_skull)
+						{
+							skull->SetState(SKULL_STATE_MOVE_RIGHT);
+						}
+					}
+					else
+					{
+						skull->time_moving += dt;
+						//skull->SetState(SKULL_STATE_MOVE_UP);
+						skull->SetState(SKULL_STATE_MOVE_RIGHT_ATTACK);
+						skull->SetIsAttack(true);
+
+					}
+
+				}
+				else
+				{
+					if (skull->time_moving < dt) {
+						skull->SetState(SKULL_STATE_MOVE_UP);
+					}
+				}
+
 			}
 		}
 	}
@@ -379,6 +422,32 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else
 					orb->SetState(ORB_STATE_DIE);
+			}
+			else if (dynamic_cast<CSkull*>(e->obj))
+			{
+				CSkull* skull = dynamic_cast<CSkull*>(e->obj);
+				float vxSkull, vySkull;
+				skull->GetSpeed(vxSkull, vySkull);
+				if (skull->GetState() != STATE_ITEM)
+				{
+					StartUntouchable();
+					if (e->ny != 0)
+					{
+						y += dy;
+					}
+					else
+						x += dx;
+				}
+				else
+				{
+					if (e->ny < 0)
+					{
+						y -= 2 * vy * dt;
+					}
+					else
+						x += dx;
+					skull->SetState(SKULL_STATE_DIE);
+				}
 			}
 			//Indoor enemies
 			else if (dynamic_cast<CCannon*>(e->obj))

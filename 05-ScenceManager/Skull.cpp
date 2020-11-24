@@ -97,7 +97,10 @@ void CSkull::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	}
 	// clean up collision events
-	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i]; for (int i = 0; i < list_weapon.size(); i++)
+	{
+		list_weapon[i]->Update(dt, coObjects);
+	}
 
 
 }

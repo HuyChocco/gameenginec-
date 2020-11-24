@@ -167,7 +167,6 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 							if (x < x_skull)
 							{
 								skull->SetState(SKULL_STATE_MOVE_LEFT);
-								
 							}
 							else if (x > x_skull)
 							{
@@ -406,61 +405,57 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else if (dynamic_cast<CInsect*>(e->obj))
 				{
-				Is_On_Ground = false;
-				CInsect* insect = dynamic_cast<CInsect*>(e->obj);
-				float vxInsect, vyInsect;
-				insect->GetSpeed(vxInsect, vyInsect);
-				if (insect->GetState() != STATE_ITEM)
-				{
-					StartUntouchable();
-					if (e->ny != 0)
+					Is_On_Ground = false;
+					CInsect* insect = dynamic_cast<CInsect*>(e->obj);
+					float vxInsect, vyInsect;
+					insect->GetSpeed(vxInsect, vyInsect);
+					if (insect->GetState() != STATE_ITEM)
 					{
-						y -= 2 * vyInsect * dt;
+						StartUntouchable();
+						if (e->ny != 0)
+						{
+							y -= 2 * vyInsect * dt;
+						}
+						else
+							x += dx;
 					}
 					else
-						x += dx;
-				}
-				else
-				{
-					if (e->ny < 0)
 					{
-						y -= 2 * vy * dt;
+						if (e->ny < 0)
+						{
+							y -= 2 * vy * dt;
+						}
+						else
+							x += dx;
+						insect->SetState(INSECT_STATE_DIE);
 					}
-					else
-						x += dx;
-					insect->SetState(INSECT_STATE_DIE);
-				}
-
-
 				}
 				else if (dynamic_cast<CSkull*>(e->obj))
 				{
-				Is_On_Ground = false;
-				CSkull* skull = dynamic_cast<CSkull*>(e->obj);
-				float vxSkull, vySkull;
-				skull->GetSpeed(vxSkull, vySkull);
-				if (skull->GetState() != STATE_ITEM)
-				{
-					StartUntouchable();
-					if (e->ny != 0)
+					Is_On_Ground = false;
+					CSkull* skull = dynamic_cast<CSkull*>(e->obj);
+					float vxSkull, vySkull;
+					skull->GetSpeed(vxSkull, vySkull);
+					if (skull->GetState() != STATE_ITEM)
 					{
-						y -= 2 * vySkull * dt;
+						StartUntouchable();
+						if (e->ny != 0)
+						{
+							y += dy;
+						}
+						else
+							x += dx;
 					}
 					else
-						x += dx;
-				}
-				else
-				{
-					if (e->ny < 0)
 					{
-						y -= 2 * vy * dt;
+						if (e->ny < 0)
+						{
+							y -= 2 * vy * dt;
+						}
+						else
+							x += dx;
+						skull->SetState(SKULL_STATE_DIE);
 					}
-					else
-						x += dx;
-					skull->SetState(SKULL_STATE_DIE);
-				}
-
-
 				}
 				else if (dynamic_cast<COrb*>(e->obj))
 				{
