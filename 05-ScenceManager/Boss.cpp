@@ -43,7 +43,7 @@ void CBoss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 
 	time_moving += dt;
-	if (x<=0||x >= CGame::GetInstance()->GetScreenWidth()- BOSS_BBOX_WIDTH)
+	if (x<=0||x >= CGame::GetInstance()->GetScreenWidth() - BOSS_BBOX_WIDTH)
 		SetState(BOSS_STATE_MOVE_CHANGE_DIRECTION_X);
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
