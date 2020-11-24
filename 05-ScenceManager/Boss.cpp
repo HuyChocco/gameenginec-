@@ -5,7 +5,7 @@
 CBoss::CBoss(int _item) :CEnemyObject()
 {
 	SetState(BOSS_STATE_MOVE);
-	this->blood = 1;
+	this->blood = 20;
 	item = _item;
 	time_moving = 0;
 	isEnable = true;
@@ -90,7 +90,7 @@ void CBoss::Render()
 		if (isDisplay)
 		{
 			animation_set->at(ani)->Render(x, y);
-			RenderBoundingBox();
+			//RenderBoundingBox();
 		}
 	}
 	for (int i = 0; i < list_weapon.size(); i++)
