@@ -319,7 +319,7 @@ Map-Blaster-Master-Area-2-A.txt
 # xoay ngang
 801	300001	200	300002	200
 # mở nắp cabin
-802	300003	100
+802	300003	200
 # đưa nòng súng lên
 803	300004	100	300005	100	300006	100
 # ==== MAIN CHARACTER =========
@@ -422,14 +422,14 @@ Map-Blaster-Master-Area-2-A.txt
 # MAIN_CHARACTER need to be created first!
 1	9	0	200	2
 # MAIN OBJECTS LIST
-# HUMAN
-2	11	17	115	1
 # WHEEL_LEFT
 3	4	18	132	3
 # WHEEL_RIGHT
 4	6	32	132	3
 # SOFIA VEHICLE
 5	7	25	118	4
+# HUMAN
+2	11	17	115	1
 # HUB LIST - x,y theo trục màn hình
 9	500	10	100	100
 # ENEMY LIST
@@ -465,7 +465,7 @@ Map-Blaster-Master-Area-2-A.txt
 116	1	817	207	2	850	158
 117	1	880	208	2	913	127
 118	1	2	223	2	1024	209
-119 	1	0	210	2	0	80
+#119 	1	0	210	2	0	80
 120	1	2	18	2	1024	0
 121	1	978	206	2	1022	79
 #Stair

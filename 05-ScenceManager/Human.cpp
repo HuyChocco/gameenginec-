@@ -274,7 +274,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (isBeingHuman)
 				{
 					SetState(HUMAN_STATE_CLIMB);
-					SetPosition(l + ((r - l) / 2) - 6, y);
+					SetPosition(l + ((r - l) / 2) - 4, y);
 				}
 
 			}
@@ -753,21 +753,25 @@ void CHuman::SetState(int state)
 		}
 		break;
 	case MAIN_CHARACTER_STATE_DOWN_BARREL:
-		if (level == HUMAN_LEVEL_BIG)
+		if(isBeingHuman)
 		{
-			isGoingUp = false;
-			isGoingDown = true;
-			vy = -HUMAN_WALKING_SPEED;
-		}
-		else if (level == HUMAN_LEVEL_SMALL)
-		{
-			if (!isStateClimb)
-				isStateCrawl = true;
-			if (isStateClimb)
+			if (level == HUMAN_LEVEL_BIG)
 			{
-				vy = -0.04f;
+				isGoingUp = false;
+				isGoingDown = true;
+				vy = -HUMAN_WALKING_SPEED;
+			}
+			else if (level == HUMAN_LEVEL_SMALL)
+			{
+				if (!isStateClimb)
+					isStateCrawl = true;
+				if (isStateClimb)
+				{
+					vy = -0.04f;
+				}
 			}
 		}
+		
 		break;
 	case MAIN_CHARACTER_STATE_DIE:
 		break;

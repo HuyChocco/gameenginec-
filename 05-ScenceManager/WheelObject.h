@@ -9,11 +9,14 @@
 #define WHEEL_BBOX_WIDTH 8
 #define WHEEL_BBOX_HEIGHT 8
 #define WHEEL_PUSH_EFFECT_TIME 300
+#define WHEEL_UP_DOWN_EFFECT_TIME 100
 class CWheelObject : public CGameObject
 {
 	int level;
 	DWORD up_effect_start;
 	DWORD push_effect_time;
+	DWORD up_down_effect_time;
+	bool is_being_up_effect_wheel;
 	float start_x;			// initial position of WHEEL at scene
 	float start_y;
 
@@ -23,6 +26,7 @@ class CWheelObject : public CGameObject
 	bool is_being_up;
 
 	float x_delta;
+	float y_delta;
 	bool is_start_push_effect;
 	bool is_end_push_effect;
 public:
