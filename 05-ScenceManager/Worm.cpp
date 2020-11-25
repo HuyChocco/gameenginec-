@@ -39,7 +39,8 @@ void CWorm::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
-
+	if (x <= 0 && vx < 0)
+		dx = 0;
 	// Simple fall down
 	if (isDisplay)
 		vy -= 0.0001f * dt;

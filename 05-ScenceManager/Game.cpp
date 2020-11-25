@@ -406,7 +406,6 @@ bool CGame::CheckCollision(float l1, float t1, float r1, float b1, float l2, flo
 {
 	if (t1 <= b2 && b1 >= t2 && l1 <= r2 && r1 >= l2)
 		return true;
-
 	return false;
 }
 CGame *CGame::GetInstance()
