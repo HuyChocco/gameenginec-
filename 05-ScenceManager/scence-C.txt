@@ -429,11 +429,11 @@ Map-Blaster-Master-Area-2-C.txt
 4010	100016	100
 # Skull 
 # Bullet left
-4013	100019	100
+4011	100019	100
 # Bullet right
-4014	100020	100
+4012	100020	100
 #Bullet explosion
-4015	100021	100
+4013	100021	100
 # ==== HUB =========
 # PowerHub - Text
 100000	800001	100
@@ -470,7 +470,7 @@ Map-Blaster-Master-Area-2-C.txt
 # SKULLS
 15	120000	120001	120002	120003
 # WEAPON Player-horizontal Player-vertical Player-explode Big human-bullet Big human-explosion Cannon-bullet Cannon-explosion Eyeball-bullet Eyeball-explosion	Floater-bullet	Floater-explosion	Skull bullet left	Skull bullet right	Skull bullet explosion
-7	4000	4001	4002	4003	4004	4005	4006	4007	4008	4009	4010	4013	4014	4015
+7	4000	4001	4002	4003	4004	4005	4006	4007	4008	4009	4010	4011	4012	4013
 # HUB
 100	100000	100001	100002	100003
 # ITEMS
@@ -496,8 +496,8 @@ Map-Blaster-Master-Area-2-C.txt
 # ENEMY LIST
 # Skulls
 8	17	150	140	15	1
-10	17	263	144	15	1
-11	17	422	133	15	1
+10	17	260	140	15	1
+11	17	290	140	15	1
 16	13	135	140	11	
 # MAP OBJECT LIST
 # BRICK 
@@ -524,5 +524,5 @@ Map-Blaster-Master-Area-2-C.txt
 0	2	107	108	102
 0	3	109
 1	0	1000	110	8
-1	2	1001	110	10
-1	3	109	11
+1	2	1001	110	10	11
+1	3	109
