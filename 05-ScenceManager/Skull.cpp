@@ -185,10 +185,10 @@ void CSkull::SetState(int state)
 		{
 			if (isDisplay)
 			{
-				CWeapon* weapon = new CWeapon(WEAPON_TYPE_ENEMY_FLOATER);// Khởi tạo weapon
+				CWeapon* weapon = new CWeapon(WEAPON_TYPE_ENEMY_SKULL);// Khởi tạo weapon
 				weapon->SetDirection(nx);
 				weapon->SetPosition(x + SKULL_BBOX_WIDTH / 2, y);
-				weapon->SetState(WEAPON_FLOATER_STATE_FLY);
+				weapon->SetState(WEAPON_SKULL_STATE_FLY_RIGHT_UP);
 				if (player)
 					weapon->SetPlayerObject(player);
 				list_weapon.push_back(weapon);

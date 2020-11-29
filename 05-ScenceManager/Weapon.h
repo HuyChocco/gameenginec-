@@ -54,9 +54,10 @@
 
 //Enemy Skull
 #define WEAPON_SKULL_STATE_FLY_LEFT		700
-#define WEAPON_SKULL_STATE_FLY_RIGHT		701
+#define WEAPON_SKULL_STATE_FLY_RIGHT_UP		701
 #define WEAPON_SKULL_STATE_EXPLODE		702
-
+#define WEAPON_SKULL_STATE_FLY_RIGHT_DOWN		703
+#define WEAPON_SKULL_STATE_FLY_RIGHT		704
 //Big Human
 #define WEAPON_BIG_HUMAN_STATE_FLY		800
 #define WEAPON_BIG_HUMAN_STATE_EXPLODE		801
@@ -83,9 +84,9 @@
 #define WEAPON_ANI_ENEMY_FLOATER 9
 #define WEAPON_ANI_EXPLODE_ENEMY_FLOATER 10
 //Enemy_Skull
-#define WEAPON_ANI_ENEMY_SKULL_LEFT 13
-#define WEAPON_ANI_ENEMY_SKULL_RIGHT 14
-#define WEAPON_ANI_EXPLODE_ENEMY_SKULL 15
+#define WEAPON_ANI_ENEMY_SKULL_LEFT 11
+#define WEAPON_ANI_ENEMY_SKULL_RIGHT 12
+#define WEAPON_ANI_EXPLODE_ENEMY_SKULL 13
 //Player
 #define WEAPON_FLY_SPEED 0.3f;
 
@@ -94,7 +95,8 @@
 #define WEAPON_TELEPORTER_FLY_SPEED 0.15f;
 #define WEAPON_FLOATER_FLY_SPEED 0.05f;
 #define WEAPON_BIG_HUMAN_FLY_SPEED 0.15f;
-#define WEAPON_SKULL_FLY_SPEED 0.1f;
+#define WEAPON_SKULL_FLY_SPEED 0.04f;
+#define WEAPON_SKULL_FLY_SPEED_X 0.03f;
 
 #define TIME_ENABLE_FIRE			1000
 
@@ -118,6 +120,15 @@ class CWeapon : public CGameObject
 	bool isBurning;
 	bool isAttacked;
 	CGameObject* player;
+
+	DWORD time_movingg;
+	bool isOne;
+	bool isTwo= true;
+	bool isThree = true;
+	bool isOne1;
+	bool isTwo1;
+	bool isThree1;
+	bool isFour = true;
 public:
 	CWeapon(int type);
 	CWeapon(float x, float y, int nx, int state,bool isBarrelUp);

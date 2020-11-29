@@ -182,8 +182,9 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
-						if (skull->time_moving < dt) {
+						if (skull->time_moving < 100) {
 							skull->SetState(SKULL_STATE_MOVE_UP);
+							skull->time_moving = 0;
 						}
 					}
 
