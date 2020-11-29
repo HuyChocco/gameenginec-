@@ -61,6 +61,7 @@ class CHuman : public CGameObject
 	bool isBeingHuman;
 	bool isStateCrawl;
 	bool isStateClimb;
+	CGameObject* player;
 public:
 	CHuman(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
@@ -78,4 +79,5 @@ public:
 	bool GetGoingUp() { return isGoingUp; }
 	bool GetGoingDown() { return isGoingDown; }
 	void SetIsBeingHuman(bool _flag) { isBeingHuman = _flag; }
+	void SetPlayerObject(CGameObject* _player) { player = _player; }
 };

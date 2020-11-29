@@ -104,4 +104,8 @@ public:
 	float GetStartY() { return start_y; }
 
 	void CollisionItem(int item);
+	int GetPower() { return power; }
+	void SetPower(int _power) { power = _power; }
+	int GetAlive() { return alive; }
+	void SetAlive(int _alive) { alive = _alive; }
 };

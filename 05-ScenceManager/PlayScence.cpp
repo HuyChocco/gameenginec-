@@ -314,6 +314,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
 		hub_objects.push_back(obj);
 		DebugOut(L"[INFO] PowerHub object created!\n");
+		if (player != NULL)
+		{
+			DebugOut(L"[INFO] Player object has been Created Already!\n");
+			dynamic_cast<CPowerHub*>(obj)->SetPlayerObject(player);
+		}
 		return;
 		break;
 	}
@@ -400,6 +405,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		{
 			DebugOut(L"[INFO] Player object has been Created Already!\n");
 			player->AddComponentObject(obj);
+			dynamic_cast<CHuman*>(obj)->SetPlayerObject(player);
 		}
 		return;
 		break;
@@ -516,7 +522,7 @@ void CPlayScene::_ParseSection_GRID(string line)
 	}
 }
 
-void CPlayScene::Load()
+void CPlayScene::Load(int _alive, int _power)
 {
 	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 
@@ -580,6 +586,11 @@ void CPlayScene::Load()
 
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 
+	if (player != NULL)
+	{
+		player->SetPower(_power);
+		player->SetAlive(_alive);
+	}
 }
 
 
@@ -654,7 +665,7 @@ void CPlayScene::Update(DWORD dt)
 		if (player_x >= widthMap + (widthNextMap / 3))
 		{
 			// switch scene
-			game->SwitchScene(game->GetSceneId());
+			game->SwitchScene(game->GetSceneId(),player->GetAlive(),player->GetPower());
 			game->SetIsNextMap(false);
 		}
 
@@ -685,7 +696,7 @@ void CPlayScene::Update(DWORD dt)
 		//if (player_x <= -(widthPreMap / 3))
 		{
 			// switch scene
-			game->SwitchScene(game->GetSceneId());
+			game->SwitchScene(game->GetSceneId(), player->GetAlive(), player->GetPower());
 			game->SetIsPreMap(false);
 		}
 
