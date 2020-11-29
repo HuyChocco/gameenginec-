@@ -304,7 +304,8 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
-						power++;
+						if (power <= 8)
+							power++;
 						if (e->ny != 0)
 						{
 							y -= 2 * vy * dt;
@@ -334,7 +335,8 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
-						power++;
+						if (power <= 8)
+							power++;
 						if (e->ny < 0)
 						{
 							y -=  2*vy * dt;
@@ -364,6 +366,8 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
+						if (power <= 8)
+							power++;
 						if (e->ny < 0)
 						{
 							y -= 2 * vy * dt;
@@ -391,6 +395,8 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
+						if (power <= 8)
+							power++;
 						if (e->ny < 0)
 						{
 							y -= 2 * vy * dt;
@@ -420,6 +426,8 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
+						if (power <= 8)
+							power++;
 						if (e->ny < 0)
 						{
 							y -= 2 * vy * dt;
@@ -447,6 +455,8 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
+						if (power <= 8)
+							power++;
 						if (e->ny < 0)
 						{
 							y -= 2 * vy * dt;
@@ -478,6 +488,8 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
+						if (power <= 8)
+							power++;
 						if (e->ny < 0)
 						{
 							y -= 2 * vy * dt;
@@ -506,6 +518,8 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
+						if (power <= 8)
+							power++;
 						if (e->ny != 0)
 						{
 							y += dy;
@@ -533,6 +547,8 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
+						if (power <= 8)
+							power++;
 						if (e->ny != 0)
 						{
 							y += dy;
@@ -560,6 +576,8 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
+						if(power<=8)
+							power++;
 						if (e->ny != 0)
 						{
 							y += dy;

@@ -310,6 +310,16 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else
 				{
+					if (player != NULL)
+					{
+						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+						int power = player_object->GetPower();
+						if (power <= 8)
+						{
+							power++;
+							player_object->SetPower(power);
+						}
+					}
 					if (e->ny != 0)
 					{
 						y -= 2 * vy * dt;
@@ -338,6 +348,15 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else
 				{
+					if (player != NULL)
+					{
+						int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
+						if (power <= 8)
+						{
+							power++;
+							dynamic_cast<CMainCharacter*>(player)->SetPower(power);
+						}
+					}
 					if (e->ny < 0)
 					{
 						y -= 2 * vy * dt;
@@ -366,6 +385,15 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else
 				{
+					if (player != NULL)
+					{
+						int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
+						if (power <= 8)
+						{
+							power++;
+							dynamic_cast<CMainCharacter*>(player)->SetPower(power);
+						}
+					}
 					if (e->ny < 0)
 					{
 						y -= 2 * vy * dt;
@@ -394,6 +422,15 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else
 				{
+					if (player != NULL)
+					{
+						int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
+						if (power <= 8)
+						{
+							power++;
+							dynamic_cast<CMainCharacter*>(player)->SetPower(power);
+						}
+					}
 					if (e->ny < 0)
 					{
 						y -= 2 * vy * dt;
@@ -421,7 +458,18 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						x += dx;
 				}
 				else
+				{
+					if (player != NULL)
+					{
+						int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
+						if (power <= 8)
+						{
+							power++;
+							dynamic_cast<CMainCharacter*>(player)->SetPower(power);
+						}
+					}
 					orb->SetState(ORB_STATE_DIE);
+				}
 			}
 			else if (dynamic_cast<CSkull*>(e->obj))
 			{
@@ -440,6 +488,15 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else
 				{
+					if (player != NULL)
+					{
+						int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
+						if (power <= 8)
+						{
+							power++;
+							dynamic_cast<CMainCharacter*>(player)->SetPower(power);
+						}
+					}
 					if (e->ny < 0)
 					{
 						y -= 2 * vy * dt;
@@ -467,6 +524,15 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else
 				{
+					if (player != NULL)
+					{
+						int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
+						if (power <= 8)
+						{
+							power++;
+							dynamic_cast<CMainCharacter*>(player)->SetPower(power);
+						}
+					}
 					if (e->ny != 0)
 					{
 						y += dy;
@@ -493,6 +559,15 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else
 				{
+					if (player != NULL)
+					{
+						int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
+						if (power <= 8)
+						{
+							power++;
+							dynamic_cast<CMainCharacter*>(player)->SetPower(power);
+						}
+					}
 					if (e->ny != 0)
 					{
 						y += dy;
@@ -520,6 +595,15 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else
 				{
+					if (player != NULL)
+					{
+						int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
+						if (power <= 8)
+						{
+							power++;
+							dynamic_cast<CMainCharacter*>(player)->SetPower(power);
+						}
+					}
 					if (e->ny != 0)
 					{
 						y += dy;
@@ -527,10 +611,8 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					else
 						x += dx;
 					teleporter->SetState(TELEPORTER_STATE_DIE);
-
 				}
 			}
-
 		}
 	}
 
