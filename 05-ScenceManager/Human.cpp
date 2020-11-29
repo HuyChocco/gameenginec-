@@ -162,7 +162,8 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 		else if (dynamic_cast<CSkull*>(coObjects->at(i))) {
 			CSkull* skull = dynamic_cast<CSkull*>(coObjects->at(i));
-
+			if (isBeingHuman)
+				skull->SetPlayerObject(this);
 			float x_skull, y_skull;
 			skull->GetPosition(x_skull, y_skull);
 			if (x > x_skull)

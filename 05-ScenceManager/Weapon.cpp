@@ -1230,28 +1230,21 @@ void CWeapon::SetState(int state)
 	switch (state)
 	{
 	case WEAPON_SKULL_STATE_FLY_RIGHT_UP:
-		
-			vx = WEAPON_SKULL_FLY_SPEED;
+		vx = WEAPON_SKULL_FLY_SPEED;
 		vy = WEAPON_SKULL_FLY_SPEED;
-
 		this->dame = 1;
 	break;
 	case WEAPON_SKULL_STATE_FLY_RIGHT_DOWN:
-
 		vx = WEAPON_SKULL_FLY_SPEED_X;
 		vy = -WEAPON_SKULL_FLY_SPEED;
-
 		this->dame = 1;
 		break;
 	case WEAPON_SKULL_STATE_FLY_RIGHT:
-
-
 		vx = WEAPON_SKULL_FLY_SPEED;
 		vy = 0;
 		this->dame = 1;
 		break;
 	case WEAPON_SKULL_STATE_FLY_LEFT:
-
 		vx = -WEAPON_SKULL_FLY_SPEED;
 		this->dame = 1;
 		break;

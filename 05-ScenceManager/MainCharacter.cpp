@@ -31,7 +31,8 @@
 
 
 #define SKULL_ROUNDING_DISTANCE_X 2
-
+#define ORB_ROUNDING_DISTANCE_X 120
+#define ORB_ROUNDING_DISTANCE_Y 110
 
 CMainCharacter::CMainCharacter(float x, float y) : CGameObject()
 {
@@ -122,6 +123,25 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else
 					teleporter->SetDirectionY(-1);//Down
 			}
+			else if (dynamic_cast<COrb*>(coObjects->at(i))) {
+				COrb* orb = dynamic_cast<COrb*>(coObjects->at(i));
+				int type = orb->GetType();
+				if (type != 1)
+				{
+					float x_orb, y_orb;
+					orb->GetPosition(x_orb, y_orb);
+					if (x > x_orb)
+						orb->SetDirection(1);
+					else
+						orb->SetDirection(-1);
+					if (orb->GetState() != STATE_ITEM)
+					{
+						if (abs(x - x_orb) < ORB_ROUNDING_DISTANCE_X && abs(y - y_orb) < ORB_ROUNDING_DISTANCE_Y)
+							orb->SetState(ORB_STATE_ATTACK);
+						else orb->SetState(ORB_STATE_IDLE);
+					}
+				}
+			}
 			else if (dynamic_cast<CCannon*>(coObjects->at(i))) {
 				CCannon* cannon = dynamic_cast<CCannon*>(coObjects->at(i));
 			}
@@ -150,7 +170,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			else if (dynamic_cast<CSkull*>(coObjects->at(i))) {
 				CSkull* skull = dynamic_cast<CSkull*>(coObjects->at(i));
-
+				skull->SetPlayerObject(this);
 				float x_skull, y_skull;
 				skull->GetPosition(x_skull, y_skull);
 				if (x > x_skull)
