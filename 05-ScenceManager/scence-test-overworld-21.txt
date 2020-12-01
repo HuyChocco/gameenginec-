@@ -94,8 +94,11 @@
 10003	21	30	29	46	1
 10004	30	30	38	46	1
 # Crawl left - Bo ben trai
-10005	39	30	55	46	1
-10006	56	30	72	46	1
+10005	129	162	145	172	55
+10006	150	162	165	172	55
+# Climbing - leo cau thang
+10016	26	177	38	194	55
+10017	47	177	59	194	55
 # BIG-SOFIA
 # move left
 10007	208	69	232	101	1
@@ -109,12 +112,6 @@
 10013	208	3	232	35	1
 10014	233	3	257	35	1
 10015	258	3	282	35	1
-#bullet_sofia
-10016	135	183	139	187	55
-#bullet_explosion
-10017	155	181	162	189	55
-10018	171	178	187	191	55
-10019	192	177	208	193	55
 # SOFIA left Wheel 
 20001	3	21	10	28	1
 20002	12	21	19	28	1
@@ -125,33 +122,21 @@
 200004	30	21	37	28	1
 200001	3	21	10	28	1
 200002	12	21	19	28	1
-# SOFIA Barrel
-#down-left
-30001	3	3	10	10	1
-#horizontal
-30002	12	3	19	10	1
-#up-left
-30003	21	3	28	10	1
-#straight
-30004	30	3	37	10	1
-# SOFIA Cabin
-50001	39	3	54	10	1
-# SOFIA Cabin Up
-50002	73	3	88	18	1
-# SOFIA Middle Wheel
-60001	3	12	10	19	1
-60002	12	12	19	19	1
-60003	21	12	28	19	1
-60004	30	12	37	19	1
+# SOFIA Vehicle
+# nằm ngang, đóng nắp cabin
+300001	72	24	98	40	55
+# xoay
+300002	116	24	134	40	55
+# mở nắp cabin
+300003	30	16	56	40	55
+# đưa nóng súng lên 1
+300004	30	58	55	82	55
+# đưa nòng súng lên 2
+300005	114	59	138	81	55
+# đưa nòng súng lên 3
+300006	71	56	92	82	55
 # Main character empty sprite
 70001	0	0	0	0	1
-# Enemy 1
-#Walk left 
-80001	91	2	103	26	2
-80002	108	1	121	26	2
-#Walk right
-80003	133	1	145	26	2
-80004	150	2	162	26	2
 # WORM
 #move left 
 110001	46	412	62	421	2
@@ -159,23 +144,80 @@
 #move right
 110003	172	412	189	421	2
 110004	191	412	207	421	2
-# SPIDER
+# FLOATER-SPIDER
 #move left 
 120001	84	407	101	421	2
 120002	104	406	121	421	2
 #move right
 120003	132	406	149	421	2
 120004	152	407	169	421	2
-# WEAPON_PLAYER
-#fly_horizontal
+# DOMES
+#move left
+140001	87	425	105	441	2
+140002	67	424	85	441	2
+#move right
+140003	149	425	167	441	2
+140004	169	424	187	441	2
+#di chuyen ngang ben trai
+140005	51	441	67	459	2
+140006	50	461	67	479	2
+#nam ngua
+140007	67	479	85	495	2
+140008	87	479	105	496	2
+# JUMPERS
+#move left
+150001	105	500	122	525	2
+150002	87	499	102	525	2
+150003	69	500	84	525	2
+#move right
+150004	132	500	149	525	2
+150005	152	499	167	525	2
+150006	170	500	185	525	2
+# WEAPON
+# Main character
+# fly_horizontal
 100001	91	20	114	27	1
-#fly_vertical
+# fly_vertical
 100002	116	20	123	43	1
-#explode
+# explode
 100003	140	101	148	109	1
 100004	149	97	165	113	1
 100005	166	97	182	113	1
 100006	183	93	207	117	1
+# Human-Sofia
+# bullet
+100007	135	183	139	187	55
+# bullet_explosion
+100008	155	181	162	189	55
+100009	171	178	187	191	55
+100010	192	177	208	193	55
+# Cannon
+# bullet
+100011	252	102	260	118	1
+# bullet_explosion
+100012	296	102	312	118	1
+# Eyeball
+# bullet
+100013	252	102	260	118	1
+# bullet_explosion
+100014	296	102	312	118	1
+# Floater
+# bullet
+100015	252	102	260	118	1
+# bullet_explosion
+100016	296	102	312	118	1
+# HUB OBJECTS
+# PowerHub - Text
+800001	175	219	183	235	55
+# PowerHub
+800002	115	98	123	130	55
+# GunHub
+800003	154	221	162	253	55
+# Hov-Text
+800004	112	240	120	256	55
+# ITEMS
+# P
+900000	87	240	103	256	55
 # path
 [MAP]
 map-overworld-21.txt
@@ -210,17 +252,15 @@ map-overworld-21.txt
 601	10002	100	10003	100	10004	100
 #crawl left
 602	10005	100	10006	100
-#BIG-SOFIA
-#move left
+#climb
+606	10016	100	10017	100
+# BIG-SOFIA
+# move left
 603	10007	100	10008	100	10009	100
-#move up
+# move up
 604	10010	100	10011	100	10012	100
-#move down
+# move down
 605	10013	100	10014	100	10015	100
-#bullet
-606	10016	100
-#bullet_explosion
-607	10017	100	10018	100	10019	100
 # ==== SOFIA WHEEL =========
 #idle-of left-wheel
 700	20002	100
@@ -228,68 +268,128 @@ map-overworld-21.txt
 701	20001	100	20002	100	20003	100	20004	100
 #right-wheel
 702	200003	100	200004	100	200001	100	200002	100
-# ==== SOFIA BARREL =========
-#idle
-800	30002	100
-#down-left
-801	30001	100
-#up-left
-802	30003	100	30004	100
-# ==== SOFIA CABIN =========
-#idle
-900	50001	100
-#up
-901	50002	100
-# ==== SOFIA MIDDLE WHEEL =========
-#idle
-1000	60001	100
+# ==== SOFIA VEHICLE =========
+# di chuyển ngang bình thường
+800	300001	100
+# xoay ngang
+801	300001	200	300002	200
+# mở nắp cabin
+802	300003	100
+# đưa nòng súng lên
+803	300004	100	300005	100	300006	100
 # ==== MAIN CHARACTER =========
 #idle
 2000	70001	100
-# ==== ENEMY 1 =========
-#Walk left
-3000	80001	100	80002	100
-#Walk right
-3001	80003	100	80004	100
+# === ENEMY DOMES ===
+#walk left
+8000	140001	100	140002	100
+#walk right
+8001	140003	100	140004	100
+#di chuyen ngang ben trai
+8002	140005	100	140006	100
+#nam ngua
+8003	140007	100	140008	100
 # ==== ENEMY WORM =========
 #Walk left
 5000	110001	100	110002	100
 #Walk right
 5001	110003	100	110004	100
-# ==== ENEMY SPIDER =========
+# ==== ENEMY FLOATER-SPIDER =========
 #Walk left
 6000	120001	100	120002	100
 #Walk right
 6001	120003	100	120004	100
-#
+# === JUMPERS ======
+#walk left
+9000	150001	100	150002	100	150003	100
+#walk right
+9001	150004	100	150005	100	150006	100
 # ==== WEAPON =========
-#left
+# Main Character
+# left
 4000	100001	100
-#Up
+# Up
 4001	100002	100
-#explode
+# explode
 4002	100003	100	100004	100	100005	100
+# Human-Sofia
+# Bullet
+4003	100007	100
+# Bullet_explosion
+4004	100008	100	100009	100	100010	100
+# Cannon
+# Bullet
+4005	100011	100
+# Bullet_explosion
+4006	100012	100
+# Eyeball
+# Bullet
+4007	100013	100
+# Bullet_explosion
+4008	100014	100
+# Floater
+# Bullet
+4009	100015	100
+# Bullet_explosion
+4010	100016	100
+# ==== HUB =========
+# PowerHub - Text
+100000	800001	100
+# PowerHub
+100001	800002	100
+# GunHub
+100002	800003	100
+# Hov - text
+100003	800004	100
+# ITEMS
+# P
+900000	900000	100
 # id	ani1	ani2	ani3
 #
 [ANIMATION_SETS]
 # SOFIA 
-1	600	601	602	603	604	605	606	607
+1	600	601	602	603	604	605	606
 # MAIN_CHARACTER 
 2	2000
 # WHEEL 
 3	700	701	702
-# CABIN
-4	900	901
-# BARREL
-5	800	801	802
-# ENEMY 1
-6	3000	3001
+# SOFIA VEHICLE
+4	800	801	802	803
 # WORM - ENEMY
 8	5000	5001
-# FLOATER - ENEMY
+# FLOATER-SPIDER - ENEMY
 9	6000	6001
-# WEAPON
-7	4000	4001	4002
+# DOMES
+11	8000	8001	8002	8003
+# JUMPERS
+12	9000	9001
+# WEAPON Player-horizontal Player-vertical Player-explode Big human-bullet Big human-explosion Cannon-bullet Cannon-explosion Eyeball-bullet Eyeball-explosion	Floater-bullet	Floater-explosion
+7	4000	4001	4002	4003	4004	4005	4006	4007	4008	4009	4010
+# HUB
+100	100000	100001	100002	100003
+# ITEMS
+# P
+200	900000
+[ANIMATION_SETS]
+# SOFIA 
+1	600	601	602	603	604	605	606
+# MAIN_CHARACTER 
+2	2000
+# WHEEL 
+3	700	701	702
+# SOFIA VEHICLE
+4	800	801	802	803
+# WORM - ENEMY
+8	5000	5001
+# FLOATER-SPIDER - ENEMY
+9	6000	6001
+# WEAPON Player-horizontal Player-vertical Player-explode Big human-bullet Big human-explosion Cannon-bullet Cannon-explosion Eyeball-bullet Eyeball-explosion	Floater-bullet	Floater-explosion
+7	4000	4001	4002	4003	4004	4005	4006	4007	4008	4009	4010
+# HUB
+100	100000	100001	100002	100003
+# ITEMS
+# P
+200	900000
 # CANNONS
 10	1160	1161	1162	1163
 # EYEBALLS
