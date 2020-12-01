@@ -198,6 +198,11 @@ void CBossScence::_ParseSection_OBJECTS(string line)
 			obj->SetAnimationSet(animation_sets->Get(ani_set_id));
 			hub_objects.push_back(obj);
 			DebugOut(L"[INFO] PowerHub object created!\n");
+			if (player != NULL)
+			{
+				DebugOut(L"[INFO] Player object has been Created Already!\n");
+				dynamic_cast<CPowerHub*>(obj)->SetPlayerObject(player);
+			}
 			return;
 			break;
 		}
@@ -230,7 +235,7 @@ void CBossScence::_ParseSection_MAP(string line)
 
 }
 
-void CBossScence::Load()
+void CBossScence::Load(int _alive, int _power)
 {
 	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 
