@@ -302,6 +302,20 @@ void CBossScence::Update(DWORD dt)
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 		objects[i]->Update(dt, &coObjects);
+		if (dynamic_cast<CBoss*>(objects[i])->GetState() == BOSS_STATE_IDLE)
+		{
+			if (player)
+			{
+				player->IsStartingBossScence = true;
+			}
+		}
+		else
+		{
+			if (player)
+			{
+				player->IsStartingBossScence = false;
+			}
+		}
 	}
 	if (player == NULL) return;
 	else
@@ -365,6 +379,8 @@ void CBossScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 	CMainCharacter* player = ((CBossScence*)scence)->GetPlayer();
+	if (player->GetState() == MAIN_CHARACTER_STATE_DIE) return;
+	if (player->IsStartingBossScence) return;
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
@@ -392,7 +408,7 @@ void CBossScenceKeyHandler::KeyState(BYTE* states)
 	//// disable control key when Mario die 
 	if (player->GetState() == MAIN_CHARACTER_STATE_DIE) return;
 	if (player->GetState() == MAIN_CHARACTER_STATE_NONE_COLLISION) return;
-
+	if (player->IsStartingBossScence) return;
 	if (game->IsKeyDown(DIK_UP))
 	{
 		player->SetState(MAIN_CHARACTER_STATE_UP_BARREL);
