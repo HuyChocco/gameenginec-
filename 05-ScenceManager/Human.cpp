@@ -622,7 +622,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 }
 int ani = HUMAN_ANI_BIG_WALKING;
-int flip = false;
+int flip = true;
 void CHuman::Render()
 {
 	if (state == MAIN_CHARACTER_STATE_DIE)
@@ -669,8 +669,6 @@ void CHuman::Render()
 		{
 			if (vx == 0)
 			{
-
-
 				if (nx > 0)
 				{
 					if (isStateCrawl)
@@ -707,7 +705,6 @@ void CHuman::Render()
 			}
 			else if (vx > 0)
 			{
-
 				if (isStateCrawl)
 				{
 					flip = false;
@@ -756,14 +753,8 @@ void CHuman::Render()
 		if (untouchable)
 			alpha = 128;
 		animation_set->at(ani)->Render(x, y, flip, alpha);
-
 		RenderBoundingBox();
 	}
-
-
-
-
-
 }
 
 void CHuman::SetState(int state)

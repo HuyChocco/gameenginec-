@@ -4,7 +4,7 @@
 
 CBoss::CBoss(int _item) :CEnemyObject()
 {
-	SetState(BOSS_STATE_MOVE);
+	SetState(BOSS_STATE_IDLE);
 	this->blood = 20;
 	item = _item;
 	time_moving = 0;
@@ -78,9 +78,11 @@ void CBoss::Render()
 		case BOSS_STATE_ATTACK:
 		case BOSS_STATE_MOVE_CHANGE_DIRECTION_X:
 		case BOSS_STATE_MOVE_CHANGE_DIRECTION_Y:
-		case BOSS_STATE_IDLE:
 		case BOSS_STATE_MOVE:
 			ani = BOSS_ANI_MOVE_LEFT;
+			break;
+		case BOSS_STATE_IDLE:
+			ani = BOSS_ANI_START;
 			break;
 		case STATE_ITEM:
 			ani = item;
@@ -91,6 +93,13 @@ void CBoss::Render()
 		{
 			animation_set->at(ani)->Render(x, y);
 			//RenderBoundingBox();
+			if(state==BOSS_STATE_IDLE)
+			{
+				if(animation_set->at(ani)->isFinish)
+				{
+					SetState(BOSS_STATE_MOVE);
+				}
+			}
 		}
 	}
 	for (int i = 0; i < list_weapon.size(); i++)
@@ -107,6 +116,7 @@ void CBoss::SetState(int state)
 	{
 	case BOSS_STATE_IDLE:
 		vx = 0;
+		vy = 0;
 		break;
 	case BOSS_STATE_MOVE:
 		vx = BOSS_MOVE_SPEED;

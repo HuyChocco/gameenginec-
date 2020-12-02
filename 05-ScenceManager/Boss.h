@@ -18,7 +18,7 @@
 
 
 #define BOSS_ANI_MOVE_LEFT 0
-#define BOSS_ANI_MOVE_RIGHT 1
+#define BOSS_ANI_START 1
 
 #define TIME_CHANGE_DIRECTION 1000
 class CBoss :public CEnemyObject

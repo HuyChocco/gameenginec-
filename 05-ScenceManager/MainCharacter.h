@@ -84,6 +84,7 @@ public:
 	bool Is_On_Ground;
 	bool Is_Human;
 	bool CanChangeState;
+	bool IsStartingBossScence;
 	CMainCharacter(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
