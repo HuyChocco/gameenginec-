@@ -21,6 +21,7 @@
 #include "Teleporter.h"
 #include "Orb.h"
 #include "Skull.h"
+#include "Boss.h"
 
 #define JUMPER_ROUNDING_DISTANCE_X 50
 #define JUMPER_ROUNDING_DISTANCE_Y 20
@@ -202,6 +203,11 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			}
 		}
+		if (dynamic_cast<CBoss*>(coObjects->at(i))) {
+			CBoss* boss = dynamic_cast<CBoss*>(coObjects->at(i));
+			if (isBeingHuman)
+				boss->SetPlayerObject(this);
+		}
 	}
 	// Simple fall down
 	if (level == HUMAN_LEVEL_SMALL && !isStateClimb)
@@ -220,6 +226,13 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		StartUntouchable();
 		isAttacked = false;
+		if (player != NULL)
+		{
+			CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+			int power = player_object->GetPower();
+			power--;
+			player_object->SetPower(power);
+		}
 	}
 	// reset untouchable timer if untouchable time has passed
 	if (untouchable == 1)
@@ -290,6 +303,14 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 				if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
 				{
+					if (player != NULL)
+					{
+						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+						int power = player_object->GetPower();
+						power--;
+						player_object->SetPower(power);
+
+					}
 					StartUntouchable();
 				}
 			}
@@ -301,6 +322,14 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				worm->GetSpeed(vxWorm, vyWorm);
 				if (worm->GetState() != STATE_ITEM)
 				{
+					if (player != NULL)
+					{
+						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+						int power = player_object->GetPower();
+						power--;
+						player_object->SetPower(power);
+						
+					}
 					StartUntouchable();
 					if (e->ny != 0)
 					{
@@ -338,8 +367,15 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				floater->GetSpeed(vxFloater, vyFloater);
 				if (floater->GetState() != STATE_ITEM)
 				{
-					StartUntouchable();
+					if (player != NULL)
+					{
+						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+						int power = player_object->GetPower();
+						power--;
+						player_object->SetPower(power);
 
+					}
+					StartUntouchable();
 					if (e->ny != 0)
 					{
 						y -= 2 * vyFloater * dt;
@@ -376,6 +412,14 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				dome->GetSpeed(vxDome, vyDome);
 				if (dome->GetState() != STATE_ITEM)
 				{
+					if (player != NULL)
+					{
+						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+						int power = player_object->GetPower();
+						power--;
+						player_object->SetPower(power);
+
+					}
 					StartUntouchable();
 					if (e->ny != 0)
 					{
@@ -413,6 +457,14 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				jumper->GetSpeed(vxJumper, vyJumper);
 				if (jumper->GetState() != STATE_ITEM)
 				{
+					if (player != NULL)
+					{
+						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+						int power = player_object->GetPower();
+						power--;
+						player_object->SetPower(power);
+
+					}
 					StartUntouchable();
 					if (e->ny != 0)
 					{
@@ -448,6 +500,14 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				COrb* orb = dynamic_cast<COrb*>(e->obj);
 				if (orb->GetState() != STATE_ITEM)
 				{
+					if (player != NULL)
+					{
+						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+						int power = player_object->GetPower();
+						power--;
+						player_object->SetPower(power);
+
+					}
 					StartUntouchable();
 					float vxOrb, vyOrb;
 					orb->GetSpeed(vxOrb, vyOrb);
@@ -479,6 +539,14 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				skull->GetSpeed(vxSkull, vySkull);
 				if (skull->GetState() != STATE_ITEM)
 				{
+					if (player != NULL)
+					{
+						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+						int power = player_object->GetPower();
+						power--;
+						player_object->SetPower(power);
+
+					}
 					StartUntouchable();
 					if (e->ny != 0)
 					{
@@ -515,6 +583,14 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				cannon->GetSpeed(vxCannon, vyCannon);
 				if (cannon->GetState() != STATE_ITEM)
 				{
+					if (player != NULL)
+					{
+						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+						int power = player_object->GetPower();
+						power--;
+						player_object->SetPower(power);
+
+					}
 					StartUntouchable();
 					if (e->ny != 0)
 					{
@@ -550,6 +626,14 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				eyeball->GetSpeed(vxEyeball, vyEyeball);
 				if (eyeball->GetState() != STATE_ITEM)
 				{
+					if (player != NULL)
+					{
+						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+						int power = player_object->GetPower();
+						power--;
+						player_object->SetPower(power);
+
+					}
 					StartUntouchable();
 					if (e->ny != 0)
 					{
@@ -586,6 +670,14 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				teleporter->GetSpeed(vxTeleporter, vyTeleporter);
 				if (teleporter->GetState() != STATE_ITEM)
 				{
+					if (player != NULL)
+					{
+						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+						int power = player_object->GetPower();
+						power--;
+						player_object->SetPower(power);
+
+					}
 					StartUntouchable();
 					if (e->ny != 0)
 					{
@@ -612,6 +704,49 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					else
 						x += dx;
 					teleporter->SetState(TELEPORTER_STATE_DIE);
+				}
+			}
+			//Boss
+			else if (dynamic_cast<CBoss*>(e->obj))
+			{
+				CBoss* boss = dynamic_cast<CBoss*>(e->obj);
+				float vxBoss, vyBoss;
+				boss->GetSpeed(vxBoss, vyBoss);
+				if (boss->GetState() != STATE_ITEM)
+				{
+					if (player != NULL)
+					{
+						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+						int power = player_object->GetPower();
+						power--;
+						player_object->SetPower(power);
+					}
+					StartUntouchable();
+					if (e->ny != 0)
+					{
+						y += dy;
+					}
+					else
+						x += dx;
+				}
+				else
+				{
+					if (player != NULL)
+					{
+						int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
+						if (power <= 8)
+						{
+							power++;
+							dynamic_cast<CMainCharacter*>(player)->SetPower(power);
+						}
+					}
+					if (e->ny != 0)
+					{
+						y += dy;
+					}
+					else
+						x += dx;
+					boss->SetState(BOSS_STATE_DIE);
 				}
 			}
 		}

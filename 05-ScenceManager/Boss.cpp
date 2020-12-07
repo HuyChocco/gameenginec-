@@ -2,7 +2,7 @@
 #include "Boss.h"
 #include "Weapon.h"
 
-CBoss::CBoss(int _item) :CEnemyObject()
+CBoss::CBoss(float x,float y,int _item) :CEnemyObject()
 {
 	SetState(BOSS_STATE_IDLE);
 	this->blood = 20;
@@ -10,9 +10,39 @@ CBoss::CBoss(int _item) :CEnemyObject()
 	time_moving = 0;
 	isEnable = true;
 	isDisplay = true;
-
+	start_x = x;
+	start_y = y;
+	CreateCouplingElements();
 }
 
+void CBoss::CreateCouplingElements()
+{
+	CAnimationSets* animation_sets = CAnimationSets::GetInstance();
+	LPANIMATION_SET ani_set;
+	for (int i = 0; i < 4; i++)
+	{
+		CCoupling* object_right = new CCoupling(start_x+BOSS_BBOX_WIDTH,start_y-BOSS_BBOX_HEIGHT/2-i*COUPLING_BBOX_HEIGHT,false);
+		ani_set = animation_sets->Get(3);
+		object_right->SetAnimationSet(ani_set);
+		right_coupling_elements.push_back(object_right);
+	}
+	for (int i = 0; i < 4; i++)
+	{
+		CCoupling* object_left = new CCoupling(start_x, start_y - BOSS_BBOX_HEIGHT / 2 - i * COUPLING_BBOX_HEIGHT,true);
+		ani_set = animation_sets->Get(3);
+		object_left->SetAnimationSet(ani_set);
+		left_coupling_elements.push_back(object_left);
+	}
+	CPincer* object_right = new CPincer(start_x+BOSS_BBOX_WIDTH, start_y - BOSS_BBOX_HEIGHT / 2 - 4 * COUPLING_BBOX_HEIGHT,false);
+	ani_set = animation_sets->Get(3);
+	object_right->SetAnimationSet(ani_set);
+	right_pincer = object_right;
+
+	CPincer* object_left = new CPincer(start_x, start_y - BOSS_BBOX_HEIGHT / 2 - 4 * COUPLING_BBOX_HEIGHT,true);
+	ani_set = animation_sets->Get(3);
+	object_left->SetAnimationSet(ani_set);
+	left_pincer = object_left;
+}
 void CBoss::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	if (isEnable)
@@ -40,10 +70,16 @@ void CBoss::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 
 void CBoss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-
-
-	time_moving += dt;
-	if (x<=0||x >= CGame::GetInstance()->GetScreenWidth() - BOSS_BBOX_WIDTH)
+	if (state != BOSS_STATE_IDLE)
+	{
+		time_moving += dt;
+		if (time_moving >= 2000)
+		{
+			time_moving = 0;
+			SetState(BOSS_STATE_ATTACK);
+		}
+	}
+	if (x<=0||x >= CGame::GetInstance()->GetScreenWidth() - BOSS_BBOX_WIDTH-1)
 		SetState(BOSS_STATE_MOVE_CHANGE_DIRECTION_X);
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
@@ -58,13 +94,20 @@ void CBoss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	
 	x += dx;
 	y += dy;
-
-
 	for (int i = 0; i < list_weapon.size(); i++)
 	{
 		list_weapon[i]->Update(dt, coObjects);
 	}
-
+	for (int i = 0; i < left_coupling_elements.size(); i++)
+	{
+		left_coupling_elements[i]->Update(dt, coObjects);
+	}
+	for (int i = 0; i < right_coupling_elements.size(); i++)
+	{
+		right_coupling_elements[i]->Update(dt, coObjects);
+	}
+	right_pincer->Update(dt, coObjects);
+	left_pincer->Update(dt, coObjects);
 }
 
 void CBoss::Render()
@@ -100,13 +143,35 @@ void CBoss::Render()
 					SetState(BOSS_STATE_MOVE);
 				}
 			}
+			else
+			{
+				for (int i = 0; i < left_coupling_elements.size(); i++)
+				{
+					if (left_coupling_elements[i])
+					{
+						left_coupling_elements[i]->Render();
+					}
+				}
+				for (int i = 0; i < right_coupling_elements.size(); i++)
+				{
+					if (right_coupling_elements[i])
+					{
+						right_coupling_elements[i]->Render();
+					}
+				}
+				if (right_pincer)
+					right_pincer->Render();
+				if (left_pincer)
+					left_pincer->Render();
+			}
 		}
-	}
-	for (int i = 0; i < list_weapon.size(); i++)
-	{
-		list_weapon[i]->Render();
-	}
+		for (int i = 0; i < list_weapon.size(); i++)
+		{
+			list_weapon[i]->Render();
+		}
 
+	}
+	
 }
 
 void CBoss::SetState(int state)
@@ -131,13 +196,13 @@ void CBoss::SetState(int state)
 	{
 		if (isDisplay)
 		{
-			//CWeapon* weapon = new CWeapon(WEAPON_TYPE_ENEMY_BOSS);// Khởi tạo weapon
-			//weapon->SetDirection(nx);
-			//weapon->SetPosition(x + BOSS_BBOX_WIDTH / 2, y);
-			//weapon->SetState(WEAPON_BOSS_STATE_FLY);
-			//if (player)
-			//	weapon->SetPlayerObject(player);
-			//list_weapon.push_back(weapon);
+			CWeapon* weapon = new CWeapon(WEAPON_TYPE_BOSS);// Khởi tạo weapon
+			weapon->SetDirection(nx);
+			weapon->SetPosition(x + BOSS_BBOX_WIDTH / 2, y);
+			weapon->SetState(WEAPON_BOSS_STATE_FLY);
+			if (player)
+				weapon->SetPlayerObject(player);
+			list_weapon.push_back(weapon);
 		}
 
 	}

@@ -35,8 +35,10 @@ CBossScence::CBossScence(int id, LPCWSTR filePath) :
 //Map objects
 #define OBJECT_TYPE_BRICK	1
 
-//Enemy objects
+//Enemy Boss objects
 #define OBJECT_TYPE_BOSS	2
+#define OBJECT_TYPE_COUPLING	3
+#define OBJECT_TYPE_PINCER	4
 //Main character objects
 #define OBJECT_TYPE_MAIN_CHARACTER	9
 
@@ -186,7 +188,7 @@ void CBossScence::_ParseSection_OBJECTS(string line)
 			int item = 0;
 			if (tokens.size() > 5)
 				item = atoi(tokens[5].c_str());
-			obj = new CBoss(item);
+			obj = new CBoss(x,y,item);
 			LPANIMATION_SET ani_set = animation_sets->Get(200);
 			obj->SetAnimationItemSet(ani_set);
 			break;

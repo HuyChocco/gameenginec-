@@ -10,6 +10,9 @@
 #include "Human.h"
 #include "GunHub.h"
 #include "PowerHub.h"
+
+#include "Pincer.h"
+#include "Coupling.h"
 class CBossScence : public CScene
 {
 protected:
