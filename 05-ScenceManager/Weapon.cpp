@@ -57,6 +57,11 @@ CWeapon::CWeapon(int type)
 		this->timeAttack = 0.0f;
 		SetTypeWeapon(WEAPON_TYPE_ENEMY_SKULL);
 	}
+	else if (type == WEAPON_TYPE_BOSS)
+	{
+		this->timeAttack = 0.0f;
+		SetTypeWeapon(WEAPON_TYPE_BOSS);
+	}
 }
 CWeapon::CWeapon(float x, float y, int nx, int state, bool isBarrelUp)
 {
@@ -90,9 +95,10 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 
 		CGameObject::Update(dt);
 		timeAttack += dt;
-		if (timeAttack > 5000)
+		if (timeAttack > 2500)
 		{
 			SetState(WEAPON_STATE_NONE);
+			timeAttack = 0;
 		}
 		if (!isBurning)
 		{
@@ -692,7 +698,6 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 				}
 			}
 		}
-
 		else if (type_weapon == WEAPON_TYPE_ENEMY_SKULL)
 		{
 		time_movingg += dt;
@@ -832,6 +837,25 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 
 			}
 		}
+		}
+		else if (type_weapon == WEAPON_TYPE_BOSS)
+		{
+			if (x_player >= this->x)
+				x++;
+			else
+				x--;
+			if (y_player >= this->y)
+				y++;
+			else
+				y--;
+			float l1, t1, r1, b1;
+			GetBoundingBox(l1, t1, r1, b1);
+			if (game->CheckCollision(l1, t1, r1, b1, l_player, t_player, r_player, b_player) == true)
+			{
+				SetState(WEAPON_STATE_EXPLODE);
+				isBurning = true;
+				player->SetIsAttacked(true);
+			}
 		}
 	}
 
@@ -1095,6 +1119,38 @@ void CWeapon::Render()
 			//RenderBoundingBox();
 		}
 	}
+	else if (typeWeapon == WEAPON_TYPE_BOSS)
+	{
+		if (state != WEAPON_STATE_NONE)
+		{
+			int ani = WEAPON_ANI_BOSS;
+			int flip = false;
+			switch (state)
+			{
+			case WEAPON_BOSS_STATE_FLY:
+				ani = WEAPON_ANI_BOSS;
+				break;
+			case WEAPON_STATE_EXPLODE:
+				ani = WEAPON_ANI_EXPLODE_BOSS;
+				break;
+			default:
+				break;
+			}
+			if (state == WEAPON_STATE_EXPLODE)
+			{
+				float l, t, r, b;
+				GetBoundingBox(l, t, r, b);
+				animation_set->at(ani)->Render(x, y, flip);
+				if (animation_set->at(ani)->isFinish)
+				{
+					animation_set->at(ani)->isFinish = false;
+					SetState(WEAPON_STATE_NONE);
+				}
+			}
+			else
+				animation_set->at(ani)->Render(x, y, flip);
+		}
+	}
 }
 
 void CWeapon::SetState(int state)
@@ -1250,6 +1306,25 @@ void CWeapon::SetState(int state)
 		break;
 	}
 	}
+	else if (type_weapon == WEAPON_TYPE_ENEMY_FLOATER)
+	{
+		switch (state)
+		{
+		case WEAPON_FLOATER_STATE_FLY:
+		{
+			if (nx > 0)
+			{
+				vx = 0.05f;
+			}
+			else
+			{
+				vx = -0.05f;
+			}
+			this->dame = 1;
+		}
+		break;
+		}
+	}
 }
 
 void CWeapon::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -1312,6 +1387,13 @@ void CWeapon::GetBoundingBox(float& left, float& top, float& right, float& botto
 		left = x;
 		top = y - WEAPON_BIG_HUMAN_BBOX_HEIGHT;
 		right = x + WEAPON_BIG_HUMAN_BBOX_WIDTH;
+		bottom = y;
+	}
+	else if (typeWeapon == WEAPON_TYPE_BOSS)
+	{
+		left = x;
+		top = y - WEAPON_BOSS_BBOX_HEIGHT;
+		right = x + WEAPON_BOSS_BBOX_WIDTH;
 		bottom = y;
 	}
 }

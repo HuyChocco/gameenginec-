@@ -1,6 +1,8 @@
 #pragma once
 #include "EnemyObject.h"
 #include "Game.h"
+#include "Pincer.h"
+#include "Coupling.h"
 #define BOSS_MOVE_SPEED 0.05f;
 #define BOSS_GRAVITY 0.002f;
 
@@ -28,10 +30,17 @@ class CBoss :public CEnemyObject
 	bool isBeingUp;
 	bool isRepeat;
 	vector<CGameObject*> list_weapon;
+	vector<CGameObject*> left_coupling_elements;
+	vector<CGameObject*> right_coupling_elements;
+	CGameObject* left_pincer;
+	CGameObject* right_pincer;
+	float start_x;
+	float start_y;
 public:
-	CBoss(int _item);
+	CBoss(float x,float y,int _item);
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 	virtual void SetState(int state);
+	void CreateCouplingElements();
 };
