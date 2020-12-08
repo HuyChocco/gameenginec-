@@ -1,16 +1,16 @@
 #pragma once
 #include "EnemyObject.h"
 #include "Game.h"
-#define PINCER_MOVE_SPEED 0.05f;
+#define PINCER_MOVE_SPEED 0.02f;
 #define PINCER_GRAVITY 0.002f;
 
 #define PINCER_BBOX_WIDTH 18
 #define PINCER_BBOX_HEIGHT 32
 
-#define PINCER_STATE_MOVE 100
-#define PINCER_STATE_MOVE_CHANGE_DIRECTION_X 101
-#define PINCER_STATE_MOVE_CHANGE_DIRECTION_Y 102
-#define PINCER_STATE_ATTACK 103
+#define PINCER_STATE_MOVE_LEFT 100
+#define PINCER_STATE_MOVE_RIGHT 101
+#define PINCER_STATE_MOVE_UP 102
+#define PINCER_STATE_MOVE_DOWN 103
 
 #define PINCER_STATE_DIE 200
 
@@ -28,6 +28,9 @@ class CPincer :public CEnemyObject
 	float start_x;
 	float start_y;
 	bool is_left;
+	int current_state = 0;
+	float delta_x;
+	float delta_y;
 public:
 	CPincer(float start_x, float start_y,bool is_left);
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);

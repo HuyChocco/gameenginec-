@@ -942,6 +942,9 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 	case DIK_Z:
 		player->SetState(MAIN_CHARACTER_STATE_BARREL_FIRE);
 		break;
+	case DIK_X:
+		player->SetState(MAIN_CHARACTER_STATE_FIRE_ROCKET);
+		break;
 	case DIK_M:
 		if(!player->Is_Human)
 			player->SetState(MAIN_CHARACTER_STATE_OPEN_CABIN);

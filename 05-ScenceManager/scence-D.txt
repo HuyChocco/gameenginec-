@@ -204,6 +204,9 @@
 300006	71	56	92	82	55
 # Main character empty sprite
 70001	0	0	0	0	1
+# Main character explosion
+70002	159	3	207	43	1
+70003	143	44	207	132	1
 # WORM
 #move left 
 110001	46	412	62	421	2
@@ -347,6 +350,8 @@ Map-Blaster-Master-Area-2-D.txt
 # ==== MAIN CHARACTER =========
 #idle
 2000	70001	100
+#explosion
+2001	70002	200
 # === ENEMY DOMES ===
 #walk left
 8000	140001	100	140002	100
@@ -428,7 +433,7 @@ Map-Blaster-Master-Area-2-D.txt
 # SOFIA 
 1	600	601	602	603	604	605	606
 # MAIN_CHARACTER 
-2	2000
+2	2000	2001
 # WHEEL 
 3	700	701	702
 # SOFIA VEHICLE

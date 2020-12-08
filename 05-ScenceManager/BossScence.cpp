@@ -179,6 +179,7 @@ void CBossScence::_ParseSection_OBJECTS(string line)
 			{
 				DebugOut(L"[INFO] Player object has been Created Already!\n");
 				player->AddComponentObject(obj);
+				dynamic_cast<CHuman*>(obj)->SetPlayerObject(player);
 			}
 			return;
 			break;
@@ -290,7 +291,11 @@ void CBossScence::Load(int _alive, int _power)
 	//Texture for bounding box
 	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 	DebugOut(L"[INFO] Done loading boss scence resources %s\n", sceneFilePath);
-
+	if (player != NULL)
+	{
+		player->SetPower(_power);
+		player->SetAlive(_alive);
+	}
 }
 
 

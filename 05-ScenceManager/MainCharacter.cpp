@@ -895,6 +895,13 @@ void CMainCharacter::SetState(int state)
 				}
 			}
 		}
+		else if (state == MAIN_CHARACTER_STATE_FIRE_ROCKET &&!Is_Human)
+		{
+			CWeapon* weapon = new CWeapon(WEAPON_TYPE_PLAYER_ROCKET);
+			weapon->SetPosition(x, y);
+			weapon->SetState(WEAPON_PLAYER_ROCKET_STATE_FLY_UP);
+			list_weapon.push_back(weapon);
+		}
 		else if (state == MAIN_CHARACTER_STATE_UP_BARREL)
 		{
 			isBeingUpBarrel = true;
