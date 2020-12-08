@@ -139,6 +139,9 @@
     <ClCompile Include="Coupling.cpp">
       <Filter>Source Files\BossElements</Filter>
     </ClCompile>
+    <ClCompile Include="Lava.cpp">
+      <Filter>Source Files\ItemObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cannon.h">
@@ -278,6 +281,9 @@
     </ClInclude>
     <ClInclude Include="Coupling.h">
       <Filter>Header Files\BossElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Lava.h">
+      <Filter>Header Files\ItemObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

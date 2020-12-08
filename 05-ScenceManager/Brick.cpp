@@ -16,6 +16,7 @@ CBrick::CBrick(float l, float t, float r, float b,int type)
 	isEnable = true;
 
 	SetState(BRICK_STATE_NORMAL);
+
 }
 
 void CBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -41,7 +42,7 @@ void CBrick::Render()
 			break;
 		}
 		animation_set->at(ani)->Render(x, y);
-		RenderBoundingBox();
+		//RenderBoundingBox();
 	}
 	
 }

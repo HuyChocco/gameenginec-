@@ -9,6 +9,7 @@
 #include "Portal.h"
 #include "Brick.h"
 #include "Stair.h"
+#include "Lava.h"
 
 #include "EnemyObject1.h"
 #include "Worm.h"
@@ -281,6 +282,12 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 						Is_On_Ground = false;
+				}
+				else if (dynamic_cast<CLava*>(e->obj)) // if e->obj is CLava
+				{
+					StartUntouchable();
+					power--;
+
 				}
 				else if (dynamic_cast<CStair*>(e->obj))
 				{

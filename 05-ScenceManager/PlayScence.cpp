@@ -39,6 +39,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 
 //Map objects
 #define OBJECT_TYPE_BRICK	1
+#define OBJECT_TYPE_LAVA	30
 #define OBJECT_TYPE_SPIKE	21
 #define OBJECT_TYPE_STAIR	22
 
@@ -202,6 +203,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		LPANIMATION_SET ani_set = animation_sets->Get(200);
 		obj->SetAnimationItemSet(ani_set);
 	}
+	
 	break;
 	case OBJECT_TYPE_FLOATER:
 	{
@@ -322,7 +324,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		return;
 		break;
 	}
-
 	case OBJECT_TYPE_BRICK:
 	{
 		float r = atof(tokens[5].c_str());
@@ -331,9 +332,18 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		{
 			int type = atoi(tokens[7].c_str());
 			obj = new CBrick(x, y, r, b, type);
+
 		}
 		else
 			obj = new CBrick(x, y, r, b);
+		break;
+	}
+
+	case OBJECT_TYPE_LAVA:
+	{
+		float r = atof(tokens[5].c_str());
+		float b = atof(tokens[6].c_str());
+		obj = new CLava(x, y, r, b);
 		break;
 	}
 	case OBJECT_TYPE_STAIR:

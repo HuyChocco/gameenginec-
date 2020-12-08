@@ -144,6 +144,7 @@
     <ClCompile Include="IntroScence.cpp" />
     <ClCompile Include="Jumper.cpp" />
     <ClCompile Include="Koopas.cpp" />
+    <ClCompile Include="Lava.cpp" />
     <ClCompile Include="MainCharacter.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Orb.cpp" />
@@ -192,6 +193,7 @@
     <ClInclude Include="IntroScence.h" />
     <ClInclude Include="Jumper.h" />
     <ClInclude Include="Koopas.h" />
+    <ClInclude Include="Lava.h" />
     <ClInclude Include="MainCharacter.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Orb.h" />
