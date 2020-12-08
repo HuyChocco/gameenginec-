@@ -3,7 +3,7 @@
 #include "Game.h"
 #include "Pincer.h"
 #include "Coupling.h"
-#define BOSS_MOVE_SPEED 0.05f;
+#define BOSS_MOVE_SPEED 0.04f;
 #define BOSS_GRAVITY 0.002f;
 
 #define BOSS_BBOX_WIDTH 60
@@ -26,9 +26,13 @@
 class CBoss :public CEnemyObject
 {
 	DWORD time_moving;
+	DWORD time_moving_coupling;
+	DWORD time_moving_coupling_left;
 	bool isBeingDown;
 	bool isBeingUp;
 	bool isRepeat;
+	bool isStartAllCouplingRight;
+	bool isStartAllCouplingLeft;
 	vector<CGameObject*> list_weapon;
 	vector<CGameObject*> left_coupling_elements;
 	vector<CGameObject*> right_coupling_elements;

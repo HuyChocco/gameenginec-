@@ -8,6 +8,7 @@ CBoss::CBoss(float x,float y,int _item) :CEnemyObject()
 	this->blood = 20;
 	item = _item;
 	time_moving = 0;
+	time_moving_coupling = 0;
 	isEnable = true;
 	isDisplay = true;
 	start_x = x;
@@ -98,16 +99,75 @@ void CBoss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		list_weapon[i]->Update(dt, coObjects);
 	}
-	for (int i = 0; i < left_coupling_elements.size(); i++)
-	{
-		left_coupling_elements[i]->Update(dt, coObjects);
-	}
+	time_moving_coupling += dt;
+	time_moving_coupling_left += dt;
 	for (int i = 0; i < right_coupling_elements.size(); i++)
 	{
-		right_coupling_elements[i]->Update(dt, coObjects);
+		right_coupling_elements[i]->SetPosition(x + BOSS_BBOX_WIDTH - 10, y - BOSS_BBOX_HEIGHT / 2 - i * COUPLING_BBOX_HEIGHT);
 	}
-	right_pincer->Update(dt, coObjects);
-	left_pincer->Update(dt, coObjects);
+	for (int i = 0; i < left_coupling_elements.size(); i++)
+	{
+		left_coupling_elements[i]->SetPosition(x, y - BOSS_BBOX_HEIGHT / 2 - i * COUPLING_BBOX_HEIGHT);
+	}
+	
+	if (isStartAllCouplingRight)
+	{
+		for (int i = 0; i < right_coupling_elements.size(); i++)
+		{
+			right_coupling_elements[i]->Update(dt, coObjects);
+		}
+	}
+	else
+	{
+		if (time_moving_coupling >= 4000)
+		{
+			right_coupling_elements[3]->Update(dt, coObjects);
+		}
+		if (time_moving_coupling >= 5000)
+			right_coupling_elements[2]->Update(dt, coObjects);
+		if (time_moving_coupling >= 6000)
+			right_coupling_elements[1]->Update(dt, coObjects);
+		if (time_moving_coupling >= 7000)
+		{
+			right_coupling_elements[0]->Update(dt, coObjects);
+			isStartAllCouplingRight = true;
+		}
+	}
+
+	if (isStartAllCouplingLeft)
+	{
+		for (int i = 0; i < left_coupling_elements.size(); i++)
+		{
+			left_coupling_elements[i]->Update(dt, coObjects);
+		}
+	}
+	else
+	{
+		if (time_moving_coupling_left >= 4000)
+		{
+			left_coupling_elements[3]->Update(dt, coObjects);
+		}
+		if (time_moving_coupling_left >= 5000)
+			left_coupling_elements[2]->Update(dt, coObjects);
+		if (time_moving_coupling_left >= 6000)
+			left_coupling_elements[1]->Update(dt, coObjects);
+		if (time_moving_coupling_left >= 7000)
+		{
+			left_coupling_elements[0]->Update(dt, coObjects);
+			isStartAllCouplingLeft = true;
+		}
+	}
+
+	//Xử lý Pincer
+	float _x, _y;
+	float _delta_x, _delta_y;
+	right_coupling_elements[3]->GetPosition(_x, _y);
+	dynamic_cast<CCoupling*>(right_coupling_elements[3])->GetDelta(_delta_x, _delta_y);
+	right_pincer->SetPosition(_x+_delta_x, _y - COUPLING_BBOX_HEIGHT+_delta_y);
+
+	left_coupling_elements[3]->GetPosition(_x, _y);
+	dynamic_cast<CCoupling*>(left_coupling_elements[3])->GetDelta(_delta_x, _delta_y);
+	left_pincer->SetPosition(_x + _delta_x, _y - COUPLING_BBOX_HEIGHT + _delta_y);
 }
 
 void CBoss::Render()

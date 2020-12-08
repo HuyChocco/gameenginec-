@@ -1,16 +1,16 @@
 #pragma once
 #include "EnemyObject.h"
 #include "Game.h"
-#define COUPLING_MOVE_SPEED 0.05f;
+#define COUPLING_MOVE_SPEED 0.02f;
 #define COUPLING_GRAVITY 0.002f;
 
 #define COUPLING_BBOX_WIDTH 16
 #define COUPLING_BBOX_HEIGHT 17
 
-#define COUPLING_STATE_MOVE 100
-#define COUPLING_STATE_MOVE_CHANGE_DIRECTION_X 101
-#define COUPLING_STATE_MOVE_CHANGE_DIRECTION_Y 102
-#define COUPLING_STATE_ATTACK 103
+#define COUPLING_STATE_MOVE_LEFT 100
+#define COUPLING_STATE_MOVE_RIGHT 101
+#define COUPLING_STATE_MOVE_UP 102
+#define COUPLING_STATE_MOVE_DOWN 103
 
 #define COUPLING_STATE_DIE 200
 
@@ -30,10 +30,14 @@ class CCoupling :public CEnemyObject
 	float start_x;
 	float start_y;
 	bool is_left;
+	int current_state = 0;
+	float delta_x;
+	float delta_y;
 public:
 	CCoupling(float start_x,float start_y,bool is_left);
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 	virtual void SetState(int state);
+	void GetDelta(float& _delta_x, float& _delta_y) { _delta_x = delta_x; _delta_y = delta_y; }
 };

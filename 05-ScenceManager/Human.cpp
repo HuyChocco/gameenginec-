@@ -42,6 +42,13 @@ CHuman::CHuman(float x, float y) : CGameObject()
 
 void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	if (player != NULL)
+	{
+		CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+		int power = player_object->GetPower();
+		if (power < 0)
+			return;
+	}
 	CGame* game = CGame::GetInstance();
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
@@ -760,6 +767,13 @@ int ani = HUMAN_ANI_BIG_WALKING;
 int flip = true;
 void CHuman::Render()
 {
+	if (player != NULL)
+	{
+		CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+		int power = player_object->GetPower();
+		if (power < 0)
+			return;
+	}
 	if (state == MAIN_CHARACTER_STATE_DIE)
 		ani = HUMAN_ANI_DIE;
 	else

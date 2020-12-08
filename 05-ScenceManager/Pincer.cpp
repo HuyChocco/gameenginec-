@@ -4,7 +4,7 @@
 
 CPincer::CPincer(float start_x, float start_y,bool is_left) :CEnemyObject()
 {
-	SetState(PINCER_STATE_MOVE);
+	SetState(PINCER_STATE_IDLE);
 	this->is_left = is_left;
 	this->start_x = start_x;
 	this->start_y = start_y;
@@ -42,8 +42,8 @@ void CPincer::GetBoundingBox(float& left, float& top, float& right, float& botto
 void CPincer::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	time_moving += dt;
-	if (x <= 0 || x >= CGame::GetInstance()->GetScreenWidth() - PINCER_BBOX_WIDTH - 1)
-		SetState(PINCER_STATE_MOVE_CHANGE_DIRECTION_X);
+	//if (x <= 0 || x >= CGame::GetInstance()->GetScreenWidth() - PINCER_BBOX_WIDTH - 1)
+		//SetState(PINCER_STATE_MOVE_CHANGE_DIRECTION_X);
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
 	if (this->blood < 0)
@@ -53,8 +53,6 @@ void CPincer::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		else
 			SetState(PINCER_STATE_DIE);
 	}
-	x += dx;
-	y += dy;
 }
 
 void CPincer::Render()
@@ -68,7 +66,7 @@ void CPincer::Render()
 			ani = PINCER_ANI_RIGHT;
 		if (isDisplay)
 		{
-			animation_set->at(ani)->Render(x, y);
+			animation_set->at(ani)->Render(x+delta_x, y+delta_y);
 			//RenderBoundingBox();
 		}
 	}
@@ -83,16 +81,21 @@ void CPincer::SetState(int state)
 		vx = 0;
 		vy = 0;
 		break;
-	case PINCER_STATE_MOVE:
+	case PINCER_STATE_MOVE_LEFT:
+		vx = -PINCER_MOVE_SPEED;
+		vy = 0;
+		break;
+	case PINCER_STATE_MOVE_RIGHT:
 		vx = PINCER_MOVE_SPEED;
+		vy = 0;
 		break;
-	case PINCER_STATE_MOVE_CHANGE_DIRECTION_X:
-		vx = -vx;
+	case PINCER_STATE_MOVE_UP:
+		vy = PINCER_MOVE_SPEED;
+		vx = 0;
 		break;
-	case PINCER_STATE_MOVE_CHANGE_DIRECTION_Y:
-		vy = -vy;
-		break;
-	case PINCER_STATE_ATTACK:
+	case PINCER_STATE_MOVE_DOWN:
+		vy = -PINCER_MOVE_SPEED;
+		vx = 0;
 		break;
 	case PINCER_STATE_DIE:
 		isDisplay = false;
