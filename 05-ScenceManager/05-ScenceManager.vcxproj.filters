@@ -274,10 +274,10 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Pincer.h">
-      <Filter>Header Files\Hub\BossElements</Filter>
+      <Filter>Header Files\BossElements</Filter>
     </ClInclude>
     <ClInclude Include="Coupling.h">
-      <Filter>Header Files\Hub\BossElements</Filter>
+      <Filter>Header Files\BossElements</Filter>
     </ClInclude>
     <ClInclude Include="Lava.h">
       <Filter>Header Files\ItemObjects</Filter>
@@ -320,7 +320,7 @@
     <Filter Include="Source Files\BossElements">
       <UniqueIdentifier>{bed60ae5-8675-451f-b209-697e268d7f2d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Hub\BossElements">
+    <Filter Include="Header Files\BossElements">
       <UniqueIdentifier>{5875a0e6-a6d1-4d55-b3dc-8b30b4bff1f2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
