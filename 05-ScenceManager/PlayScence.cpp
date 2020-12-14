@@ -633,53 +633,60 @@ void CPlayScene::Update(DWORD dt)
 	//Thực hiện chuyển sang scene tiếp theo
 	if (game->GetIsNextMap() == true)
 	{
-		game->SetRenderingNextMap(true);
-		//Lấy scene id của scene tiếp theo từ game object
-		id_next_map = game->GetSceneId();
-		game->SetScenceIDRenderingNextMap(id_next_map);
-		//Get scene kế tiếp thông qua scene_id
-		LPSCENE s = game->GetScene(id_next_map);
-		//Nếu scene tiếp theo tồn tại và chưa load tiled map của scene tiếp theo
-		if (s && initNextMap)
-		{
-			// Lấy tiled map tiếp theo
-			s->GetNextMap();
-			// Nếu tiled map tiếp theo tồn tại
-			if (s->GetMap() != NULL)
-			{
-				//Thêm vào đối tượng CTiledMapSets
-				CTiledMapSets::GetInstance()->Add(id_next_map, s->GetMap());
-				//Chuyển cờ đánh dấu đã load được tiled map tiếp theo
-				initNextMap = false;
-			}
-
-		}
-		float player_x, player_y;
-		player->GetPosition(player_x, player_y);
-		//Không xét va chạm và render player lên màn hình
-		player->SetState(MAIN_CHARACTER_STATE_NONE_COLLISION);
-		//Cho camera di chuyển theo trục x
-		player->SetSpeed(0.4, 0);
-		//Lấy width, height của map hiện tại
-		CMap* map = CTiledMapSets::GetInstance()->Get(id);
-		int widthMap, heightMap;
-		map->GetMapWidth(widthMap);
-		map->GetMapHeight(heightMap);
-		//Lấy width, height của map tiếp theo
-		map = CTiledMapSets::GetInstance()->Get(id_next_map);
-		int widthNextMap, heightNextMap;
-		map->GetMapWidth(widthNextMap);
-		map->GetMapHeight(heightNextMap);
-		player->GetPosition(player_x, player_y);
-		//Sau hiệu ứng di chuyển camera sang màn thì tiến hành chuyển màn
-		if (player_x >= widthMap + (widthNextMap / 3))
+		if (type_scence == OVER_WORLD)
 		{
 			// switch scene
-			game->SwitchScene(game->GetSceneId(),player->GetAlive(),player->GetPower());
+			game->SwitchScene(game->GetSceneId(), player->GetAlive(), player->GetPower());
 			game->SetIsNextMap(false);
 		}
+		else
+		{
+			game->SetRenderingNextMap(true);
+			//Lấy scene id của scene tiếp theo từ game object
+			id_next_map = game->GetSceneId();
+			game->SetScenceIDRenderingNextMap(id_next_map);
+			//Get scene kế tiếp thông qua scene_id
+			LPSCENE s = game->GetScene(id_next_map);
+			//Nếu scene tiếp theo tồn tại và chưa load tiled map của scene tiếp theo
+			if (s && initNextMap)
+			{
+				// Lấy tiled map tiếp theo
+				s->GetNextMap();
+				// Nếu tiled map tiếp theo tồn tại
+				if (s->GetMap() != NULL)
+				{
+					//Thêm vào đối tượng CTiledMapSets
+					CTiledMapSets::GetInstance()->Add(id_next_map, s->GetMap());
+					//Chuyển cờ đánh dấu đã load được tiled map tiếp theo
+					initNextMap = false;
+				}
 
-
+			}
+			float player_x, player_y;
+			player->GetPosition(player_x, player_y);
+			//Không xét va chạm và render player lên màn hình
+			player->SetState(MAIN_CHARACTER_STATE_NONE_COLLISION);
+			//Cho camera di chuyển theo trục x
+			player->SetSpeed(0.4, 0);
+			//Lấy width, height của map hiện tại
+			CMap* map = CTiledMapSets::GetInstance()->Get(id);
+			int widthMap, heightMap;
+			map->GetMapWidth(widthMap);
+			map->GetMapHeight(heightMap);
+			//Lấy width, height của map tiếp theo
+			map = CTiledMapSets::GetInstance()->Get(id_next_map);
+			int widthNextMap, heightNextMap;
+			map->GetMapWidth(widthNextMap);
+			map->GetMapHeight(heightNextMap);
+			player->GetPosition(player_x, player_y);
+			//Sau hiệu ứng di chuyển camera sang màn thì tiến hành chuyển màn
+			if (player_x >= widthMap + (widthNextMap / 3))
+			{
+				// switch scene
+				game->SwitchScene(game->GetSceneId(), player->GetAlive(), player->GetPower());
+				game->SetIsNextMap(false);
+			}
+		}
 	}
 	//Thực hiện chuyển về scene trước
 	else if (game->GetIsPreMap() == true)
@@ -832,14 +839,20 @@ void CPlayScene::Render()
 			objects[i]->Render();
 		//Vẽ player object
 		player->Render();
-
+		if (player->GetPower() < 0 && player->GetState() == MAIN_CHARACTER_STATE_DIE)
+		{
+			int lives = player->GetAlive();
+			if (lives >= 0)
+			{
+				lives -= 1;
+				player->SetAlive(lives);
+				ReLoad();
+			}
+		}
 		//Vẽ Hub objects
 		for (int i = 0; i < hub_objects.size(); i++)
 			hub_objects[i]->Render();
 	}
-
-
-
 }
 
 CMap* CPlayScene::GetMap()
@@ -936,7 +949,14 @@ void CPlayScene::Unload()
 
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
 }
-
+void CPlayScene::ReLoad()
+{
+	if (player)
+	{
+		if(player->GetAlive()>=0)
+			CGame::GetInstance()->SwitchScene(id, player->GetAlive(), 5);
+	}
+}
 void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);

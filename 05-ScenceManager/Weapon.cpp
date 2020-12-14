@@ -99,12 +99,7 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 	{
 
 		CGameObject::Update(dt);
-		timeAttack += dt;
-		if (timeAttack > 2500)
-		{
-			SetState(WEAPON_STATE_NONE);
-			timeAttack = 0;
-		}
+	
 		if (!isBurning)
 		{
 			x += dx;
@@ -861,222 +856,187 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 		}
 		else if (type_weapon == WEAPON_TYPE_PLAYER_ROCKET)
 		{
-		for (UINT i = 0; i < colliable_object->size(); i++)
-		{
-			if (dynamic_cast<CWorm*>(colliable_object->at(i)))
+			LPGAMEOBJECT minObjectDistance = FindMinObjectDistance(x_player, y_player, colliable_object);
+			if (minObjectDistance)
 			{
-				CWorm* worm = dynamic_cast<CWorm*>(colliable_object->at(i));
-				if (worm->GetState() != STATE_ITEM)
+				float x_object, y_object;
+				minObjectDistance->GetPosition(x_object, y_object);
+				if (state != WEAPON_STATE_EXPLODE)
 				{
-					float l1, t1, r1, b1, l2, t2, r2, b2;
-					GetBoundingBox(l1, t1, r1, b1);
-					worm->GetBoundingBox(l2, t2, r2, b2);
-
-					if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+					if (abs(this->x - x_object) <= 6)
 					{
-						SetState(WEAPON_STATE_EXPLODE);
-						isBurning = true;
+						if (this->y <= y_object)
+							SetState(WEAPON_PLAYER_ROCKET_STATE_FLY_UP);
+						else if (this->y > y_object)
+							SetState(WEAPON_PLAYER_ROCKET_STATE_FLY_DOWN);
+					}
+					else
+					{
+						if (this->x > x_object)
+							SetState(WEAPON_PLAYER_ROCKET_STATE_FLY_HORIZONTAL_LEFT);
+						else
+							SetState(WEAPON_PLAYER_ROCKET_STATE_FLY_HORIZONTAL_RIGHT);
+					}
+				}
+				if (dynamic_cast<CWorm*>(minObjectDistance))
+				{
+					CWorm* worm = dynamic_cast<CWorm*>(minObjectDistance);
+					if (worm->GetState() != STATE_ITEM)
+					{
+						float l1, t1, r1, b1, l2, t2, r2, b2;
+						GetBoundingBox(l1, t1, r1, b1);
+						worm->GetBoundingBox(l2, t2, r2, b2);
 
-						if (!isAttacked)
+						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
 						{
-							worm->LostBlood(GetDame());
-							isAttacked = true;
+							SetState(WEAPON_STATE_EXPLODE);
+							isBurning = true;
+							if (!isAttacked)
+							{
+								worm->LostBlood(GetDame());
+								isAttacked = true;
+							}
 						}
 					}
 				}
-
-			}
-			else if (dynamic_cast<CFloater*>(colliable_object->at(i)))
-			{
-				CFloater* floater = dynamic_cast<CFloater*>(colliable_object->at(i));
-				if (floater->GetState() != STATE_ITEM)
+				else if (dynamic_cast<CFloater*>(minObjectDistance))
 				{
-					float l1, t1, r1, b1, l2, t2, r2, b2;
-					GetBoundingBox(l1, t1, r1, b1);
-					floater->GetBoundingBox(l2, t2, r2, b2);
-
-					if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+					CFloater* floater = dynamic_cast<CFloater*>(minObjectDistance);
+					if (floater->GetState() != STATE_ITEM)
 					{
-						SetState(WEAPON_STATE_EXPLODE);
-						isBurning = true;
-						if (!isAttacked)
+						float l1, t1, r1, b1, l2, t2, r2, b2;
+						GetBoundingBox(l1, t1, r1, b1);
+						floater->GetBoundingBox(l2, t2, r2, b2);
+
+						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
 						{
-							floater->LostBlood(GetDame());
-							isAttacked = true;
+							SetState(WEAPON_STATE_EXPLODE);
+							isBurning = true;
+							if (!isAttacked)
+							{
+								floater->LostBlood(GetDame());
+								isAttacked = true;
+							}
 						}
 					}
+
 				}
-
-			}
-			else if (dynamic_cast<CDome*>(colliable_object->at(i)))
-			{
-				CDome* dome = dynamic_cast<CDome*>(colliable_object->at(i));
-				if (dome->GetState() != STATE_ITEM)
+				else if (dynamic_cast<CDome*>(minObjectDistance))
 				{
-					float l1, t1, r1, b1, l2, t2, r2, b2;
-					GetBoundingBox(l1, t1, r1, b1);
-					dome->GetBoundingBox(l2, t2, r2, b2);
-
-					if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+					CDome* dome = dynamic_cast<CDome*>(minObjectDistance);
+					if (dome->GetState() != STATE_ITEM)
 					{
-						SetState(WEAPON_STATE_EXPLODE);
-						isBurning = true;
-						if (!isAttacked)
+						float l1, t1, r1, b1, l2, t2, r2, b2;
+						GetBoundingBox(l1, t1, r1, b1);
+						dome->GetBoundingBox(l2, t2, r2, b2);
+
+						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
 						{
-							dome->LostBlood(GetDame());
-							isAttacked = true;
+							SetState(WEAPON_STATE_EXPLODE);
+							isBurning = true;
+							if (!isAttacked)
+							{
+								dome->LostBlood(GetDame());
+								isAttacked = true;
+							}
 						}
 					}
+
 				}
-
-			}
-			else if (dynamic_cast<CJumper*>(colliable_object->at(i)))
-			{
-				CJumper* jumper = dynamic_cast<CJumper*>(colliable_object->at(i));
-				if (jumper->GetState() != STATE_ITEM)
+				else if (dynamic_cast<CJumper*>(minObjectDistance))
 				{
-					float l1, t1, r1, b1, l2, t2, r2, b2;
-					GetBoundingBox(l1, t1, r1, b1);
-					jumper->GetBoundingBox(l2, t2, r2, b2);
-
-					if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+					CJumper* jumper = dynamic_cast<CJumper*>(minObjectDistance);
+					if (jumper->GetState() != STATE_ITEM)
 					{
-						SetState(WEAPON_STATE_EXPLODE);
-						isBurning = true;
-						if (!isAttacked)
+						float l1, t1, r1, b1, l2, t2, r2, b2;
+						GetBoundingBox(l1, t1, r1, b1);
+						jumper->GetBoundingBox(l2, t2, r2, b2);
+
+						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
 						{
-							jumper->LostBlood(GetDame());
-							isAttacked = true;
+							SetState(WEAPON_STATE_EXPLODE);
+							isBurning = true;
+							if (!isAttacked)
+							{
+								jumper->LostBlood(GetDame());
+								isAttacked = true;
+							}
 						}
 					}
+
 				}
-
-			}
-
-			else if (dynamic_cast<CInsect*>(colliable_object->at(i)))
-			{
-				CInsect* insect = dynamic_cast<CInsect*>(colliable_object->at(i));
-				if (insect->GetState() != STATE_ITEM)
+				else if (dynamic_cast<CInsect*>(minObjectDistance))
 				{
-					float l1, t1, r1, b1, l2, t2, r2, b2;
-					GetBoundingBox(l1, t1, r1, b1);
-					insect->GetBoundingBox(l2, t2, r2, b2);
-
-					if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+					CInsect* insect = dynamic_cast<CInsect*>(minObjectDistance);
+					if (insect->GetState() != STATE_ITEM)
 					{
-						SetState(WEAPON_STATE_EXPLODE);
-						isBurning = true;
-						if (!isAttacked)
+						float l1, t1, r1, b1, l2, t2, r2, b2;
+						GetBoundingBox(l1, t1, r1, b1);
+						insect->GetBoundingBox(l2, t2, r2, b2);
+
+						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
 						{
-							insect->LostBlood(GetDame());
-							isAttacked = true;
+							SetState(WEAPON_STATE_EXPLODE);
+							isBurning = true;
+							if (!isAttacked)
+							{
+								insect->LostBlood(GetDame());
+								isAttacked = true;
+							}
 						}
 					}
+
 				}
-
-			}
-			else if (dynamic_cast<CSkull*>(colliable_object->at(i)))
-			{
-				CSkull* skull = dynamic_cast<CSkull*>(colliable_object->at(i));
-				if (skull->GetState() != STATE_ITEM)
+				else if (dynamic_cast<CSkull*>(minObjectDistance))
 				{
-					float l1, t1, r1, b1, l2, t2, r2, b2;
-					GetBoundingBox(l1, t1, r1, b1);
-					skull->GetBoundingBox(l2, t2, r2, b2);
-
-					if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+					CSkull* skull = dynamic_cast<CSkull*>(minObjectDistance);
+					if (skull->GetState() != STATE_ITEM)
 					{
-						SetState(WEAPON_STATE_EXPLODE);
-						isBurning = true;
-						if (!isAttacked)
+						float l1, t1, r1, b1, l2, t2, r2, b2;
+						GetBoundingBox(l1, t1, r1, b1);
+						skull->GetBoundingBox(l2, t2, r2, b2);
+
+						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
 						{
-							skull->LostBlood(GetDame());
-							isAttacked = true;
+							SetState(WEAPON_STATE_EXPLODE);
+							isBurning = true;
+							if (!isAttacked)
+							{
+								skull->LostBlood(GetDame());
+								isAttacked = true;
+							}
 						}
 					}
+
 				}
-
-			}
-			else if (dynamic_cast<COrb*>(colliable_object->at(i)))
-			{
-				COrb* orb = dynamic_cast<COrb*>(colliable_object->at(i));
-				if (orb->GetState() != STATE_ITEM)
+				else if (dynamic_cast<COrb*>(minObjectDistance))
 				{
-					float l1, t1, r1, b1, l2, t2, r2, b2;
-					GetBoundingBox(l1, t1, r1, b1);
-					orb->GetBoundingBox(l2, t2, r2, b2);
-
-					if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+					COrb* orb = dynamic_cast<COrb*>(minObjectDistance);
+					if (orb->GetState() != STATE_ITEM)
 					{
-						SetState(WEAPON_STATE_EXPLODE);
-						isBurning = true;
-						if (!isAttacked)
+						float l1, t1, r1, b1, l2, t2, r2, b2;
+						GetBoundingBox(l1, t1, r1, b1);
+						orb->GetBoundingBox(l2, t2, r2, b2);
+
+						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
 						{
-							orb->LostBlood(GetDame());
-							isAttacked = true;
+							SetState(WEAPON_STATE_EXPLODE);
+							isBurning = true;
+							if (!isAttacked)
+							{
+								orb->LostBlood(GetDame());
+								isAttacked = true;
+							}
 						}
-					}
-				}
-			}
-			else if (dynamic_cast<CSpike*>(colliable_object->at(i)))
-			{
-			}
-			else if (dynamic_cast<CPortal*>(colliable_object->at(i)))
-			{
-				CPortal* portal = dynamic_cast<CPortal*>(colliable_object->at(i));
-				float l1, t1, r1, b1, l2, t2, r2, b2;
-				GetBoundingBox(l1, t1, r1, b1);
-				portal->GetBoundingBox(l2, t2, r2, b2);
-
-				if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
-				{
-					SetState(WEAPON_STATE_EXPLODE);
-					isBurning = true;
-				}
-			}
-			else if (dynamic_cast<CBrick*>(colliable_object->at(i)))
-			{
-				CBrick* brick = dynamic_cast<CBrick*>(colliable_object->at(i));
-				if (brick->GetType() == BRICK_TYPE_NORMAL) //Default brick type
-				{
-					float l1, t1, r1, b1, l2, t2, r2, b2;
-					GetBoundingBox(l1, t1, r1, b1);
-					brick->GetBoundingBox(l2, t2, r2, b2);
-
-					if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
-					{
-						SetState(WEAPON_STATE_EXPLODE);
-						isBurning = true;
-					}
-				}
-				else if (brick->GetType() == BRICK_TYPE_DESTRUCTIBLE_1) //Destructible brick type
-				{
-					float l1, t1, r1, b1, l2, t2, r2, b2;
-					GetBoundingBox(l1, t1, r1, b1);
-					brick->GetBoundingBox(l2, t2, r2, b2);
-
-					if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
-					{
-						SetState(WEAPON_STATE_EXPLODE);
-						isBurning = true;
-						brick->SetState(BRICK_STATE_NONE);
-					}
-				}
-				else if (brick->GetType() == BRICK_TYPE_DESTRUCTIBLE_2) //Destructible brick type
-				{
-					float l1, t1, r1, b1, l2, t2, r2, b2;
-					GetBoundingBox(l1, t1, r1, b1);
-					brick->GetBoundingBox(l2, t2, r2, b2);
-
-					if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
-					{
-						SetState(WEAPON_STATE_EXPLODE);
-						isBurning = true;
-						brick->SetState(BRICK_STATE_NONE);
 					}
 				}
 			}
 		}
+		timeAttack += dt;
+		if (timeAttack > 2500)
+		{
+			SetState(WEAPON_STATE_NONE);
+			timeAttack = 0;
 		}
 	}
 
@@ -1376,16 +1336,25 @@ void CWeapon::Render()
 	{
 		if (state != WEAPON_STATE_NONE)
 		{
-			int ani = WEAPON_ANI_PLAYER_ROCKET;
+			int ani = WEAPON_ANI_PLAYER_ROCKET_HORIZONTAL_RIGHT;
 			int flip = false;
 			switch (state)
 			{
-			case WEAPON_PLAYER_ROCKET_STATE_FLY_UP:
-				ani = WEAPON_ANI_PLAYER_ROCKET;
+			case WEAPON_PLAYER_ROCKET_STATE_FLY_HORIZONTAL_RIGHT:
+				ani = WEAPON_ANI_PLAYER_ROCKET_HORIZONTAL_RIGHT;
 				break;
-			//case WEAPON_STATE_EXPLODE:
-				//ani = WEAPON_ANI_EXPLODE_BOSS;
-				//break;
+			case WEAPON_PLAYER_ROCKET_STATE_FLY_HORIZONTAL_LEFT:
+				ani = WEAPON_ANI_PLAYER_ROCKET_HORIZONTAL_LEFT;
+				break;
+			case WEAPON_PLAYER_ROCKET_STATE_FLY_UP:
+				ani = WEAPON_ANI_PLAYER_ROCKET_VERTICAL_UP;
+				break;
+			case WEAPON_PLAYER_ROCKET_STATE_FLY_DOWN:
+				ani = WEAPON_ANI_PLAYER_ROCKET_VERTICAL_DOWN;
+				break;
+			case WEAPON_STATE_EXPLODE:
+				ani = WEAPON_ANI_EXPLODE;
+				break;
 			default:
 				break;
 			}
@@ -1585,8 +1554,33 @@ void CWeapon::SetState(int state)
 		case WEAPON_PLAYER_ROCKET_STATE_FLY_UP:
 		{
 			vy = 0.1f;
+			vx = 0;
+			this->dame = 1;
 		}
 		break;
+		case WEAPON_PLAYER_ROCKET_STATE_FLY_DOWN:
+		{
+			vy = -0.1f;
+			vx = 0;
+			this->dame = 1;
+		}
+		break;
+		case WEAPON_PLAYER_ROCKET_STATE_FLY_HORIZONTAL_RIGHT:
+		{
+			vx = 0.1f;
+			vy = 0;
+			this->dame = 1;
+		}
+		break;
+		case WEAPON_PLAYER_ROCKET_STATE_FLY_HORIZONTAL_LEFT:
+		{
+			vx = -0.1f;
+			vy = 0;
+			this->dame = 1;
+		}
+		break;
+		case WEAPON_STATE_EXPLODE:
+			break;
 		}
 	}
 }
@@ -1662,14 +1656,57 @@ void CWeapon::GetBoundingBox(float& left, float& top, float& right, float& botto
 	}
 	else if (typeWeapon == WEAPON_TYPE_PLAYER_ROCKET)
 	{
-		left = x;
-		top = y - WEAPON_PLAYER_ROCKET_BBOX_HEIGHT;
-		right = x + WEAPON_PLAYER_ROCKER_BBOX_WIDTH;
-		bottom = y;
+		if (state == WEAPON_PLAYER_ROCKET_STATE_FLY_HORIZONTAL_RIGHT|| state == WEAPON_PLAYER_ROCKET_STATE_FLY_HORIZONTAL_LEFT)
+		{
+			left = x;
+			top = y - WEAPON_PLAYER_ROCKET_BBOX_HEIGHT;
+			right = x + WEAPON_PLAYER_ROCKER_BBOX_WIDTH;
+			bottom = y;
+		}
+		else if (state == WEAPON_PLAYER_ROCKET_STATE_FLY_UP || state == WEAPON_PLAYER_ROCKET_STATE_FLY_DOWN)
+		{
+			left = x;
+			top = y - WEAPON_PLAYER_ROCKER_BBOX_WIDTH;
+			right = x + WEAPON_PLAYER_ROCKET_BBOX_HEIGHT;
+			bottom = y;
+		}
 	}
 }
 
 void CWeapon::Reset()
 {
 
+}
+
+LPGAMEOBJECT CWeapon::FindMinObjectDistance(float x, float y, vector<LPGAMEOBJECT>* colliable_object)
+{
+	LPGAMEOBJECT minObjectDistance = NULL;
+	unordered_map<float, LPGAMEOBJECT> map_object_distance;
+	vector<float> list_distance;
+	for (int i = 0; i < colliable_object->size(); i++)
+	{
+		LPGAMEOBJECT object = colliable_object->at(i);
+		if (dynamic_cast<CEnemyObject*>(object)&&object->GetState()!=200&&object->GetState()!=STATE_ITEM)
+		{
+			float x_object, y_object;
+			object->GetPosition(x_object, y_object);
+			float vector_x = x_object - x;
+			float vector_y = y_object - y;
+			float delta = sqrt(vector_x * vector_x + vector_y * vector_y);
+			map_object_distance[delta]= object;
+			list_distance.push_back(delta);
+		}
+	}
+	float min_value;
+	if (list_distance.size() > 0)
+	{
+		min_value = list_distance[0];
+		for (int i = 1; i < list_distance.size(); i++) {
+			if (min_value >= list_distance[i])
+				min_value = list_distance[i];
+		}
+	}
+	if(map_object_distance[min_value])
+		minObjectDistance = map_object_distance[min_value];
+	return minObjectDistance;
 }

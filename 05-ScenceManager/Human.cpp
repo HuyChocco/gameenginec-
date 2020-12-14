@@ -321,6 +321,30 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					StartUntouchable();
 				}
 			}
+			// Nếu là portal object thì thực hiện chuyển cảnh
+			else if (dynamic_cast<CPortal*>(e->obj))
+			{
+				if (level == HUMAN_LEVEL_BIG)
+				{
+					CPortal* p = dynamic_cast<CPortal*>(e->obj);
+					//Nếu portal là đối tượng chuyển next scene
+					if (p->GetType() == 1)
+					{
+						CGame::GetInstance()->SetIsNextMap(true);
+						CGame::GetInstance()->SetIsPreMap(false);
+						CGame::GetInstance()->SetSceneId(p->GetSceneId());
+						CGame::GetInstance()->SetNextPortalId(p->GetNextPortalId());
+					}
+					//Nếu portal là đối tượng chuyển previous scene
+					else
+					{
+						CGame::GetInstance()->SetIsPreMap(true);
+						CGame::GetInstance()->SetIsNextMap(false);
+						CGame::GetInstance()->SetSceneId(p->GetSceneId());
+						CGame::GetInstance()->SetNextPortalId(p->GetNextPortalId());
+					}
+				}
+			}
 			//Outdoor enemies
 			else if (dynamic_cast<CWorm*>(e->obj))
 			{
@@ -351,7 +375,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
 						int power = player_object->GetPower();
-						if (power <= 8)
+						if (power < 8)
 						{
 							power++;
 							player_object->SetPower(power);
@@ -395,7 +419,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					if (player != NULL)
 					{
 						int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
-						if (power <= 8)
+						if (power < 8)
 						{
 							power++;
 							dynamic_cast<CMainCharacter*>(player)->SetPower(power);
@@ -440,7 +464,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					if (player != NULL)
 					{
 						int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
-						if (power <= 8)
+						if (power < 8)
 						{
 							power++;
 							dynamic_cast<CMainCharacter*>(player)->SetPower(power);
@@ -485,7 +509,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					if (player != NULL)
 					{
 						int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
-						if (power <= 8)
+						if (power < 8)
 						{
 							power++;
 							dynamic_cast<CMainCharacter*>(player)->SetPower(power);
@@ -530,7 +554,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					if (player != NULL)
 					{
 						int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
-						if (power <= 8)
+						if (power < 8)
 						{
 							power++;
 							dynamic_cast<CMainCharacter*>(player)->SetPower(power);
@@ -567,7 +591,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					if (player != NULL)
 					{
 						int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
-						if (power <= 8)
+						if (power < 8)
 						{
 							power++;
 							dynamic_cast<CMainCharacter*>(player)->SetPower(power);
@@ -611,7 +635,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					if (player != NULL)
 					{
 						int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
-						if (power <= 8)
+						if (power < 8)
 						{
 							power++;
 							dynamic_cast<CMainCharacter*>(player)->SetPower(power);
@@ -654,7 +678,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					if (player != NULL)
 					{
 						int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
-						if (power <= 8)
+						if (power < 8)
 						{
 							power++;
 							dynamic_cast<CMainCharacter*>(player)->SetPower(power);
@@ -698,7 +722,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					if (player != NULL)
 					{
 						int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
-						if (power <= 8)
+						if (power < 8)
 						{
 							power++;
 							dynamic_cast<CMainCharacter*>(player)->SetPower(power);
@@ -741,7 +765,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					if (player != NULL)
 					{
 						int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
-						if (power <= 8)
+						if (power < 8)
 						{
 							power++;
 							dynamic_cast<CMainCharacter*>(player)->SetPower(power);

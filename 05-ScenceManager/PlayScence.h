@@ -85,7 +85,7 @@ public:
 
 	CSprites* GetSpritesNextMap() { return sprites_next_map; }
 
-
+	void ReLoad();
 };
 
 class CPlayScenceKeyHandler : public CScenceKeyHandler
