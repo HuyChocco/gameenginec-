@@ -336,7 +336,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
-						if (power <= 8)
+						if (power < 8)
 							power++;
 						if (e->ny != 0)
 						{
@@ -367,7 +367,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
-						if (power <= 8)
+						if (power < 8)
 							power++;
 						if (e->ny < 0)
 						{
@@ -399,7 +399,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
-						if (power <= 8)
+						if (power < 8)
 							power++;
 						if (e->ny < 0)
 						{
@@ -429,7 +429,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
-						if (power <= 8)
+						if (power < 8)
 							power++;
 						if (e->ny < 0)
 						{
@@ -461,7 +461,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
-						if (power <= 8)
+						if (power < 8)
 							power++;
 						if (e->ny < 0)
 						{
@@ -491,7 +491,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
-						if (power <= 8)
+						if (power < 8)
 							power++;
 						if (e->ny < 0)
 						{
@@ -525,7 +525,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
-						if (power <= 8)
+						if (power < 8)
 							power++;
 						if (e->ny < 0)
 						{
@@ -556,7 +556,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
-						if (power <= 8)
+						if (power < 8)
 							power++;
 						if (e->ny != 0)
 						{
@@ -586,7 +586,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
-						if (power <= 8)
+						if (power < 8)
 							power++;
 						if (e->ny != 0)
 						{
@@ -616,7 +616,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
-						if(power<=8)
+						if(power<8)
 							power++;
 						if (e->ny != 0)
 						{
@@ -907,6 +907,7 @@ void CMainCharacter::SetState(int state)
 			CWeapon* weapon = new CWeapon(WEAPON_TYPE_PLAYER_ROCKET);
 			weapon->SetPosition(x, y);
 			weapon->SetState(WEAPON_PLAYER_ROCKET_STATE_FLY_UP);
+			weapon->SetPlayerObject(this);
 			list_weapon.push_back(weapon);
 		}
 		else if (state == MAIN_CHARACTER_STATE_UP_BARREL)

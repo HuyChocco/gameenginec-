@@ -1,6 +1,6 @@
 #include "GameObject.h"
 #include "Game.h"
-
+#include <math.h>
 #define WEAPON_BBOX_WIDTH 24
 #define WEAPON_BBOX_HEIGHT 8
 
@@ -30,8 +30,8 @@
 #define WEAPON_BOSS_BBOX_WIDTH 8
 #define WEAPON_BOSS_BBOX_HEIGHT 16
 
-#define WEAPON_PLAYER_ROCKER_BBOX_WIDTH 7
-#define WEAPON_PLAYER_ROCKET_BBOX_HEIGHT 5
+#define WEAPON_PLAYER_ROCKER_BBOX_WIDTH 15
+#define WEAPON_PLAYER_ROCKET_BBOX_HEIGHT 6
 
 #define WEAPON_STATE_NONE		100 //General
 #define WEAPON_ANI_SETS_ID 7
@@ -75,7 +75,10 @@
 //Enemy Boss
 #define WEAPON_BOSS_STATE_FLY		700
 //Player Rocket
-#define WEAPON_PLAYER_ROCKET_STATE_FLY_UP		700
+#define WEAPON_PLAYER_ROCKET_STATE_FLY_UP		900
+#define WEAPON_PLAYER_ROCKET_STATE_FLY_DOWN		901
+#define WEAPON_PLAYER_ROCKET_STATE_FLY_HORIZONTAL_LEFT		902
+#define WEAPON_PLAYER_ROCKET_STATE_FLY_HORIZONTAL_RIGHT		903
 
 //Player
 #define WEAPON_ANI_FLY_HORIZONTAL 0
@@ -104,7 +107,10 @@
 //Player
 #define WEAPON_FLY_SPEED 0.3f;
 //Player Rocket
-#define WEAPON_ANI_PLAYER_ROCKET 14
+#define WEAPON_ANI_PLAYER_ROCKET_HORIZONTAL_RIGHT 14
+#define WEAPON_ANI_PLAYER_ROCKET_HORIZONTAL_LEFT 15
+#define WEAPON_ANI_PLAYER_ROCKET_VERTICAL_UP 16
+#define WEAPON_ANI_PLAYER_ROCKET_VERTICAL_DOWN 17
 
 #define WEAPON_CANNONS_FLY_SPEED 0.15f;
 #define WEAPON_EYEBALL_FLY_SPEED 0.15f;
@@ -163,5 +169,5 @@ public:
 	int GetDame() { return this->dame; }
 	//void SetAttack(bool flag) { isAttacked = flag; }
 	void SetPlayerObject(CGameObject* _player) { this->player = _player; }
-
+	LPGAMEOBJECT FindMinObjectDistance(float x, float y, vector<LPGAMEOBJECT>* colliable_object = NULL);
 };
