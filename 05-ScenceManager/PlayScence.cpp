@@ -10,6 +10,7 @@
 //#include "Grid.h"
 #include "GunHub.h"
 #include "PowerHub.h"
+#include "Sound.h"
 
 using namespace std;
 
@@ -799,6 +800,7 @@ void CPlayScene::Update(DWORD dt)
 	//Vẽ Hub objects
 	for (int i = 0; i < hub_objects.size(); i++)
 		hub_objects[i]->Update(dt);
+	//Sound::getInstance()->Play(1);
 }
 
 void CPlayScene::Render()
@@ -971,6 +973,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_Z:
 		player->SetState(MAIN_CHARACTER_STATE_BARREL_FIRE);
+		Sound::getInstance()->PlayNew(SOUND_ID_BULLET_FIRE);
 		break;
 	case DIK_X:
 		player->SetState(MAIN_CHARACTER_STATE_FIRE_ROCKET);
