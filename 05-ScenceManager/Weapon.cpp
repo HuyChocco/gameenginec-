@@ -18,7 +18,7 @@
 #include "Orb.h"
 #include "Boss.h"
 
-
+#include "Sound.h"
 CWeapon::CWeapon(int type)
 {
 	isAttacked = false;
@@ -1085,6 +1085,7 @@ void CWeapon::Render()
 					animation_set->at(ani)->isFinish = false;
 					SetState(WEAPON_STATE_NONE);
 				}
+				Sound::getInstance()->PlayNew(SOUND_ID_BULLET_EXPLOSION);
 			}
 			else
 				animation_set->at(ani)->Render(x, y, flip);

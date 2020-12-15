@@ -34,7 +34,7 @@
 #define SKULL_ROUNDING_DISTANCE_X 2
 #define ORB_ROUNDING_DISTANCE_X 120
 #define ORB_ROUNDING_DISTANCE_Y 110
-
+#include "Sound.h"
 CMainCharacter::CMainCharacter(float x, float y) : CGameObject()
 {
 	isEnable = true;

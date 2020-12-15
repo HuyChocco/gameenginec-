@@ -85,7 +85,7 @@
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>d3dx9.lib;d3d9.lib;dxguid.lib;dxerr.lib;dinput8.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;gdi32.lib;d3d9.lib;d3dx9.lib;dxguid.lib;dinput8.lib;dsound.lib;winmm.lib;dxerr.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -133,6 +133,7 @@
     <ClCompile Include="Cannon.cpp" />
     <ClCompile Include="Coupling.cpp" />
     <ClCompile Include="Dome.cpp" />
+    <ClCompile Include="dxaudio.cpp" />
     <ClCompile Include="EndingScence.cpp" />
     <ClCompile Include="EnemyObject.cpp" />
     <ClCompile Include="Eyeball.cpp" />
@@ -152,6 +153,7 @@
     <ClCompile Include="Portal.cpp" />
     <ClCompile Include="PowerHub.cpp" />
     <ClCompile Include="Skull.cpp" />
+    <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Spike.cpp" />
     <ClCompile Include="Stair.cpp" />
     <ClCompile Include="Teleporter.cpp" />
@@ -181,6 +183,7 @@
     <ClInclude Include="Cannon.h" />
     <ClInclude Include="Coupling.h" />
     <ClInclude Include="Dome.h" />
+    <ClInclude Include="dxaudio.h" />
     <ClInclude Include="EndingScence.h" />
     <ClInclude Include="EnemyObject.h" />
     <ClInclude Include="Eyeball.h" />
@@ -201,6 +204,7 @@
     <ClInclude Include="Portal.h" />
     <ClInclude Include="PowerHub.h" />
     <ClInclude Include="Skull.h" />
+    <ClInclude Include="Sound.h" />
     <ClInclude Include="Spike.h" />
     <ClInclude Include="Stair.h" />
     <ClInclude Include="Teleporter.h" />

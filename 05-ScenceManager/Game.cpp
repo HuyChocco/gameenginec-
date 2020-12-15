@@ -8,7 +8,7 @@
 #include "IntroScence.h"
 #include "EndingScence.h"
 #include "BossScence.h"
-
+#include "Sound.h"
 CGame * CGame::__instance = NULL;
 
 /*
@@ -59,7 +59,7 @@ void CGame::Init(HWND hWnd)
 
 	// Initialize sprite helper from Direct3DX helper library
 	D3DXCreateSprite(d3ddv, &spriteHandler);
-
+	Sound::getInstance()->loadSound(hWnd);
 	OutputDebugString(L"[INFO] InitGame done;\n");
 }
 
