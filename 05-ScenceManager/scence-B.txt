@@ -483,7 +483,7 @@ Map-Blaster-Master-Area-2-B.txt
 # type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Worm, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Cabin, 8= Barrel, 9= Main character, 10= Spider, 11=Human
 # type: 12 = Floater, 13 = Domes, 14 = Jumpers, 15 = Insect,16 = Orbs, 17 = Skulls, 18 = Dashers, 500 = PowerHub, 501 = GunHub
 # MAIN_CHARACTER need to be created first!
-1	9	79	1162.33	2
+1	9	79	150	2
 # MAIN OBJECTS LIST
 # HUMAN
 2	11	17	115	1
@@ -509,7 +509,7 @@ Map-Blaster-Master-Area-2-B.txt
 18	13	222	1196	11
 19	13	328	1196	11
 # JUMPERS
-20	14	58	297	12
+20	14	58	350	12
 # INSECT
 21	15	300	545	13
 22	15	300	682	13
@@ -529,7 +529,7 @@ Map-Blaster-Master-Area-2-B.txt
 58	1	322	188	2	349	98
 59	1	97	224	2	413	192
 60	1	31	288	2	161	272
-61	1	33	271	2	109	256
+61	1	33	280	2	109	256
 62	1	145	272	2	161	257
 65	1	256	321	2	288	221
 66	1	160	351	2	413	319
@@ -589,7 +589,7 @@ Map-Blaster-Master-Area-2-B.txt
 9	3	1002
 9	2	58	99	55
 10	1	57
-8	0	59	60	61	62	109
+8	0	59	60	61	62	109	20
 8	1	65	66
 8	2	59	98
 8	3	93

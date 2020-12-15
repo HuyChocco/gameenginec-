@@ -1,9 +1,7 @@
 [SETTINGS]
-<<<<<<< HEAD
-start	3
-=======
-start	1
->>>>>>> master
+
+start	2
+
 #scene list
 #id	path	type_scence: 0-world 1-overworld
 [SCENES]
