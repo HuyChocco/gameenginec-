@@ -437,6 +437,20 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 				{
 					player->SetPosition((x - MAIN_CHARACTER_BBOX_WIDTH) - 2, y);
 				}
+				for (int i = 0; i < player->GetComponentObjects().size(); i++)
+				{
+					LPGAMEOBJECT object = player->GetComponentObjects()[i];
+					if (dynamic_cast<CHuman*>(object))
+					{
+						if (dynamic_cast<CHuman*>(object)->GetLevel() == HUMAN_LEVEL_BIG)
+						{
+							if (CGame::GetInstance()->GetNextPortalId() == object_id)
+							{
+								object->SetPosition((x - HUMAN_BIG_BBOX_WIDTH) - 2, y);
+							}
+						}
+					}
+				}
 			}
 		}
 		else if (CGame::GetInstance()->GetIsNextMap())
@@ -446,6 +460,20 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 				if (CGame::GetInstance()->GetNextPortalId() == object_id)
 				{
 					player->SetPosition(x + (r - x) + 2, y);
+				}
+				for (int i = 0; i < player->GetComponentObjects().size(); i++)
+				{
+					LPGAMEOBJECT object = player->GetComponentObjects()[i];
+					if (dynamic_cast<CHuman*>(object))
+					{
+						if (dynamic_cast<CHuman*>(object)->GetLevel() == HUMAN_LEVEL_BIG)
+						{
+							if (CGame::GetInstance()->GetNextPortalId() == object_id)
+							{
+								object->SetPosition(x + (r - x) + 2, y);
+							}
+						}
+					}
 				}
 			}
 		}
@@ -957,6 +985,8 @@ void CPlayScene::ReLoad()
 	{
 		if(player->GetAlive()>=0)
 			CGame::GetInstance()->SwitchScene(id, player->GetAlive(), 5);
+		else
+			CGame::GetInstance()->SwitchScene(id, 2, 5);
 	}
 }
 void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
@@ -977,6 +1007,7 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_X:
 		player->SetState(MAIN_CHARACTER_STATE_FIRE_ROCKET);
+		//Sound::getInstance()->PlayNew(SOUND_ID_BULLET_FIRE);
 		break;
 	case DIK_M:
 		if(!player->Is_Human)

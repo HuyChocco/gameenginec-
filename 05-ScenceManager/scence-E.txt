@@ -301,6 +301,15 @@
 100004	149	97	165	113	1
 100005	166	97	182	113	1
 100006	183	93	207	117	1
+# bullet Rocket
+# right rocket
+100100	5	35	20	41	55
+# left rocket
+100101	2	20	17	26	55
+# up rocket
+100102	109	8	115	23	55
+# down rocket
+100103	98	8	104	23	55
 # Human-Sofia
 # bullet
 100007	135	183	139	187	55
@@ -323,6 +332,13 @@
 100015	252	102	260	118	1
 # bullet_explosion
 100016	296	102	312	118	1
+#Skull
+#bullet_left
+100019	193	515	203	525	2
+#bullet_right
+100020	51	515	61	525	2
+#bullet_explosion
+100021	166	97	182	113	1
 # Hub objects
 # PowerHub - Text
 800001	175	219	183	235	55
@@ -437,6 +453,15 @@ Map-Blaster-Master-Area-2-E.txt
 4001	100002	100
 # explode
 4002	100003	100	100004	100	100005	100
+# Bullet Rocket
+# right rocket
+4100	100100	100
+# left rocket
+4101	100101	100
+# up rocket
+4102	100102	100
+# down rocket
+4103	100103	100
 # Human-Sofia
 # Bullet
 4003	100007	100
@@ -457,6 +482,13 @@ Map-Blaster-Master-Area-2-E.txt
 4009	100015	100
 # Bullet_explosion
 4010	100016	100
+# Skull 
+# Bullet left
+4011	100019	100
+# Bullet right
+4012	100020	100
+#Bullet explosion
+4013	100021	100
 # ==== HUB =========
 #PowerHub - Text
 100000	800001	100
@@ -506,8 +538,8 @@ Map-Blaster-Master-Area-2-E.txt
 15	12000	12001
 # DASHERS
 16	13000	13001
-# WEAPON Player-horizontal Player-vertical Player-explode Big human-bullet Big human-explosion Cannon-bullet Cannon-explosion Eyeball-bullet Eyeball-explosion	Floater-bullet	Floater-explosion
-7	4000	4001	4002	4003	4004	4005	4006	4007	4008	4009	4010
+# WEAPON Player-horizontal Player-vertical Player-explode Big human-bullet Big human-explosion Cannon-bullet Cannon-explosion Eyeball-bullet Eyeball-explosion	Floater-bullet	Floater-explosion	Skull bullet left	Skull bullet right	Skull bullet explosion	Player-Rocket-right	Player-Rocket-left	Player-Rocket-up	Player-Rocket-down
+7	4000	4001	4002	4003	4004	4005	4006	4007	4008	4009	4010	4011	4012	4013	4100	4101	4102	4103
 # HUB
 100	100000	100001	100002	100003	100004	100005	100006	100007	100008	100009	100010	100011
 # ITEMS

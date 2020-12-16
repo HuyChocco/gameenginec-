@@ -166,6 +166,7 @@ void CEyeball::SetState(int state)
 		{
 			CWeapon* weapon = new CWeapon(WEAPON_TYPE_ENEMY_EYEBALL);// Khởi tạo weapon
 			weapon->SetPosition(x, y);
+			weapon->SetDirection(nx);
 			weapon->SetState(WEAPON_EYEBALL_STATE_FLY);
 			list_weapon.push_back(weapon);
 		}

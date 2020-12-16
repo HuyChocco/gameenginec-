@@ -24,5 +24,5 @@ public:
 
 	int GetBlood() { return this->blood; }
 	void SetPlayerObject(CGameObject* _player) { this->player = _player; }
-
+	LPGAMEOBJECT GetPlayerObject() { return this->player; }
 };
