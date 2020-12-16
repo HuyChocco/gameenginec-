@@ -327,6 +327,14 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 		}
 		else if (type_weapon == WEAPON_TYPE_ENEMY_CANNONS)
 		{
+			float l1, t1, r1, b1;
+			GetBoundingBox(l1, t1, r1, b1);
+			if (state != WEAPON_STATE_EXPLODE && game->CheckCollision(l1, t1, r1, b1, l_player, t_player, r_player, b_player) == true)
+			{
+				SetState(WEAPON_STATE_EXPLODE);
+				isBurning = true;
+				player->SetIsAttacked(true);
+			}
 			for (UINT i = 0; i < colliable_object->size(); i++)
 			{
 				if (dynamic_cast<CBrick*>(colliable_object->at(i)))
@@ -349,11 +357,26 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 				else if (dynamic_cast<CSpike*>(colliable_object->at(i)))
 				{
 
+				}
+				else if (dynamic_cast<CCannon*>(colliable_object->at(i)))
+				{
+					CCannon* cannon = dynamic_cast<CCannon*>(colliable_object->at(i));
+					LPGAMEOBJECT _player = cannon->GetPlayerObject();
+					if (_player)
+						player = _player;
 				}
 			}
 		}
 		else if (type_weapon == WEAPON_TYPE_ENEMY_EYEBALL)
 		{
+			if (x_player >= this->x)
+				x++;
+			else
+				x--;
+			if (y_player >= this->y)
+				y++;
+			else
+				y--;
 			for (UINT i = 0; i < colliable_object->size(); i++)
 			{
 				if (dynamic_cast<CBrick*>(colliable_object->at(i)))
@@ -376,11 +399,28 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 				else if (dynamic_cast<CSpike*>(colliable_object->at(i)))
 				{
 
+				}
+				else if (dynamic_cast<CEyeball*>(colliable_object->at(i)))
+				{
+					CEyeball* eyeball = dynamic_cast<CEyeball*>(colliable_object->at(i));
+					LPGAMEOBJECT _player = eyeball->GetPlayerObject();
+					if (_player)
+					{
+						player = _player;
+					}
 				}
 			}
 		}
 		else if (type_weapon == WEAPON_TYPE_ENEMY_TELEPORTER)
 		{
+			if (x_player >= this->x)
+				x++;
+			else
+				x--;
+			if (y_player >= this->y)
+				y++;
+			else
+				y--;
 			for (UINT i = 0; i < colliable_object->size(); i++)
 			{
 				if (dynamic_cast<CBrick*>(colliable_object->at(i)))
@@ -403,6 +443,15 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 				else if (dynamic_cast<CSpike*>(colliable_object->at(i)))
 				{
 
+				}
+				else if (dynamic_cast<CTeleporter*>(colliable_object->at(i)))
+				{
+					CTeleporter* tele = dynamic_cast<CTeleporter*>(colliable_object->at(i));
+					LPGAMEOBJECT _player = tele->GetPlayerObject();
+					if (_player)
+					{
+						player = _player;
+					}
 				}
 			}
 		}
@@ -792,7 +841,6 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 					SetState(WEAPON_SKULL_STATE_EXPLODE);
 					isBurning = true;
 					time_movingg = 0;
-
 					isFour = true;
 
 				}
@@ -1085,7 +1133,7 @@ void CWeapon::Render()
 					animation_set->at(ani)->isFinish = false;
 					SetState(WEAPON_STATE_NONE);
 				}
-				Sound::getInstance()->PlayNew(SOUND_ID_BULLET_EXPLOSION);
+				Sound::getInstance()->Play(SOUND_ID_BULLET_EXPLOSION);
 			}
 			else
 				animation_set->at(ani)->Render(x, y, flip);
@@ -1259,9 +1307,13 @@ void CWeapon::Render()
 					animation_set->at(ani)->isFinish = false;
 					SetState(WEAPON_STATE_NONE);
 				}
+				Sound::getInstance()->Play(SOUND_ID_BOOMB_EXPLOSION);
 			}
 			else
+			{
 				animation_set->at(ani)->Render(x, y, flip);
+				Sound::getInstance()->Play(SOUND_ID_SKULL_THROW);
+			}
 			//RenderBoundingBox();
 		}
 	}
@@ -1295,6 +1347,7 @@ void CWeapon::Render()
 					animation_set->at(ani)->isFinish = false;
 					SetState(WEAPON_STATE_NONE);
 				}
+				Sound::getInstance()->Play(SOUND_ID_BULLET_EXPLOSION);
 			}
 			else
 				animation_set->at(ani)->Render(x, y, flip);
@@ -1369,6 +1422,7 @@ void CWeapon::Render()
 					animation_set->at(ani)->isFinish = false;
 					SetState(WEAPON_STATE_NONE);
 				}
+				Sound::getInstance()->Play(SOUND_ID_BULLET_EXPLOSION);
 			}
 			else
 				animation_set->at(ani)->Render(x, y, flip);
@@ -1439,7 +1493,14 @@ void CWeapon::SetState(int state)
 		switch (state)
 		{
 		case WEAPON_EYEBALL_STATE_FLY:
-			vx = WEAPON_EYEBALL_FLY_SPEED;
+			if (nx > 0)
+			{
+				vx = WEAPON_EYEBALL_FLY_SPEED;
+			}
+			else
+			{
+				vx = -WEAPON_EYEBALL_FLY_SPEED;
+			}
 			this->dame = 1;
 			break;
 		}
@@ -1449,7 +1510,14 @@ void CWeapon::SetState(int state)
 		switch (state)
 		{
 		case WEAPON_TELEPORTER_STATE_FLY:
-			vx = WEAPON_TELEPORTER_FLY_SPEED;
+			if (nx > 0)
+			{
+				vx = WEAPON_TELEPORTER_FLY_SPEED;
+			}
+			else
+			{
+				vx = -WEAPON_TELEPORTER_FLY_SPEED;
+			}
 			this->dame = 1;
 			break;
 		}

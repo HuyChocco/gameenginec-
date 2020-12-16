@@ -5,7 +5,7 @@
 #include "Utils.h"
 #include "Textures.h"
 #include "Sprites.h"
-
+#include "Sound.h"
 #define SCENCE_ID_START	1
 
 using namespace std;
@@ -398,6 +398,7 @@ void CBossScenceKeyHandler::OnKeyUp(int KeyCode)
 		break;
 	case DIK_Z:
 		player->SetState(MAIN_CHARACTER_STATE_BARREL_FIRE);
+		Sound::getInstance()->PlayNew(SOUND_ID_BULLET_FIRE);
 		break;
 	case DIK_M:
 		player->SetState(MAIN_CHARACTER_STATE_HUMAN);

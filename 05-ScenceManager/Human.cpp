@@ -22,7 +22,7 @@
 #include "Orb.h"
 #include "Skull.h"
 #include "Boss.h"
-
+#include "Sound.h"
 #define JUMPER_ROUNDING_DISTANCE_X 50
 #define JUMPER_ROUNDING_DISTANCE_Y 20
 #define ORB_ROUNDING_DISTANCE_X 120
@@ -98,6 +98,8 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				eyeball->SetDirectionY(1);//Up
 			else
 				eyeball->SetDirectionY(-1);//Down
+			if (isBeingHuman)
+				eyeball->SetPlayerObject(this);
 		}
 		else if (dynamic_cast<CTeleporter*>(coObjects->at(i))) {
 			CTeleporter* teleporter = dynamic_cast<CTeleporter*>(coObjects->at(i));
@@ -112,9 +114,13 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				teleporter->SetDirectionY(1);//Up
 			else
 				teleporter->SetDirectionY(-1);//Down
+			if (isBeingHuman)
+				teleporter->SetPlayerObject(this);
 		}
 		else if (dynamic_cast<CCannon*>(coObjects->at(i))) {
 			CCannon* cannon = dynamic_cast<CCannon*>(coObjects->at(i));
+			if (isBeingHuman)
+				cannon->SetPlayerObject(this);
 		}
 		else if (dynamic_cast<CJumper*>(coObjects->at(i))) {
 			CJumper* jumper = dynamic_cast<CJumper*>(coObjects->at(i));
@@ -231,14 +237,18 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		CalcPotentialCollisions(coObjects, coEvents);
 	if (isAttacked)
 	{
-		StartUntouchable();
-		isAttacked = false;
-		if (player != NULL)
+		if (untouchable == 0)
 		{
-			CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
-			int power = player_object->GetPower();
-			power--;
-			player_object->SetPower(power);
+			StartUntouchable();
+			isAttacked = false;
+			if (player != NULL)
+			{
+				CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+				int power = player_object->GetPower();
+				power--;
+				player_object->SetPower(power);
+				Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
+			}
 		}
 	}
 	// reset untouchable timer if untouchable time has passed
@@ -310,15 +320,18 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 				if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
 				{
-					if (player != NULL)
+					if (untouchable == 0)
 					{
-						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
-						int power = player_object->GetPower();
-						power--;
-						player_object->SetPower(power);
-
+						if (player != NULL)
+						{
+							CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+							int power = player_object->GetPower();
+							power--;
+							player_object->SetPower(power);
+						}
+						StartUntouchable();
+						Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
 					}
-					StartUntouchable();
 				}
 			}
 			// Nếu là portal object thì thực hiện chuyển cảnh
@@ -353,15 +366,18 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				worm->GetSpeed(vxWorm, vyWorm);
 				if (worm->GetState() != STATE_ITEM)
 				{
-					if (player != NULL)
+					if (untouchable == 0)
 					{
-						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
-						int power = player_object->GetPower();
-						power--;
-						player_object->SetPower(power);
-						
+						if (player != NULL)
+						{
+							CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+							int power = player_object->GetPower();
+							power--;
+							player_object->SetPower(power);
+						}
+						StartUntouchable();
+						Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
 					}
-					StartUntouchable();
 					if (e->ny != 0)
 					{
 						y -= 2 * vyWorm * dt;
@@ -373,6 +389,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					if (player != NULL)
 					{
+						Sound::getInstance()->PlayNew(SOUND_ID_EATING_ITEM);
 						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
 						int power = player_object->GetPower();
 						if (power < 8)
@@ -398,15 +415,18 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				floater->GetSpeed(vxFloater, vyFloater);
 				if (floater->GetState() != STATE_ITEM)
 				{
-					if (player != NULL)
+					if (untouchable == 0)
 					{
-						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
-						int power = player_object->GetPower();
-						power--;
-						player_object->SetPower(power);
-
+						if (player != NULL)
+						{
+							CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+							int power = player_object->GetPower();
+							power--;
+							player_object->SetPower(power);
+						}
+						StartUntouchable();
+						Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
 					}
-					StartUntouchable();
 					if (e->ny != 0)
 					{
 						y -= 2 * vyFloater * dt;
@@ -418,6 +438,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					if (player != NULL)
 					{
+						Sound::getInstance()->PlayNew(SOUND_ID_EATING_ITEM);
 						int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
 						if (power < 8)
 						{
@@ -443,15 +464,18 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				dome->GetSpeed(vxDome, vyDome);
 				if (dome->GetState() != STATE_ITEM)
 				{
-					if (player != NULL)
+					if (untouchable == 0)
 					{
-						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
-						int power = player_object->GetPower();
-						power--;
-						player_object->SetPower(power);
-
+						if (player != NULL)
+						{
+							CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+							int power = player_object->GetPower();
+							power--;
+							player_object->SetPower(power);
+						}
+						StartUntouchable();
+						Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
 					}
-					StartUntouchable();
 					if (e->ny != 0)
 					{
 						y -= 2 * vyDome * dt;
@@ -463,6 +487,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					if (player != NULL)
 					{
+						Sound::getInstance()->PlayNew(SOUND_ID_EATING_ITEM);
 						int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
 						if (power < 8)
 						{
@@ -488,15 +513,18 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				jumper->GetSpeed(vxJumper, vyJumper);
 				if (jumper->GetState() != STATE_ITEM)
 				{
-					if (player != NULL)
+					if (untouchable == 0)
 					{
-						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
-						int power = player_object->GetPower();
-						power--;
-						player_object->SetPower(power);
-
+						if (player != NULL)
+						{
+							CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+							int power = player_object->GetPower();
+							power--;
+							player_object->SetPower(power);
+						}
+						StartUntouchable();
+						Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
 					}
-					StartUntouchable();
 					if (e->ny != 0)
 					{
 						y -= 2 * vyJumper * dt;
@@ -508,6 +536,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					if (player != NULL)
 					{
+						Sound::getInstance()->PlayNew(SOUND_ID_EATING_ITEM);
 						int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
 						if (power < 8)
 						{
@@ -531,15 +560,18 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				COrb* orb = dynamic_cast<COrb*>(e->obj);
 				if (orb->GetState() != STATE_ITEM)
 				{
-					if (player != NULL)
+					if (untouchable == 0)
 					{
-						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
-						int power = player_object->GetPower();
-						power--;
-						player_object->SetPower(power);
-
+						if (player != NULL)
+						{
+							CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+							int power = player_object->GetPower();
+							power--;
+							player_object->SetPower(power);
+						}
+						StartUntouchable();
+						Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
 					}
-					StartUntouchable();
 					float vxOrb, vyOrb;
 					orb->GetSpeed(vxOrb, vyOrb);
 					if (e->ny != 0)
@@ -553,6 +585,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					if (player != NULL)
 					{
+						Sound::getInstance()->PlayNew(SOUND_ID_EATING_ITEM);
 						int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
 						if (power < 8)
 						{
@@ -570,15 +603,18 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				skull->GetSpeed(vxSkull, vySkull);
 				if (skull->GetState() != STATE_ITEM)
 				{
-					if (player != NULL)
+					if (untouchable == 0)
 					{
-						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
-						int power = player_object->GetPower();
-						power--;
-						player_object->SetPower(power);
-
+						if (player != NULL)
+						{
+							CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+							int power = player_object->GetPower();
+							power--;
+							player_object->SetPower(power);
+						}
+						StartUntouchable();
+						Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
 					}
-					StartUntouchable();
 					if (e->ny != 0)
 					{
 						y += dy;
@@ -590,6 +626,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					if (player != NULL)
 					{
+						Sound::getInstance()->PlayNew(SOUND_ID_EATING_ITEM);
 						int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
 						if (power < 8)
 						{
@@ -614,15 +651,18 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				cannon->GetSpeed(vxCannon, vyCannon);
 				if (cannon->GetState() != STATE_ITEM)
 				{
-					if (player != NULL)
+					if (untouchable == 0)
 					{
-						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
-						int power = player_object->GetPower();
-						power--;
-						player_object->SetPower(power);
-
+						if (player != NULL)
+						{
+							CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+							int power = player_object->GetPower();
+							power--;
+							player_object->SetPower(power);
+						}
+						StartUntouchable();
+						Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
 					}
-					StartUntouchable();
 					if (e->ny != 0)
 					{
 						y += dy;
@@ -634,6 +674,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					if (player != NULL)
 					{
+						Sound::getInstance()->PlayNew(SOUND_ID_EATING_ITEM);
 						int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
 						if (power < 8)
 						{
@@ -657,15 +698,18 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				eyeball->GetSpeed(vxEyeball, vyEyeball);
 				if (eyeball->GetState() != STATE_ITEM)
 				{
-					if (player != NULL)
+					if (untouchable == 0)
 					{
-						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
-						int power = player_object->GetPower();
-						power--;
-						player_object->SetPower(power);
-
+						if (player != NULL)
+						{
+							CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+							int power = player_object->GetPower();
+							power--;
+							player_object->SetPower(power);
+						}
+						StartUntouchable();
+						Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
 					}
-					StartUntouchable();
 					if (e->ny != 0)
 					{
 						y += dy;
@@ -677,6 +721,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					if (player != NULL)
 					{
+						Sound::getInstance()->PlayNew(SOUND_ID_EATING_ITEM);
 						int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
 						if (power < 8)
 						{
@@ -701,15 +746,18 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				teleporter->GetSpeed(vxTeleporter, vyTeleporter);
 				if (teleporter->GetState() != STATE_ITEM)
 				{
-					if (player != NULL)
+					if (untouchable == 0)
 					{
-						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
-						int power = player_object->GetPower();
-						power--;
-						player_object->SetPower(power);
-
+						if (player != NULL)
+						{
+							CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+							int power = player_object->GetPower();
+							power--;
+							player_object->SetPower(power);
+						}
+						StartUntouchable();
+						Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
 					}
-					StartUntouchable();
 					if (e->ny != 0)
 					{
 						y += dy;
@@ -721,6 +769,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					if (player != NULL)
 					{
+						Sound::getInstance()->PlayNew(SOUND_ID_EATING_ITEM);
 						int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
 						if (power < 8)
 						{
@@ -745,14 +794,18 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				boss->GetSpeed(vxBoss, vyBoss);
 				if (boss->GetState() != STATE_ITEM)
 				{
-					if (player != NULL)
+					if (untouchable == 0)
 					{
-						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
-						int power = player_object->GetPower();
-						power--;
-						player_object->SetPower(power);
+						if (player != NULL)
+						{
+							CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+							int power = player_object->GetPower();
+							power--;
+							player_object->SetPower(power);
+						}
+						StartUntouchable();
+						Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
 					}
-					StartUntouchable();
 					if (e->ny != 0)
 					{
 						y += dy;
@@ -764,6 +817,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					if (player != NULL)
 					{
+						Sound::getInstance()->PlayNew(SOUND_ID_EATING_ITEM);
 						int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
 						if (power < 8)
 						{
@@ -962,6 +1016,7 @@ void CHuman::SetState(int state)
 			{
 				vy = HUMAN_SMALL_JUMP_SPEED_Y;
 				is_on_ground = false;
+				Sound::getInstance()->PlayNew(SOUND_ID_PLAYER_JUMPING);
 			}
 		}
 		isGoingUp = false;

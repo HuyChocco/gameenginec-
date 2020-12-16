@@ -1,6 +1,7 @@
 ﻿
 #include "Boss.h"
 #include "Weapon.h"
+#include "Sound.h"
 
 CBoss::CBoss(float x,float y,int _item) :CEnemyObject()
 {
@@ -202,9 +203,11 @@ void CBoss::Render()
 				{
 					SetState(BOSS_STATE_MOVE);
 				}
+				Sound::getInstance()->Play(SOUND_ID_STARTING_BOSS);
 			}
 			else
 			{
+				Sound::getInstance()->Stop(SOUND_ID_STARTING_BOSS);
 				for (int i = 0; i < left_coupling_elements.size(); i++)
 				{
 					if (left_coupling_elements[i])
