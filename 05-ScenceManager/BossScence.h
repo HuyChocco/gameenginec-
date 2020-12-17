@@ -38,6 +38,7 @@ public:
 	virtual void Unload();
 
 	CMainCharacter* GetPlayer() { return player; }
+	void ReLoad();
 };
 
 class CBossScenceKeyHandler : public CScenceKeyHandler

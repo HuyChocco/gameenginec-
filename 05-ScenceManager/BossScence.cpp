@@ -6,6 +6,7 @@
 #include "Textures.h"
 #include "Sprites.h"
 #include "Sound.h"
+#include "MenuScence.h"
 #define SCENCE_ID_START	1
 
 using namespace std;
@@ -46,6 +47,7 @@ CBossScence::CBossScence(int id, LPCWSTR filePath) :
 
 //Hub objects
 #define OBJECT_TYPE_POWERHUB	500
+#define OBJECT_TYPE_GUNHUB	501
 
 //String
 #define MAX_SCENE_LINE 1024
@@ -192,6 +194,11 @@ void CBossScence::_ParseSection_OBJECTS(string line)
 			obj = new CBoss(x,y,item);
 			LPANIMATION_SET ani_set = animation_sets->Get(200);
 			obj->SetAnimationItemSet(ani_set);
+			if (player != NULL)
+			{
+				DebugOut(L"[INFO] Player object has been Created Already!\n");
+				dynamic_cast<CBoss*>(obj)->SetPlayerObject(player);
+			}
 			break;
 		}
 		case OBJECT_TYPE_POWERHUB:
@@ -205,6 +212,21 @@ void CBossScence::_ParseSection_OBJECTS(string line)
 			{
 				DebugOut(L"[INFO] Player object has been Created Already!\n");
 				dynamic_cast<CPowerHub*>(obj)->SetPlayerObject(player);
+			}
+			return;
+			break;
+		}
+		case OBJECT_TYPE_GUNHUB:
+		{
+			obj = new CGunHub();
+			obj->SetPosition(x, y);
+			obj->SetAnimationSet(animation_sets->Get(ani_set_id));
+			hub_objects.push_back(obj);
+			DebugOut(L"[INFO] GunHub object created!\n");
+			if (player != NULL)
+			{
+				DebugOut(L"[INFO] Player object has been Created Already!\n");
+				dynamic_cast<CGunHub*>(obj)->SetPlayerObject(player);
 			}
 			return;
 			break;
@@ -363,6 +385,16 @@ void CBossScence::Render()
 			objects[i]->Render();
 		//Vẽ player object
 		player->Render();
+		if (player->GetPower() < 0 && player->GetState() == MAIN_CHARACTER_STATE_DIE)
+		{
+			int lives = player->GetAlive();
+			if (lives >= 0)
+			{
+				lives -= 1;
+				player->SetAlive(lives);
+				ReLoad();
+			}
+		}
 		//Vẽ Hub objects
 		for (int i = 0; i < hub_objects.size(); i++)
 			hub_objects[i]->Render();
@@ -375,7 +407,26 @@ void CBossScence::Render()
 */
 void CBossScence::Unload()
 {
+	objects.clear();
+	player = NULL;
+	hub_objects.clear();
+	CSprites::GetInstance()->Clear();
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
+}
+
+void CBossScence::ReLoad()
+{
+	Sound::getInstance()->StopAll();
+	if (player)
+	{
+		CMenuScence* menu_scence = dynamic_cast<CMenuScence*>(CGame::GetInstance()->GetScene(MENU_SCENCE_ID));
+		if (menu_scence)
+			menu_scence->SetScenceId(id);
+		if (player->GetAlive() >= 0)
+			CGame::GetInstance()->SwitchScene(MENU_SCENCE_ID, player->GetAlive(), 5);
+		else
+			CGame::GetInstance()->SwitchScene(MENU_SCENCE_ID, 2, 5);
+	}
 }
 
 void CBossScenceKeyHandler::OnKeyDown(int KeyCode)

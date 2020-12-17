@@ -15,6 +15,9 @@ using namespace std;
 #define SOUND_ID_SKULL_THROW	7
 #define SOUND_ID_BOOMB_EXPLOSION	8
 #define SOUND_ID_STARTING_BOSS	9
+#define SOUND_ID_AREA_2	10
+#define SOUND_ID_BOSS	11
+#define SOUND_ID_OPENING	12
 class Sound
 {
 public:

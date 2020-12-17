@@ -377,6 +377,14 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 				y++;
 			else
 				y--;
+			float l1, t1, r1, b1;
+			GetBoundingBox(l1, t1, r1, b1);
+			if (state != WEAPON_STATE_EXPLODE && game->CheckCollision(l1, t1, r1, b1, l_player, t_player, r_player, b_player) == true)
+			{
+				SetState(WEAPON_STATE_EXPLODE);
+				isBurning = true;
+				player->SetIsAttacked(true);
+			}
 			for (UINT i = 0; i < colliable_object->size(); i++)
 			{
 				if (dynamic_cast<CBrick*>(colliable_object->at(i)))
@@ -421,6 +429,14 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 				y++;
 			else
 				y--;
+			float l1, t1, r1, b1;
+			GetBoundingBox(l1, t1, r1, b1);
+			if (state != WEAPON_STATE_EXPLODE && game->CheckCollision(l1, t1, r1, b1, l_player, t_player, r_player, b_player) == true)
+			{
+				SetState(WEAPON_STATE_EXPLODE);
+				isBurning = true;
+				player->SetIsAttacked(true);
+			}
 			for (UINT i = 0; i < colliable_object->size(); i++)
 			{
 				if (dynamic_cast<CBrick*>(colliable_object->at(i)))
@@ -1081,7 +1097,7 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 			}
 		}
 		timeAttack += dt;
-		if (timeAttack > 2500)
+		if (timeAttack > 3000)
 		{
 			SetState(WEAPON_STATE_NONE);
 			timeAttack = 0;
