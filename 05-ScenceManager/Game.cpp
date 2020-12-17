@@ -8,6 +8,7 @@
 #include "IntroScence.h"
 #include "EndingScence.h"
 #include "BossScence.h"
+#include "MenuScence.h"
 #include "Sound.h"
 CGame * CGame::__instance = NULL;
 
@@ -451,6 +452,8 @@ void CGame::_ParseSection_SCENES(string line)
 		scene = new CBossScence(id, path);
 	else if(id == ENDING_SCENCE_ID)
 		scene = new CEndingScence(id, path);
+	else if (id == MENU_SCENCE_ID)
+		scene = new CMenuScence(id, path);
 	else
 		scene = new CPlayScene(id, path);
 	if (type_scence == OVER_WORLD)
@@ -515,8 +518,6 @@ void CGame::SwitchScene(int scene_id, int _alive, int _power)
 	LPSCENE s = scenes[scene_id];
 	CGame::GetInstance()->SetKeyHandler(s->GetKeyEventHandler());
 	s->Load(_alive, _power);
-	
-	
 }
 
 
@@ -524,7 +525,7 @@ void CGame::TransformViewPortPosition(float& x, float& y, float l, float t, floa
 {
 	float width = r - l;
 	float height = b - t;
-	int scale = 1;
+	int scale = 1; 
 	D3DXVECTOR3 center = D3DXVECTOR3((width / 2) * scale, (height / 2) * scale, 0);
 	RECT rect;
 	rect.left = l;

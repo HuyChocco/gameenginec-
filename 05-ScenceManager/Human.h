@@ -43,6 +43,7 @@
 #define HUMAN_ANI_SMALL_WALKING		1
 #define HUMAN_ANI_SMALL_CRAWLING		2
 #define HUMAN_ANI_SMALL_CLIMBING		6
+#define HUMAN_ANI_SMALL_DYING		7
 
 #define HUMAN_ANI_DIE				8
 
@@ -61,6 +62,8 @@ class CHuman : public CGameObject
 	bool isBeingHuman;
 	bool isStateCrawl;
 	bool isStateClimb;
+	bool isStateExplosion;
+	bool isFininshAnimationDying;
 	CGameObject* player;
 public:
 	CHuman(float x = 0.0f, float y = 0.0f);
@@ -80,4 +83,7 @@ public:
 	bool GetGoingDown() { return isGoingDown; }
 	void SetIsBeingHuman(bool _flag) { isBeingHuman = _flag; }
 	void SetPlayerObject(CGameObject* _player) { player = _player; }
+	int GetIsStateCrawl() { return isStateCrawl; }
+	int GetIsStateExplosion() { return isStateExplosion; }
+	int GetIsFinishAnimationDying() { return isFininshAnimationDying; }
 };

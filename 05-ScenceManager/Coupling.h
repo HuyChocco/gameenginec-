@@ -1,7 +1,7 @@
 #pragma once
 #include "EnemyObject.h"
 #include "Game.h"
-#define COUPLING_MOVE_SPEED 0.02f;
+#define COUPLING_MOVE_SPEED 0.015f;
 #define COUPLING_GRAVITY 0.002f;
 
 #define COUPLING_BBOX_WIDTH 16
@@ -33,6 +33,7 @@ class CCoupling :public CEnemyObject
 	int current_state = 0;
 	float delta_x;
 	float delta_y;
+	int index;
 public:
 	CCoupling(float start_x,float start_y,bool is_left);
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
@@ -40,4 +41,5 @@ public:
 	virtual void Render();
 	virtual void SetState(int state);
 	void GetDelta(float& _delta_x, float& _delta_y) { _delta_x = delta_x; _delta_y = delta_y; }
+	void SetIndex(int _index) { this->index = _index; }
 };

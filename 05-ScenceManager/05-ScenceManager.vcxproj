@@ -148,6 +148,7 @@
     <ClCompile Include="Lava.cpp" />
     <ClCompile Include="MainCharacter.cpp" />
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="MenuScence.cpp" />
     <ClCompile Include="Orb.cpp" />
     <ClCompile Include="Pincer.cpp" />
     <ClCompile Include="Portal.cpp" />
@@ -199,6 +200,7 @@
     <ClInclude Include="Lava.h" />
     <ClInclude Include="MainCharacter.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="MenuScence.h" />
     <ClInclude Include="Orb.h" />
     <ClInclude Include="Pincer.h" />
     <ClInclude Include="Portal.h" />

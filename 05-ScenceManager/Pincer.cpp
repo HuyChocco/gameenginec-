@@ -42,8 +42,6 @@ void CPincer::GetBoundingBox(float& left, float& top, float& right, float& botto
 void CPincer::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	time_moving += dt;
-	//if (x <= 0 || x >= CGame::GetInstance()->GetScreenWidth() - PINCER_BBOX_WIDTH - 1)
-		//SetState(PINCER_STATE_MOVE_CHANGE_DIRECTION_X);
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
 	if (this->blood < 0)
@@ -52,6 +50,17 @@ void CPincer::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			SetState(STATE_ITEM);
 		else
 			SetState(PINCER_STATE_DIE);
+	}
+	if (player)
+	{
+		float player_l, player_t, player_r, player_b;
+		player->GetBoundingBox(player_l, player_t, player_r, player_b);
+		float l, t, r, b;
+		GetBoundingBox(l, t, r, b);
+		if (CGame::GetInstance()->CheckCollision(player_l, player_t, player_r, player_b, l, t, r, b))
+		{
+			player->SetIsAttacked(true);
+		}
 	}
 }
 
@@ -66,7 +75,7 @@ void CPincer::Render()
 			ani = PINCER_ANI_RIGHT;
 		if (isDisplay)
 		{
-			animation_set->at(ani)->Render(x+delta_x, y+delta_y);
+			animation_set->at(ani)->Render(x, y);
 			//RenderBoundingBox();
 		}
 	}
