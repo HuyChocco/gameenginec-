@@ -59,6 +59,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_CANNON	19
 #define OBJECT_TYPE_EYEBALL	20
 #define OBJECT_TYPE_TELEPORTER 33
+#define OBJECT_TYPE_ITEM 34
 
 //Main character objects
 #define OBJECT_TYPE_MAIN_CHARACTER	9
@@ -421,6 +422,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		return;
 		break;
 	}
+	case OBJECT_TYPE_ITEM:
+	{
+		int type = 0;
+		if (tokens.size() > 5)
+			type = atoi(tokens[5].c_str());
+		obj = new CItem(type);
+	}
+	break;
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = atof(tokens[5].c_str());
@@ -477,7 +486,54 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 				}
 			}
 		}
-
+		else if (CGame::GetInstance()->GetIsUpMap())
+		{
+			if (player != NULL)
+			{
+				if (CGame::GetInstance()->GetNextPortalId() == object_id)
+				{
+					player->SetPosition(x, y + MAIN_CHARACTER_BBOX_HEIGHT + 6);
+				}
+				for (int i = 0; i < player->GetComponentObjects().size(); i++)
+				{
+					LPGAMEOBJECT object = player->GetComponentObjects()[i];
+					if (dynamic_cast<CHuman*>(object))
+					{
+						if (dynamic_cast<CHuman*>(object)->GetLevel() == HUMAN_LEVEL_BIG)
+						{
+							if (CGame::GetInstance()->GetNextPortalId() == object_id)
+							{
+								object->SetPosition(x, y + HUMAN_BIG_BBOX_HEIGHT + 6);
+							}
+						}
+					}
+				}
+			}
+		}
+		else if (CGame::GetInstance()->GetIsDownMap())
+		{
+			if (player != NULL)
+			{
+				if (CGame::GetInstance()->GetNextPortalId() == object_id)
+				{
+					player->SetPosition(x, y -(y-b)-6);
+				}
+				for (int i = 0; i < player->GetComponentObjects().size(); i++)
+				{
+					LPGAMEOBJECT object = player->GetComponentObjects()[i];
+					if (dynamic_cast<CHuman*>(object))
+					{
+						if (dynamic_cast<CHuman*>(object)->GetLevel() == HUMAN_LEVEL_BIG)
+						{
+							if (CGame::GetInstance()->GetNextPortalId() == object_id)
+							{
+								object->SetPosition(x, y - (y - b) - 6);
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 	break;
 	default:
@@ -757,6 +813,25 @@ void CPlayScene::Update(DWORD dt)
 			}
 
 
+		}
+		else if (game->GetIsUpMap() == true)
+		{
+			if (type_scence == OVER_WORLD)
+			{
+				// switch scene
+				game->SwitchScene(game->GetSceneId(), player->GetAlive(), player->GetPower());
+				game->SetIsUpMap(false);
+			}
+
+		}
+		else if (game->GetIsDownMap() == true)
+		{
+			if (type_scence == OVER_WORLD)
+			{
+				// switch scene
+				game->SwitchScene(game->GetSceneId(), player->GetAlive(), player->GetPower());
+				game->SetIsDownMap(false);
+			}
 		}
 		else
 			game->SetRenderingNextMap(false);

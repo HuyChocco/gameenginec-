@@ -65,6 +65,7 @@ class CHuman : public CGameObject
 	bool isStateExplosion;
 	bool isFininshAnimationDying;
 	CGameObject* player;
+	bool isEnable;
 public:
 	CHuman(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);

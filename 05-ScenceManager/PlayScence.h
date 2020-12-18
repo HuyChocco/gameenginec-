@@ -23,6 +23,7 @@
 #include "Insect.h"
 #include "SKull.h"
 #include "Orb.h"
+#include "Item.h"
 //bo sung
 #include "MainCharacter.h"
 #include "BarrelObject.h"

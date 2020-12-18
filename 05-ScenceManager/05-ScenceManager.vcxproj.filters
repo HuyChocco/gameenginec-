@@ -151,6 +151,12 @@
     <ClCompile Include="MenuScence.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>Source Files\ItemObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Egg.cpp">
+      <Filter>Source Files\ItemObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cannon.h">
@@ -302,6 +308,12 @@
     </ClInclude>
     <ClInclude Include="MenuScence.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>Header Files\ItemObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Egg.h">
+      <Filter>Header Files\ItemObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -136,6 +136,7 @@ void CCoupling::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (CGame::GetInstance()->CheckCollision(player_l, player_t, player_r, player_b, l, t, r, b))
 		{
 			player->SetIsAttacked(true);
+			player->SetPosition(player_l - 0.5, player_t - 0.5);
 		}
 	}
 }
