@@ -348,9 +348,10 @@ map-overworld-2.txt
 [OBJECTS]
 # object_id  type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Worm, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Cabin, 8= Barrel, 9= Main character, 10= Spider, 11=Human
-# type: 12 = Floater, 13 = Domes, 14 = Jumpers, 15 = Insect,16 = Orbs, 17 = Skulls, 18 = Dashers, 500 = PowerHub, 501 = GunHub
+# type: 12 = Floater, 13 = Domes, 14 = Jumpers, 15 = Insect,16 = Orbs, 17 = Skulls, 18 = Dashers, 500 = PowerHub, 501 = GunHub, 19=Cannon, 20= Eyeball, 21 = Spike
+# type: 33 = Teleporter
 # MAIN_CHARACTER need to be created first!
-1	9	100	115	2
+1	9	100	150	2
 # MAIN OBJECTS LIST
 # HUMAN
 2	11	17	115	1
@@ -372,6 +373,13 @@ map-overworld-2.txt
 11	3	280	100	8
 # SPIDER
 12	10	420	120	9
+# CANNONS
+13	19	160	140	10
+# EYEBALL
+14	20	190.592	214.98	11
+15	20	141.194	104.125	11
+# TELEPORTER
+20	33	120	140	12
 # MAP OBJECT LIST
 # BRICK 
 # object_id 	type	l	t	ani_set_id	r	b
@@ -416,7 +424,7 @@ map-overworld-2.txt
 0	0	120	123	1003
 1	0	123	124	1001
 2	0	124	131	
-0	1	121	126	1003
-1	1	126	127	1002
+0	1	121	126	1003	14
+1	1	126	127	1002	15
 2	1	127	131
 

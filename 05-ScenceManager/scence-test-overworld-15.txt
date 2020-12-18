@@ -404,13 +404,13 @@ map-overworld-15.txt
 # --- SCENE PORTAL ----
 # object_id     type    l    t    ani_set_id    r    b    scene_id    type_portal: 1-Next scene 0-Previous scene    next_portal_id
 #cong ben trai
-1001	50	55	145	2	68.5	113	14	0	1002
+1001	50	55	145	2	68.5	113	12	0	1002
 #cong ben phai
-1002	50	251.268	143.8	2	266.0486	112.294	6	1	1001
+#1002	50	251.268	143.8	2	266.0486	112.294	6	1	1001
 #cong phia tren
-1003	50	152	249.5	2	168	218	16	1	1004
+1003	50	152	249.5	2	168	218	16	3	1004
 #cong phia duoi
-1004	50	143.876	63.633	2	177.2508	36.7945	11	0	1003
+1004	50	143.876	63.633	2	177.2508	36.7945	11	4	1003
 # cellx celly id_object...
 [GRID]
 0	0	120	123	1003

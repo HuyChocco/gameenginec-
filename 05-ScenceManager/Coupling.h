@@ -34,6 +34,7 @@ class CCoupling :public CEnemyObject
 	float delta_x;
 	float delta_y;
 	int index;
+	bool isAttacking;
 public:
 	CCoupling(float start_x,float start_y,bool is_left);
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);

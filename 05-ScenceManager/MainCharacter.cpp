@@ -315,14 +315,38 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						CGame::GetInstance()->SetIsNextMap(true);
 						CGame::GetInstance()->SetIsPreMap(false);
+						CGame::GetInstance()->SetIsUpMap(false);
+						CGame::GetInstance()->SetIsDownMap(false);
+						CGame::GetInstance()->SetSceneId(p->GetSceneId());
+						CGame::GetInstance()->SetNextPortalId(p->GetNextPortalId());
+					}
+					//Nếu portal là đối tượng chuyển up scene
+					else if (p->GetType() == 3)
+					{
+						CGame::GetInstance()->SetIsNextMap(false);
+						CGame::GetInstance()->SetIsPreMap(false);
+						CGame::GetInstance()->SetIsUpMap(true);
+						CGame::GetInstance()->SetIsDownMap(false);
+						CGame::GetInstance()->SetSceneId(p->GetSceneId());
+						CGame::GetInstance()->SetNextPortalId(p->GetNextPortalId());
+					}
+					//Nếu portal là đối tượng chuyển down scene
+					else if (p->GetType() == 4)
+					{
+						CGame::GetInstance()->SetIsNextMap(false);
+						CGame::GetInstance()->SetIsPreMap(false);
+						CGame::GetInstance()->SetIsUpMap(false);
+						CGame::GetInstance()->SetIsDownMap(true);
 						CGame::GetInstance()->SetSceneId(p->GetSceneId());
 						CGame::GetInstance()->SetNextPortalId(p->GetNextPortalId());
 					}
 					//Nếu portal là đối tượng chuyển previous scene
 					else
 					{
-						CGame::GetInstance()->SetIsPreMap(true);
 						CGame::GetInstance()->SetIsNextMap(false);
+						CGame::GetInstance()->SetIsPreMap(true);
+						CGame::GetInstance()->SetIsUpMap(false);
+						CGame::GetInstance()->SetIsDownMap(false);
 						CGame::GetInstance()->SetSceneId(p->GetSceneId());
 						CGame::GetInstance()->SetNextPortalId(p->GetNextPortalId());
 					}
@@ -728,7 +752,6 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CHuman* human_object = dynamic_cast<CHuman*>(componentObjects[i]);
 				human_object->SetIsBeingHuman(false);
 				human_object->SetPosition(x, y);
-				//human_object->Update(dt, coObjects);
 			}
 			else
 			{
@@ -763,8 +786,11 @@ void CMainCharacter::Render()
 				if (dynamic_cast<CHuman*>(componentObjects[i]))
 				{
 					CHuman* human = dynamic_cast<CHuman*>(componentObjects[i]);
-					if(human->GetLevel()==HUMAN_LEVEL_BIG)
+					if (human->GetLevel() == HUMAN_LEVEL_BIG)
+					{
 						SetState(MAIN_CHARACTER_STATE_DIE);
+						return;
+					}
 					else
 					{
 						if(human->GetIsFinishAnimationDying())

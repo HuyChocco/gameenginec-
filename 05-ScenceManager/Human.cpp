@@ -23,6 +23,7 @@
 #include "Skull.h"
 #include "Boss.h"
 #include "Sound.h"
+#include "Item.h"
 #define JUMPER_ROUNDING_DISTANCE_X 50
 #define JUMPER_ROUNDING_DISTANCE_Y 20
 #define ORB_ROUNDING_DISTANCE_X 120
@@ -33,7 +34,7 @@ CHuman::CHuman(float x, float y) : CGameObject()
 	level = HUMAN_LEVEL_SMALL;
 
 	SetState(HUMAN_STATE_IDLE);
-
+	isEnable = true;
 	start_x = x;
 	start_y = y;
 	this->x = x;
@@ -42,13 +43,7 @@ CHuman::CHuman(float x, float y) : CGameObject()
 
 void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if (player != NULL)
-	{
-		CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
-		int power = player_object->GetPower();
-		if (power < 0)
-			return;
-	}
+	if (!isEnable)	return;
 	CGame* game = CGame::GetInstance();
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
@@ -245,7 +240,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			{
 				CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
 				int power = player_object->GetPower();
-				power--;
+				power-=1;
 				player_object->SetPower(power);
 				Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
 			}
@@ -345,14 +340,38 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						CGame::GetInstance()->SetIsNextMap(true);
 						CGame::GetInstance()->SetIsPreMap(false);
+						CGame::GetInstance()->SetIsUpMap(false);
+						CGame::GetInstance()->SetIsDownMap(false);
+						CGame::GetInstance()->SetSceneId(p->GetSceneId());
+						CGame::GetInstance()->SetNextPortalId(p->GetNextPortalId());
+					}
+					//Nếu portal là đối tượng chuyển up scene
+					else if (p->GetType() == 3)
+					{
+						CGame::GetInstance()->SetIsNextMap(false);
+						CGame::GetInstance()->SetIsPreMap(false);
+						CGame::GetInstance()->SetIsUpMap(true);
+						CGame::GetInstance()->SetIsDownMap(false);
+						CGame::GetInstance()->SetSceneId(p->GetSceneId());
+						CGame::GetInstance()->SetNextPortalId(p->GetNextPortalId());
+					}
+					//Nếu portal là đối tượng chuyển down scene
+					else if (p->GetType() == 4)
+					{
+						CGame::GetInstance()->SetIsNextMap(false);
+						CGame::GetInstance()->SetIsPreMap(false);
+						CGame::GetInstance()->SetIsUpMap(false);
+						CGame::GetInstance()->SetIsDownMap(true);
 						CGame::GetInstance()->SetSceneId(p->GetSceneId());
 						CGame::GetInstance()->SetNextPortalId(p->GetNextPortalId());
 					}
 					//Nếu portal là đối tượng chuyển previous scene
 					else
 					{
-						CGame::GetInstance()->SetIsPreMap(true);
 						CGame::GetInstance()->SetIsNextMap(false);
+						CGame::GetInstance()->SetIsPreMap(true);
+						CGame::GetInstance()->SetIsUpMap(false);
+						CGame::GetInstance()->SetIsDownMap(false);
 						CGame::GetInstance()->SetSceneId(p->GetSceneId());
 						CGame::GetInstance()->SetNextPortalId(p->GetNextPortalId());
 					}
@@ -834,6 +853,22 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					boss->SetState(BOSS_STATE_DIE);
 				}
 			}
+			//Item
+			else if (dynamic_cast<CItem*>(e->obj))
+			{
+				Sound::getInstance()->PlayNew(SOUND_ID_EATING_ITEM);
+				CItem* item = dynamic_cast<CItem*>(e->obj);
+				if (item->GetType() == 4) {
+
+					int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
+					if (power < 8)
+					{
+						power++;
+						dynamic_cast<CMainCharacter*>(player)->SetPower(power);
+					}
+				}
+				item->SetState(ITEM_STATE_DIE);
+			}
 		}
 	}
 
@@ -845,16 +880,8 @@ int ani = HUMAN_ANI_BIG_WALKING;
 int flip = true;
 void CHuman::Render()
 {
-	if (player != NULL)
-	{
-		CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
-		int power = player_object->GetPower();
-		//if (power < 0)
-		//	return;
-	}
-	//if (state == MAIN_CHARACTER_STATE_DIE)
-		//ani = HUMAN_ANI_DIE;
-	//else
+	if (!isEnable)
+		return;
 	{
 		if (level == HUMAN_LEVEL_BIG)
 		{
@@ -1058,7 +1085,7 @@ void CHuman::SetState(int state)
 		}
 		break;
 	case MAIN_CHARACTER_STATE_DOWN_BARREL:
-		if(isBeingHuman)
+		if (isBeingHuman)
 		{
 			if (level == HUMAN_LEVEL_BIG)
 			{
@@ -1076,10 +1103,11 @@ void CHuman::SetState(int state)
 				}
 			}
 		}
-		
+
 		break;
 	case MAIN_CHARACTER_STATE_DIE:
 		vx = vy = 0;
+		isEnable = false;
 		break;
 	case MAIN_CHARACTER_STATE_EXPLOSION:
 		vx = vy = 0;
