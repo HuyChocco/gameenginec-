@@ -10,6 +10,7 @@
 #include "Brick.h"
 #include "Stair.h"
 #include "Lava.h"
+#include "Arrow.h"
 
 #include "EnemyObject1.h"
 #include "Worm.h"
@@ -293,6 +294,8 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else if (dynamic_cast<CLava*>(e->obj)) // if e->obj is CLava
 				{
+					x += dx;
+					y += dy;
 					if (untouchable == 0)
 					{
 						StartUntouchable();
@@ -300,6 +303,17 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
 					}
 				}
+				else if (dynamic_cast<CArrow*>(e->obj)) // if e->obj is CLava
+				{
+
+					if (untouchable == 0)
+					{
+						StartUntouchable();
+						power--;
+						Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
+					}
+				}
+
 				else if (dynamic_cast<CStair*>(e->obj))
 				{
 					x += dx;

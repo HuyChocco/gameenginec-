@@ -125,6 +125,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Animations.cpp" />
+    <ClCompile Include="Arrow.cpp" />
     <ClCompile Include="BarrelObject.cpp" />
     <ClCompile Include="Boss.cpp" />
     <ClCompile Include="BossScence.cpp" />
@@ -178,6 +179,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animations.h" />
+    <ClInclude Include="Arrow.h" />
     <ClInclude Include="BarrelObject.h" />
     <ClInclude Include="Boss.h" />
     <ClInclude Include="BossScence.h" />

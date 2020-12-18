@@ -8,6 +8,8 @@
 #include "Portal.h"
 #include "Brick.h"
 #include "Stair.h"
+#include "Lava.h"
+#include "Arrow.h"
 
 #include "Worm.h"
 #include "Spider.h"
@@ -304,6 +306,40 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 
 			}
+			else if (dynamic_cast<CLava*>(e->obj)) // if e->obj is CLava
+			{
+				x += dx;
+				y += dy;
+				if (untouchable == 0)
+				{
+					if (player != NULL)
+					{
+						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+						int power = player_object->GetPower();
+						power--;
+						player_object->SetPower(power);
+					}
+					StartUntouchable();
+					Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
+				}
+			}
+			else if (dynamic_cast<CArrow*>(e->obj)) // if e->obj is CLava
+			{
+
+				if (untouchable == 0)
+				{
+					if (player != NULL)
+					{
+						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+						int power = player_object->GetPower();
+						power--;
+						player_object->SetPower(power);
+					}
+					StartUntouchable();
+					Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
+				}
+			}
+
 			else if (dynamic_cast<CSpike*>(e->obj))
 			{
 				x += dx;

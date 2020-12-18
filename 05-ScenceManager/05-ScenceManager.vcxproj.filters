@@ -157,6 +157,9 @@
     <ClCompile Include="Egg.cpp">
       <Filter>Source Files\ItemObjects</Filter>
     </ClCompile>
+    <ClCompile Include="Arrow.cpp">
+      <Filter>Source Files\ItemObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cannon.h">
@@ -313,6 +316,9 @@
       <Filter>Header Files\ItemObjects</Filter>
     </ClInclude>
     <ClInclude Include="Egg.h">
+      <Filter>Header Files\ItemObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Arrow.h">
       <Filter>Header Files\ItemObjects</Filter>
     </ClInclude>
   </ItemGroup>
