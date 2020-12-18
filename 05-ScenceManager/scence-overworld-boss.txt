@@ -220,6 +220,7 @@ map-overworld-25.txt
 2	11	17	115	1
 # HUB LIST - x,y theo trục màn hình
 9	500	10	100	100
+11	501	10	50	100
 # BOSS ENEMY
 10	2	120	200	3	
 # MAP OBJECT LIST

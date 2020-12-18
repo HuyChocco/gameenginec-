@@ -1,11 +1,10 @@
 [SETTINGS]
-
-start	2
-
+start	18
 #scene list
 #id	path	type_scence: 0-world 1-overworld
 [SCENES]
 0	intro-scence.txt	0
+1000	menu-scence.txt	0
 1	scence-A.txt	0
 2	scence-B.txt	0
 3	scence-C.txt	0

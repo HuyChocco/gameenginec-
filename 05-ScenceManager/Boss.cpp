@@ -26,6 +26,7 @@ void CBoss::CreateCouplingElements()
 		CCoupling* object_right = new CCoupling(start_x+BOSS_BBOX_WIDTH,start_y-BOSS_BBOX_HEIGHT/2-i*COUPLING_BBOX_HEIGHT,false);
 		ani_set = animation_sets->Get(3);
 		object_right->SetAnimationSet(ani_set);
+		object_right->SetIndex(i);
 		right_coupling_elements.push_back(object_right);
 	}
 	for (int i = 0; i < 4; i++)
@@ -33,6 +34,7 @@ void CBoss::CreateCouplingElements()
 		CCoupling* object_left = new CCoupling(start_x, start_y - BOSS_BBOX_HEIGHT / 2 - i * COUPLING_BBOX_HEIGHT,true);
 		ani_set = animation_sets->Get(3);
 		object_left->SetAnimationSet(ani_set);
+		object_left->SetIndex(i);
 		left_coupling_elements.push_back(object_left);
 	}
 	CPincer* object_right = new CPincer(start_x+BOSS_BBOX_WIDTH, start_y - BOSS_BBOX_HEIGHT / 2 - 4 * COUPLING_BBOX_HEIGHT,false);
@@ -100,18 +102,25 @@ void CBoss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		list_weapon[i]->Update(dt, coObjects);
 	}
-	time_moving_coupling += dt;
-	time_moving_coupling_left += dt;
-	for (int i = 0; i < right_coupling_elements.size(); i++)
+	if (state != BOSS_STATE_IDLE)
 	{
-		right_coupling_elements[i]->SetPosition(x + BOSS_BBOX_WIDTH - 10, y - BOSS_BBOX_HEIGHT / 2 - i * COUPLING_BBOX_HEIGHT);
+		time_moving_coupling += dt;
+		time_moving_coupling_left += dt;
+		for (int i = 0; i < right_coupling_elements.size(); i++)
+		{
+			dynamic_cast<CCoupling*>(right_coupling_elements[i])->SetPlayerObject(player);
+			right_coupling_elements[i]->SetPosition(x + BOSS_BBOX_WIDTH - 10, y - BOSS_BBOX_HEIGHT / 2 - i * COUPLING_BBOX_HEIGHT);
+			right_coupling_elements[i]->Update(dt, coObjects);
+		}
+		for (int i = 0; i < left_coupling_elements.size(); i++)
+		{
+			dynamic_cast<CCoupling*>(left_coupling_elements[i])->SetPlayerObject(player);
+			left_coupling_elements[i]->SetPosition(x, y - BOSS_BBOX_HEIGHT / 2 - i * COUPLING_BBOX_HEIGHT);
+			left_coupling_elements[i]->Update(dt, coObjects);
+		}
+
 	}
-	for (int i = 0; i < left_coupling_elements.size(); i++)
-	{
-		left_coupling_elements[i]->SetPosition(x, y - BOSS_BBOX_HEIGHT / 2 - i * COUPLING_BBOX_HEIGHT);
-	}
-	
-	if (isStartAllCouplingRight)
+	/*if (isStartAllCouplingRight)
 	{
 		for (int i = 0; i < right_coupling_elements.size(); i++)
 		{
@@ -157,18 +166,20 @@ void CBoss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			left_coupling_elements[0]->Update(dt, coObjects);
 			isStartAllCouplingLeft = true;
 		}
-	}
+	}*/
 
 	//Xử lý Pincer
 	float _x, _y;
 	float _delta_x, _delta_y;
 	right_coupling_elements[3]->GetPosition(_x, _y);
-	dynamic_cast<CCoupling*>(right_coupling_elements[3])->GetDelta(_delta_x, _delta_y);
-	right_pincer->SetPosition(_x+_delta_x, _y - COUPLING_BBOX_HEIGHT+_delta_y);
+	dynamic_cast<CPincer*>(right_pincer)->SetPlayerObject(player);
+	right_pincer->SetPosition(_x, _y - COUPLING_BBOX_HEIGHT);
+	right_pincer->Update(dt, coObjects);
 
 	left_coupling_elements[3]->GetPosition(_x, _y);
-	dynamic_cast<CCoupling*>(left_coupling_elements[3])->GetDelta(_delta_x, _delta_y);
-	left_pincer->SetPosition(_x + _delta_x, _y - COUPLING_BBOX_HEIGHT + _delta_y);
+	dynamic_cast<CPincer*>(left_pincer)->SetPlayerObject(player);
+	left_pincer->SetPosition(_x, _y - COUPLING_BBOX_HEIGHT);
+	left_pincer->Update(dt, coObjects);
 }
 
 void CBoss::Render()
@@ -208,6 +219,7 @@ void CBoss::Render()
 			else
 			{
 				Sound::getInstance()->Stop(SOUND_ID_STARTING_BOSS);
+				Sound::getInstance()->Play(SOUND_ID_BOSS);
 				for (int i = 0; i < left_coupling_elements.size(); i++)
 				{
 					if (left_coupling_elements[i])

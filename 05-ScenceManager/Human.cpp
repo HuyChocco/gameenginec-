@@ -849,12 +849,12 @@ void CHuman::Render()
 	{
 		CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
 		int power = player_object->GetPower();
-		if (power < 0)
-			return;
+		//if (power < 0)
+		//	return;
 	}
-	if (state == MAIN_CHARACTER_STATE_DIE)
-		ani = HUMAN_ANI_DIE;
-	else
+	//if (state == MAIN_CHARACTER_STATE_DIE)
+		//ani = HUMAN_ANI_DIE;
+	//else
 	{
 		if (level == HUMAN_LEVEL_BIG)
 		{
@@ -959,7 +959,6 @@ void CHuman::Render()
 				}
 				animation_set->at(ani)->isPause = false; // Tiếp tục animation đã dừng trước đó	
 			}
-
 			if (isStateClimb)
 			{
 				if (vy != 0)
@@ -973,14 +972,18 @@ void CHuman::Render()
 					animation_set->at(ani)->isPause = true;
 				}
 			}
-
+			if (isStateExplosion)
+			{
+				ani = HUMAN_ANI_SMALL_DYING;
+				if (animation_set->at(ani)->isFinish)
+					isFininshAnimationDying = true;
+			}
 		}
-
 		int alpha = 255;
 		if (untouchable)
 			alpha = 128;
 		animation_set->at(ani)->Render(x, y, flip, alpha);
-		RenderBoundingBox();
+		//RenderBoundingBox();
 	}
 }
 
@@ -1076,6 +1079,11 @@ void CHuman::SetState(int state)
 		
 		break;
 	case MAIN_CHARACTER_STATE_DIE:
+		vx = vy = 0;
+		break;
+	case MAIN_CHARACTER_STATE_EXPLOSION:
+		vx = vy = 0;
+		isStateExplosion = true;
 		break;
 	case HUMAN_STATE_CLIMB:
 		isStateClimb = true;

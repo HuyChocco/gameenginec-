@@ -11,7 +11,7 @@
 #include "GunHub.h"
 #include "PowerHub.h"
 #include "Sound.h"
-
+#include "MenuScence.h"
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -638,250 +638,263 @@ void CPlayScene::Update(DWORD dt)
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
-	// get objects from grid 
+	// get objects from grid
 	CGame* game = CGame::GetInstance();
-	objects = CGrid::GetInstance()->GetList();
-	vector<LPGAMEOBJECT> coObjects;
-	for (size_t i = 0; i < objects.size(); i++)
+	if (!isMenuScenceDisplayed&&id == START_SCENCE_ID)
 	{
-		coObjects.push_back(objects[i]);
+		isMenuScenceDisplayed = true;
+		CMenuScence* menu_scence = dynamic_cast<CMenuScence*>(CGame::GetInstance()->GetScene(MENU_SCENCE_ID));
+		if (menu_scence)
+			menu_scence->SetScenceId(id);
+		game->SwitchScene(MENU_SCENCE_ID,2,5);
 	}
-	for (size_t i = 0; i < objects.size(); i++)
-	{
-			objects[i]->Update(dt, &coObjects);
-	}
-	if (player == NULL) return;
 	else
 	{
-		//coObjects.push_back(player);
-		player->Update(dt, &coObjects);
-	}
-
-	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
-
-	//Thực hiện chuyển sang scene tiếp theo
-	if (game->GetIsNextMap() == true)
-	{
-		if (type_scence == OVER_WORLD)
+		objects = CGrid::GetInstance()->GetList();
+		vector<LPGAMEOBJECT> coObjects;
+		for (size_t i = 0; i < objects.size(); i++)
 		{
-			// switch scene
-			game->SwitchScene(game->GetSceneId(), player->GetAlive(), player->GetPower());
-			game->SetIsNextMap(false);
+			coObjects.push_back(objects[i]);
 		}
+		for (size_t i = 0; i < objects.size(); i++)
+		{
+			objects[i]->Update(dt, &coObjects);
+		}
+		if (player == NULL) return;
 		else
 		{
-			game->SetRenderingNextMap(true);
-			//Lấy scene id của scene tiếp theo từ game object
-			id_next_map = game->GetSceneId();
-			game->SetScenceIDRenderingNextMap(id_next_map);
-			//Get scene kế tiếp thông qua scene_id
-			LPSCENE s = game->GetScene(id_next_map);
-			//Nếu scene tiếp theo tồn tại và chưa load tiled map của scene tiếp theo
-			if (s && initNextMap)
-			{
-				// Lấy tiled map tiếp theo
-				s->GetNextMap();
-				// Nếu tiled map tiếp theo tồn tại
-				if (s->GetMap() != NULL)
-				{
-					//Thêm vào đối tượng CTiledMapSets
-					CTiledMapSets::GetInstance()->Add(id_next_map, s->GetMap());
-					//Chuyển cờ đánh dấu đã load được tiled map tiếp theo
-					initNextMap = false;
-				}
+			//coObjects.push_back(player);
+			player->Update(dt, &coObjects);
+		}
 
-			}
-			float player_x, player_y;
-			player->GetPosition(player_x, player_y);
-			//Không xét va chạm và render player lên màn hình
-			player->SetState(MAIN_CHARACTER_STATE_NONE_COLLISION);
-			//Cho camera di chuyển theo trục x
-			player->SetSpeed(0.4, 0);
-			//Lấy width, height của map hiện tại
-			CMap* map = CTiledMapSets::GetInstance()->Get(id);
-			int widthMap, heightMap;
-			map->GetMapWidth(widthMap);
-			map->GetMapHeight(heightMap);
-			//Lấy width, height của map tiếp theo
-			map = CTiledMapSets::GetInstance()->Get(id_next_map);
-			int widthNextMap, heightNextMap;
-			map->GetMapWidth(widthNextMap);
-			map->GetMapHeight(heightNextMap);
-			player->GetPosition(player_x, player_y);
-			//Sau hiệu ứng di chuyển camera sang màn thì tiến hành chuyển màn
-			if (player_x >= widthMap + (widthNextMap / 3))
+		// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
+
+		//Thực hiện chuyển sang scene tiếp theo
+		if (game->GetIsNextMap() == true)
+		{
+			if (type_scence == OVER_WORLD)
 			{
 				// switch scene
 				game->SwitchScene(game->GetSceneId(), player->GetAlive(), player->GetPower());
 				game->SetIsNextMap(false);
 			}
-		}
-	}
-	//Thực hiện chuyển về scene trước
-	else if (game->GetIsPreMap() == true)
-	{
-
-		//float player_x, player_y;
-		//player->GetPosition(player_x, player_y);
-		//Không xét va chạm và render player lên màn hình
-		//player->SetState(MAIN_CHARACTER_STATE_NONE_COLLISION);
-		//Cho camera di chuyển theo trục x
-		//player->SetSpeed(-0.4, 0);
-		//Lấy width, height của map hiện tại
-		//CMap* map = CTiledMapSets::GetInstance()->Get(id);
-		//int widthMap, heightMap;
-		//map->GetMapWidth(widthMap);
-		//map->GetMapHeight(heightMap);
-		//Lấy width, height của map trước
-		//map = CTiledMapSets::GetInstance()->Get(id_pre_map);
-		//int widthPreMap, heightPreMap;
-		//map->GetMapWidth(widthPreMap);
-		//map->GetMapHeight(heightPreMap);
-		//player->GetPosition(player_x, player_y);
-		//Sau hiệu ứng di chuyển camera sang màn thì tiến hành chuyển màn
-		//if (player_x <= -(widthPreMap / 3))
-		{
-			// switch scene
-			game->SwitchScene(game->GetSceneId(), player->GetAlive(), player->GetPower());
-			game->SetIsPreMap(false);
-		}
-
-
-	}
-	else
-		game->SetRenderingNextMap(false);
-	// Update camera to follow main character
-	float cx = 0, cy = 0;
-	if (player != NULL)
-	{
-		if (player->Is_Human)
-		{
-			for (int i = 0; i < player->GetComponentObjects().size(); i++)
+			else
 			{
-				if (dynamic_cast<CHuman*>(player->GetComponentObjects()[i]))
+				game->SetRenderingNextMap(true);
+				//Lấy scene id của scene tiếp theo từ game object
+				id_next_map = game->GetSceneId();
+				game->SetScenceIDRenderingNextMap(id_next_map);
+				//Get scene kế tiếp thông qua scene_id
+				LPSCENE s = game->GetScene(id_next_map);
+				//Nếu scene tiếp theo tồn tại và chưa load tiled map của scene tiếp theo
+				if (s && initNextMap)
 				{
-					CHuman* human = dynamic_cast<CHuman*>(player->GetComponentObjects()[i]);
-					human->GetPosition(cx, cy);
+					// Lấy tiled map tiếp theo
+					s->GetNextMap();
+					// Nếu tiled map tiếp theo tồn tại
+					if (s->GetMap() != NULL)
+					{
+						//Thêm vào đối tượng CTiledMapSets
+						CTiledMapSets::GetInstance()->Add(id_next_map, s->GetMap());
+						//Chuyển cờ đánh dấu đã load được tiled map tiếp theo
+						initNextMap = false;
+					}
+
+				}
+				float player_x, player_y;
+				player->GetPosition(player_x, player_y);
+				//Không xét va chạm và render player lên màn hình
+				player->SetState(MAIN_CHARACTER_STATE_NONE_COLLISION);
+				//Cho camera di chuyển theo trục x
+				player->SetSpeed(0.4, 0);
+				//Lấy width, height của map hiện tại
+				CMap* map = CTiledMapSets::GetInstance()->Get(id);
+				int widthMap, heightMap;
+				map->GetMapWidth(widthMap);
+				map->GetMapHeight(heightMap);
+				//Lấy width, height của map tiếp theo
+				map = CTiledMapSets::GetInstance()->Get(id_next_map);
+				int widthNextMap, heightNextMap;
+				map->GetMapWidth(widthNextMap);
+				map->GetMapHeight(heightNextMap);
+				player->GetPosition(player_x, player_y);
+				//Sau hiệu ứng di chuyển camera sang màn thì tiến hành chuyển màn
+				if (player_x >= widthMap + (widthNextMap / 3))
+				{
+					// switch scene
+					game->SwitchScene(game->GetSceneId(), player->GetAlive(), player->GetPower());
+					game->SetIsNextMap(false);
 				}
 			}
 		}
+		//Thực hiện chuyển về scene trước
+		else if (game->GetIsPreMap() == true)
+		{
+
+			//float player_x, player_y;
+			//player->GetPosition(player_x, player_y);
+			//Không xét va chạm và render player lên màn hình
+			//player->SetState(MAIN_CHARACTER_STATE_NONE_COLLISION);
+			//Cho camera di chuyển theo trục x
+			//player->SetSpeed(-0.4, 0);
+			//Lấy width, height của map hiện tại
+			//CMap* map = CTiledMapSets::GetInstance()->Get(id);
+			//int widthMap, heightMap;
+			//map->GetMapWidth(widthMap);
+			//map->GetMapHeight(heightMap);
+			//Lấy width, height của map trước
+			//map = CTiledMapSets::GetInstance()->Get(id_pre_map);
+			//int widthPreMap, heightPreMap;
+			//map->GetMapWidth(widthPreMap);
+			//map->GetMapHeight(heightPreMap);
+			//player->GetPosition(player_x, player_y);
+			//Sau hiệu ứng di chuyển camera sang màn thì tiến hành chuyển màn
+			//if (player_x <= -(widthPreMap / 3))
+			{
+				// switch scene
+				game->SwitchScene(game->GetSceneId(), player->GetAlive(), player->GetPower());
+				game->SetIsPreMap(false);
+			}
+
+
+		}
 		else
-			player->GetPosition(cx, cy);
-	}
+			game->SetRenderingNextMap(false);
+		// Update camera to follow main character
+		float cx = 0, cy = 0;
+		if (player != NULL)
+		{
+			if (player->Is_Human)
+			{
+				for (int i = 0; i < player->GetComponentObjects().size(); i++)
+				{
+					if (dynamic_cast<CHuman*>(player->GetComponentObjects()[i]))
+					{
+						CHuman* human = dynamic_cast<CHuman*>(player->GetComponentObjects()[i]);
+						human->GetPosition(cx, cy);
+					}
+				}
+			}
+			else
+				player->GetPosition(cx, cy);
+		}
 
 
-	CMap* map = CTiledMapSets::GetInstance()->Get(id);
-	int widthMap, heightMap;
-	map->GetMapWidth(widthMap);
-	map->GetMapHeight(heightMap);
+		CMap* map = CTiledMapSets::GetInstance()->Get(id);
+		int widthMap, heightMap;
+		map->GetMapWidth(widthMap);
+		map->GetMapHeight(heightMap);
 
-	if (cx <= (float)game->GetScreenWidth() / 2)
-	{
-		cx = 0;
-		cy = 0;
-	}
-	else if (widthMap - cx <= (float)game->GetScreenWidth() / 2)
-	{
-		if (game->GetIsNextMap())//nếu player va chạm portal
+		if (cx <= (float)game->GetScreenWidth() / 2)
+		{
+			cx = 0;
+			cy = 0;
+		}
+		else if (widthMap - cx <= (float)game->GetScreenWidth() / 2)
+		{
+			if (game->GetIsNextMap())//nếu player va chạm portal
+				cx -= (float)game->GetScreenWidth() / 2;
+			else
+				cx = widthMap - game->GetScreenWidth();
+		}
+		else
+		{
 			cx -= (float)game->GetScreenWidth() / 2;
-		else
-			cx = widthMap - game->GetScreenWidth();
-	}
-	else
-	{
-		cx -= (float)game->GetScreenWidth() / 2;
-	}
-	//Xử lý camera theo trục y
-	cy = game->GetScreenHeight();
+		}
+		//Xử lý camera theo trục y
+		cy = game->GetScreenHeight();
 
-	if (player)
-	{
-		float player_x, player_y;
-		player_x = 0;
-		player_y = 0;
-		if (player->Is_Human)
+		if (player)
 		{
-			for (int i = 0; i < player->GetComponentObjects().size(); i++)
+			float player_x, player_y;
+			player_x = 0;
+			player_y = 0;
+			if (player->Is_Human)
 			{
-				if (dynamic_cast<CHuman*>(player->GetComponentObjects()[i]))
+				for (int i = 0; i < player->GetComponentObjects().size(); i++)
 				{
-					CHuman* human = dynamic_cast<CHuman*>(player->GetComponentObjects()[i]);
-					human->GetPosition(player_x, player_y);
+					if (dynamic_cast<CHuman*>(player->GetComponentObjects()[i]))
+					{
+						CHuman* human = dynamic_cast<CHuman*>(player->GetComponentObjects()[i]);
+						human->GetPosition(player_x, player_y);
+					}
 				}
 			}
+			else
+				player->GetPosition(player_x, player_y);
+
+			float height = (player_y - cy);
+
+			if (height >= ((float)game->GetScreenHeight() / 80))
+			{
+				height += (float)(game->GetScreenHeight() / 3);
+
+				cy += height;
+			}
+
+
 		}
-		else
-			player->GetPosition(player_x, player_y);
-
-		float height = (player_y - cy);
-
-		if (height >= ((float)game->GetScreenHeight() / 80))
-		{
-			height += (float)(game->GetScreenHeight() / 3);
-
-			cy += height;
-		}
-
-
+		CGame::GetInstance()->SetCamPos(cx, cy);
+		//Vẽ Hub objects
+		for (int i = 0; i < hub_objects.size(); i++)
+			hub_objects[i]->Update(dt);
+		Sound::getInstance()->Play(SOUND_ID_AREA_2);
 	}
-	CGame::GetInstance()->SetCamPos(cx, cy);
-	//Vẽ Hub objects
-	for (int i = 0; i < hub_objects.size(); i++)
-		hub_objects[i]->Update(dt);
-	//Sound::getInstance()->Play(1);
 }
 
 void CPlayScene::Render()
 {
-	//Vẽ tiled map của scene hiện tại
-	CTiledMapSets::GetInstance()->Get(id)->Render();
-	//Tạo hiệu ứng vẽ tiled map của scene tiếp theo nếu thỏa điều kiện
-	if (id_next_map != -1 && CTiledMapSets::GetInstance()->Get(id_next_map) && CGame::GetInstance()->GetRenderingNextMap())
 	{
-		CMap* map = CTiledMapSets::GetInstance()->Get(id);
-		int widthMap, heightMap;
-		map->GetMapWidth(widthMap);
-		map->GetMapHeight(heightMap);
-
-		map = CTiledMapSets::GetInstance()->Get(id_next_map);
-		int widthNextMap, heightNextMap;
-		map->GetMapWidth(widthNextMap);
-		map->GetMapHeight(heightNextMap);
-		CTiledMapSets::GetInstance()->Get(id_next_map)->Render(widthMap, heightMap <= heightNextMap ? 0 : heightMap - heightNextMap);
-	}
-	/*else if (isRenderPreMap && id_pre_map != -1 && CTiledMapSets::GetInstance()->Get(id_pre_map))
-	{
-		CMap* map = CTiledMapSets::GetInstance()->Get(id);
-		int widthMap, heightMap;
-		map->GetMapWidth(widthMap);
-		map->GetMapHeight(heightMap);
-
-		map = CTiledMapSets::GetInstance()->Get(id_pre_map);
-		int widthPreMap, heightPreMap;
-		map->GetMapWidth(widthPreMap);
-		map->GetMapHeight(heightPreMap);
-		CTiledMapSets::GetInstance()->Get(id_pre_map)->Render(-widthPreMap, heightMap - heightPreMap);
-	}*/
-	//Vẽ tất cả các object hiện tại nếu thỏa điều kiện
-	if (player->GetState() != MAIN_CHARACTER_STATE_NONE_COLLISION)
-	{
-		for (int i = 0; i < objects.size(); i++)
-			objects[i]->Render();
-		//Vẽ player object
-		player->Render();
-		if (player->GetPower() < 0 && player->GetState() == MAIN_CHARACTER_STATE_DIE)
+		//Vẽ tiled map của scene hiện tại
+		CTiledMapSets::GetInstance()->Get(id)->Render();
+		//Tạo hiệu ứng vẽ tiled map của scene tiếp theo nếu thỏa điều kiện
+		if (id_next_map != -1 && CTiledMapSets::GetInstance()->Get(id_next_map) && CGame::GetInstance()->GetRenderingNextMap())
 		{
-			int lives = player->GetAlive();
-			if (lives >= 0)
-			{
-				lives -= 1;
-				player->SetAlive(lives);
-				ReLoad();
-			}
+			CMap* map = CTiledMapSets::GetInstance()->Get(id);
+			int widthMap, heightMap;
+			map->GetMapWidth(widthMap);
+			map->GetMapHeight(heightMap);
+
+			map = CTiledMapSets::GetInstance()->Get(id_next_map);
+			int widthNextMap, heightNextMap;
+			map->GetMapWidth(widthNextMap);
+			map->GetMapHeight(heightNextMap);
+			CTiledMapSets::GetInstance()->Get(id_next_map)->Render(widthMap, heightMap <= heightNextMap ? 0 : heightMap - heightNextMap);
 		}
-		//Vẽ Hub objects
-		for (int i = 0; i < hub_objects.size(); i++)
-			hub_objects[i]->Render();
+		/*else if (isRenderPreMap && id_pre_map != -1 && CTiledMapSets::GetInstance()->Get(id_pre_map))
+		{
+			CMap* map = CTiledMapSets::GetInstance()->Get(id);
+			int widthMap, heightMap;
+			map->GetMapWidth(widthMap);
+			map->GetMapHeight(heightMap);
+
+			map = CTiledMapSets::GetInstance()->Get(id_pre_map);
+			int widthPreMap, heightPreMap;
+			map->GetMapWidth(widthPreMap);
+			map->GetMapHeight(heightPreMap);
+			CTiledMapSets::GetInstance()->Get(id_pre_map)->Render(-widthPreMap, heightMap - heightPreMap);
+		}*/
+		//Vẽ tất cả các object hiện tại nếu thỏa điều kiện
+		if (player->GetState() != MAIN_CHARACTER_STATE_NONE_COLLISION)
+		{
+			for (int i = 0; i < objects.size(); i++)
+				objects[i]->Render();
+			//Vẽ player object
+			player->Render();
+			if (player->GetPower() < 0 && player->GetState() == MAIN_CHARACTER_STATE_DIE)
+			{
+				int lives = player->GetAlive();
+				if (lives >= 0)
+				{
+					lives -= 1;
+					player->SetAlive(lives);
+					ReLoad();
+				}
+			}
+			//Vẽ Hub objects
+			for (int i = 0; i < hub_objects.size(); i++)
+				hub_objects[i]->Render();
+		}
 	}
 }
 
@@ -962,13 +975,9 @@ void CPlayScene::GetNextMap()
 */
 void CPlayScene::Unload()
 {
-	//for (int i = 0; i < objects.size(); i++)
-		//delete objects[i];
 	CGame::GetInstance()->SetRenderingNextMap(false);
 	sprites_next_map = NULL;
-
 	objects.clear();
-
 	player = NULL;
 	isRenderNextMap = false;
 	isRenderPreMap = false;
@@ -976,17 +985,20 @@ void CPlayScene::Unload()
 	initGridFlag = true;
 	hub_objects.clear();
 	CGrid::GetInstance()->Unload();
-
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
 }
 void CPlayScene::ReLoad()
 {
+	Sound::getInstance()->StopAll();
 	if (player)
 	{
+		CMenuScence* menu_scence=dynamic_cast<CMenuScence*>(CGame::GetInstance()->GetScene(MENU_SCENCE_ID));
+		if (menu_scence)
+			menu_scence->SetScenceId(id);
 		if(player->GetAlive()>=0)
-			CGame::GetInstance()->SwitchScene(id, player->GetAlive(), 5);
+			CGame::GetInstance()->SwitchScene(MENU_SCENCE_ID, player->GetAlive(), 5);
 		else
-			CGame::GetInstance()->SwitchScene(id, 2, 5);
+			CGame::GetInstance()->SwitchScene(MENU_SCENCE_ID, 2, 5);
 	}
 }
 void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
@@ -1007,7 +1019,6 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_X:
 		player->SetState(MAIN_CHARACTER_STATE_FIRE_ROCKET);
-		//Sound::getInstance()->PlayNew(SOUND_ID_BULLET_FIRE);
 		break;
 	case DIK_M:
 		if(!player->Is_Human)

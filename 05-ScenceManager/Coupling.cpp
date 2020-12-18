@@ -124,7 +124,20 @@ void CCoupling::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	delta_x+= dx;
 	delta_y+= dy;
+	x += delta_x;
+	y += delta_y;
 
+	if (player)
+	{
+		float player_l, player_t, player_r, player_b;
+		player->GetBoundingBox(player_l, player_t, player_r, player_b);
+		float l, t, r, b;
+		GetBoundingBox(l, t, r, b);
+		if (CGame::GetInstance()->CheckCollision(player_l, player_t, player_r, player_b, l, t, r, b))
+		{
+			player->SetIsAttacked(true);
+		}
+	}
 }
 
 void CCoupling::Render()
@@ -139,7 +152,7 @@ void CCoupling::Render()
 			ani = COUPLING_ANI_RIGHT;
 		if (isDisplay)
 		{
-			animation_set->at(ani)->Render(x+delta_x, y+delta_y);
+			animation_set->at(ani)->Render(x, y);
 			//RenderBoundingBox();
 		}
 	}
@@ -155,19 +168,19 @@ void CCoupling::SetState(int state)
 		vy = 0;
 		break;
 	case COUPLING_STATE_MOVE_LEFT:
-		vx = -COUPLING_MOVE_SPEED;
+		vx = -index * COUPLING_MOVE_SPEED;
 		vy = 0;
 		break;
 	case COUPLING_STATE_MOVE_RIGHT:
-		vx = COUPLING_MOVE_SPEED;
+		vx = index*COUPLING_MOVE_SPEED;
 		vy = 0;
 		break;
 	case COUPLING_STATE_MOVE_UP:
-		vy = COUPLING_MOVE_SPEED;
+		vy = index* COUPLING_MOVE_SPEED;
 		vx = 0;
 		break;
 	case COUPLING_STATE_MOVE_DOWN:
-		vy = -COUPLING_MOVE_SPEED;
+		vy = -index* COUPLING_MOVE_SPEED;
 		vx = 0;
 		break;
 	case COUPLING_STATE_DIE:

@@ -293,6 +293,8 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else if (dynamic_cast<CLava*>(e->obj)) // if e->obj is CLava
 				{
+					x += dx;
+					y += dy;
 					if (untouchable == 0)
 					{
 						StartUntouchable();
@@ -756,9 +758,23 @@ void CMainCharacter::Render()
 			if (animation_set->at(MAIN_CHARACTER_ANI_EXPLOSION)->isFinish)
 				SetState(MAIN_CHARACTER_STATE_DIE);
 		}
-		if (state == MAIN_CHARACTER_STATE_EXPLOSION && Is_Human)
+		else if (state == MAIN_CHARACTER_STATE_EXPLOSION && Is_Human)
 		{
-				SetState(MAIN_CHARACTER_STATE_DIE);
+			for (int i = 0; i < componentObjects.size(); i++)
+			{
+				if (dynamic_cast<CHuman*>(componentObjects[i]))
+				{
+					CHuman* human = dynamic_cast<CHuman*>(componentObjects[i]);
+					if(human->GetLevel()==HUMAN_LEVEL_BIG)
+						SetState(MAIN_CHARACTER_STATE_DIE);
+					else
+					{
+						if(human->GetIsFinishAnimationDying())
+							SetState(MAIN_CHARACTER_STATE_DIE);
+					}
+				}
+				componentObjects[i]->Render();
+			}
 		}
 		else
 		{
@@ -936,7 +952,10 @@ void CMainCharacter::SetState(int state)
 						}
 						else
 						{
-							weapon->SetPosition(x_human, y_human - HUMAN_SMALL_BBOX_HEIGHT / 2);
+							if(dynamic_cast<CHuman*>(componentObjects[i])->GetIsStateCrawl())
+								weapon->SetPosition(x_human, y_human);
+							else
+								weapon->SetPosition(x_human, y_human - HUMAN_SMALL_BBOX_HEIGHT / 2);
 							weapon->SetDirection(nx);
 							weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY);
 						}
@@ -975,6 +994,7 @@ void CMainCharacter::SetState(int state)
 			weapon->SetState(WEAPON_PLAYER_ROCKET_STATE_FLY_UP);
 			weapon->SetPlayerObject(this);
 			list_weapon.push_back(weapon);
+			Sound::getInstance()->Play(SOUND_ID_BULLET_FIRE);
 		}
 		else if (state == MAIN_CHARACTER_STATE_UP_BARREL)
 		{
