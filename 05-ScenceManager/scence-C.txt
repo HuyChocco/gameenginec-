@@ -204,6 +204,9 @@
 300006	71	56	92	82	55
 # Main character empty sprite
 70001	0	0	0	0	1
+# Main character explosion
+70002	159	3	207	43	1
+70003	143	44	207	132	1
 # WORM
 #move left 
 110001	46	412	62	421	2
@@ -274,6 +277,15 @@
 100004	149	97	165	113	1
 100005	166	97	182	113	1
 100006	183	93	207	117	1
+# bullet Rocket
+# right rocket
+100100	5	35	20	41	55
+# left rocket
+100101	2	20	17	26	55
+# up rocket
+100102	109	8	115	23	55
+# down rocket
+100103	98	8	104	23	55
 # Human-Sofia
 # bullet
 100007	135	183	139	187	55
@@ -307,7 +319,15 @@
 # PowerHub - Text
 800001	175	219	183	235	55
 # PowerHub
-800002	115	98	123	130	55
+800002	85	97	93	129	55
+800005	95	97	103	129	55
+800006	110	97	118	129	55
+800007	120	97	128	129	55
+800008	130	98	138	130	55
+800009	141	98	149	130	55
+800010	152	98	160	130	55
+800011	27	96	35	128	55
+800012	242	101	250	133	55
 # GunHub
 800003	154	221	162	253	55
 # Hov-Text
@@ -355,6 +375,8 @@ Map-Blaster-Master-Area-2-C.txt
 # ==== MAIN CHARACTER =========
 #idle
 2000	70001	100
+#explosion
+2001	70002	200
 # === ENEMY DOMES ===
 #walk left
 8000	140001	100	140002	100
@@ -407,6 +429,15 @@ Map-Blaster-Master-Area-2-C.txt
 4001	100002	100
 # explode
 4002	100003	100	100004	100	100005	100
+# Bullet Rocket
+# right rocket
+4100	100100	100
+# left rocket
+4101	100101	100
+# up rocket
+4102	100102	100
+# down rocket
+4103	100103	100
 # Human-Sofia
 # Bullet
 4003	100007	100
@@ -439,6 +470,14 @@ Map-Blaster-Master-Area-2-C.txt
 100000	800001	100
 # PowerHub
 100001	800002	100
+100004	800005	100
+100005	800006	100
+100006	800007	100
+100007	800008	100
+100008	800009	100
+100009	800010	100
+100010	800011	100
+100011	800012	100
 # GunHub
 100002	800003	100
 # Hov - text
@@ -450,7 +489,7 @@ Map-Blaster-Master-Area-2-C.txt
 # SOFIA 
 1	600	601	602	603	604	605	606
 # MAIN_CHARACTER 
-2	2000
+2	2000	2001
 # WHEEL 
 3	700	701	702
 # SOFIA VEHICLE
@@ -469,10 +508,10 @@ Map-Blaster-Master-Area-2-C.txt
 14	11000	11001
 # SKULLS
 15	120000	120001	120002	120003
-# WEAPON Player-horizontal Player-vertical Player-explode Big human-bullet Big human-explosion Cannon-bullet Cannon-explosion Eyeball-bullet Eyeball-explosion	Floater-bullet	Floater-explosion	Skull bullet left	Skull bullet right	Skull bullet explosion
-7	4000	4001	4002	4003	4004	4005	4006	4007	4008	4009	4010	4011	4012	4013
+# WEAPON Player-horizontal Player-vertical Player-explode Big human-bullet Big human-explosion Cannon-bullet Cannon-explosion Eyeball-bullet Eyeball-explosion	Floater-bullet	Floater-explosion	Skull bullet left	Skull bullet right	Skull bullet explosion	Player-Rocket-right	Player-Rocket-left	Player-Rocket-up	Player-Rocket-down
+7	4000	4001	4002	4003	4004	4005	4006	4007	4008	4009	4010	4011	4012	4013	4100	4101	4102	4103
 # HUB
-100	100000	100001	100002	100003
+100	100000	100001	100002	100003	100004	100005	100006	100007	100008	100009	100010	100011
 # ITEMS
 # P
 200	900000
@@ -483,14 +522,14 @@ Map-Blaster-Master-Area-2-C.txt
 # MAIN_CHARACTER need to be created first!
 1	9	65	144.73	2
 # MAIN OBJECTS LIST
-# HUMAN
-2	11	17	115	1
 # WHEEL_LEFT
 3	4	18	132	3
 # WHEEL_RIGHT
 4	6	32	132	3
 # SOFIA VEHICLE
 5	7	25	118	4
+# HUMAN
+2	11	17	115	1
 # HUB LIST - x,y theo trục màn hình
 9	500	10	100	100
 # ENEMY LIST

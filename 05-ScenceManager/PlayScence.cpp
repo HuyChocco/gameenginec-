@@ -10,6 +10,7 @@
 //#include "Grid.h"
 #include "GunHub.h"
 #include "PowerHub.h"
+#include "Sound.h"
 
 using namespace std;
 
@@ -39,6 +40,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 
 //Map objects
 #define OBJECT_TYPE_BRICK	1
+#define OBJECT_TYPE_LAVA	30
 #define OBJECT_TYPE_SPIKE	21
 #define OBJECT_TYPE_STAIR	22
 
@@ -202,6 +204,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		LPANIMATION_SET ani_set = animation_sets->Get(200);
 		obj->SetAnimationItemSet(ani_set);
 	}
+	
 	break;
 	case OBJECT_TYPE_FLOATER:
 	{
@@ -314,10 +317,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
 		hub_objects.push_back(obj);
 		DebugOut(L"[INFO] PowerHub object created!\n");
+		if (player != NULL)
+		{
+			DebugOut(L"[INFO] Player object has been Created Already!\n");
+			dynamic_cast<CPowerHub*>(obj)->SetPlayerObject(player);
+		}
 		return;
 		break;
 	}
-
 	case OBJECT_TYPE_BRICK:
 	{
 		float r = atof(tokens[5].c_str());
@@ -326,9 +333,18 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		{
 			int type = atoi(tokens[7].c_str());
 			obj = new CBrick(x, y, r, b, type);
+
 		}
 		else
 			obj = new CBrick(x, y, r, b);
+		break;
+	}
+
+	case OBJECT_TYPE_LAVA:
+	{
+		float r = atof(tokens[5].c_str());
+		float b = atof(tokens[6].c_str());
+		obj = new CLava(x, y, r, b);
 		break;
 	}
 	case OBJECT_TYPE_STAIR:
@@ -400,6 +416,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		{
 			DebugOut(L"[INFO] Player object has been Created Already!\n");
 			player->AddComponentObject(obj);
+			dynamic_cast<CHuman*>(obj)->SetPlayerObject(player);
 		}
 		return;
 		break;
@@ -420,6 +437,20 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 				{
 					player->SetPosition((x - MAIN_CHARACTER_BBOX_WIDTH) - 2, y);
 				}
+				for (int i = 0; i < player->GetComponentObjects().size(); i++)
+				{
+					LPGAMEOBJECT object = player->GetComponentObjects()[i];
+					if (dynamic_cast<CHuman*>(object))
+					{
+						if (dynamic_cast<CHuman*>(object)->GetLevel() == HUMAN_LEVEL_BIG)
+						{
+							if (CGame::GetInstance()->GetNextPortalId() == object_id)
+							{
+								object->SetPosition((x - HUMAN_BIG_BBOX_WIDTH) - 2, y);
+							}
+						}
+					}
+				}
 			}
 		}
 		else if (CGame::GetInstance()->GetIsNextMap())
@@ -429,6 +460,20 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 				if (CGame::GetInstance()->GetNextPortalId() == object_id)
 				{
 					player->SetPosition(x + (r - x) + 2, y);
+				}
+				for (int i = 0; i < player->GetComponentObjects().size(); i++)
+				{
+					LPGAMEOBJECT object = player->GetComponentObjects()[i];
+					if (dynamic_cast<CHuman*>(object))
+					{
+						if (dynamic_cast<CHuman*>(object)->GetLevel() == HUMAN_LEVEL_BIG)
+						{
+							if (CGame::GetInstance()->GetNextPortalId() == object_id)
+							{
+								object->SetPosition(x + (r - x) + 2, y);
+							}
+						}
+					}
 				}
 			}
 		}
@@ -516,7 +561,7 @@ void CPlayScene::_ParseSection_GRID(string line)
 	}
 }
 
-void CPlayScene::Load()
+void CPlayScene::Load(int _alive, int _power)
 {
 	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 
@@ -580,6 +625,11 @@ void CPlayScene::Load()
 
 	DebugOut(L"[INFO] Done loading scene resources %s\n", sceneFilePath);
 
+	if (player != NULL)
+	{
+		player->SetPower(_power);
+		player->SetAlive(_alive);
+	}
 }
 
 
@@ -612,53 +662,60 @@ void CPlayScene::Update(DWORD dt)
 	//Thực hiện chuyển sang scene tiếp theo
 	if (game->GetIsNextMap() == true)
 	{
-		game->SetRenderingNextMap(true);
-		//Lấy scene id của scene tiếp theo từ game object
-		id_next_map = game->GetSceneId();
-		game->SetScenceIDRenderingNextMap(id_next_map);
-		//Get scene kế tiếp thông qua scene_id
-		LPSCENE s = game->GetScene(id_next_map);
-		//Nếu scene tiếp theo tồn tại và chưa load tiled map của scene tiếp theo
-		if (s && initNextMap)
-		{
-			// Lấy tiled map tiếp theo
-			s->GetNextMap();
-			// Nếu tiled map tiếp theo tồn tại
-			if (s->GetMap() != NULL)
-			{
-				//Thêm vào đối tượng CTiledMapSets
-				CTiledMapSets::GetInstance()->Add(id_next_map, s->GetMap());
-				//Chuyển cờ đánh dấu đã load được tiled map tiếp theo
-				initNextMap = false;
-			}
-
-		}
-		float player_x, player_y;
-		player->GetPosition(player_x, player_y);
-		//Không xét va chạm và render player lên màn hình
-		player->SetState(MAIN_CHARACTER_STATE_NONE_COLLISION);
-		//Cho camera di chuyển theo trục x
-		player->SetSpeed(0.4, 0);
-		//Lấy width, height của map hiện tại
-		CMap* map = CTiledMapSets::GetInstance()->Get(id);
-		int widthMap, heightMap;
-		map->GetMapWidth(widthMap);
-		map->GetMapHeight(heightMap);
-		//Lấy width, height của map tiếp theo
-		map = CTiledMapSets::GetInstance()->Get(id_next_map);
-		int widthNextMap, heightNextMap;
-		map->GetMapWidth(widthNextMap);
-		map->GetMapHeight(heightNextMap);
-		player->GetPosition(player_x, player_y);
-		//Sau hiệu ứng di chuyển camera sang màn thì tiến hành chuyển màn
-		if (player_x >= widthMap + (widthNextMap / 3))
+		if (type_scence == OVER_WORLD)
 		{
 			// switch scene
-			game->SwitchScene(game->GetSceneId());
+			game->SwitchScene(game->GetSceneId(), player->GetAlive(), player->GetPower());
 			game->SetIsNextMap(false);
 		}
+		else
+		{
+			game->SetRenderingNextMap(true);
+			//Lấy scene id của scene tiếp theo từ game object
+			id_next_map = game->GetSceneId();
+			game->SetScenceIDRenderingNextMap(id_next_map);
+			//Get scene kế tiếp thông qua scene_id
+			LPSCENE s = game->GetScene(id_next_map);
+			//Nếu scene tiếp theo tồn tại và chưa load tiled map của scene tiếp theo
+			if (s && initNextMap)
+			{
+				// Lấy tiled map tiếp theo
+				s->GetNextMap();
+				// Nếu tiled map tiếp theo tồn tại
+				if (s->GetMap() != NULL)
+				{
+					//Thêm vào đối tượng CTiledMapSets
+					CTiledMapSets::GetInstance()->Add(id_next_map, s->GetMap());
+					//Chuyển cờ đánh dấu đã load được tiled map tiếp theo
+					initNextMap = false;
+				}
 
-
+			}
+			float player_x, player_y;
+			player->GetPosition(player_x, player_y);
+			//Không xét va chạm và render player lên màn hình
+			player->SetState(MAIN_CHARACTER_STATE_NONE_COLLISION);
+			//Cho camera di chuyển theo trục x
+			player->SetSpeed(0.4, 0);
+			//Lấy width, height của map hiện tại
+			CMap* map = CTiledMapSets::GetInstance()->Get(id);
+			int widthMap, heightMap;
+			map->GetMapWidth(widthMap);
+			map->GetMapHeight(heightMap);
+			//Lấy width, height của map tiếp theo
+			map = CTiledMapSets::GetInstance()->Get(id_next_map);
+			int widthNextMap, heightNextMap;
+			map->GetMapWidth(widthNextMap);
+			map->GetMapHeight(heightNextMap);
+			player->GetPosition(player_x, player_y);
+			//Sau hiệu ứng di chuyển camera sang màn thì tiến hành chuyển màn
+			if (player_x >= widthMap + (widthNextMap / 3))
+			{
+				// switch scene
+				game->SwitchScene(game->GetSceneId(), player->GetAlive(), player->GetPower());
+				game->SetIsNextMap(false);
+			}
+		}
 	}
 	//Thực hiện chuyển về scene trước
 	else if (game->GetIsPreMap() == true)
@@ -685,7 +742,7 @@ void CPlayScene::Update(DWORD dt)
 		//if (player_x <= -(widthPreMap / 3))
 		{
 			// switch scene
-			game->SwitchScene(game->GetSceneId());
+			game->SwitchScene(game->GetSceneId(), player->GetAlive(), player->GetPower());
 			game->SetIsPreMap(false);
 		}
 
@@ -771,6 +828,7 @@ void CPlayScene::Update(DWORD dt)
 	//Vẽ Hub objects
 	for (int i = 0; i < hub_objects.size(); i++)
 		hub_objects[i]->Update(dt);
+	//Sound::getInstance()->Play(1);
 }
 
 void CPlayScene::Render()
@@ -811,14 +869,20 @@ void CPlayScene::Render()
 			objects[i]->Render();
 		//Vẽ player object
 		player->Render();
-
+		if (player->GetPower() < 0 && player->GetState() == MAIN_CHARACTER_STATE_DIE)
+		{
+			int lives = player->GetAlive();
+			if (lives >= 0)
+			{
+				lives -= 1;
+				player->SetAlive(lives);
+				ReLoad();
+			}
+		}
 		//Vẽ Hub objects
 		for (int i = 0; i < hub_objects.size(); i++)
 			hub_objects[i]->Render();
 	}
-
-
-
 }
 
 CMap* CPlayScene::GetMap()
@@ -915,7 +979,16 @@ void CPlayScene::Unload()
 
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
 }
-
+void CPlayScene::ReLoad()
+{
+	if (player)
+	{
+		if(player->GetAlive()>=0)
+			CGame::GetInstance()->SwitchScene(id, player->GetAlive(), 5);
+		else
+			CGame::GetInstance()->SwitchScene(id, 2, 5);
+	}
+}
 void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
@@ -930,6 +1003,11 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 		break;
 	case DIK_Z:
 		player->SetState(MAIN_CHARACTER_STATE_BARREL_FIRE);
+		Sound::getInstance()->PlayNew(SOUND_ID_BULLET_FIRE);
+		break;
+	case DIK_X:
+		player->SetState(MAIN_CHARACTER_STATE_FIRE_ROCKET);
+		//Sound::getInstance()->PlayNew(SOUND_ID_BULLET_FIRE);
 		break;
 	case DIK_M:
 		if(!player->Is_Human)

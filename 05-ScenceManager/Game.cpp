@@ -8,7 +8,7 @@
 #include "IntroScence.h"
 #include "EndingScence.h"
 #include "BossScence.h"
-
+#include "Sound.h"
 CGame * CGame::__instance = NULL;
 
 /*
@@ -59,7 +59,7 @@ void CGame::Init(HWND hWnd)
 
 	// Initialize sprite helper from Direct3DX helper library
 	D3DXCreateSprite(d3ddv, &spriteHandler);
-
+	Sound::getInstance()->loadSound(hWnd);
 	OutputDebugString(L"[INFO] InitGame done;\n");
 }
 
@@ -499,7 +499,7 @@ void CGame::Load(LPCWSTR gameFile)
 	SwitchScene(current_scene);
 }
 
-void CGame::SwitchScene(int scene_id)
+void CGame::SwitchScene(int scene_id, int _alive, int _power)
 {
 	DebugOut(L"[INFO] Switching to scene %d\n", scene_id);
 
@@ -514,7 +514,7 @@ void CGame::SwitchScene(int scene_id)
 	current_scene = scene_id;
 	LPSCENE s = scenes[scene_id];
 	CGame::GetInstance()->SetKeyHandler(s->GetKeyEventHandler());
-	s->Load();
+	s->Load(_alive, _power);
 	
 	
 }

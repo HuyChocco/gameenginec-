@@ -5,6 +5,7 @@
 #include "GameObject.h"
 
 #include "Brick.h"
+#include "Lava.h"
 #include "Stair.h"
 #include "Mario.h"
 #include "Goomba.h"
@@ -67,8 +68,8 @@ public:
 	bool initNextMap = true;
 	bool initGridFlag = true;
 	CPlayScene(int id, LPCWSTR filePath);
-
-	virtual void Load();
+	virtual void Load() {};
+	virtual void Load(int _alive = 2, int _power = 0);
 	virtual void Update(DWORD dt);
 	virtual void Render();
 	virtual void Unload();
@@ -84,7 +85,7 @@ public:
 
 	CSprites* GetSpritesNextMap() { return sprites_next_map; }
 
-
+	void ReLoad();
 };
 
 class CPlayScenceKeyHandler : public CScenceKeyHandler

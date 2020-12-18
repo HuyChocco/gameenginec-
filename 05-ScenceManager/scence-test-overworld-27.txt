@@ -66,15 +66,11 @@
 #chuan bi ban ngang
 161	70	603	92	629	2
 #chuan bi ban doc
-162	41	607	67	629	2
-#bullet_cannons
-163	252	102	260	118	1
-#bullet_cannons_explosion
-164	296	102	312	118	1	
+162	41	607	67	629	2	
 # TELEPROTERS
-154	159	568	175	584	2
+154	159	568	183	600	2
 #khong co ao choang
-155	132	568	148	584	2
+155	132	568	156	600	2
 # ENEMY EYEBALLS
 #phai
 150	136	550	152	566	2
@@ -82,10 +78,6 @@
 151	102	550	118	566	2
 #nham mat
 152	119	550	135	566	2
-#weapon
-153	252	102	260	118	1
-#bullet_eyeball_explosion
-154	296	102	312	118	1
 # SOFIA Human
 #idle
 10001	3	30	11	46	1
@@ -109,12 +101,6 @@
 10013	208	3	232	35	1
 10014	233	3	257	35	1
 10015	258	3	282	35	1
-#bullet_sofia
-10016	135	183	139	187	55
-#bullet_explosion
-10017	155	181	162	189	55
-10018	171	178	187	191	55
-10019	192	177	208	193	55
 # SOFIA left Wheel 
 20001	3	21	10	28	1
 20002	12	21	19	28	1
@@ -166,16 +152,51 @@
 #move right
 120003	132	406	149	421	2
 120004	152	407	169	421	2
-# WEAPON_PLAYER
-#fly_horizontal
+# WEAPON
+# Main character
+# fly_horizontal
 100001	91	20	114	27	1
-#fly_vertical
+# fly_vertical
 100002	116	20	123	43	1
-#explode
+# explode
 100003	140	101	148	109	1
 100004	149	97	165	113	1
 100005	166	97	182	113	1
 100006	183	93	207	117	1
+# Human-Sofia
+# bullet
+100007	135	183	139	187	55
+# bullet_explosion
+100008	155	181	162	189	55
+100009	171	178	187	191	55
+100010	192	177	208	193	55
+# Cannon
+# bullet
+100011	252	102	260	118	1
+# bullet_explosion
+100012	296	102	312	118	1
+# Eyeball
+# bullet
+100013	252	102	260	118	1
+# bullet_explosion
+100014	296	102	312	118	1
+# HUB OBJECTS
+# PowerHub - Text
+800001	175	219	183	235	55
+# PowerHub
+800002	85	97	93	129	55
+800005	95	97	103	129	55
+800006	110	97	118	129	55
+800007	120	97	128	129	55
+800008	130	98	138	130	55
+800009	141	98	149	130	55
+800010	152	98	160	130	55
+800011	27	96	35	128	55
+800012	242	101	250	133	55
+# GunHub
+800003	154	221	162	253	55
+# Hov-Text
+800004	112	240	120	256	55
 # path
 [MAP]
 map-overworld-27.txt
@@ -186,23 +207,15 @@ map-overworld-27.txt
 1160	160	300	161	300
 # ban ngang
 1161	161	300	162	300
-#bullet_cannons
-1162	163	100
-#bullet_cannons_explosion
-1163	164	100
 # ==== ENEMY TELEPORTERS =========
 #bien hinh
-1152	154	100	155	50	154	50	155	50	154	50	155	100
+1152	154	100	155	50	154	50	155	50
 #sau khi bien hinh va tan cong
-1153	155	100		
+1153	155	100
 # ==== ENEMY EYEBALLS =========
 1150	150	100	151	100
 # nham mat chuan bi ban
 1151	152	100
-#Dan
-1152	153	100
-#Dan no
-1153	154	100
 # ==== SOFIA HUMAN =========
 #idle
 600	10001	100
@@ -217,10 +230,6 @@ map-overworld-27.txt
 604	10010	100	10011	100	10012	100
 #move down
 605	10013	100	10014	100	10015	100
-#bullet
-606	10016	100
-#bullet_explosion
-607	10017	100	10018	100	10019	100
 # ==== SOFIA WHEEL =========
 #idle-of left-wheel
 700	20002	100
@@ -263,17 +272,55 @@ map-overworld-27.txt
 6001	120003	100	120004	100
 #
 # ==== WEAPON =========
-#left
+# Main Character
+# left
 4000	100001	100
-#Up
+# Up
 4001	100002	100
-#explode
+# explode
 4002	100003	100	100004	100	100005	100
+# Human-Sofia
+# Bullet
+4003	100007	100
+# Bullet_explosion
+4004	100008	100	100009	100	100010	100
+# Cannon
+# Bullet
+4005	100011	100
+# Bullet_explosion
+4006	100012	100
+# Eyeball
+# Bullet
+4007	100013	100
+# Bullet_explosion
+4008	100014	100
+# Teleporter
+# Bullet
+4009	100013	100
+# Bullet_explosion
+4010	100014	100
+# ==== HUB =========
+# PowerHub - Text
+100000	800001	100
+# PowerHub
+100001	800002	100
+100004	800005	100
+100005	800006	100
+100006	800007	100
+100007	800008	100
+100008	800009	100
+100009	800010	100
+100010	800011	100
+100011	800012	100
+# GunHub
+100002	800003	100
+# Hov - text
+100003	800004	100
 # id	ani1	ani2	ani3
 #
 [ANIMATION_SETS]
 # SOFIA 
-1	600	601	602	603	604	605	606	607
+1	600	601	602	603	604	605
 # MAIN_CHARACTER 
 2	2000
 # WHEEL 
@@ -286,14 +333,18 @@ map-overworld-27.txt
 6	3000	3001
 # WORM - ENEMY
 8	5000	5001
-# FLOATER - ENEMY
+# SPIDER - ENEMY
 9	6000	6001
 # WEAPON
-7	4000	4001	4002
+7	4000	4001	4002	4003	4004	4005	4006	4007	4008	4009	4010
 # CANNONS
-10	1160	1161	1162	1163
+10	1160	1161
 # EYEBALLS
-11	1150	1151	1152	1153
+11	1150	1151
+# TELEPORTER
+12	1152	1153
+# HUB
+100	100000	100001	100002	100003	100004	100005	100006	100007	100008	100009	100010	100011
 [OBJECTS]
 # object_id  type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Worm, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Cabin, 8= Barrel, 9= Main character, 10= Spider, 11=Human
@@ -313,6 +364,8 @@ map-overworld-27.txt
 6	7	25	118	4
 # BARREL
 7	8	17	118	5
+# HUB LIST - x,y theo trục màn hình
+9	500	10	100	100
 # ENEMY LIST
 # WORM
 10	3	50	100	8
@@ -351,13 +404,13 @@ map-overworld-27.txt
 # --- SCENE PORTAL ----
 # object_id     type    l    t    ani_set_id    r    b    scene_id    type_portal: 1-Next scene 0-Previous scene    next_portal_id
 #cong ben trai
-1001	50	55	145	2	68.5	113	5	0	9
+1001	50	55	145	2	68.5	113	19	0	1002
 #cong ben phai
-1002	50	251.268	143.8	2	266.0486	112.294	6	1	9
+1002	50	251.268	143.8	2	266.0486	112.294	21	1	1001
 #cong phia tren
 1003	50	152	249.5	2	168	218	7	1	9
 #cong phia duoi
-1004	50	143.876	63.633	2	177.2508	36.7945	8	0	9
+1004	50	143.876	63.633	2	177.2508	36.7945	16	0	1003
 # cellx celly id_object...
 [GRID]
 0	0	122	123

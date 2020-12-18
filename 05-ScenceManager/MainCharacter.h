@@ -21,7 +21,8 @@
 
 #define MAIN_CHARACTER_STATE_RUN_LEFT	200
 #define MAIN_CHARACTER_STATE_JUMP			300
-#define MAIN_CHARACTER_STATE_DIE				400
+#define MAIN_CHARACTER_STATE_DIE				401
+#define MAIN_CHARACTER_STATE_EXPLOSION				400
 #define MAIN_CHARACTER_STATE_UP_BARREL				500
 #define MAIN_CHARACTER_STATE_STRAIGHT_BARREL				501
 #define MAIN_CHARACTER_STATE_DOWN_BARREL				502
@@ -33,6 +34,7 @@
 
 #define MAIN_CHARACTER_STATE_BARREL_FIRE				700
 #define MAIN_CHARACTER_STATE_BARREL_FIRE_UP				701
+#define MAIN_CHARACTER_STATE_FIRE_ROCKET				702
 
 #define MAIN_CHARACTER_ANI_IDLE_RIGHT		0
 #define MAIN_CHARACTER_ANI_IDLE_LEFT			0
@@ -43,6 +45,7 @@
 #define MAIN_CHARACTER_ANI_JUMP			1
 
 #define MAIN_CHARACTER_ANI_DIE				8
+#define MAIN_CHARACTER_ANI_EXPLOSION			1
 
 #define	MAIN_CHARACTER_LEVEL_SMALL	1
 #define	MAIN_CHARACTER_LEVEL_BIG		2
@@ -52,6 +55,8 @@
 #define MAIN_CHARACTER_BBOX_HEIGHT 16
 #define MAIN_CHARACTER_STATE_BARREL_UP_BBOX_WIDTH  26
 #define MAIN_CHARACTER_STATE_BARREL_UP_BBOX_HEIGHT 34
+#define MAIN_CHARACTER_STATE_EXPLOSION_BBOX_WIDTH  48
+#define MAIN_CHARACTER_STATE_EXPLOSION_BBOX_HEIGHT 40
 #define MAIN_CHARACTER_CHANGE_BBOX_HEIGHT 18
 #define MAIN_CHARACTER_UNTOUCHABLE_TIME 500
 class CMainCharacter : public CGameObject
@@ -78,12 +83,16 @@ class CMainCharacter : public CGameObject
 	bool isStartFire;
 	bool isBeingUpBarrel;
 	bool isCabinOpened;
+
+	bool isEnable;
+	bool isDisplay;
 public:
 
 	//Bo sung property
 	bool Is_On_Ground;
 	bool Is_Human;
 	bool CanChangeState;
+	bool IsStartingBossScence;
 	CMainCharacter(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
@@ -104,4 +113,8 @@ public:
 	float GetStartY() { return start_y; }
 
 	void CollisionItem(int item);
+	int GetPower() { return power; }
+	void SetPower(int _power) { power = _power; }
+	int GetAlive() { return alive; }
+	void SetAlive(int _alive) { alive = _alive; }
 };

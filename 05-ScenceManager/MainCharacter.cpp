@@ -9,6 +9,7 @@
 #include "Portal.h"
 #include "Brick.h"
 #include "Stair.h"
+#include "Lava.h"
 
 #include "EnemyObject1.h"
 #include "Worm.h"
@@ -31,22 +32,28 @@
 
 
 #define SKULL_ROUNDING_DISTANCE_X 2
-
-
+#define ORB_ROUNDING_DISTANCE_X 120
+#define ORB_ROUNDING_DISTANCE_Y 110
+#include "Sound.h"
 CMainCharacter::CMainCharacter(float x, float y) : CGameObject()
 {
-
+	isEnable = true;
 	SetState(MAIN_CHARACTER_STATE_IDLE);
 	start_x = x;
 	start_y = y;
 	this->x = x;
 	this->y = y;
-
 }
 
 void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	
+	if (!isEnable)
+		return;
+	if (power < 0)
+	{
+		Sound::getInstance()->Play(SOUND_ID_PLAYER_EXPLOSION);
+		SetState(MAIN_CHARACTER_STATE_EXPLOSION);
+	}
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
 	if (x <= 0&&vx<0)
@@ -122,8 +129,28 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else
 					teleporter->SetDirectionY(-1);//Down
 			}
+			else if (dynamic_cast<COrb*>(coObjects->at(i))) {
+				COrb* orb = dynamic_cast<COrb*>(coObjects->at(i));
+				int type = orb->GetType();
+				if (type != 1)
+				{
+					float x_orb, y_orb;
+					orb->GetPosition(x_orb, y_orb);
+					if (x > x_orb)
+						orb->SetDirection(1);
+					else
+						orb->SetDirection(-1);
+					if (orb->GetState() != STATE_ITEM)
+					{
+						if (abs(x - x_orb) < ORB_ROUNDING_DISTANCE_X && abs(y - y_orb) < ORB_ROUNDING_DISTANCE_Y)
+							orb->SetState(ORB_STATE_ATTACK);
+						else orb->SetState(ORB_STATE_IDLE);
+					}
+				}
+			}
 			else if (dynamic_cast<CCannon*>(coObjects->at(i))) {
 				CCannon* cannon = dynamic_cast<CCannon*>(coObjects->at(i));
+				cannon->SetPlayerObject(this);
 			}
 			else if (dynamic_cast<CJumper*>(coObjects->at(i))) {
 				CJumper* jumper = dynamic_cast<CJumper*>(coObjects->at(i));
@@ -150,7 +177,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			else if (dynamic_cast<CSkull*>(coObjects->at(i))) {
 				CSkull* skull = dynamic_cast<CSkull*>(coObjects->at(i));
-
+				skull->SetPlayerObject(this);
 				float x_skull, y_skull;
 				skull->GetPosition(x_skull, y_skull);
 				if (x > x_skull)
@@ -203,8 +230,13 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			CalcPotentialCollisions(coObjects, coEvents);
 		if (isAttacked)
 		{
-			StartUntouchable();
-			isAttacked = false;
+			if (untouchable == 0)
+			{
+				StartUntouchable();
+				isAttacked = false;
+				power--;
+				Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
+			}
 		}
 		// reset untouchable timer if untouchable time has passed
 		if (untouchable == 1)
@@ -259,6 +291,15 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					else
 						Is_On_Ground = false;
 				}
+				else if (dynamic_cast<CLava*>(e->obj)) // if e->obj is CLava
+				{
+					if (untouchable == 0)
+					{
+						StartUntouchable();
+						power--;
+						Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
+					}
+				}
 				else if (dynamic_cast<CStair*>(e->obj))
 				{
 					x += dx;
@@ -295,7 +336,12 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					worm->GetSpeed(vxWorm, vyWorm);
 					if (worm->GetState() != STATE_ITEM)
 					{
-						StartUntouchable();
+						if (untouchable == 0)
+						{
+							StartUntouchable();
+							power--;
+							Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
+						}
 						if (e->ny != 0)
 						{
 							y -= 2 * vyWorm * dt;
@@ -305,7 +351,9 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
-						power++;
+						Sound::getInstance()->PlayNew(SOUND_ID_EATING_ITEM);
+						if (power < 8)
+							power++;
 						if (e->ny != 0)
 						{
 							y -= 2 * vy * dt;
@@ -324,8 +372,12 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					floater->GetSpeed(vxFloater, vyFloater);
 					if (floater->GetState() != STATE_ITEM)
 					{
-						StartUntouchable();
-
+						if (untouchable == 0)
+						{
+							StartUntouchable();
+							power--;
+							Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
+						}
 						if (e->ny != 0)
 						{
 							y -= 2 * vyFloater * dt;
@@ -335,7 +387,9 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
-						power++;
+						Sound::getInstance()->PlayNew(SOUND_ID_EATING_ITEM);
+						if (power < 8)
+							power++;
 						if (e->ny < 0)
 						{
 							y -=  2*vy * dt;
@@ -355,7 +409,12 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					dome->GetSpeed(vxDome, vyDome);
 					if (dome->GetState() != STATE_ITEM)
 					{
-						StartUntouchable();
+						if (untouchable == 0)
+						{
+							StartUntouchable();
+							power--;
+							Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
+						}
 						if (e->ny != 0)
 						{
 							y -= 2 * vyDome * dt;
@@ -365,6 +424,9 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
+						Sound::getInstance()->PlayNew(SOUND_ID_EATING_ITEM);
+						if (power < 8)
+							power++;
 						if (e->ny < 0)
 						{
 							y -= 2 * vy * dt;
@@ -382,7 +444,12 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					jumper->GetSpeed(vxJumper, vyJumper);
 					if (jumper->GetState() != STATE_ITEM)
 					{
-						StartUntouchable();
+						if (untouchable == 0)
+						{
+							StartUntouchable();
+							power--;
+							Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
+						}
 						if (e->ny != 0)
 						{
 							y -= 2 * vyJumper * dt;
@@ -392,6 +459,9 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
+						Sound::getInstance()->PlayNew(SOUND_ID_EATING_ITEM);
+						if (power < 8)
+							power++;
 						if (e->ny < 0)
 						{
 							y -= 2 * vy * dt;
@@ -411,7 +481,12 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					insect->GetSpeed(vxInsect, vyInsect);
 					if (insect->GetState() != STATE_ITEM)
 					{
-						StartUntouchable();
+						if (untouchable == 0)
+						{
+							StartUntouchable();
+							power--;
+							Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
+						}
 						if (e->ny != 0)
 						{
 							y -= 2 * vyInsect * dt;
@@ -421,6 +496,9 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
+						Sound::getInstance()->PlayNew(SOUND_ID_EATING_ITEM);
+						if (power < 8)
+							power++;
 						if (e->ny < 0)
 						{
 							y -= 2 * vy * dt;
@@ -438,7 +516,12 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					skull->GetSpeed(vxSkull, vySkull);
 					if (skull->GetState() != STATE_ITEM)
 					{
-						StartUntouchable();
+						if (untouchable == 0)
+						{
+							StartUntouchable();
+							power--;
+							Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
+						}
 						if (e->ny != 0)
 						{
 							y += dy;
@@ -448,6 +531,9 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
+						Sound::getInstance()->PlayNew(SOUND_ID_EATING_ITEM);
+						if (power < 8)
+							power++;
 						if (e->ny < 0)
 						{
 							y -= 2 * vy * dt;
@@ -463,7 +549,12 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					COrb* orb = dynamic_cast<COrb*>(e->obj);
 					if (orb->GetState() != STATE_ITEM)
 					{
-						StartUntouchable();
+						if (untouchable == 0)
+						{
+							StartUntouchable();
+							power--;
+							Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
+						}
 						float vxOrb, vyOrb;
 						orb->GetSpeed(vxOrb, vyOrb);
 						if (e->ny == 1)
@@ -479,6 +570,9 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
+						Sound::getInstance()->PlayNew(SOUND_ID_EATING_ITEM);
+						if (power < 8)
+							power++;
 						if (e->ny < 0)
 						{
 							y -= 2 * vy * dt;
@@ -497,7 +591,12 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					cannon->GetSpeed(vxCannon, vyCannon);
 					if (cannon->GetState() != STATE_ITEM)
 					{
-						StartUntouchable();
+						if (untouchable == 0)
+						{
+							StartUntouchable();
+							power--;
+							Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
+						}
 						if (e->ny != 0)
 						{
 							y += vyCannon * dt;
@@ -507,6 +606,9 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
+						Sound::getInstance()->PlayNew(SOUND_ID_EATING_ITEM);
+						if (power < 8)
+							power++;
 						if (e->ny != 0)
 						{
 							y += dy;
@@ -524,7 +626,12 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					eyeball->GetSpeed(vxEyeball, vyEyeball);
 					if (eyeball->GetState() != STATE_ITEM)
 					{
-						StartUntouchable();
+						if (untouchable == 0)
+						{
+							StartUntouchable();
+							power--;
+							Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
+						}
 						if (e->ny != 0)
 						{
 							y += vyEyeball * dt;
@@ -534,6 +641,9 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
+						Sound::getInstance()->PlayNew(SOUND_ID_EATING_ITEM);
+						if (power < 8)
+							power++;
 						if (e->ny != 0)
 						{
 							y += dy;
@@ -551,7 +661,12 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					teleporter->GetSpeed(vxTeleporter, vyTeleporter);
 					if (teleporter->GetState() != STATE_ITEM)
 					{
-						StartUntouchable();
+						if (untouchable == 0)
+						{
+							StartUntouchable();
+							power--;
+							Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
+						}
 						if (e->ny != 0)
 						{
 							y += vyTeleporter * dt;
@@ -561,6 +676,9 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					else
 					{
+						Sound::getInstance()->PlayNew(SOUND_ID_EATING_ITEM);
+						if(power<8)
+							power++;
 						if (e->ny != 0)
 						{
 							y += dy;
@@ -624,92 +742,83 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
-
-	/*for (UINT i = 0; i < coObjects->size(); i++)
-	{
-		if (dynamic_cast<CFloater*>(coObjects->at(i))) {
-
-			CFloater* floater = dynamic_cast<CFloater*>(coObjects->at(i));
-			if (floater->GetState() == STATE_ITEM)
-			{
-				float l1, t1, r1, b1, l2, t2, r2, b2;
-				GetBoundingBox(l1, t1, r1, b1);
-				floater->GetBoundingBox(l2, t2, r2, b2);
-				if (CGame::GetInstance()->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2))
-				{
-					power+=1;
-					floater->SetState(FLOATER_STATE_DIE);
-				}
-			}
-		}
-	}*/
 }
 
 void CMainCharacter::Render()
 {
 	int alpha = 255;
 	CGame* game = CGame::GetInstance();
-
-	if (!game->GetCurrentScene()->GetTypeScence() == OVER_WORLD)
+	if (isEnable)
 	{
-
-		animation_set->at(0)->Render(x, y, alpha);
-		// Vẽ các đối tượng weapon của nhân vật chính
+		if (state == MAIN_CHARACTER_STATE_EXPLOSION&&!Is_Human)
 		{
-			if (list_weapon.size() > 0)
-			{
-				for (int i = 0; i < list_weapon.size(); i++)
-					list_weapon[i]->Render();
-			}
+			animation_set->at(MAIN_CHARACTER_ANI_EXPLOSION)->Render(x, y + 25, alpha);
+			if (animation_set->at(MAIN_CHARACTER_ANI_EXPLOSION)->isFinish)
+				SetState(MAIN_CHARACTER_STATE_DIE);
 		}
-		//Vẽ các object thành phần của player object
-		for (int i = 0; i < componentObjects.size(); i++)
+		if (state == MAIN_CHARACTER_STATE_EXPLOSION && Is_Human)
 		{
-			if (!dynamic_cast<CHuman*>(componentObjects[i]))
-				componentObjects[i]->SetUntouchable(untouchable);
-			//Chỉ Render đối tượng CHuman
-			if (Is_Human)
+				SetState(MAIN_CHARACTER_STATE_DIE);
+		}
+		else
+		{
+			if (!game->GetCurrentScene()->GetTypeScence() == OVER_WORLD)
 			{
-				componentObjects[i]->Render();
+				animation_set->at(0)->Render(x, y, alpha);
+				// Vẽ các đối tượng weapon của nhân vật chính
+				{
+					if (list_weapon.size() > 0)
+					{
+						for (int i = 0; i < list_weapon.size(); i++)
+							list_weapon[i]->Render();
+					}
+				}
+				//Vẽ các object thành phần của player object
+				for (int i = 0; i < componentObjects.size(); i++)
+				{
+					if (!dynamic_cast<CHuman*>(componentObjects[i]))
+						componentObjects[i]->SetUntouchable(untouchable);
+					//Chỉ Render đối tượng CHuman
+					if (Is_Human)
+					{
+						componentObjects[i]->Render();
+					}
+					//Render các đối tượng thành phần không phải CHuman
+					else
+					{
+						if (!dynamic_cast<CHuman*>(componentObjects[i]))
+						{
+							componentObjects[i]->Render();
+						}
+					}
+					if (dynamic_cast<CVehicle*>(componentObjects[i]))
+					{
+						if (dynamic_cast<CVehicle*>(componentObjects[i])->GetIsCabinOpened())
+							Is_Human = true;
+						else
+							Is_Human = false;
+					}
+				}
+				//RenderBoundingBox();
 			}
-			//Render các đối tượng thành phần không phải CHuman
 			else
 			{
-				if (!dynamic_cast<CHuman*>(componentObjects[i]))
+				Is_Human = true;
+				for (int i = 0; i < componentObjects.size(); i++)
 				{
-					componentObjects[i]->Render();
+					//Chỉ Render đối tượng CHuman
+					if (dynamic_cast<CHuman*>(componentObjects[i]))
+						componentObjects[i]->Render();
+				}
+				if (list_weapon.size() > 0)
+				{
+					for (int i = 0; i < list_weapon.size(); i++)
+						list_weapon[i]->Render();
 				}
 			}
-			if (dynamic_cast<CVehicle*>(componentObjects[i]))
-			{
-				if (dynamic_cast<CVehicle*>(componentObjects[i])->GetIsCabinOpened())
-					Is_Human = true;
-				else
-					Is_Human = false;
-			}
 		}
-		//RenderBoundingBox();
-
+		
 	}
-
-	else
-	{
-		Is_Human = true;
-		for (int i = 0; i < componentObjects.size(); i++)
-		{
-			//Chỉ Render đối tượng CHuman
-			if (dynamic_cast<CHuman*>(componentObjects[i]))
-				componentObjects[i]->Render();
-		}
-		if (list_weapon.size() > 0)
-		{
-			for (int i = 0; i < list_weapon.size(); i++)
-				list_weapon[i]->Render();
-		}
-	}
-
-
-
 }
 
 void CMainCharacter::SetState(int state)
@@ -732,12 +841,18 @@ void CMainCharacter::SetState(int state)
 		{
 			vy = MAIN_CHARACTER_JUMP_SPEED_Y;
 			Is_On_Ground = false;
+			Sound::getInstance()->PlayNew(SOUND_ID_PLAYER_JUMPING);
 		}
 		break;
 	case MAIN_CHARACTER_STATE_IDLE:
 		vx = 0;
 		break;
 	case MAIN_CHARACTER_STATE_DIE:
+		vx = vy = 0;
+		isEnable = false;
+		break;
+	case MAIN_CHARACTER_STATE_EXPLOSION:
+		vx = vy = 0;
 		break;
 	case MAIN_CHARACTER_STATE_UP_BARREL:
 		break;
@@ -853,6 +968,14 @@ void CMainCharacter::SetState(int state)
 				}
 			}
 		}
+		else if (state == MAIN_CHARACTER_STATE_FIRE_ROCKET &&!Is_Human)
+		{
+			CWeapon* weapon = new CWeapon(WEAPON_TYPE_PLAYER_ROCKET);
+			weapon->SetPosition(x, y);
+			weapon->SetState(WEAPON_PLAYER_ROCKET_STATE_FLY_UP);
+			weapon->SetPlayerObject(this);
+			list_weapon.push_back(weapon);
+		}
 		else if (state == MAIN_CHARACTER_STATE_UP_BARREL)
 		{
 			isBeingUpBarrel = true;
@@ -871,14 +994,14 @@ void CMainCharacter::SetState(int state)
 
 void CMainCharacter::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	/*if (state == MAIN_CHARACTER_STATE_UP_BARREL)
+	if (state == MAIN_CHARACTER_STATE_EXPLOSION)
 	{
 		left = x;
-		top = y - MAIN_CHARACTER_STATE_BARREL_UP_BBOX_HEIGHT;
-		right = x + MAIN_CHARACTER_STATE_BARREL_UP_BBOX_WIDTH;
+		top = y - MAIN_CHARACTER_STATE_EXPLOSION_BBOX_HEIGHT;
+		right = x + MAIN_CHARACTER_STATE_EXPLOSION_BBOX_WIDTH;
 		bottom = y;
 	}
-	else*/
+	else
 	{
 		left = x;
 		top = y - MAIN_CHARACTER_BBOX_HEIGHT;
