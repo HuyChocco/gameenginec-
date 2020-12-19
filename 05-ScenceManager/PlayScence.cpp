@@ -6,12 +6,14 @@
 #include "Textures.h"
 #include "Sprites.h"
 #include "Portal.h"
+#include "SpecialPortal.h"
 
 //#include "Grid.h"
 #include "GunHub.h"
 #include "PowerHub.h"
 #include "Sound.h"
 #include "MenuScence.h"
+
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -59,6 +61,8 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_CANNON	19
 #define OBJECT_TYPE_EYEBALL	20
 #define OBJECT_TYPE_TELEPORTER 33
+#define OBJECT_TYPE_MINE 40
+
 #define OBJECT_TYPE_ITEM 34
 
 //Main character objects
@@ -74,6 +78,8 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_POWERHUB	500
 
 #define OBJECT_TYPE_PORTAL	50
+
+#define OBJECT_TYPE_SPECIAL_PORTAL	51
 
 #define MAX_SCENE_LINE 1024
 
@@ -213,6 +219,16 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		if (tokens.size() > 5)
 			item = atoi(tokens[5].c_str());
 		obj = new CFloater(item);
+		LPANIMATION_SET ani_set = animation_sets->Get(200);
+		obj->SetAnimationItemSet(ani_set);
+	}
+	break;
+	case OBJECT_TYPE_MINE:
+	{
+		int item = 0;
+		if (tokens.size() > 5)
+			item = atoi(tokens[5].c_str());
+		obj = new CMine(item);
 		LPANIMATION_SET ani_set = animation_sets->Get(200);
 		obj->SetAnimationItemSet(ani_set);
 	}
@@ -430,6 +446,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CItem(type);
 	}
 	break;
+	case OBJECT_TYPE_SPECIAL_PORTAL:
+	{
+		float r = atof(tokens[5].c_str());
+		float b = atof(tokens[6].c_str());
+		int scene_id = atoi(tokens[7].c_str());
+		int next_portal_id = atoi(tokens[8].c_str());
+		obj = new CSpecialPortal(x, y, r, b, scene_id, next_portal_id);
+	}
+	break;
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = atof(tokens[5].c_str());
@@ -453,6 +478,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 					{
 						if (dynamic_cast<CHuman*>(object)->GetLevel() == HUMAN_LEVEL_BIG)
 						{
+							if (CGame::GetInstance()->GetNextPortalId() == object_id)
+							{
+								object->SetPosition((x - HUMAN_BIG_BBOX_WIDTH) - 2, y);
+							}
+						}
+						else if (dynamic_cast<CHuman*>(object)->GetLevel() == HUMAN_LEVEL_SMALL)
+						{
+							
 							if (CGame::GetInstance()->GetNextPortalId() == object_id)
 							{
 								object->SetPosition((x - HUMAN_BIG_BBOX_WIDTH) - 2, y);

@@ -160,6 +160,12 @@
     <ClCompile Include="Arrow.cpp">
       <Filter>Source Files\ItemObjects</Filter>
     </ClCompile>
+    <ClCompile Include="SpecialPortal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mine.cpp">
+      <Filter>Source Files\EnemyObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cannon.h">
@@ -320,6 +326,12 @@
     </ClInclude>
     <ClInclude Include="Arrow.h">
       <Filter>Header Files\ItemObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="SpecialPortal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mine.h">
+      <Filter>Header Files\EnemyObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

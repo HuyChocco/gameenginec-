@@ -824,7 +824,7 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 			{
 				if (!isThree1)
 				{
-					if (time_movingg > 300)
+					if (time_movingg > 100)
 					{
 						SetState(WEAPON_SKULL_STATE_FLY_RIGHT_DOWN);
 						time_movingg = 0;
@@ -838,7 +838,7 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 			{
 				if (isThree1)
 				{
-					if (time_movingg > 300)
+					if (time_movingg > 200)
 					{
 						SetState(WEAPON_SKULL_STATE_FLY_RIGHT);
 						time_movingg = 0;
@@ -852,7 +852,7 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 
 			if (!isFour)
 			{
-				if (time_movingg > 600)
+				if (time_movingg > 400)
 				{
 					SetState(WEAPON_SKULL_STATE_EXPLODE);
 					isBurning = true;

@@ -6,6 +6,7 @@
 #include "Game.h"
 
 #include "Portal.h"
+#include "SpecialPortal.h"
 #include "Brick.h"
 #include "Stair.h"
 #include "Lava.h"
@@ -409,8 +410,22 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						CGame::GetInstance()->SetIsUpMap(false);
 						CGame::GetInstance()->SetIsDownMap(false);
 						CGame::GetInstance()->SetSceneId(p->GetSceneId());
-						CGame::GetInstance()->SetNextPortalId(p->GetNextPortalId());
+						//CGame::GetInstance()->SetNextPortalId(p->GetNextPortalId());
 					}
+				}
+			}
+
+			else if (dynamic_cast<CSpecialPortal*>(e->obj))
+			{
+				if (level == HUMAN_LEVEL_SMALL)
+				{
+					CSpecialPortal* p = dynamic_cast<CSpecialPortal*>(e->obj);
+					//Nếu portal là đối tượng chuyển overworld
+					CGame::GetInstance()->SetIsNextMap(false);
+					CGame::GetInstance()->SetIsPreMap(true);
+					CGame::GetInstance()->SetIsUpMap(false);
+					CGame::GetInstance()->SetIsDownMap(false);
+					CGame::GetInstance()->SetSceneId(p->GetSceneId());
 				}
 			}
 			//Outdoor enemies
