@@ -260,6 +260,7 @@ void CIntroScenceKeyHandler::OnKeyUp(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_A:
+		Sound::getInstance()->Stop(SOUND_ID_OPENING);
 		game->SwitchScene(SCENCE_ID_START);
 		break;
 	}
