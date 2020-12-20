@@ -22,7 +22,7 @@ enum TYPE_SCENCE
 	OVER_WORLD
 };
 
-
+#define MENU_SCENCE_ID	1000
 class CGame
 {
 	static CGame * __instance;
@@ -58,6 +58,8 @@ class CGame
 	// next map
 	bool isNextMap = false;	// check allow change scene
 	bool isPreMap = false;	// check allow change scene
+	bool isUpMap = false;	// check allow change scene
+	bool isDownMap = false;	// check allow change scene
 	int sceneId;			// sceneId will change
 	bool is_rendering_next_map = false; // Kiểm tra có hiệu ứng đang vẽ map kế tiếp không
 
@@ -81,7 +83,7 @@ public:
 	void Load(LPCWSTR gameFile);
 	LPSCENE GetCurrentScene() { return scenes[current_scene]; }
 	LPSCENE GetScene(int id) { return scenes[id]; }
-	void SwitchScene(int scene_id, int _alive = 2, int _power = 0);
+	void SwitchScene(int scene_id, int _alive = 2, int _power = 5);
 
 	int GetScreenWidth() { return screen_width; }
 	int GetScreenHeight() { return screen_height; }
@@ -117,8 +119,17 @@ public:
 	bool GetIsNextMap() { return this->isNextMap; }
 	void SetIsNextMap(bool flag) { this->isNextMap = flag; }
 
-	void SetIsPreMap(bool flag) { this->isPreMap = flag; }
 	bool GetIsPreMap() { return this->isPreMap; }
+	void SetIsPreMap(bool flag) { this->isPreMap = flag; }
+
+
+	bool GetIsUpMap() { return this->isUpMap; }
+	void SetIsUpMap(bool flag) { this->isUpMap = flag; }
+
+	bool GetIsDownMap() { return this->isDownMap; }
+	void SetIsDownMap(bool flag) { this->isDownMap = flag; }
+
+	
 	//Get, Set scence id tiếp theo
 	void SetSceneId(int _sceneId) { this->sceneId = _sceneId; }
 	int GetSceneId() { return this->sceneId; }

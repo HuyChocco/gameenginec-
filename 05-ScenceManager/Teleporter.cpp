@@ -167,6 +167,7 @@ void CTeleporter::SetState(int state)
 	{
 		CWeapon* weapon = new CWeapon(WEAPON_TYPE_ENEMY_TELEPORTER);// Khởi tạo weapon
 		weapon->SetPosition(x, y);
+		weapon->SetDirection(nx);
 		weapon->SetState(WEAPON_TELEPORTER_STATE_FLY);
 		list_weapon.push_back(weapon);
 	}

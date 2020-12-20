@@ -5,7 +5,8 @@
 #include "Utils.h"
 #include "Textures.h"
 #include "Sprites.h"
-
+#include "Sound.h"
+#include "MenuScence.h"
 #define SCENCE_ID_START	1
 
 using namespace std;
@@ -35,8 +36,10 @@ CBossScence::CBossScence(int id, LPCWSTR filePath) :
 //Map objects
 #define OBJECT_TYPE_BRICK	1
 
-//Enemy objects
+//Enemy Boss objects
 #define OBJECT_TYPE_BOSS	2
+#define OBJECT_TYPE_COUPLING	3
+#define OBJECT_TYPE_PINCER	4
 //Main character objects
 #define OBJECT_TYPE_MAIN_CHARACTER	9
 
@@ -44,6 +47,7 @@ CBossScence::CBossScence(int id, LPCWSTR filePath) :
 
 //Hub objects
 #define OBJECT_TYPE_POWERHUB	500
+#define OBJECT_TYPE_GUNHUB	501
 
 //String
 #define MAX_SCENE_LINE 1024
@@ -177,6 +181,7 @@ void CBossScence::_ParseSection_OBJECTS(string line)
 			{
 				DebugOut(L"[INFO] Player object has been Created Already!\n");
 				player->AddComponentObject(obj);
+				dynamic_cast<CHuman*>(obj)->SetPlayerObject(player);
 			}
 			return;
 			break;
@@ -186,9 +191,14 @@ void CBossScence::_ParseSection_OBJECTS(string line)
 			int item = 0;
 			if (tokens.size() > 5)
 				item = atoi(tokens[5].c_str());
-			obj = new CBoss(item);
+			obj = new CBoss(x,y,item);
 			LPANIMATION_SET ani_set = animation_sets->Get(200);
 			obj->SetAnimationItemSet(ani_set);
+			if (player != NULL)
+			{
+				DebugOut(L"[INFO] Player object has been Created Already!\n");
+				dynamic_cast<CBoss*>(obj)->SetPlayerObject(player);
+			}
 			break;
 		}
 		case OBJECT_TYPE_POWERHUB:
@@ -202,6 +212,21 @@ void CBossScence::_ParseSection_OBJECTS(string line)
 			{
 				DebugOut(L"[INFO] Player object has been Created Already!\n");
 				dynamic_cast<CPowerHub*>(obj)->SetPlayerObject(player);
+			}
+			return;
+			break;
+		}
+		case OBJECT_TYPE_GUNHUB:
+		{
+			obj = new CGunHub();
+			obj->SetPosition(x, y);
+			obj->SetAnimationSet(animation_sets->Get(ani_set_id));
+			hub_objects.push_back(obj);
+			DebugOut(L"[INFO] GunHub object created!\n");
+			if (player != NULL)
+			{
+				DebugOut(L"[INFO] Player object has been Created Already!\n");
+				dynamic_cast<CGunHub*>(obj)->SetPlayerObject(player);
 			}
 			return;
 			break;
@@ -288,7 +313,11 @@ void CBossScence::Load(int _alive, int _power)
 	//Texture for bounding box
 	CTextures::GetInstance()->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 	DebugOut(L"[INFO] Done loading boss scence resources %s\n", sceneFilePath);
-
+	if (player != NULL)
+	{
+		player->SetPower(_power);
+		player->SetAlive(_alive);
+	}
 }
 
 
@@ -302,6 +331,20 @@ void CBossScence::Update(DWORD dt)
 	for (size_t i = 0; i < objects.size(); i++)
 	{
 		objects[i]->Update(dt, &coObjects);
+		if (dynamic_cast<CBoss*>(objects[i])->GetState() == BOSS_STATE_IDLE)
+		{
+			if (player)
+			{
+				player->IsStartingBossScence = true;
+			}
+		}
+		else
+		{
+			if (player)
+			{
+				player->IsStartingBossScence = false;
+			}
+		}
 	}
 	if (player == NULL) return;
 	else
@@ -342,6 +385,16 @@ void CBossScence::Render()
 			objects[i]->Render();
 		//Vẽ player object
 		player->Render();
+		if (player->GetPower() < 0 && player->GetState() == MAIN_CHARACTER_STATE_DIE)
+		{
+			int lives = player->GetAlive();
+			if (lives >= 0)
+			{
+				lives -= 1;
+				player->SetAlive(lives);
+				ReLoad();
+			}
+		}
 		//Vẽ Hub objects
 		for (int i = 0; i < hub_objects.size(); i++)
 			hub_objects[i]->Render();
@@ -354,7 +407,26 @@ void CBossScence::Render()
 */
 void CBossScence::Unload()
 {
+	objects.clear();
+	player = NULL;
+	hub_objects.clear();
+	CSprites::GetInstance()->Clear();
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
+}
+
+void CBossScence::ReLoad()
+{
+	Sound::getInstance()->StopAll();
+	if (player)
+	{
+		CMenuScence* menu_scence = dynamic_cast<CMenuScence*>(CGame::GetInstance()->GetScene(MENU_SCENCE_ID));
+		if (menu_scence)
+			menu_scence->SetScenceId(id);
+		if (player->GetAlive() >= 0)
+			CGame::GetInstance()->SwitchScene(MENU_SCENCE_ID, player->GetAlive(), 5);
+		else
+			CGame::GetInstance()->SwitchScene(MENU_SCENCE_ID, 2, 5);
+	}
 }
 
 void CBossScenceKeyHandler::OnKeyDown(int KeyCode)
@@ -365,6 +437,8 @@ void CBossScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 	CMainCharacter* player = ((CBossScence*)scence)->GetPlayer();
+	if (player->GetState() == MAIN_CHARACTER_STATE_DIE) return;
+	if (player->IsStartingBossScence) return;
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
@@ -375,6 +449,7 @@ void CBossScenceKeyHandler::OnKeyUp(int KeyCode)
 		break;
 	case DIK_Z:
 		player->SetState(MAIN_CHARACTER_STATE_BARREL_FIRE);
+		Sound::getInstance()->PlayNew(SOUND_ID_BULLET_FIRE);
 		break;
 	case DIK_M:
 		player->SetState(MAIN_CHARACTER_STATE_HUMAN);
@@ -392,7 +467,7 @@ void CBossScenceKeyHandler::KeyState(BYTE* states)
 	//// disable control key when Mario die 
 	if (player->GetState() == MAIN_CHARACTER_STATE_DIE) return;
 	if (player->GetState() == MAIN_CHARACTER_STATE_NONE_COLLISION) return;
-
+	if (player->IsStartingBossScence) return;
 	if (game->IsKeyDown(DIK_UP))
 	{
 		player->SetState(MAIN_CHARACTER_STATE_UP_BARREL);

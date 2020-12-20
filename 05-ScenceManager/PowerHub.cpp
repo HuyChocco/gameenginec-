@@ -49,7 +49,7 @@ void CPowerHub::Render()
 			ani = 11;
 			break;
 		default:
-			ani = 10;
+			ani = 11;
 			break;
 		}
 	}

@@ -5,7 +5,7 @@
 #include "Utils.h"
 #include "Textures.h"
 #include "Sprites.h"
-
+#include "Sound.h"
 #define SCENCE_ID_START	1
 
 using namespace std;
@@ -223,9 +223,19 @@ void CIntroScence::Render()
 {
 	CGame* game = CGame::GetInstance();
 	CAnimationSets::GetInstance()->Get(0)->at(0)->isIntroEndScence = true;
-	CAnimationSets::GetInstance()->Get(0)->at(0)->Render(0, 0);
-	if(CAnimationSets::GetInstance()->Get(0)->at(0)->isFinish)
-		game->SwitchScene(SCENCE_ID_START);
+	CAnimationSets::GetInstance()->Get(0)->at(1)->isIntroEndScence = true;
+	if (CAnimationSets::GetInstance()->Get(0)->at(1)->isFinish)
+	{
+		Sound::getInstance()->Play(SOUND_ID_OPENING);
+		CAnimationSets::GetInstance()->Get(0)->at(0)->Render(25, 10);
+		if (CAnimationSets::GetInstance()->Get(0)->at(0)->isFinish)
+		{
+			Sound::getInstance()->Stop(SOUND_ID_OPENING);
+			game->SwitchScene(SCENCE_ID_START);
+		}
+	}
+	else
+		CAnimationSets::GetInstance()->Get(0)->at(1)->Render(40, 10);
 
 }
 

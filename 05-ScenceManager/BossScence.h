@@ -10,6 +10,9 @@
 #include "Human.h"
 #include "GunHub.h"
 #include "PowerHub.h"
+
+#include "Pincer.h"
+#include "Coupling.h"
 class CBossScence : public CScene
 {
 protected:
@@ -35,6 +38,7 @@ public:
 	virtual void Unload();
 
 	CMainCharacter* GetPlayer() { return player; }
+	void ReLoad();
 };
 
 class CBossScenceKeyHandler : public CScenceKeyHandler

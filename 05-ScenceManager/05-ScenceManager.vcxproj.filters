@@ -120,7 +120,7 @@
     </ClCompile>
     <ClCompile Include="Utils.cpp">
       <Filter>Header Files</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="Vehicle.cpp">
       <Filter>Source Files\MainCharacterObjects</Filter>
     </ClCompile>
@@ -132,6 +132,30 @@
     </ClCompile>
     <ClCompile Include="Boss.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Pincer.cpp">
+      <Filter>Source Files\BossElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Coupling.cpp">
+      <Filter>Source Files\BossElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Lava.cpp">
+      <Filter>Source Files\ItemObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="dxaudio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuScence.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>Source Files\ItemObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Egg.cpp">
+      <Filter>Source Files\ItemObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -169,9 +193,6 @@
       <Filter>Header Files\Hub</Filter>
     </ClInclude>
     <ClInclude Include="HovHub.h">
-      <Filter>Header Files\Hub</Filter>
-    </ClInclude>
-    <ClInclude Include="PowerHub.h">
       <Filter>Header Files\Hub</Filter>
     </ClInclude>
     <ClInclude Include="Spike.h">
@@ -267,6 +288,33 @@
     <ClInclude Include="Boss.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Pincer.h">
+      <Filter>Header Files\BossElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Coupling.h">
+      <Filter>Header Files\BossElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Lava.h">
+      <Filter>Header Files\ItemObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="dxaudio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PowerHub.h">
+      <Filter>Header Files\Hub</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuScence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>Header Files\ItemObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Egg.h">
+      <Filter>Header Files\ItemObjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -298,6 +346,12 @@
     </Filter>
     <Filter Include="Source Files\MainCharacterObjects">
       <UniqueIdentifier>{cbdb355c-d240-4c13-9cfa-1b882cbaaa30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\BossElements">
+      <UniqueIdentifier>{bed60ae5-8675-451f-b209-697e268d7f2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\BossElements">
+      <UniqueIdentifier>{5875a0e6-a6d1-4d55-b3dc-8b30b4bff1f2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

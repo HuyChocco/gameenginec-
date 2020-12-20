@@ -5,6 +5,7 @@
 #include "GameObject.h"
 
 #include "Brick.h"
+#include "Lava.h"
 #include "Stair.h"
 #include "Mario.h"
 #include "Goomba.h"
@@ -22,6 +23,7 @@
 #include "Insect.h"
 #include "SKull.h"
 #include "Orb.h"
+#include "Item.h"
 //bo sung
 #include "MainCharacter.h"
 #include "BarrelObject.h"
@@ -33,7 +35,8 @@
 #include "TiledMap.h"
 #include "Grid.h"
 
-
+#define MENU_SCENCE_ID	1000
+#define START_SCENCE_ID	1
 class CPlayScene : public CScene
 {
 protected:
@@ -59,7 +62,7 @@ protected:
 	LPCWSTR tiled_map_file_path_next;
 	CSprites* sprites_next_map;
 
-
+	bool isMenuScenceDisplayed;
 
 public:
 	bool isRenderNextMap = false;
@@ -84,7 +87,7 @@ public:
 
 	CSprites* GetSpritesNextMap() { return sprites_next_map; }
 
-
+	void ReLoad();
 };
 
 class CPlayScenceKeyHandler : public CScenceKeyHandler

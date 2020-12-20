@@ -204,6 +204,11 @@
 300006	71	56	92	82	55
 # Main character empty sprite
 70001	0	0	0	0	1
+# Main character explosion
+70002	159	3	207	43	1
+70003	143	44	207	132	1
+#Destroyable-brick
+80000	96	160	112	176	33
 # WORM
 #move left 
 110001	46	412	62	421	2
@@ -258,6 +263,15 @@
 100004	149	97	165	113	1
 100005	166	97	182	113	1
 100006	183	93	207	117	1
+# bullet Rocket
+# right rocket
+100100	5	35	20	41	55
+# left rocket
+100101	2	20	17	26	55
+# up rocket
+100102	109	8	115	23	55
+# down rocket
+100103	98	8	104	23	55
 # Human-Sofia
 # bullet
 100007	135	183	139	187	55
@@ -280,6 +294,13 @@
 100015	252	102	260	118	1
 # bullet_explosion
 100016	296	102	312	118	1
+#Skull
+#bullet_left
+100019	193	515	203	525	2
+#bullet_right
+100020	51	515	61	525	2
+#bullet_explosion
+100021	166	97	182	113	1
 # Hub objects
 # PowerHub - Text
 800001	175	219	183	235	55
@@ -347,6 +368,10 @@ Map-Blaster-Master-Area-2-D.txt
 # ==== MAIN CHARACTER =========
 #idle
 2000	70001	100
+#explosion
+2001	70002	200
+#Destroyable-brick
+3000	80000	100
 # === ENEMY DOMES ===
 #walk left
 8000	140001	100	140002	100
@@ -384,6 +409,15 @@ Map-Blaster-Master-Area-2-D.txt
 4001	100002	100
 # explode
 4002	100003	100	100004	100	100005	100
+# Bullet Rocket
+# right rocket
+4100	100100	100
+# left rocket
+4101	100101	100
+# up rocket
+4102	100102	100
+# down rocket
+4103	100103	100
 # Human-Sofia
 # Bullet
 4003	100007	100
@@ -404,6 +438,13 @@ Map-Blaster-Master-Area-2-D.txt
 4009	100015	100
 # Bullet_explosion
 4010	100016	100
+# Skull 
+# Bullet left
+4011	100019	100
+# Bullet right
+4012	100020	100
+#Bullet explosion
+4013	100021	100
 # ==== HUB =========
 # PowerHub - Text
 100000	800001	100
@@ -428,11 +469,13 @@ Map-Blaster-Master-Area-2-D.txt
 # SOFIA 
 1	600	601	602	603	604	605	606
 # MAIN_CHARACTER 
-2	2000
+2	2000	2001
 # WHEEL 
 3	700	701	702
 # SOFIA VEHICLE
 4	800	801	802	803
+#Destroyable-brick
+5	3000
 # WORM - ENEMY
 8	5000	5001
 # FLOATER-SPIDER - ENEMY
@@ -443,8 +486,8 @@ Map-Blaster-Master-Area-2-D.txt
 12	9000	9001
 # INSECT - ENEMY
 #11	7000	7001
-# WEAPON Player-horizontal Player-vertical Player-explode Big human-bullet Big human-explosion Cannon-bullet Cannon-explosion Eyeball-bullet Eyeball-explosion	Floater-bullet	Floater-explosion
-7	4000	4001	4002	4003	4004	4005	4006	4007	4008	4009	4010
+# WEAPON Player-horizontal Player-vertical Player-explode Big human-bullet Big human-explosion Cannon-bullet Cannon-explosion Eyeball-bullet Eyeball-explosion	Floater-bullet	Floater-explosion	Skull bullet left	Skull bullet right	Skull bullet explosion	Player-Rocket-right	Player-Rocket-left	Player-Rocket-up	Player-Rocket-down
+7	4000	4001	4002	4003	4004	4005	4006	4007	4008	4009	4010	4011	4012	4013	4100	4101	4102	4103
 # HUB
 100	100000	100001	100002	100003	100004	100005	100006	100007	100008	100009	100010	100011
 # ITEMS
@@ -453,7 +496,7 @@ Map-Blaster-Master-Area-2-D.txt
 [OBJECTS]
 # object_id  type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Worm, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Cabin, 8= Barrel, 9= Main character, 10= Spider, 11=Human
-# type: 12 = Floater, 13 = Domes, 14 = Jumpers, 15 = Insect,16 = Orbs, 17 = Skulls, 18 = Dashers, 19 = Mine, 20 = LAVA
+# type: 12 = Floater, 13 = Domes, 14 = Jumpers, 15 = Insect,16 = Orbs, 17 = Skulls, 18 = Dashers, 19 = Mine, 30 = LAVA
 # type: 101 = DESTROYABLE_BRICK , 22 = Stair
 # MAIN_CHARACTER need to be created first!
 1	9	78	144.73	2
@@ -563,12 +606,23 @@ Map-Blaster-Master-Area-2-D.txt
 169	1	160	256.0	2	190	176.66699
 # DESTROYABLE_BRICK 
 # object_id 	type	l	t	ani_set_id	r	b	type_brick: 1: normal	2,3: destructible  
-170	1	160.182	815.455	2	191.182	799.455	2		
-171	1	160.182	687.81995	2	191.182	671.81995	2
-172	1	95.6667	624.0	2	126.6667	608.0	2	
-173	1	160.333	176.32996	2	191.333	160.32996	2
+170	1	160.182	815.455	5	175.182	799.455	2
+171	1	176.182	815.455	5	191.182	799.455	2	
+172	1	160.182	687.81995	5	175.182	671.81995	2
+173	1	176.182	687.81995	5	191.182	671.81995	2
+174	1	95.6667	624.0	5	110.6667	608.0	2
+175	1	111.6667	624.0	5	126.6667	608.0	2
+176	1	160.333	176.32996	5	175.333	160.32996	2
+177	1	176.333	176.32996	5	191.333	160.32996	2
 # STAIRS
 174	22	49.3333	1648.0	2	61.3333	1438.0
+# LAVA
+180	30	160	414	2	224	400
+#181	30	l t	2	r	b
+#182	30	l t	2	r	b
+#183	30	l t	2	r	b
+#184	30	l t	2	r	b
+#185	30	l t	2	r	b
 # --- SCENE PORTAL ----
 # object_id 	type	l	t	ani_set_id	r	b	scene_id	type_portal: 1-Next scene 0-Previous scene
 #1000	50	452	1654.667	2	463	1631.667	4	1
@@ -602,25 +656,25 @@ Map-Blaster-Master-Area-2-D.txt
 6	1	131	130	127	129
 6	2	129	128	130
 7	0	158	161	1002	121	127	120	165
-7	1	165	170	127	129	120
+7	1	165	170	171	127	129	120
 7	2	129	128	124	123	159	160
 8	0	161	119	118	120	166	167	171
-8	1	166	171	126	122	120
+8	1	166	172	173	126	122	120
 8	2	122	126	123	125	160
-9	0	161	118	167	126	1003	172	117	113
+9	0	161	118	167	126	1003	174	175	117	113
 9	1	117	126	113	14	114	22
 9	2	126	125	116	114	1004	160
 10	0	161	113
 10	1	113	115	114	16
 10	2	114	112	160	162	23
 11	0	161	163	107	108
-11	1	18	109	110	168
+11	1	18	109	110	168	180
 11	2	109	110	168	111	162	17
 12	0	163	103
 12	1	103	169	173	105	168	104
 12	2	104	162
-13	0	163	102	1005	100	173	101
-13	1	173	101	20	21
+13	0	163	102	1005	100	176	177	101
+13	1	176	177	101	20	21
 13	2	101	106	162	21
 14	0	163	164
 14	1	164
