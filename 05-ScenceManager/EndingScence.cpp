@@ -158,7 +158,7 @@ void CEndingScence::_ParseSection_OBJECTS(string line)
 
 
 
-void CEndingScence::Load()
+void CEndingScence::Load(int _alive, int _power)
 {
 	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 

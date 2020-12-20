@@ -29,6 +29,36 @@ void CWheelObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt);
 	x = player_x;
 	y = player_y;
+	//Hiệu ứng bánh xe lên xuống khi di chuyển
+	if (vx != 0)
+	{
+		up_down_effect_time += dt;
+		if (!is_being_up_effect_wheel)
+		{
+			if (up_down_effect_time <= WHEEL_UP_DOWN_EFFECT_TIME)
+			{
+				y_delta += 0.01 * dt;
+			}
+			else
+			{
+				is_being_up_effect_wheel = true;
+				up_down_effect_time = 0;
+			}
+		}
+		else
+		{
+			if (up_down_effect_time <= WHEEL_UP_DOWN_EFFECT_TIME)
+			{
+				y_delta -= 0.01 * dt;
+			}
+			else
+			{
+				is_being_up_effect_wheel = false;
+				up_down_effect_time = 0;
+			}
+		}
+		
+	}
 	if (is_start_push_effect&&is_being_up && is_Right_Wheel)
 	{
 		push_effect_time += dt;
@@ -89,7 +119,7 @@ void CWheelObject::Render()
 		else // Nhân vật di chuyển
 		{
 			animation_set->at(ani)->isPause = false; // Tiếp tục animation đã dừng trước đó
-			animation_set->at(ani)->Render(x + MAIN_CHARACTER_BBOX_WIDTH - WHEEL_BBOX_WIDTH + x_delta, y - MAIN_CHARACTER_BBOX_HEIGHT + WHEEL_BBOX_HEIGHT, flip,alpha);
+			animation_set->at(ani)->Render(x + MAIN_CHARACTER_BBOX_WIDTH - WHEEL_BBOX_WIDTH + x_delta, y - MAIN_CHARACTER_BBOX_HEIGHT + WHEEL_BBOX_HEIGHT+y_delta, flip,alpha);
 		}
 	}
 	else //Bánh xe bên trái
@@ -103,7 +133,7 @@ void CWheelObject::Render()
 			else // Nhân vật di chuyển
 			{
 				animation_set->at(ani)->isPause = false; // Tiếp tục animation đã dừng trước đó
-				animation_set->at(ani)->Render(x + x_delta, y - MAIN_CHARACTER_BBOX_HEIGHT + WHEEL_BBOX_HEIGHT, flip,alpha);
+				animation_set->at(ani)->Render(x + x_delta, y - MAIN_CHARACTER_BBOX_HEIGHT + WHEEL_BBOX_HEIGHT+y_delta, flip,alpha);
 			}	
 	}
 		

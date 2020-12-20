@@ -28,7 +28,8 @@ public:
 
 	CBossScence(int id, LPCWSTR filePath);
 
-	virtual void Load();
+	virtual void Load(int _alive = 2, int _power = 0);
+	virtual void Load() {};
 	virtual void Update(DWORD dt);
 	virtual void Render();
 	virtual void Unload();

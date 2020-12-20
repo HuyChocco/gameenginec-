@@ -406,7 +406,6 @@ bool CGame::CheckCollision(float l1, float t1, float r1, float b1, float l2, flo
 {
 	if (t1 <= b2 && b1 >= t2 && l1 <= r2 && r1 >= l2)
 		return true;
-
 	return false;
 }
 CGame *CGame::GetInstance()
@@ -500,7 +499,7 @@ void CGame::Load(LPCWSTR gameFile)
 	SwitchScene(current_scene);
 }
 
-void CGame::SwitchScene(int scene_id)
+void CGame::SwitchScene(int scene_id, int _alive, int _power)
 {
 	DebugOut(L"[INFO] Switching to scene %d\n", scene_id);
 
@@ -515,7 +514,7 @@ void CGame::SwitchScene(int scene_id)
 	current_scene = scene_id;
 	LPSCENE s = scenes[scene_id];
 	CGame::GetInstance()->SetKeyHandler(s->GetKeyEventHandler());
-	s->Load();
+	s->Load(_alive, _power);
 	
 	
 }

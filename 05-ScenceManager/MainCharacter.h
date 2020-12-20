@@ -27,7 +27,8 @@
 #define MAIN_CHARACTER_STATE_DOWN_BARREL				502
 #define MAIN_CHARACTER_STATE_NONE_COLLISION			600
 #define MAIN_CHARACTER_STATE_HUMAN					800
-//#define MAIN_CHARACTER_STATE_DOWN_BARREL				600
+#define MAIN_CHARACTER_STATE_OPEN_CABIN				801
+#define MAIN_CHARACTER_STATE_CLOSE_CABIN				802
 
 
 #define MAIN_CHARACTER_STATE_BARREL_FIRE				700
@@ -70,17 +71,19 @@ class CMainCharacter : public CGameObject
 	int alive;
 	int heart;
 	int score;
-
-	bool canChangeState;
+	int power;
+	
 	bool isStateStraightBarrel;
 	bool doIncreaseYValue;
 	bool isStartFire;
 	bool isBeingUpBarrel;
+	bool isCabinOpened;
 public:
 
 	//Bo sung property
 	bool Is_On_Ground;
 	bool Is_Human;
+	bool CanChangeState;
 	CMainCharacter(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
@@ -101,4 +104,8 @@ public:
 	float GetStartY() { return start_y; }
 
 	void CollisionItem(int item);
+	int GetPower() { return power; }
+	void SetPower(int _power) { power = _power; }
+	int GetAlive() { return alive; }
+	void SetAlive(int _alive) { alive = _alive; }
 };

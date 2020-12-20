@@ -90,7 +90,7 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 
 		CGameObject::Update(dt);
 		timeAttack += dt;
-		if (timeAttack > TIME_ENABLE_FIRE)
+		if (timeAttack > 5000)
 		{
 			SetState(WEAPON_STATE_NONE);
 		}
@@ -695,39 +695,143 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 
 		else if (type_weapon == WEAPON_TYPE_ENEMY_SKULL)
 		{
-		
-			float l1, t1, r1, b1;
-			GetBoundingBox(l1, t1, r1, b1);
-			if (game->CheckCollision(l1, t1, r1, b1, l_player, t_player, r_player, b_player) == true)
+		time_movingg += dt;
+
+		if (!isOne)
+		{
+			if (!isOne1)
 			{
-				SetState(WEAPON_STATE_EXPLODE);
+				if (time_movingg > 300)
+				{
+					SetState(WEAPON_SKULL_STATE_FLY_RIGHT_DOWN);
+					time_movingg = 0;
+					isOne = true;
+					isOne1 = true;
+				}
+			}
+		}
+		else
+		{
+			if (isOne1)
+			{
+				if (time_movingg > 1100)
+				{
+					SetState(WEAPON_SKULL_STATE_FLY_RIGHT_UP);
+					time_movingg = 0;
+					isOne1 = false;
+					isTwo = false;
+				}
+			}
+		}
+
+		if (!isTwo)
+		{
+			if (!isTwo1)
+				if (time_movingg > 300)
+				{
+					SetState(WEAPON_SKULL_STATE_FLY_RIGHT_DOWN);
+					time_movingg = 0;
+					isTwo = true;
+					isTwo1 = true;
+
+				}
+
+		}
+		else
+		{
+			if (isTwo1)
+			{
+				if (time_movingg > 300)
+				{
+					SetState(WEAPON_SKULL_STATE_FLY_RIGHT_UP);
+					time_movingg = 0;
+					isTwo1 = false;
+					isThree = false;
+
+
+				}
+			}
+		}
+
+		if (!isThree)
+		{
+			if (!isThree1)
+			{
+				if (time_movingg > 300)
+				{
+					SetState(WEAPON_SKULL_STATE_FLY_RIGHT_DOWN);
+					time_movingg = 0;
+					isThree = true;
+					isThree1 = true;
+
+				}
+			}
+		}
+		else
+		{
+			if (isThree1)
+			{
+				if (time_movingg > 300)
+				{
+					SetState(WEAPON_SKULL_STATE_FLY_RIGHT);
+					time_movingg = 0;
+
+					isThree1 = false;
+					isFour = false;
+
+				}
+			}
+		}
+
+		if (!isFour)
+		{
+			if (time_movingg > 600)
+			{
+				SetState(WEAPON_SKULL_STATE_EXPLODE);
 				isBurning = true;
-				player->SetIsAttacked(true);
+				time_movingg = 0;
+
+				isFour = true;
+
 			}
-			for (UINT i = 0; i < colliable_object->size(); i++)
+		}
+
+
+		float l1, t1, r1, b1;
+		GetBoundingBox(l1, t1, r1, b1);
+		if (game->CheckCollision(l1, t1, r1, b1, l_player, t_player, r_player, b_player) == true)
+		{
+			SetState(WEAPON_SKULL_STATE_EXPLODE);
+			isBurning = true;
+			player->SetIsAttacked(true);
+		}
+		for (UINT i = 0; i < colliable_object->size(); i++)
+		{
+			if (dynamic_cast<CBrick*>(colliable_object->at(i)))
 			{
-				if (dynamic_cast<CBrick*>(colliable_object->at(i)))
-				{
-					CBrick* brick = dynamic_cast<CBrick*>(colliable_object->at(i));
-					float l1, t1, r1, b1, l2, t2, r2, b2;
-					GetBoundingBox(l1, t1, r1, b1);
-					brick->GetBoundingBox(l2, t2, r2, b2);
+				CBrick* brick = dynamic_cast<CBrick*>(colliable_object->at(i));
+				float l1, t1, r1, b1, l2, t2, r2, b2;
+				GetBoundingBox(l1, t1, r1, b1);
+				brick->GetBoundingBox(l2, t2, r2, b2);
 
-					if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
-					{
-						SetState(WEAPON_STATE_EXPLODE);
-						isBurning = true;
-					}
-				}
-				else if (dynamic_cast<CPortal*>(colliable_object->at(i)))
-				{
+				//if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+				//{
+				//	//SetState(WEAPON_STATE_EXPLODE);
+				//	//isBurning = true;
+				//}
 
-				}
-				else if (dynamic_cast<CSpike*>(colliable_object->at(i)))
-				{
+				
 
-				}
 			}
+			else if (dynamic_cast<CPortal*>(colliable_object->at(i)))
+			{
+
+			}
+			else if (dynamic_cast<CSpike*>(colliable_object->at(i)))
+			{
+
+			}
+		}
 		}
 	}
 
@@ -915,39 +1019,45 @@ void CWeapon::Render()
 	}
 	else if (typeWeapon == WEAPON_TYPE_ENEMY_SKULL)
 	{
-	if (state != WEAPON_STATE_NONE)
-	{
-		int ani = WEAPON_ANI_ENEMY_SKULL_LEFT;
-		int flip = false;
-		switch (state)
+		if (state != WEAPON_STATE_NONE)
 		{
-		case WEAPON_SKULL_STATE_FLY_RIGHT:
-			ani = WEAPON_ANI_ENEMY_SKULL_RIGHT;
-			break;
-		case WEAPON_SKULL_STATE_FLY_LEFT:
-			ani = WEAPON_ANI_ENEMY_SKULL_LEFT;
-			break;
-		case WEAPON_SKULL_STATE_EXPLODE:
-			ani = WEAPON_ANI_EXPLODE_ENEMY_SKULL;
-			break;
-		default:
-			break;
-		}
-		if (state == WEAPON_SKULL_STATE_EXPLODE)
-		{
-			float l, t, r, b;
-			GetBoundingBox(l, t, r, b);
-			animation_set->at(ani)->Render(x, y, flip);
-			if (animation_set->at(ani)->isFinish)
+			int ani = WEAPON_ANI_ENEMY_SKULL_LEFT;
+			int flip = false;
+			switch (state)
 			{
-				animation_set->at(ani)->isFinish = false;
-				SetState(WEAPON_STATE_NONE);
+			case WEAPON_SKULL_STATE_FLY_RIGHT_UP:
+				ani = WEAPON_ANI_ENEMY_SKULL_RIGHT;
+				break;
+			case WEAPON_SKULL_STATE_FLY_RIGHT_DOWN:
+				ani = WEAPON_ANI_ENEMY_SKULL_RIGHT;
+				break;
+			case WEAPON_SKULL_STATE_FLY_RIGHT:
+				ani = WEAPON_ANI_ENEMY_SKULL_RIGHT;
+				break;
+			case WEAPON_SKULL_STATE_FLY_LEFT:
+				ani = WEAPON_ANI_ENEMY_SKULL_LEFT;
+				break;
+			case WEAPON_SKULL_STATE_EXPLODE:
+				ani = WEAPON_ANI_EXPLODE_ENEMY_SKULL;
+				break;
+			default:
+				break;
 			}
+			if (state == WEAPON_SKULL_STATE_EXPLODE)
+			{
+				float l, t, r, b;
+				GetBoundingBox(l, t, r, b);
+				animation_set->at(ani)->Render(x, y, flip);
+				if (animation_set->at(ani)->isFinish)
+				{
+					animation_set->at(ani)->isFinish = false;
+					SetState(WEAPON_STATE_NONE);
+				}
+			}
+			else
+				animation_set->at(ani)->Render(x, y, flip);
+			//RenderBoundingBox();
 		}
-		else
-			animation_set->at(ani)->Render(x, y, flip);
-		//RenderBoundingBox();
-	}
 	}
 	else if (typeWeapon == WEAPON_TYPE_BIG_HUMAN)
 	{
@@ -1119,13 +1229,22 @@ void CWeapon::SetState(int state)
 	{
 	switch (state)
 	{
-	case WEAPON_SKULL_STATE_FLY_RIGHT:
-		
-		vx = WEAPON_SKULL_FLY_SPEED;		
+	case WEAPON_SKULL_STATE_FLY_RIGHT_UP:
+		vx = WEAPON_SKULL_FLY_SPEED;
+		vy = WEAPON_SKULL_FLY_SPEED;
 		this->dame = 1;
 	break;
+	case WEAPON_SKULL_STATE_FLY_RIGHT_DOWN:
+		vx = WEAPON_SKULL_FLY_SPEED_X;
+		vy = -WEAPON_SKULL_FLY_SPEED;
+		this->dame = 1;
+		break;
+	case WEAPON_SKULL_STATE_FLY_RIGHT:
+		vx = WEAPON_SKULL_FLY_SPEED;
+		vy = 0;
+		this->dame = 1;
+		break;
 	case WEAPON_SKULL_STATE_FLY_LEFT:
-
 		vx = -WEAPON_SKULL_FLY_SPEED;
 		this->dame = 1;
 		break;

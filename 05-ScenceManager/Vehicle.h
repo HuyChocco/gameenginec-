@@ -5,10 +5,13 @@
 #define VEHICLE_ANI_XOAY	1
 #define VEHICLE_ANI_MO_CABIN	2
 #define VEHICLE_ANI_NONG_SUNG	3
+#define VEHICLE_UP_DOWN_EFFECT_TIME 100
 class CVehicle : public CGameObject
 {
 	int level;
 	DWORD up_effect_start;
+	DWORD up_down_effect_time;
+	bool is_being_up_effect_cabin;
 
 	float start_x;			// initial position of CABIN at scene
 	float start_y;
@@ -20,6 +23,8 @@ class CVehicle : public CGameObject
 
 	float y_delta;
 	bool is_firing;
+	bool isCabinOpened;
+	bool isStateOpenCabin;
 public:
 	
 	CVehicle(float x = 0.0f, float y = 0.0f);
@@ -36,5 +41,5 @@ public:
 
 	bool GetIsBarrelUp() { return is_barrel_up; }
 	bool GetIsBarrelStraight() { return isBarrelStraight; }
-
+	bool GetIsCabinOpened() { return isCabinOpened; }
 };

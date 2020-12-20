@@ -162,7 +162,7 @@ void CIntroScence::_ParseSection_OBJECTS(string line)
 
 
 
-void CIntroScence::Load()
+void CIntroScence::Load(int _alive , int _power)
 {
 	DebugOut(L"[INFO] Start loading scene resources from : %s \n", sceneFilePath);
 
