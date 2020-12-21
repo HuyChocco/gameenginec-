@@ -800,6 +800,7 @@ void CMainCharacter::Render()
 					if (human->GetLevel() == HUMAN_LEVEL_BIG)
 					{
 						SetState(MAIN_CHARACTER_STATE_DIE);
+						Sound::getInstance()->PlayNew(SOUND_ID_PLAYER_EXPLOSION);
 						return;
 					}
 					else

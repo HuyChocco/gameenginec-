@@ -394,6 +394,8 @@ void CBossScence::Render()
 				player->SetAlive(lives);
 				ReLoad();
 			}
+			else
+				ReLoad();
 		}
 		//Vẽ Hub objects
 		for (int i = 0; i < hub_objects.size(); i++)
@@ -423,9 +425,9 @@ void CBossScence::ReLoad()
 		if (menu_scence)
 			menu_scence->SetScenceId(id);
 		if (player->GetAlive() >= 0)
-			CGame::GetInstance()->SwitchScene(MENU_SCENCE_ID, player->GetAlive(), 5);
+			CGame::GetInstance()->SwitchScene(MENU_SCENCE_ID, player->GetAlive(), 8);
 		else
-			CGame::GetInstance()->SwitchScene(MENU_SCENCE_ID, 2, 5);
+			CGame::GetInstance()->SwitchScene(MENU_SCENCE_ID, 2, 8);
 	}
 }
 
