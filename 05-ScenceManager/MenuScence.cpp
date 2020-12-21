@@ -10,6 +10,9 @@
 
 using namespace std;
 
+bool isContinueButton = true;
+bool isCancelButton = false;
+bool isEnter = false;
 CMenuScence::CMenuScence(int id, LPCWSTR filePath) :
 	CScene(id, filePath)
 {
@@ -217,21 +220,63 @@ void CMenuScence::Load(int _alive, int _power)
 
 void CMenuScence::Update(DWORD dt)
 {
-
+	CGame* game = CGame::GetInstance();
+	if (isEnter)
+	{
+		if (isCancelButton)
+		{
+			game->SwitchScene(START_SCENCE_ID, 2, 8);
+		}
+		else if (isContinueButton)
+		{
+			if (scence_id != -1)
+				game->SwitchScene(scence_id, 2, 8);
+		}
+	}
 }
 
 void CMenuScence::Render()
 {
 	CGame* game = CGame::GetInstance();
-	//int scence_id = game->GetSceneId();
-	CAnimationSets::GetInstance()->Get(0)->at(0)->isIntroEndScence = true;
-	CAnimationSets::GetInstance()->Get(0)->at(0)->Render(80, 50);
-	if (CAnimationSets::GetInstance()->Get(0)->at(0)->isFinish)
+	if (alives >= 0)
 	{
-		if(scence_id==-1)
-			game->SwitchScene(START_SCENCE_ID, alives, power);
+		CAnimationSets::GetInstance()->Get(0)->at(0)->isIntroEndScence = true;
+		CAnimationSets::GetInstance()->Get(0)->at(0)->Render(80, 50);
+		int ani = -1;
+		switch (alives)
+		{
+		case 0:
+			ani = 3;
+			break;
+		case 1:
+			ani = 1;
+			break;
+		case 2:
+			ani = 2;
+			break;
+		default:
+			ani = 2;
+			break;
+		}
+		CAnimationSets::GetInstance()->Get(0)->at(ani)->isIntroEndScence = true;
+		CAnimationSets::GetInstance()->Get(0)->at(ani)->Render(180, 70);
+		if (CAnimationSets::GetInstance()->Get(0)->at(0)->isFinish)
+		{
+			if (scence_id == -1)
+				game->SwitchScene(START_SCENCE_ID, alives, power);
+			else
+				game->SwitchScene(scence_id, alives, power);
+		}
+	}
+	else
+	{
+		CAnimationSets::GetInstance()->Get(0)->at(4)->isIntroEndScence = true;
+		CAnimationSets::GetInstance()->Get(0)->at(4)->Render(80, 50);
+		CAnimationSets::GetInstance()->Get(0)->at(5)->isIntroEndScence = true;
+		if(isContinueButton)
+			CAnimationSets::GetInstance()->Get(0)->at(5)->Render(60, 60);
 		else
-			game->SwitchScene(scence_id,alives,power);
+			CAnimationSets::GetInstance()->Get(0)->at(5)->Render(60, 80);
 	}
 }
 
@@ -244,19 +289,39 @@ void CMenuScence::Unload()
 	if (CAnimationSets::GetInstance()->Get(0))
 		CAnimationSets::GetInstance()->Get(0)->at(0)->isIntroEndScence = false;
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
+	isEnter = false;
+	isContinueButton = true;
+	isCancelButton = false;
 }
 
 void CMenuScenceKeyHandler::OnKeyDown(int KeyCode)
 {
 
 }
+
 void CMenuScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	CGame* game = CGame::GetInstance();
 	switch (KeyCode)
 	{
 	case DIK_A:
-		//game->SwitchScene(START_SCENCE_ID);
+		break;
+	case DIK_UP:
+		if (!isContinueButton)
+		{
+			isContinueButton = true;
+			isCancelButton = false;
+		}
+		break;
+	case DIK_DOWN:
+		if (!isCancelButton)
+		{
+			isCancelButton = true;
+			isContinueButton = false;
+		}
+		break;
+	case DIK_SPACE:
+		isEnter = true;
 		break;
 	}
 }

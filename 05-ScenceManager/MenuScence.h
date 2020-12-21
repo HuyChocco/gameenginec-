@@ -15,6 +15,10 @@ protected:
 	int scence_id=-1;
 	int alives;
 	int power;
+	float x_button;
+	float y_button;
+	//bool isContinueButton;
+	//bool isCancelButton;
 public:
 
 	CMenuScence(int id, LPCWSTR filePath);

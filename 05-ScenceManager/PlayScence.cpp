@@ -1139,10 +1139,10 @@ void CPlayScene::ReLoad()
 		CMenuScence* menu_scence=dynamic_cast<CMenuScence*>(CGame::GetInstance()->GetScene(MENU_SCENCE_ID));
 		if (menu_scence)
 			menu_scence->SetScenceId(id);
-		if(player->GetAlive()>=0)
+		//if(player->GetAlive()>=0)
 			CGame::GetInstance()->SwitchScene(MENU_SCENCE_ID, player->GetAlive(), 8);
-		else
-			CGame::GetInstance()->SwitchScene(MENU_SCENCE_ID, 2, 8);
+	//	else
+			//CGame::GetInstance()->SwitchScene(MENU_SCENCE_ID, 2, 8);
 	}
 }
 void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
