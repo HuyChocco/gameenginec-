@@ -17,6 +17,7 @@
 #include "Skull.h"
 #include "Orb.h"
 #include "Boss.h"
+#include "Egg.h"
 
 #include "Sound.h"
 CWeapon::CWeapon(int type)
@@ -488,6 +489,25 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 						isBurning = true;
 					}
 				}
+				else if (dynamic_cast<CEgg*>(colliable_object->at(i)))
+				{
+					CEgg* egg = dynamic_cast<CEgg*>(colliable_object->at(i));
+					float l1, t1, r1, b1, l2, t2, r2, b2;
+					GetBoundingBox(l1, t1, r1, b1);
+					egg->GetBoundingBox(l2, t2, r2, b2);
+					if (egg->GetState() != STATE_ITEM) {
+						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+						{
+							SetState(WEAPON_STATE_EXPLODE);
+							isBurning = true;
+							if (!isAttacked)
+							{
+								egg->LostBlood(GetDame());
+								isAttacked = true;
+							}
+						}
+					}
+				}
 				else if (dynamic_cast<CPortal*>(colliable_object->at(i)))
 				{
 					CPortal* portal = dynamic_cast<CPortal*>(colliable_object->at(i));
@@ -901,14 +921,14 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 		}
 		else if (type_weapon == WEAPON_TYPE_BOSS)
 		{
-			if (x_player >= this->x)
+			/*if (x_player >= this->x)
 				x++;
 			else
 				x--;
 			if (y_player >= this->y)
 				y++;
 			else
-				y--;
+				y--;*/
 			float l1, t1, r1, b1;
 			GetBoundingBox(l1, t1, r1, b1);
 			if (game->CheckCollision(l1, t1, r1, b1, l_player, t_player, r_player, b_player) == true)
@@ -1619,14 +1639,15 @@ void CWeapon::SetState(int state)
 		{
 		case WEAPON_BOSS_STATE_FLY:
 		{
-			if (nx > 0)
+			vy = -0.08f;
+			/*if (nx > 0)
 			{
 				vx = 0.05f;
 			}
 			else
 			{
 				vx = -0.05f;
-			}
+			}*/
 			this->dame = 1;
 		}
 		break;

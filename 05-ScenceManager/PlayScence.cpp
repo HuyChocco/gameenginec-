@@ -6,14 +6,12 @@
 #include "Textures.h"
 #include "Sprites.h"
 #include "Portal.h"
-#include "SpecialPortal.h"
 
 //#include "Grid.h"
 #include "GunHub.h"
 #include "PowerHub.h"
 #include "Sound.h"
 #include "MenuScence.h"
-
 using namespace std;
 
 CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
@@ -61,9 +59,9 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_CANNON	19
 #define OBJECT_TYPE_EYEBALL	20
 #define OBJECT_TYPE_TELEPORTER 33
-#define OBJECT_TYPE_MINE 40
-
 #define OBJECT_TYPE_ITEM 34
+#define OBJECT_TYPE_MINE 40
+#define OBJECT_TYPE_EGG 41
 
 //Main character objects
 #define OBJECT_TYPE_MAIN_CHARACTER	9
@@ -356,7 +354,19 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			obj = new CBrick(x, y, r, b);
 		break;
 	}
-
+	case OBJECT_TYPE_EGG:
+	{
+		if (tokens.size() > 5)
+		{
+			int item = atoi(tokens[5].c_str());
+			obj = new CEgg(item);
+			LPANIMATION_SET ani_set = animation_sets->Get(200);
+			obj->SetAnimationItemSet(ani_set);
+		}
+		else
+			obj = new CEgg(0);
+		break;
+	}
 	case OBJECT_TYPE_LAVA:
 	{
 		float r = atof(tokens[5].c_str());
@@ -453,6 +463,31 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int scene_id = atoi(tokens[7].c_str());
 		int next_portal_id = atoi(tokens[8].c_str());
 		obj = new CSpecialPortal(x, y, r, b, scene_id, next_portal_id);
+		if (CGame::GetInstance()->GetIsPreMap())
+		{
+			if (player != NULL)
+			{
+				if (CGame::GetInstance()->GetNextPortalId() == object_id)
+				{
+					player->SetPosition((x - MAIN_CHARACTER_BBOX_WIDTH) - 2, y);
+				}
+				for (int i = 0; i < player->GetComponentObjects().size(); i++)
+				{
+					LPGAMEOBJECT object = player->GetComponentObjects()[i];
+					if (dynamic_cast<CHuman*>(object))
+					{
+						if (dynamic_cast<CHuman*>(object)->GetLevel() == HUMAN_LEVEL_SMALL)
+						{
+
+							if (CGame::GetInstance()->GetNextPortalId() == object_id)
+							{
+								object->SetPosition((x - HUMAN_SMALL_BBOX_WIDTH) - 2, y);
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 	break;
 	case OBJECT_TYPE_PORTAL:
@@ -485,16 +520,17 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 						}
 						else if (dynamic_cast<CHuman*>(object)->GetLevel() == HUMAN_LEVEL_SMALL)
 						{
-							
+
 							if (CGame::GetInstance()->GetNextPortalId() == object_id)
 							{
-								object->SetPosition((x - HUMAN_BIG_BBOX_WIDTH) - 2, y);
+								object->SetPosition((x - HUMAN_SMALL_BBOX_WIDTH) - 2, y);
 							}
 						}
 					}
 				}
 			}
 		}
+
 		else if (CGame::GetInstance()->GetIsNextMap())
 		{
 			if (player != NULL)
@@ -525,7 +561,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			{
 				if (CGame::GetInstance()->GetNextPortalId() == object_id)
 				{
-					player->SetPosition(x, y + MAIN_CHARACTER_BBOX_HEIGHT + 6);
+					player->SetPosition(x, y + MAIN_CHARACTER_BBOX_HEIGHT + 12);
 				}
 				for (int i = 0; i < player->GetComponentObjects().size(); i++)
 				{
@@ -536,7 +572,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 						{
 							if (CGame::GetInstance()->GetNextPortalId() == object_id)
 							{
-								object->SetPosition(x, y + HUMAN_BIG_BBOX_HEIGHT + 6);
+								object->SetPosition(x, y + HUMAN_BIG_BBOX_HEIGHT + 12);
 							}
 						}
 					}
@@ -735,7 +771,7 @@ void CPlayScene::Update(DWORD dt)
 		CMenuScence* menu_scence = dynamic_cast<CMenuScence*>(CGame::GetInstance()->GetScene(MENU_SCENCE_ID));
 		if (menu_scence)
 			menu_scence->SetScenceId(id);
-		game->SwitchScene(MENU_SCENCE_ID,2,5);
+		game->SwitchScene(MENU_SCENCE_ID,2,8);
 	}
 	else
 	{
@@ -1104,9 +1140,9 @@ void CPlayScene::ReLoad()
 		if (menu_scence)
 			menu_scence->SetScenceId(id);
 		if(player->GetAlive()>=0)
-			CGame::GetInstance()->SwitchScene(MENU_SCENCE_ID, player->GetAlive(), 5);
+			CGame::GetInstance()->SwitchScene(MENU_SCENCE_ID, player->GetAlive(), 8);
 		else
-			CGame::GetInstance()->SwitchScene(MENU_SCENCE_ID, 2, 5);
+			CGame::GetInstance()->SwitchScene(MENU_SCENCE_ID, 2, 8);
 	}
 }
 void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)

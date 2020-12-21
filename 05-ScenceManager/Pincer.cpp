@@ -1,6 +1,7 @@
 
 #include "Pincer.h"
 #include "Weapon.h"
+
 CPincer::CPincer(float start_x, float start_y,bool is_left) :CEnemyObject()
 {
 	SetState(PINCER_STATE_IDLE);
@@ -59,7 +60,7 @@ void CPincer::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (CGame::GetInstance()->CheckCollision(player_l, player_t, player_r, player_b, l, t, r, b))
 		{
 			player->SetIsAttacked(true);
-			player->SetPosition(player_l - 0.5, player_t - 0.5);
+			player->SetPosition(player_l - 1, player_t - 1);
 		}
 	}
 }

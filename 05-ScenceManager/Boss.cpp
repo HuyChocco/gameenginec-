@@ -74,12 +74,13 @@ void CBoss::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 
 void CBoss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if (!isEnable)
+	if (!isEnable) {
 		return;
+	}
 	if (state != BOSS_STATE_IDLE)
 	{
 		time_moving += dt;
-		if (time_moving >= 2000)
+		if (time_moving >= 1000)
 		{
 			time_moving = 0;
 			SetState(BOSS_STATE_ATTACK);
@@ -122,6 +123,54 @@ void CBoss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 
 	}
+	/*if (isStartAllCouplingRight)
+	{
+		for (int i = 0; i < right_coupling_elements.size(); i++)
+		{
+			right_coupling_elements[i]->Update(dt, coObjects);
+		}
+	}
+	else
+	{
+		if (time_moving_coupling >= 4000)
+		{
+			right_coupling_elements[3]->Update(dt, coObjects);
+		}
+		if (time_moving_coupling >= 5000)
+			right_coupling_elements[2]->Update(dt, coObjects);
+		if (time_moving_coupling >= 6000)
+			right_coupling_elements[1]->Update(dt, coObjects);
+		if (time_moving_coupling >= 7000)
+		{
+			right_coupling_elements[0]->Update(dt, coObjects);
+			isStartAllCouplingRight = true;
+		}
+	}
+
+	if (isStartAllCouplingLeft)
+	{
+		for (int i = 0; i < left_coupling_elements.size(); i++)
+		{
+			left_coupling_elements[i]->Update(dt, coObjects);
+		}
+	}
+	else
+	{
+		if (time_moving_coupling_left >= 4000)
+		{
+			left_coupling_elements[3]->Update(dt, coObjects);
+		}
+		if (time_moving_coupling_left >= 5000)
+			left_coupling_elements[2]->Update(dt, coObjects);
+		if (time_moving_coupling_left >= 6000)
+			left_coupling_elements[1]->Update(dt, coObjects);
+		if (time_moving_coupling_left >= 7000)
+		{
+			left_coupling_elements[0]->Update(dt, coObjects);
+			isStartAllCouplingLeft = true;
+		}
+	}*/
+
 	//Xử lý Pincer
 	float _x, _y;
 	float _delta_x, _delta_y;
@@ -168,7 +217,6 @@ void CBoss::Render()
 				{
 					SetState(BOSS_STATE_MOVE);
 				}
-				Sound::getInstance()->Stop(SOUND_ID_AREA_2);
 				Sound::getInstance()->Play(SOUND_ID_STARTING_BOSS);
 			}
 			else
