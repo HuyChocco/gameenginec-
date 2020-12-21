@@ -217,6 +217,7 @@ void CBoss::Render()
 				{
 					SetState(BOSS_STATE_MOVE);
 				}
+				Sound::getInstance()->Stop(SOUND_ID_AREA_2);
 				Sound::getInstance()->Play(SOUND_ID_STARTING_BOSS);
 			}
 			else

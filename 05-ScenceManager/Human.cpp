@@ -1113,7 +1113,7 @@ void CHuman::SetState(int state)
 		// TODO: need to check if HUMAN is *current* on a platform before allowing to jump again
 		if (level == HUMAN_LEVEL_SMALL)
 		{
-			if (is_on_ground)
+			if (is_on_ground && !isStateCrawl)
 			{
 				vy = HUMAN_SMALL_JUMP_SPEED_Y;
 				is_on_ground = false;
