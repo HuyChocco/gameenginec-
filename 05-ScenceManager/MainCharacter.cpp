@@ -10,7 +10,6 @@
 #include "Brick.h"
 #include "Stair.h"
 #include "Lava.h"
-#include "Arrow.h"
 
 #include "EnemyObject1.h"
 #include "Worm.h"
@@ -175,7 +174,6 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 
 			}
-
 			else if (dynamic_cast<CSkull*>(coObjects->at(i))) {
 				CSkull* skull = dynamic_cast<CSkull*>(coObjects->at(i));
 				skull->SetPlayerObject(this);
@@ -217,6 +215,11 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 
 				}
+			}
+			else if (dynamic_cast<CLava*>((coObjects->at(i)))) // if e->obj is CLava
+			{
+				CLava* lava = dynamic_cast<CLava*>(coObjects->at(i));
+				lava->SetPlayerObject(this);
 			}
 
 		}
@@ -294,18 +297,11 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else if (dynamic_cast<CLava*>(e->obj)) // if e->obj is CLava
 				{
-					x += dx;
-					y += dy;
-					if (untouchable == 0)
+					/*if (e->ny != 0)
 					{
-						StartUntouchable();
-						power--;
-						Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
-					}
-				}
-				else if (dynamic_cast<CArrow*>(e->obj)) // if e->obj is CLava
-				{
-
+						y += dy / 2;
+						x += dx;
+					}*/
 					if (untouchable == 0)
 					{
 						StartUntouchable();
@@ -317,7 +313,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else if (dynamic_cast<CStair*>(e->obj))
 				{
 					x += dx;
-					y += dy;
+					//y += dy;
 				}
 				// Nếu là portal object thì thực hiện chuyển cảnh
 				else if (dynamic_cast<CPortal*>(e->obj))
@@ -766,6 +762,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				CHuman* human_object = dynamic_cast<CHuman*>(componentObjects[i]);
 				human_object->SetIsBeingHuman(false);
 				human_object->SetPosition(x, y);
+				//human_object->Update(dt, coObjects);
 			}
 			else
 			{

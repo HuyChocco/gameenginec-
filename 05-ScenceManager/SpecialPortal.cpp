@@ -16,7 +16,7 @@ void CSpecialPortal::Render()
 	RenderBoundingBox();
 }
 
-void CSpecialPortal::GetBoundingBox(float &l, float &t, float &r, float &b)
+void CSpecialPortal::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	l = x;
 	t = y - height;

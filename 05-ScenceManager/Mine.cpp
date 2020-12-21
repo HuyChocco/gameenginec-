@@ -42,13 +42,13 @@ void CMine::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// Simple fall down
 	if (isDisplay)
 		//vy -= 0.0001f * dt;
-	if (this->blood < 0)
-	{
-		if (item > 0)
-			SetState(STATE_ITEM);
-		else
-			SetState(MINE_STATE_EXPLOSION);
-	}
+		if (this->blood < 0)
+		{
+			if (item > 0)
+				SetState(STATE_ITEM);
+			else
+				SetState(MINE_STATE_EXPLOSION);
+		}
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
@@ -103,7 +103,7 @@ void CMine::Render()
 			break;
 		case MINE_STATE_ATTACK:
 			break;
-		
+
 		case STATE_ITEM:
 			ani = item;
 			animation_item_set->at(ani - 1)->Render(x, y);

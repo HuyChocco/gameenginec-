@@ -527,7 +527,6 @@ Map-Blaster-Master-Area-2-B.txt
 # object_id  type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Worm, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Cabin, 8= Barrel, 9= Main character, 10= Spider, 11=Human
 # type: 12 = Floater, 13 = Domes, 14 = Jumpers, 15 = Insect,16 = Orbs, 17 = Skulls, 18 = Dashers, 500 = PowerHub, 501 = GunHub
-# type : 31 = ARROW
 # MAIN_CHARACTER need to be created first!
 1	9	79	150	2
 # MAIN OBJECTS LIST
@@ -613,6 +612,14 @@ Map-Blaster-Master-Area-2-B.txt
 100	1	418	416	2	479	385
 101	1	97	1039	2	111	1025
 102	1	144	1038	2	177	1023
+103	1	110	1235	2	140	1214
+104	1	176	1234	2	202	1214
+105	1	239	1233	2	271	1214
+106	1	178	1039	2	208	1024
+107	1	239	1042	2	270	1023
+108	1	305	1041	2	335	1023
+109	1	107	273	2	143	255
+110	1	114	1041	2	142	1024
 # DESTROYABLE_BRICK 
 # object_id 	type	l	t	ani_set_id	r	b	type_brick: 1: normal	2,3: destructible  
 111	1	320	113	5	335	94	2	
@@ -625,15 +632,6 @@ Map-Blaster-Master-Area-2-B.txt
 118	1	272	497	5	287	477	2
 119	1	256	1072	5	272	1052	2
 120	1	272	1072	5	287	1052	2
-# ARROW
-103	31	110	1235	2	140	1214
-104	31	176	1234	2	202	1214
-105	31	239	1233	2	271	1214
-106	31	178	1039	2	208	1024
-107	31	239	1042	2	270	1023
-108	31	305	1041	2	335	1023
-109	31	107	273	2	143	255
-110	31	114	1041	2	142	1024
 # --- SCENE PORTAL ----
 # object_id 	type	l	t	ani_set_id	r	b	scene_id	type_portal: 1-Next scene 0-Previous scene	next_portal_id
 1000	50	47.3333	119.33	2	58.6666	97.9967	1	0	1000
