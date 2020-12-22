@@ -43,6 +43,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_LAVA	30
 #define OBJECT_TYPE_SPIKE	21
 #define OBJECT_TYPE_STAIR	22
+#define OBJECT_TYPE_ARROW	31
 
 //Enemy objects
 #define OBJECT_TYPE_ENEMY1	2
@@ -345,6 +346,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		float r = atof(tokens[5].c_str());
 		float b = atof(tokens[6].c_str());
 		obj = new CLava(x, y, r, b);
+		break;
+	}
+	case OBJECT_TYPE_ARROW:
+	{
+		float r = atof(tokens[5].c_str());
+		float b = atof(tokens[6].c_str());
+		obj = new CArrow(x, y, r, b);
 		break;
 	}
 	case OBJECT_TYPE_STAIR:

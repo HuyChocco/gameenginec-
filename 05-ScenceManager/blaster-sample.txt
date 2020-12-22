@@ -1,5 +1,5 @@
 [SETTINGS]
-start	18
+start	0
 #scene list
 #id	path	type_scence: 0-world 1-overworld
 [SCENES]
@@ -27,4 +27,4 @@ start	18
 20	scence-test-overworld-27.txt	1
 21	scence-test-overworld-28.txt	1
 99	scence-overworld-boss.txt	1
-100	end-scence.txt	0
+100	ending-scence.txt	0

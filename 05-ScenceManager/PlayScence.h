@@ -6,6 +6,7 @@
 
 #include "Brick.h"
 #include "Lava.h"
+#include "Arrow.h"
 #include "Stair.h"
 #include "Mario.h"
 #include "Goomba.h"
