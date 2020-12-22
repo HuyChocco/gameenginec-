@@ -591,7 +591,7 @@ Map-Blaster-Master-Area-2-E.txt
 119	1	432	208	2	464	176
 # --- SCENE PORTAL ----
 # object_id 	type	l	t	ani_set_id	r	b	scene_id	type_portal: 1-Next scene 0-Previous scene
-1000	50	32	112	2	64	80	4	0	1002
+1000	50	32	112	2	64	80	4	0	1000
 1001	50	448	112	2	480	80	7	1	1000
 # cellx celly id_object...
 [GRID]

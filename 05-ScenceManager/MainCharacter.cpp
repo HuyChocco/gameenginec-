@@ -175,7 +175,6 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 
 			}
-
 			else if (dynamic_cast<CSkull*>(coObjects->at(i))) {
 				CSkull* skull = dynamic_cast<CSkull*>(coObjects->at(i));
 				skull->SetPlayerObject(this);
@@ -217,6 +216,11 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 
 				}
+			}
+			else if (dynamic_cast<CLava*>((coObjects->at(i)))) // if e->obj is CLava
+			{
+				CLava* lava = dynamic_cast<CLava*>(coObjects->at(i));
+				lava->SetPlayerObject(this);
 			}
 
 		}
@@ -294,6 +298,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else if (dynamic_cast<CLava*>(e->obj)) // if e->obj is CLava
 				{
+
 					x += dx;
 					y += dy;
 					if (untouchable == 0)
@@ -306,6 +311,13 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else if (dynamic_cast<CArrow*>(e->obj)) // if e->obj is CLava
 				{
 					
+
+					/*if (e->ny != 0)
+					{
+						y += dy / 2;
+						x += dx;
+					}*/
+
 					if (untouchable == 0)
 					{
 						StartUntouchable();
@@ -313,10 +325,11 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
 					}
 				}
+
 				else if (dynamic_cast<CStair*>(e->obj))
 				{
 					x += dx;
-					y += dy;
+					//y += dy;
 				}
 				// Nếu là portal object thì thực hiện chuyển cảnh
 				else if (dynamic_cast<CPortal*>(e->obj))
@@ -328,14 +341,38 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						CGame::GetInstance()->SetIsNextMap(true);
 						CGame::GetInstance()->SetIsPreMap(false);
+						CGame::GetInstance()->SetIsUpMap(false);
+						CGame::GetInstance()->SetIsDownMap(false);
+						CGame::GetInstance()->SetSceneId(p->GetSceneId());
+						CGame::GetInstance()->SetNextPortalId(p->GetNextPortalId());
+					}
+					//Nếu portal là đối tượng chuyển up scene
+					else if (p->GetType() == 3)
+					{
+						CGame::GetInstance()->SetIsNextMap(false);
+						CGame::GetInstance()->SetIsPreMap(false);
+						CGame::GetInstance()->SetIsUpMap(true);
+						CGame::GetInstance()->SetIsDownMap(false);
+						CGame::GetInstance()->SetSceneId(p->GetSceneId());
+						CGame::GetInstance()->SetNextPortalId(p->GetNextPortalId());
+					}
+					//Nếu portal là đối tượng chuyển down scene
+					else if (p->GetType() == 4)
+					{
+						CGame::GetInstance()->SetIsNextMap(false);
+						CGame::GetInstance()->SetIsPreMap(false);
+						CGame::GetInstance()->SetIsUpMap(false);
+						CGame::GetInstance()->SetIsDownMap(true);
 						CGame::GetInstance()->SetSceneId(p->GetSceneId());
 						CGame::GetInstance()->SetNextPortalId(p->GetNextPortalId());
 					}
 					//Nếu portal là đối tượng chuyển previous scene
 					else
 					{
-						CGame::GetInstance()->SetIsPreMap(true);
 						CGame::GetInstance()->SetIsNextMap(false);
+						CGame::GetInstance()->SetIsPreMap(true);
+						CGame::GetInstance()->SetIsUpMap(false);
+						CGame::GetInstance()->SetIsDownMap(false);
 						CGame::GetInstance()->SetSceneId(p->GetSceneId());
 						CGame::GetInstance()->SetNextPortalId(p->GetNextPortalId());
 					}
@@ -776,8 +813,12 @@ void CMainCharacter::Render()
 				if (dynamic_cast<CHuman*>(componentObjects[i]))
 				{
 					CHuman* human = dynamic_cast<CHuman*>(componentObjects[i]);
-					if(human->GetLevel()==HUMAN_LEVEL_BIG)
+					if (human->GetLevel() == HUMAN_LEVEL_BIG)
+					{
 						SetState(MAIN_CHARACTER_STATE_DIE);
+						Sound::getInstance()->PlayNew(SOUND_ID_PLAYER_EXPLOSION);
+						return;
+					}
 					else
 					{
 						if(human->GetIsFinishAnimationDying())

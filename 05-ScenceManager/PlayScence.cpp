@@ -60,6 +60,9 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_CANNON	19
 #define OBJECT_TYPE_EYEBALL	20
 #define OBJECT_TYPE_TELEPORTER 33
+#define OBJECT_TYPE_ITEM 34
+#define OBJECT_TYPE_MINE 40
+#define OBJECT_TYPE_EGG 41
 
 //Main character objects
 #define OBJECT_TYPE_MAIN_CHARACTER	9
@@ -74,6 +77,8 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_POWERHUB	500
 
 #define OBJECT_TYPE_PORTAL	50
+
+#define OBJECT_TYPE_SPECIAL_PORTAL	51
 
 #define MAX_SCENE_LINE 1024
 
@@ -217,6 +222,16 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetAnimationItemSet(ani_set);
 	}
 	break;
+	case OBJECT_TYPE_MINE:
+	{
+		int item = 0;
+		if (tokens.size() > 5)
+			item = atoi(tokens[5].c_str());
+		obj = new CMine(item);
+		LPANIMATION_SET ani_set = animation_sets->Get(200);
+		obj->SetAnimationItemSet(ani_set);
+	}
+	break;
 	case OBJECT_TYPE_CANNON:
 	{
 		int item = 0;
@@ -340,7 +355,19 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			obj = new CBrick(x, y, r, b);
 		break;
 	}
-
+	case OBJECT_TYPE_EGG:
+	{
+		if (tokens.size() > 5)
+		{
+			int item = atoi(tokens[5].c_str());
+			obj = new CEgg(item);
+			LPANIMATION_SET ani_set = animation_sets->Get(200);
+			obj->SetAnimationItemSet(ani_set);
+		}
+		else
+			obj = new CEgg(0);
+		break;
+	}
 	case OBJECT_TYPE_LAVA:
 	{
 		float r = atof(tokens[5].c_str());
@@ -429,6 +456,48 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		return;
 		break;
 	}
+	case OBJECT_TYPE_ITEM:
+	{
+		int type = 0;
+		if (tokens.size() > 5)
+			type = atoi(tokens[5].c_str());
+		obj = new CItem(type);
+	}
+	break;
+	case OBJECT_TYPE_SPECIAL_PORTAL:
+	{
+		float r = atof(tokens[5].c_str());
+		float b = atof(tokens[6].c_str());
+		int scene_id = atoi(tokens[7].c_str());
+		int next_portal_id = atoi(tokens[8].c_str());
+		obj = new CSpecialPortal(x, y, r, b, scene_id, next_portal_id);
+		if (CGame::GetInstance()->GetIsPreMap())
+		{
+			if (player != NULL)
+			{
+				if (CGame::GetInstance()->GetNextPortalId() == object_id)
+				{
+					player->SetPosition((x - MAIN_CHARACTER_BBOX_WIDTH) - 2, y);
+				}
+				for (int i = 0; i < player->GetComponentObjects().size(); i++)
+				{
+					LPGAMEOBJECT object = player->GetComponentObjects()[i];
+					if (dynamic_cast<CHuman*>(object))
+					{
+						if (dynamic_cast<CHuman*>(object)->GetLevel() == HUMAN_LEVEL_SMALL)
+						{
+
+							if (CGame::GetInstance()->GetNextPortalId() == object_id)
+							{
+								object->SetPosition((x - HUMAN_SMALL_BBOX_WIDTH) - 2, y);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	break;
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = atof(tokens[5].c_str());
@@ -457,10 +526,19 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 								object->SetPosition((x - HUMAN_BIG_BBOX_WIDTH) - 2, y);
 							}
 						}
+						else if (dynamic_cast<CHuman*>(object)->GetLevel() == HUMAN_LEVEL_SMALL)
+						{
+
+							if (CGame::GetInstance()->GetNextPortalId() == object_id)
+							{
+								object->SetPosition((x - HUMAN_SMALL_BBOX_WIDTH) - 2, y);
+							}
+						}
 					}
 				}
 			}
 		}
+
 		else if (CGame::GetInstance()->GetIsNextMap())
 		{
 			if (player != NULL)
@@ -485,7 +563,54 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 				}
 			}
 		}
-
+		else if (CGame::GetInstance()->GetIsUpMap())
+		{
+			if (player != NULL)
+			{
+				if (CGame::GetInstance()->GetNextPortalId() == object_id)
+				{
+					player->SetPosition(x, y + MAIN_CHARACTER_BBOX_HEIGHT + 12);
+				}
+				for (int i = 0; i < player->GetComponentObjects().size(); i++)
+				{
+					LPGAMEOBJECT object = player->GetComponentObjects()[i];
+					if (dynamic_cast<CHuman*>(object))
+					{
+						if (dynamic_cast<CHuman*>(object)->GetLevel() == HUMAN_LEVEL_BIG)
+						{
+							if (CGame::GetInstance()->GetNextPortalId() == object_id)
+							{
+								object->SetPosition(x, y + HUMAN_BIG_BBOX_HEIGHT + 12);
+							}
+						}
+					}
+				}
+			}
+		}
+		else if (CGame::GetInstance()->GetIsDownMap())
+		{
+			if (player != NULL)
+			{
+				if (CGame::GetInstance()->GetNextPortalId() == object_id)
+				{
+					player->SetPosition(x, y -(y-b)-6);
+				}
+				for (int i = 0; i < player->GetComponentObjects().size(); i++)
+				{
+					LPGAMEOBJECT object = player->GetComponentObjects()[i];
+					if (dynamic_cast<CHuman*>(object))
+					{
+						if (dynamic_cast<CHuman*>(object)->GetLevel() == HUMAN_LEVEL_BIG)
+						{
+							if (CGame::GetInstance()->GetNextPortalId() == object_id)
+							{
+								object->SetPosition(x, y - (y - b) - 6);
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 	break;
 	default:
@@ -654,7 +779,7 @@ void CPlayScene::Update(DWORD dt)
 		CMenuScence* menu_scence = dynamic_cast<CMenuScence*>(CGame::GetInstance()->GetScene(MENU_SCENCE_ID));
 		if (menu_scence)
 			menu_scence->SetScenceId(id);
-		game->SwitchScene(MENU_SCENCE_ID,2,5);
+		game->SwitchScene(MENU_SCENCE_ID,2,8);
 	}
 	else
 	{
@@ -765,6 +890,25 @@ void CPlayScene::Update(DWORD dt)
 			}
 
 
+		}
+		else if (game->GetIsUpMap() == true)
+		{
+			if (type_scence == OVER_WORLD)
+			{
+				// switch scene
+				game->SwitchScene(game->GetSceneId(), player->GetAlive(), player->GetPower());
+				game->SetIsUpMap(false);
+			}
+
+		}
+		else if (game->GetIsDownMap() == true)
+		{
+			if (type_scence == OVER_WORLD)
+			{
+				// switch scene
+				game->SwitchScene(game->GetSceneId(), player->GetAlive(), player->GetPower());
+				game->SetIsDownMap(false);
+			}
 		}
 		else
 			game->SetRenderingNextMap(false);
@@ -1003,10 +1147,10 @@ void CPlayScene::ReLoad()
 		CMenuScence* menu_scence=dynamic_cast<CMenuScence*>(CGame::GetInstance()->GetScene(MENU_SCENCE_ID));
 		if (menu_scence)
 			menu_scence->SetScenceId(id);
-		if(player->GetAlive()>=0)
-			CGame::GetInstance()->SwitchScene(MENU_SCENCE_ID, player->GetAlive(), 5);
-		else
-			CGame::GetInstance()->SwitchScene(MENU_SCENCE_ID, 2, 5);
+		//if(player->GetAlive()>=0)
+			CGame::GetInstance()->SwitchScene(MENU_SCENCE_ID, player->GetAlive(), 8);
+	//	else
+			//CGame::GetInstance()->SwitchScene(MENU_SCENCE_ID, 2, 8);
 	}
 }
 void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)

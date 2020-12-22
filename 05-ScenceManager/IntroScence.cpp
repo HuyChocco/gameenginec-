@@ -224,14 +224,19 @@ void CIntroScence::Render()
 	CGame* game = CGame::GetInstance();
 	CAnimationSets::GetInstance()->Get(0)->at(0)->isIntroEndScence = true;
 	CAnimationSets::GetInstance()->Get(0)->at(1)->isIntroEndScence = true;
+	CAnimationSets::GetInstance()->Get(0)->at(2)->isIntroEndScence = true;
 	if (CAnimationSets::GetInstance()->Get(0)->at(1)->isFinish)
 	{
-		Sound::getInstance()->Play(SOUND_ID_OPENING);
 		CAnimationSets::GetInstance()->Get(0)->at(0)->Render(25, 10);
+		Sound::getInstance()->Play(SOUND_ID_OPENING);
 		if (CAnimationSets::GetInstance()->Get(0)->at(0)->isFinish)
 		{
+			CAnimationSets::GetInstance()->Get(0)->at(2)->Render(25, 10);
 			Sound::getInstance()->Stop(SOUND_ID_OPENING);
-			game->SwitchScene(SCENCE_ID_START);
+			if (CAnimationSets::GetInstance()->Get(0)->at(2)->isFinish)
+			{
+				game->SwitchScene(SCENCE_ID_START);
+			}
 		}
 	}
 	else
@@ -261,6 +266,7 @@ void CIntroScenceKeyHandler::OnKeyUp(int KeyCode)
 	{
 	case DIK_A:
 		game->SwitchScene(SCENCE_ID_START);
+		Sound::getInstance()->Stop(SOUND_ID_OPENING);
 		break;
 	}
 }

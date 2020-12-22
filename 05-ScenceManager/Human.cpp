@@ -23,6 +23,10 @@
 #include "Skull.h"
 #include "Boss.h"
 #include "Sound.h"
+#include "Item.h"
+#include "SpecialPortal.h"
+#include "Egg.h"
+#include "Lava.h"
 #define JUMPER_ROUNDING_DISTANCE_X 50
 #define JUMPER_ROUNDING_DISTANCE_Y 20
 #define ORB_ROUNDING_DISTANCE_X 120
@@ -33,7 +37,7 @@ CHuman::CHuman(float x, float y) : CGameObject()
 	level = HUMAN_LEVEL_SMALL;
 
 	SetState(HUMAN_STATE_IDLE);
-
+	isEnable = true;
 	start_x = x;
 	start_y = y;
 	this->x = x;
@@ -42,6 +46,8 @@ CHuman::CHuman(float x, float y) : CGameObject()
 
 void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	if (!isEnable)
+		return;
 	if (player != NULL)
 	{
 		CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
@@ -221,6 +227,11 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (isBeingHuman)
 				boss->SetPlayerObject(this);
 		}
+		else if (dynamic_cast<CLava*>((coObjects->at(i)))) // if e->obj is CLava
+		{
+			CLava* lava = dynamic_cast<CLava*>(coObjects->at(i));
+			lava->SetPlayerObject(this);
+		}
 	}
 	// Simple fall down
 	if (level == HUMAN_LEVEL_SMALL && !isStateClimb)
@@ -309,6 +320,26 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 
 			}
+			else if (dynamic_cast<CEgg*>(e->obj))
+			{
+				CEgg* egg = dynamic_cast<CEgg*>(e->obj);
+				if (egg->GetState() == STATE_ITEM)
+				{
+					if (player != NULL)
+					{
+						Sound::getInstance()->PlayNew(SOUND_ID_EATING_ITEM);
+						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+						int power = player_object->GetPower();
+						if (power < 8)
+						{
+							power++;
+							player_object->SetPower(power);
+						}
+					}
+					egg->SetState(EGG_STATE_DESTROYED);
+				}
+
+			}
 			else if (dynamic_cast<CSpike*>(e->obj))
 			{
 				x += dx;
@@ -334,6 +365,21 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 				}
 			}
+			else if (dynamic_cast<CLava*>(e->obj)) // if e->obj is CLava
+			{
+				if (untouchable == 0)
+				{
+					if (player != NULL)
+					{
+						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+						int power = player_object->GetPower();
+						power--;
+						player_object->SetPower(power);
+					}
+					StartUntouchable();
+					Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
+				}
+			}
 			// Nếu là portal object thì thực hiện chuyển cảnh
 			else if (dynamic_cast<CPortal*>(e->obj))
 			{
@@ -345,17 +391,54 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						CGame::GetInstance()->SetIsNextMap(true);
 						CGame::GetInstance()->SetIsPreMap(false);
+						CGame::GetInstance()->SetIsUpMap(false);
+						CGame::GetInstance()->SetIsDownMap(false);
+						CGame::GetInstance()->SetSceneId(p->GetSceneId());
+						CGame::GetInstance()->SetNextPortalId(p->GetNextPortalId());
+					}
+					//Nếu portal là đối tượng chuyển up scene
+					else if (p->GetType() == 3)
+					{
+						CGame::GetInstance()->SetIsNextMap(false);
+						CGame::GetInstance()->SetIsPreMap(false);
+						CGame::GetInstance()->SetIsUpMap(true);
+						CGame::GetInstance()->SetIsDownMap(false);
+						CGame::GetInstance()->SetSceneId(p->GetSceneId());
+						CGame::GetInstance()->SetNextPortalId(p->GetNextPortalId());
+					}
+					//Nếu portal là đối tượng chuyển down scene
+					else if (p->GetType() == 4)
+					{
+						CGame::GetInstance()->SetIsNextMap(false);
+						CGame::GetInstance()->SetIsPreMap(false);
+						CGame::GetInstance()->SetIsUpMap(false);
+						CGame::GetInstance()->SetIsDownMap(true);
 						CGame::GetInstance()->SetSceneId(p->GetSceneId());
 						CGame::GetInstance()->SetNextPortalId(p->GetNextPortalId());
 					}
 					//Nếu portal là đối tượng chuyển previous scene
 					else
 					{
-						CGame::GetInstance()->SetIsPreMap(true);
 						CGame::GetInstance()->SetIsNextMap(false);
+						CGame::GetInstance()->SetIsPreMap(true);
+						CGame::GetInstance()->SetIsUpMap(false);
+						CGame::GetInstance()->SetIsDownMap(false);
 						CGame::GetInstance()->SetSceneId(p->GetSceneId());
 						CGame::GetInstance()->SetNextPortalId(p->GetNextPortalId());
 					}
+				}
+			}
+			else if (dynamic_cast<CSpecialPortal*>(e->obj))
+			{
+				if (level == HUMAN_LEVEL_SMALL && !isStateClimb)
+				{
+					CSpecialPortal* p = dynamic_cast<CSpecialPortal*>(e->obj);
+					//Nếu portal là đối tượng chuyển overworld
+					CGame::GetInstance()->SetIsNextMap(false);
+					CGame::GetInstance()->SetIsPreMap(true);
+					CGame::GetInstance()->SetIsUpMap(false);
+					CGame::GetInstance()->SetIsDownMap(false);
+					CGame::GetInstance()->SetSceneId(p->GetSceneId());
 				}
 			}
 			//Outdoor enemies
@@ -808,10 +891,10 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					}
 					if (e->ny != 0)
 					{
-						y += dy;
+						y -= dy;
 					}
 					else
-						x += dx;
+						x -= dx;
 				}
 				else
 				{
@@ -834,6 +917,22 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					boss->SetState(BOSS_STATE_DIE);
 				}
 			}
+			//Item
+			else if (dynamic_cast<CItem*>(e->obj))
+			{
+				Sound::getInstance()->PlayNew(SOUND_ID_EATING_ITEM);
+				CItem* item = dynamic_cast<CItem*>(e->obj);
+				if (item->GetType() == 4) {
+
+					int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
+					if (power < 8)
+					{
+						power++;
+						dynamic_cast<CMainCharacter*>(player)->SetPower(power);
+					}
+				}
+				item->SetState(ITEM_STATE_DIE);
+			}
 		}
 	}
 
@@ -845,12 +944,9 @@ int ani = HUMAN_ANI_BIG_WALKING;
 int flip = true;
 void CHuman::Render()
 {
-	if (player != NULL)
+	if (!isEnable)
 	{
-		CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
-		int power = player_object->GetPower();
-		//if (power < 0)
-		//	return;
+		return;
 	}
 	//if (state == MAIN_CHARACTER_STATE_DIE)
 		//ani = HUMAN_ANI_DIE;
@@ -881,6 +977,8 @@ void CHuman::Render()
 			}
 			if (vx == 0 && vy == 0) // Nhân vật đứng yên
 			{
+				if (ani == animation_set->size())
+					return;
 				animation_set->at(ani)->isPause = true; //Dừng animation 
 				animation_set->at(ani)->Render(x, y, flip, alpha); // Vẽ frame đang bị tạm dừng
 			}
@@ -1015,7 +1113,7 @@ void CHuman::SetState(int state)
 		// TODO: need to check if HUMAN is *current* on a platform before allowing to jump again
 		if (level == HUMAN_LEVEL_SMALL)
 		{
-			if (is_on_ground)
+			if (is_on_ground && !isStateCrawl)
 			{
 				vy = HUMAN_SMALL_JUMP_SPEED_Y;
 				is_on_ground = false;
@@ -1058,7 +1156,7 @@ void CHuman::SetState(int state)
 		}
 		break;
 	case MAIN_CHARACTER_STATE_DOWN_BARREL:
-		if(isBeingHuman)
+		if (isBeingHuman)
 		{
 			if (level == HUMAN_LEVEL_BIG)
 			{
@@ -1076,9 +1174,10 @@ void CHuman::SetState(int state)
 				}
 			}
 		}
-		
+
 		break;
 	case MAIN_CHARACTER_STATE_DIE:
+		isEnable = false;
 		vx = vy = 0;
 		break;
 	case MAIN_CHARACTER_STATE_EXPLOSION:

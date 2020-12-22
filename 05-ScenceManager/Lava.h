@@ -20,10 +20,13 @@ class CLava : public CGameObject
 	int height;
 	bool isDisplay;
 	bool isEnable;
+	bool isCollision;
+	LPGAMEOBJECT player;
 public:
 	CLava(float l, float t, float r, float b);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL);
 	virtual void Render();
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
 	virtual void SetState(int state);
+	void SetPlayerObject(LPGAMEOBJECT _player) { player = _player; }
 };

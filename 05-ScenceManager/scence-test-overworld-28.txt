@@ -60,6 +60,7 @@
 111	32	144	48	160	50
 112	48	144	64	160	50
 290	64	144	80	160	50
+690	80	144	96	160	50
 # ENEMY CANNONS
 # ban
 160	96	603	122	629	2
@@ -198,6 +199,17 @@
 # Hov-Text
 800004	112	240	120	256	55
 # path
+# ITEMS
+# P
+900000	87	240	103	256	55
+#H rocket
+900001	3	240	19	256	55
+#H green
+900002	236	162	252	178	55
+#flash
+900003	45	240	61	256	55
+#P green
+900004	236	139	252	155	55	
 [MAP]
 map-overworld-28.txt
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
@@ -318,6 +330,17 @@ map-overworld-28.txt
 100003	800004	100
 # id	ani1	ani2	ani3
 #
+# ITEMS
+# P
+900000	900000	100
+#H rocket
+900001	900001	100
+#H green
+900002	900002	100
+#flash
+900003	900003	100
+#P green
+900004	900004	100
 [ANIMATION_SETS]
 # SOFIA 
 1	600	601	602	603	604	605
@@ -345,10 +368,14 @@ map-overworld-28.txt
 12	1152	1153
 # HUB
 100	100000	100001	100002	100003	100004	100005	100006	100007	100008	100009	100010	100011
+# ITEMS
+# P
+200	900000	900001	900002	900003	900004
 [OBJECTS]
 # object_id  type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Worm, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Cabin, 8= Barrel, 9= Main character, 10= Spider, 11=Human
-# type: 12 = Floater, 13 = Domes, 14 = Jumpers, 15 = Insect,16 = Orbs, 17 = Skulls, 18 = Dashers, 500 = PowerHub, 501 = GunHub
+# type: 12 = Floater, 13 = Domes, 14 = Jumpers, 15 = Insect,16 = Orbs, 17 = Skulls, 18 = Dashers, 500 = PowerHub, 501 = GunHub, 19=Cannon, 20= Eyeball, 21 = Spike
+# type: 33 = Teleporter, 34 = Item
 # MAIN_CHARACTER need to be created first!
 1	9	100	115	2
 # MAIN OBJECTS LIST
@@ -372,6 +399,13 @@ map-overworld-28.txt
 11	3	280	100	8
 # SPIDER
 12	10	420	120	9
+# CANNONS
+13	19	203.817	196.31	10	1
+# EYEBALL
+14	20	204.319	194.252	11	1
+15	20	100.855	121.127	11
+# TELEPORTER
+20	33	141.918	158.966	12
 # MAP OBJECT LIST
 # BRICK 
 # object_id 	type	l	t	ani_set_id	r	b
@@ -414,16 +448,16 @@ map-overworld-28.txt
 #cong ben trai
 1001	50	55	145	2	68.5	113	20	0	1002
 #cong ben phai
-1002	50	251.268	143.8	2	266.0486	112.294	6	1	9
+1002	50	251.268	143.8	2	266.0486	112.294	6	1	1001
 #cong phia tren
-1003	50	152	249.5	2	168	218	99	1	9
+1003	50	152	249.5	2	168	218	99	3	1004
 #cong phia duoi
-1004	50	143.876	63.633	2	177.2508	36.7945	8	0	9
+1004	50	143.876	63.633	2	177.2508	36.7945	8	4	1003
 # cellx celly id_object...
 [GRID]
 0	0	120	123	1003	368
 1	0	123	124	1001	368	369	370	371
 2	0	124	131	370	371
-0	1	121	128	1003	373	374
+0	1	121	128	1003	373	374	13
 1	1	128	373	374	369	371	372
 2	1	128	131	371	372

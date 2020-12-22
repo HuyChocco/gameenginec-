@@ -42,13 +42,6 @@ void CTeleporter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (isEnable)
 	{
-		if (this->blood < 0)
-		{
-			if (item > 0)
-				SetState(STATE_ITEM);
-			else
-				SetState(TELEPORTER_STATE_DIE);
-		}
 		// Calculate dx, dy 
 		CGameObject::Update(dt);
 
@@ -75,6 +68,13 @@ void CTeleporter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 			x += dx;
 			y += dy;
+		}
+		if (this->blood < 0)
+		{
+			if (item > 0)
+				SetState(STATE_ITEM);
+			else
+				SetState(TELEPORTER_STATE_DIE);
 		}
 		for (int i = 0; i < list_weapon.size(); i++)
 		{
@@ -116,9 +116,16 @@ void CTeleporter::Render()
 		break;
 		case TELEPORTER_STATE_IDLE:
 			break;
+		case STATE_ITEM:
+			ani = item;
+			animation_item_set->at(ani - 1)->Render(x, y);
+			break;
 		}
-		animation_set->at(ani)->Render(x, y, flip);
-		RenderBoundingBox();
+		if (isDisplay)
+		{
+			animation_set->at(ani)->Render(x, y);
+			RenderBoundingBox();
+		}
 		for (int i = 0; i < list_weapon.size(); i++)
 		{
 			list_weapon[i]->Render();

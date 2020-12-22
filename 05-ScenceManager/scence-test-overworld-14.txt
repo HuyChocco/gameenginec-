@@ -60,6 +60,7 @@
 111	32	144	48	160	50
 112	48	144	64	160	50
 290	64	144	80	160	50
+690	80	144	96	160	50
 # ENEMY CANNONS
 # ban
 160	96	603	122	629	2
@@ -198,6 +199,17 @@
 # Hov-Text
 800004	112	240	120	256	55
 # path
+# ITEMS
+# P
+900000	87	240	103	256	55
+#H rocket
+900001	3	240	19	256	55
+#H green
+900002	236	162	252	178	55
+#flash
+900003	45	240	61	256	55
+#P green
+900004	236	139	252	155	55	
 [MAP]
 map-overworld-14.txt
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
@@ -318,6 +330,17 @@ map-overworld-14.txt
 100003	800004	100
 # id	ani1	ani2	ani3
 #
+# ITEMS
+# P
+900000	900000	100
+#H rocket
+900001	900001	100
+#H green
+900002	900002	100
+#flash
+900003	900003	100
+#P green
+900004	900004	100
 [ANIMATION_SETS]
 # SOFIA 
 1	600	601	602	603	604	605
@@ -345,10 +368,14 @@ map-overworld-14.txt
 12	1152	1153
 # HUB
 100	100000	100001	100002	100003	100004	100005	100006	100007	100008	100009	100010	100011
+# ITEMS
+# P
+200	900000	900001	900002	900003	900004
 [OBJECTS]
 # object_id  type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Worm, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Cabin, 8= Barrel, 9= Main character, 10= Spider, 11=Human
-# type: 12 = Floater, 13 = Domes, 14 = Jumpers, 15 = Insect,16 = Orbs, 17 = Skulls, 18 = Dashers, 500 = PowerHub, 501 = GunHub
+# type: 12 = Floater, 13 = Domes, 14 = Jumpers, 15 = Insect,16 = Orbs, 17 = Skulls, 18 = Dashers, 500 = PowerHub, 501 = GunHub, 19=Cannon, 20= Eyeball, 21 = Spike
+# type: 33 = Teleporter, 34 = Item
 # MAIN_CHARACTER need to be created first!
 1	9	100	115	2
 # MAIN OBJECTS LIST
@@ -372,6 +399,12 @@ map-overworld-14.txt
 11	3	280	100	8
 # SPIDER
 12	10	420	120	9
+# CANNONS
+13	19	146.028	149.634	10	1	
+# EYEBALL
+14	20	200	200	11
+# TELEPORTER
+20	33	138.667	169.333	12
 # MAP OBJECT LIST
 # BRICK 
 # object_id 	type	l	t	ani_set_id	r	b
@@ -402,14 +435,6 @@ map-overworld-14.txt
 #da chan
 132	1	58.7334	160.192	2	275.3854	112.6826
 #spikes		l	t		r	b
-368	21	63.5539	223.079	2	144.3053	143.9666
-369	21	95.9768	158.969	2	191.7588	127.9563
-370	21	63.6929	111.905	2	95.685	63.6736
-371	21	93.7401	95.763	2	199.5381	63.6732
-372	21	191.912	111.058	2	254.7711	63.6736
-373	21	224.043	223.9261	2	254.5351	110.3491
-374	21	175.978	223.8151	2	226.9322	191.7951
-#spikes		l	t		r	b
 366	21	63.9315	224.704	2	143.6586	159.9796
 367	21	63.8153	160.525	2	127.9689	64.0621
 368	21	127.254	96.24	2	255.564	64.0366
@@ -423,13 +448,13 @@ map-overworld-14.txt
 #cong ben phai
 1002	50	251.268	143.8	2	266.0486	112.294	13	0	1001
 #cong phia tren
-1003	50	152	249.5	2	168	218	15	1	1004
+1003	50	152	249.5	2	168	218	15	3	1004
 #cong phia duoi
-1004	50	143.876	63.633	2	177.2508	36.7945	8	0	9
+1004	50	143.876	63.633	2	177.2508	36.7945	8	4	9
 # cellx celly id_object...
 [GRID]
 0	0	120	125	1003	366
-1	0	125	366	367	368
+1	0	125	366	367	368	13
 2	0	125	131	367	368
 0	1	121	126	370
 1	1	126	127	1002	370	371	368	369
