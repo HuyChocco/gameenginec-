@@ -60,13 +60,14 @@ vector<LPGAMEOBJECT> CGrid::GetList()
 			{
 				for (int k = 0; k < cells[i][j].GetObjects().size(); k++)
 				{
-					if(cells[i][j].GetObjects().at(k) !=NULL)
+					if (cells[i][j].GetObjects().at(k) != NULL)
+					{
 						objects.push_back(cells[i][j].GetObjects().at(k));
+					}
 				}
 			}
 		}
 	}
-
 	return objects;
 }
 

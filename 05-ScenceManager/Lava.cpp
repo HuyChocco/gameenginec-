@@ -30,12 +30,12 @@ void CLava::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			t2 = y - height;
 			r2 = x + width;
 			b2 = y;
-
+			float player_x;
+			float player_y;
+			player->GetPosition(player_x, player_y);
 			if (CGame::GetInstance()->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
 			{
-				{
-					player->SetIsAttacked(true);
-				}
+				player->SetIsAttacked(true);
 			}
 		}
 		

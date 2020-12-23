@@ -167,21 +167,20 @@ void CBossScence::_ParseSection_OBJECTS(string line)
 			player = new CMainCharacter(x, y);
 			player->SetPosition(x, y);
 			player->SetAnimationSet(animation_sets->Get(ani_set_id));
+			player->Is_Human = true;
 			DebugOut(L"[INFO] Player object created!\n");
 			return;
 			break;
 		case OBJECT_TYPE_HUMAN:
 		{
-			obj = new CHuman(x, y);
-			obj->SetID(object_id);
-			obj->SetAnimationSet(animation_sets->Get(ani_set_id));
+			player_human = new CHuman(x, y);
+			player_human->SetAnimationSet(animation_sets->Get(ani_set_id));
 			if (type_scence == OVER_WORLD)
-				dynamic_cast<CHuman*>(obj)->SetLevel(HUMAN_LEVEL_BIG);
+				player_human->SetLevel(HUMAN_LEVEL_BIG);
 			if (player != NULL)
 			{
 				DebugOut(L"[INFO] Player object has been Created Already!\n");
-				player->AddComponentObject(obj);
-				dynamic_cast<CHuman*>(obj)->SetPlayerObject(player);
+				player_human->SetPlayerObject(player);
 			}
 			return;
 			break;
@@ -194,10 +193,10 @@ void CBossScence::_ParseSection_OBJECTS(string line)
 			obj = new CBoss(x,y,item);
 			LPANIMATION_SET ani_set = animation_sets->Get(200);
 			obj->SetAnimationItemSet(ani_set);
-			if (player != NULL)
+			if (player_human != NULL)
 			{
-				DebugOut(L"[INFO] Player object has been Created Already!\n");
-				dynamic_cast<CBoss*>(obj)->SetPlayerObject(player);
+				DebugOut(L"[INFO] Player human object has been Created Already!\n");
+				dynamic_cast<CBoss*>(obj)->SetPlayerObject(player_human);
 			}
 			break;
 		}
@@ -333,23 +332,23 @@ void CBossScence::Update(DWORD dt)
 		objects[i]->Update(dt, &coObjects);
 		if (dynamic_cast<CBoss*>(objects[i])->GetState() == BOSS_STATE_IDLE)
 		{
-			if (player)
+			if (player_human)
 			{
-				player->IsStartingBossScence = true;
+				player_human->IsStartingBossScence = true;
 			}
 		}
 		else
 		{
-			if (player)
+			if (player_human)
 			{
-				player->IsStartingBossScence = false;
+				player_human->IsStartingBossScence = false;
 			}
 		}
 	}
-	if (player == NULL) return;
+	if (player_human == NULL) return;
 	else
 	{
-		player->Update(dt, &coObjects);
+		player_human->Update(dt, &coObjects);
 	}
 	//Update Hub objects
 	for (int i = 0; i < hub_objects.size(); i++)
@@ -357,22 +356,6 @@ void CBossScence::Update(DWORD dt)
 
 	// Update camera to follow main character
 	float cx = 0, cy = 0;
-	if (player != NULL)
-	{
-		if (player->Is_Human)
-		{
-			for (int i = 0; i < player->GetComponentObjects().size(); i++)
-			{
-				if (dynamic_cast<CHuman*>(player->GetComponentObjects()[i]))
-				{
-					CHuman* human = dynamic_cast<CHuman*>(player->GetComponentObjects()[i]);
-					human->GetPosition(cx, cy);
-				}
-			}
-		}
-		else
-			player->GetPosition(cx, cy);
-	}
 	CGame::GetInstance()->SetCamPos(0, cy = CGame::GetInstance()->GetScreenHeight());
 }
 
@@ -384,7 +367,7 @@ void CBossScence::Render()
 		for (int i = 0; i < objects.size(); i++)
 			objects[i]->Render();
 		//Vẽ player object
-		player->Render();
+		player_human->Render();
 		if (player->GetPower() < 0 && player->GetState() == MAIN_CHARACTER_STATE_DIE)
 		{
 			int lives = player->GetAlive();
@@ -411,6 +394,7 @@ void CBossScence::Unload()
 {
 	objects.clear();
 	player = NULL;
+	player_human = NULL;
 	hub_objects.clear();
 	CSprites::GetInstance()->Clear();
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
@@ -438,53 +422,47 @@ void CBossScenceKeyHandler::OnKeyDown(int KeyCode)
 void CBossScenceKeyHandler::OnKeyUp(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
-	CMainCharacter* player = ((CBossScence*)scence)->GetPlayer();
-	if (player->GetState() == MAIN_CHARACTER_STATE_DIE) return;
-	if (player->IsStartingBossScence) return;
+	CHuman* player_human = ((CBossScence*)scence)->GetHumanPlayer();
+	if (player_human->GetState() == MAIN_CHARACTER_STATE_DIE) return;
+	if (player_human->IsStartingBossScence) return;
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
-		player->SetState(MAIN_CHARACTER_STATE_JUMP);
+		player_human->SetState(MAIN_CHARACTER_STATE_JUMP);
 		break;
 	case DIK_A:
-		player->Reset();
+		player_human->Reset();
 		break;
 	case DIK_Z:
-		player->SetState(MAIN_CHARACTER_STATE_BARREL_FIRE);
+		player_human->SetState(MAIN_CHARACTER_STATE_BARREL_FIRE);
 		Sound::getInstance()->PlayNew(SOUND_ID_BULLET_FIRE);
-		break;
-	case DIK_M:
-		player->SetState(MAIN_CHARACTER_STATE_HUMAN);
-		break;
-	case DIK_DOWN:
-		player->SetState(MAIN_CHARACTER_STATE_DOWN_BARREL);
 		break;
 	}
 }
 
 void CBossScenceKeyHandler::KeyState(BYTE* states)
 {
+	CHuman* player_human = ((CBossScence*)scence)->GetHumanPlayer();
 	CGame* game = CGame::GetInstance();
-	CMainCharacter* player = ((CBossScence*)scence)->GetPlayer();
-	//// disable control key when Mario die 
-	if (player->GetState() == MAIN_CHARACTER_STATE_DIE) return;
-	if (player->GetState() == MAIN_CHARACTER_STATE_NONE_COLLISION) return;
-	if (player->IsStartingBossScence) return;
+	////// disable control key when Mario die 
+	if (player_human->GetState() == MAIN_CHARACTER_STATE_DIE) return;
+	if (player_human->GetState() == MAIN_CHARACTER_STATE_NONE_COLLISION) return;
+	if (player_human->IsStartingBossScence) return;
 	if (game->IsKeyDown(DIK_UP))
 	{
-		player->SetState(MAIN_CHARACTER_STATE_UP_BARREL);
+		player_human->SetState(MAIN_CHARACTER_STATE_UP_BARREL);
 	}
 	else if (game->IsKeyDown(DIK_DOWN))
 	{
-		player->SetState(MAIN_CHARACTER_STATE_DOWN_BARREL);
+		player_human->SetState(MAIN_CHARACTER_STATE_DOWN_BARREL);
 	}
 	else if (game->IsKeyDown(DIK_RIGHT))
-		player->SetState(MAIN_CHARACTER_STATE_RUN_RIGHT);
+		player_human->SetState(MAIN_CHARACTER_STATE_RUN_RIGHT);
 	else if (game->IsKeyDown(DIK_LEFT))
-		player->SetState(MAIN_CHARACTER_STATE_RUN_LEFT);
+		player_human->SetState(MAIN_CHARACTER_STATE_RUN_LEFT);
 	else
 	{
-		player->SetState(MAIN_CHARACTER_STATE_IDLE);
+		player_human->SetState(MAIN_CHARACTER_STATE_IDLE);
 	}
 }
 
