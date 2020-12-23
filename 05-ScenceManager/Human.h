@@ -50,7 +50,7 @@
 class CHuman : public CGameObject
 {
 	int level;
-	
+
 	float start_x;			// initial position of Human at scene
 	float start_y;
 	bool is_on_ground;
@@ -66,7 +66,12 @@ class CHuman : public CGameObject
 	bool isFininshAnimationDying;
 	CGameObject* player;
 	bool isEnable;
+	bool canChangeStateClimb;
+	bool isStartBeingHuman;
+	vector<CWeapon*> list_weapon;
 public:
+	bool CanChangeBeingPLayer;
+	bool IsStartingBossScence;
 	CHuman(float x = 0.0f, float y = 0.0f);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_objects = NULL);
 	virtual void Render();
@@ -87,4 +92,5 @@ public:
 	int GetIsStateCrawl() { return isStateCrawl; }
 	int GetIsStateExplosion() { return isStateExplosion; }
 	int GetIsFinishAnimationDying() { return isFininshAnimationDying; }
+	void SetIsStartBeingHuman(bool _flag) { isStartBeingHuman = _flag; }
 };

@@ -384,7 +384,7 @@ map-overworld-3.txt
 1	9	100	115	2
 # MAIN OBJECTS LIST
 # HUMAN
-2	11	17	115	1
+2	11	100	115	1
 # WHEEL_LEFT
 3	4	18	132	3
 # WHEEL_MIDDLE
@@ -454,7 +454,7 @@ map-overworld-3.txt
 #cong ben trai
 1001	50	55	145	2	68.5	113	9	0	1002
 #cong ben phai
-1002	50	251.268	143.8	2	266.0486	112.294	6	1	9
+#1002	50	251.268	143.8	2	266.0486	112.294	6	1	9
 #cong phia tren
 1003	50	152	249.5	2	168	218	11	3	1004
 #cong phia duoi

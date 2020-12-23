@@ -36,6 +36,8 @@ void CDome::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 
 void CDome::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	if (!isEnable)
+		return;
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
 
