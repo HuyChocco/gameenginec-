@@ -44,13 +44,14 @@ CMainCharacter::CMainCharacter(float x, float y) : CGameObject()
 	start_y = y;
 	this->x = x;
 	this->y = y;
+	Is_Human = false;
 }
 
 void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (!isEnable)
 		return;
-	if (power < 0)
+	if (power < 0 && !Is_Human)
 	{
 		Sound::getInstance()->Play(SOUND_ID_PLAYER_EXPLOSION);
 		SetState(MAIN_CHARACTER_STATE_EXPLOSION);
@@ -226,7 +227,6 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 		// Simple fall down
 		if (state != MAIN_CHARACTER_STATE_NONE_COLLISION)
-			//vy += MAIN_CHARACTER_GRAVITY * dt;
 			vy -= MAIN_CHARACTER_GRAVITY * dt;
 
 		coEvents.clear();
@@ -298,6 +298,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else if (dynamic_cast<CLava*>(e->obj)) // if e->obj is CLava
 				{
+<<<<<<< HEAD
 
 					x += dx;
 					y += dy;
@@ -318,6 +319,8 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						x += dx;
 					}*/
 
+=======
+>>>>>>> master
 					if (untouchable == 0)
 					{
 						StartUntouchable();
@@ -325,11 +328,9 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
 					}
 				}
-
 				else if (dynamic_cast<CStair*>(e->obj))
 				{
 					x += dx;
-					//y += dy;
 				}
 				// Nếu là portal object thì thực hiện chuyển cảnh
 				else if (dynamic_cast<CPortal*>(e->obj))
@@ -752,44 +753,14 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	//Chạy hàm cập nhật của các đối tượng thành phần
 	for (int i = 0; i < componentObjects.size(); i++)
 	{
-		//Chạy hàm cập nhật đối tượng CHuman
-		if (Is_Human)
 		{
-			if (dynamic_cast<CHuman*>(componentObjects[i]))
-			{
-				CHuman* human_object = dynamic_cast<CHuman*>(componentObjects[i]);
-				float human_x = 0;
-				float human_y = 0;
-				human_object->SetIsBeingHuman(true);
-				human_object->Update(dt, coObjects);
-				human_object->GetPosition(human_x, human_y);
-				if (this->x <= human_x && human_x <= (this->x + MAIN_CHARACTER_BBOX_WIDTH) && this->y <= human_y && human_y <= (this->y + MAIN_CHARACTER_BBOX_HEIGHT))
-					CanChangeState = true;
-				else
-					CanChangeState = false;
-			}
-		}
-		//Chạy hàm cập nhật cho tất cả đối tượng thành phần, kể cả Human
-		else
-		{
-			CanChangeState = false;
-			if (dynamic_cast<CHuman*>(componentObjects[i]))
-			{
-				CHuman* human_object = dynamic_cast<CHuman*>(componentObjects[i]);
-				human_object->SetIsBeingHuman(false);
-				human_object->SetPosition(x, y);
-				//human_object->Update(dt, coObjects);
-			}
-			else
 			{
 				componentObjects[i]->SetPlayerPosition(x, y);
 				componentObjects[i]->Update(dt, coObjects);
 			}
 
 		}
-
 	}
-
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
@@ -800,37 +771,14 @@ void CMainCharacter::Render()
 	CGame* game = CGame::GetInstance();
 	if (isEnable)
 	{
-		if (state == MAIN_CHARACTER_STATE_EXPLOSION&&!Is_Human)
+		if (state == MAIN_CHARACTER_STATE_EXPLOSION)
 		{
 			animation_set->at(MAIN_CHARACTER_ANI_EXPLOSION)->Render(x, y + 25, alpha);
 			if (animation_set->at(MAIN_CHARACTER_ANI_EXPLOSION)->isFinish)
 				SetState(MAIN_CHARACTER_STATE_DIE);
-		}
-		else if (state == MAIN_CHARACTER_STATE_EXPLOSION && Is_Human)
-		{
-			for (int i = 0; i < componentObjects.size(); i++)
-			{
-				if (dynamic_cast<CHuman*>(componentObjects[i]))
-				{
-					CHuman* human = dynamic_cast<CHuman*>(componentObjects[i]);
-					if (human->GetLevel() == HUMAN_LEVEL_BIG)
-					{
-						SetState(MAIN_CHARACTER_STATE_DIE);
-						Sound::getInstance()->PlayNew(SOUND_ID_PLAYER_EXPLOSION);
-						return;
-					}
-					else
-					{
-						if(human->GetIsFinishAnimationDying())
-							SetState(MAIN_CHARACTER_STATE_DIE);
-					}
-				}
-				componentObjects[i]->Render();
-			}
-		}
+		}		
 		else
 		{
-			if (!game->GetCurrentScene()->GetTypeScence() == OVER_WORLD)
 			{
 				animation_set->at(0)->Render(x, y, alpha);
 				// Vẽ các đối tượng weapon của nhân vật chính
@@ -844,23 +792,11 @@ void CMainCharacter::Render()
 				//Vẽ các object thành phần của player object
 				for (int i = 0; i < componentObjects.size(); i++)
 				{
-					if (!dynamic_cast<CHuman*>(componentObjects[i]))
-						componentObjects[i]->SetUntouchable(untouchable);
-					//Chỉ Render đối tượng CHuman
-					if (Is_Human)
-					{
-						componentObjects[i]->Render();
-					}
-					//Render các đối tượng thành phần không phải CHuman
-					else
-					{
-						if (!dynamic_cast<CHuman*>(componentObjects[i]))
-						{
-							componentObjects[i]->Render();
-						}
-					}
+					componentObjects[i]->SetUntouchable(untouchable);
+					componentObjects[i]->Render();	
 					if (dynamic_cast<CVehicle*>(componentObjects[i]))
 					{
+						//Chuyển sang trạng thái là Human
 						if (dynamic_cast<CVehicle*>(componentObjects[i])->GetIsCabinOpened())
 							Is_Human = true;
 						else
@@ -868,21 +804,6 @@ void CMainCharacter::Render()
 					}
 				}
 				//RenderBoundingBox();
-			}
-			else
-			{
-				Is_Human = true;
-				for (int i = 0; i < componentObjects.size(); i++)
-				{
-					//Chỉ Render đối tượng CHuman
-					if (dynamic_cast<CHuman*>(componentObjects[i]))
-						componentObjects[i]->Render();
-				}
-				if (list_weapon.size() > 0)
-				{
-					for (int i = 0; i < list_weapon.size(); i++)
-						list_weapon[i]->Render();
-				}
 			}
 		}
 		
@@ -956,15 +877,6 @@ void CMainCharacter::SetState(int state)
 	//Cập nhật state, hướng di chuyển, tốc độ cho các đối tượng thành phần theo nhân vật chính
 	for (int i = 0; i < componentObjects.size(); i++)
 	{
-		//Khi đang ở state Human thì chỉ cập nhật state, hướng,.. cho đối tượng CHuman
-		if (Is_Human)
-		{
-			if (dynamic_cast<CHuman*>(componentObjects[i]))
-			{
-					componentObjects[i]->SetState(state);
-			}
-		}
-		else
 		{
 			componentObjects[i]->SetState(state);
 			componentObjects[i]->SetDirection(nx);
@@ -973,51 +885,6 @@ void CMainCharacter::SetState(int state)
 
 		if (state == MAIN_CHARACTER_STATE_BARREL_FIRE)//Nhân vật bắn
 		{
-			if (Is_Human)
-			{
-				CWeapon* weapon = new CWeapon(WEAPON_TYPE_BIG_HUMAN);// Khởi tạo weapon theo x,y của human
-				float x_human, y_human;
-				//Lấy vị trí x, y của đối tượng human
-				if (dynamic_cast<CHuman*>(componentObjects[i]))
-				{
-					dynamic_cast<CHuman*>(componentObjects[i])->GetPosition(x_human, y_human);
-
-					if (dynamic_cast<CHuman*>(componentObjects[i])->GetGoingUp())
-					{
-						weapon->SetPosition(x_human + HUMAN_BIG_BBOX_WIDTH / 2, y_human);
-						weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY_UP);
-					}
-
-					else if (dynamic_cast<CHuman*>(componentObjects[i])->GetGoingDown())
-					{
-						weapon->SetPosition(x_human + HUMAN_BIG_BBOX_WIDTH / 2, y_human);
-						weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY_DOWN);
-					}
-
-					else
-					{
-						if (dynamic_cast<CHuman*>(componentObjects[i])->GetLevel() == HUMAN_LEVEL_BIG)
-						{
-							weapon->SetPosition(x_human, y_human - HUMAN_BIG_BBOX_HEIGHT / 2);
-							weapon->SetDirection(nx);
-							weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY);
-						}
-						else
-						{
-							if(dynamic_cast<CHuman*>(componentObjects[i])->GetIsStateCrawl())
-								weapon->SetPosition(x_human, y_human);
-							else
-								weapon->SetPosition(x_human, y_human - HUMAN_SMALL_BBOX_HEIGHT / 2);
-							weapon->SetDirection(nx);
-							weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY);
-						}
-
-					}
-					list_weapon.push_back(weapon);
-				}
-
-			}
-			else
 			{
 				isStartFire = true;
 				if (dynamic_cast<CVehicle*>(componentObjects[i]))
@@ -1039,7 +906,7 @@ void CMainCharacter::SetState(int state)
 				}
 			}
 		}
-		else if (state == MAIN_CHARACTER_STATE_FIRE_ROCKET &&!Is_Human)
+		else if (state == MAIN_CHARACTER_STATE_FIRE_ROCKET)
 		{
 			CWeapon* weapon = new CWeapon(WEAPON_TYPE_PLAYER_ROCKET);
 			weapon->SetPosition(x, y);

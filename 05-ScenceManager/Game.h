@@ -65,6 +65,9 @@ class CGame
 
 	int next_portal_id;
 	int next_scence_id_effect;
+	bool is_entering_overworld;
+	float player_x_world;
+	float player_y_world;
 public:
 	void InitKeyboard();
 	void SetKeyHandler(LPKEYEVENTHANDLER handler) { keyHandler = handler; }
@@ -145,6 +148,11 @@ public:
 
 	int GetCurrentScenceID() { return current_scene; }
 
+	void SetParamEnteringOverWorld(bool _is_entering_overworld) { is_entering_overworld = _is_entering_overworld; }
+	bool GetParamEnteringOverWorld() { return is_entering_overworld; }
+	void SetParamPlayer(float _x, float _y) { player_x_world = _x; player_y_world = _y; }
+	float GetParamXPlayer() { return player_x_world;}
+	float GetParamYPlayer() { return player_y_world; }
 	int RandomItem(int _item);
 	~CGame();
 };

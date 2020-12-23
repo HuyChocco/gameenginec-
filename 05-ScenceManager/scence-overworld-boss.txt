@@ -217,7 +217,7 @@ map-overworld-25.txt
 1	9	160	40	2
 # MAIN OBJECTS LIST
 # HUMAN
-2	11	17	115	1
+2	11	160	40	1
 # HUB LIST - x,y theo trục màn hình
 9	500	10	100	100
 11	501	10	50	100

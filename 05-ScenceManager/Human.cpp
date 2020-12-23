@@ -35,7 +35,6 @@
 CHuman::CHuman(float x, float y) : CGameObject()
 {
 	level = HUMAN_LEVEL_SMALL;
-
 	SetState(HUMAN_STATE_IDLE);
 	isEnable = true;
 	start_x = x;
@@ -51,9 +50,28 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (player != NULL)
 	{
 		CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
-		int power = player_object->GetPower();
-		if (power < 0)
+		if (!player_object->Is_Human)
 			return;
+		float x_player, y_player;
+		player_object->GetPosition(x_player, y_player);
+		if (player_object->GetPower() < 0)
+		{
+			if(level==HUMAN_LEVEL_SMALL)
+				SetState(MAIN_CHARACTER_STATE_EXPLOSION);
+			else
+			{
+				SetState(MAIN_CHARACTER_STATE_DIE);
+				player_object->SetState(MAIN_CHARACTER_STATE_DIE);
+			}
+		}
+		
+		if (player_object->Is_Human && level == HUMAN_LEVEL_SMALL)
+		{
+			if (x_player <= x && x <= (x_player + MAIN_CHARACTER_BBOX_WIDTH) && y_player <= y && y <= (y_player + MAIN_CHARACTER_BBOX_HEIGHT))
+				CanChangeBeingPLayer = true;
+			else
+				CanChangeBeingPLayer = false;
+		}
 	}
 	CGame* game = CGame::GetInstance();
 	// Calculate dx, dy 
@@ -232,6 +250,19 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			CLava* lava = dynamic_cast<CLava*>(coObjects->at(i));
 			lava->SetPlayerObject(this);
 		}
+		else if (dynamic_cast<CStair*>((coObjects->at(i))))
+		{
+			float l_stair, t_stair, r_stair, b_stair;
+			coObjects->at(i)->GetBoundingBox(l_stair, t_stair, r_stair, b_stair);
+			float stair_width = abs(l_stair - r_stair);
+			float stair_height = abs(t_stair - b_stair);
+			float l, t, r, b;
+			GetBoundingBox(l, t, r, b);
+			if (l_stair <= x && x <= r_stair && abs(b - t_stair)<=HUMAN_SMALL_BBOX_HEIGHT)
+				canChangeStateClimb = true;
+			else
+				canChangeStateClimb = false;
+		}
 	}
 	// Simple fall down
 	if (level == HUMAN_LEVEL_SMALL && !isStateClimb)
@@ -265,7 +296,6 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// reset untouchable timer if untouchable time has passed
 	if (untouchable == 1)
 	{
-
 		if (GetTickCount() - untouchable_start > MAIN_CHARACTER_UNTOUCHABLE_TIME)
 		{
 			untouchable = 0;
@@ -311,14 +341,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 			else if (dynamic_cast<CStair*>(e->obj))
 			{
-				float l, t, r, b;
-				dynamic_cast<CStair*>(e->obj)->GetBoundingBox(l, t, r, b);
-				if (isBeingHuman)
-				{
-					SetState(HUMAN_STATE_CLIMB);
-					SetPosition(l + ((r - l) / 2) - 4, y);
-				}
-
+				x += dx;
 			}
 			else if (dynamic_cast<CEgg*>(e->obj))
 			{
@@ -439,6 +462,8 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					CGame::GetInstance()->SetIsUpMap(false);
 					CGame::GetInstance()->SetIsDownMap(false);
 					CGame::GetInstance()->SetSceneId(p->GetSceneId());
+					CGame::GetInstance()->SetNextPortalId(p->GetNextPortalId());
+					CGame::GetInstance()->SetParamEnteringOverWorld(true);
 				}
 			}
 			//Outdoor enemies
@@ -935,22 +960,31 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			}
 		}
 	}
-
+	//Update list of weapon objects
+	if (list_weapon.size() > 0)
+	{
+		for (int i = 0; i < list_weapon.size(); i++)
+			list_weapon[i]->Update(dt, coObjects);
+	}
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
 }
 int ani = HUMAN_ANI_BIG_WALKING;
+int ani_small = HUMAN_ANI_SMALL_WALKING;
 int flip = true;
 void CHuman::Render()
 {
+	if (player)
+	{
+		CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+		if (!player_object->Is_Human)
+			return;
+	}
 	if (!isEnable)
 	{
 		return;
 	}
-	//if (state == MAIN_CHARACTER_STATE_DIE)
-		//ani = HUMAN_ANI_DIE;
-	//else
 	{
 		if (level == HUMAN_LEVEL_BIG)
 		{
@@ -977,8 +1011,8 @@ void CHuman::Render()
 			}
 			if (vx == 0 && vy == 0) // Nhân vật đứng yên
 			{
-				if (ani == animation_set->size())
-					return;
+				//if (ani == animation_set->size())
+					//return;
 				animation_set->at(ani)->isPause = true; //Dừng animation 
 				animation_set->at(ani)->Render(x, y, flip, alpha); // Vẽ frame đang bị tạm dừng
 			}
@@ -987,8 +1021,8 @@ void CHuman::Render()
 				animation_set->at(ani)->isPause = false; // Tiếp tục animation đã dừng trước đó
 				animation_set->at(ani)->Render(x, y, flip, alpha);
 			}
+			animation_set->at(ani)->Render(x, y, flip, alpha);
 			RenderBoundingBox();
-			return;
 		}
 		else if (level == HUMAN_LEVEL_SMALL)
 		{
@@ -998,13 +1032,13 @@ void CHuman::Render()
 				{
 					if (isStateCrawl)
 					{
-						ani = HUMAN_ANI_SMALL_CRAWLING;
+						ani_small = HUMAN_ANI_SMALL_CRAWLING;
 						flip = false;
 					}
 					else
 					{
 						flip = true;
-						ani = HUMAN_ANI_SMALL_IDLE;
+						ani_small = HUMAN_ANI_SMALL_IDLE;
 					}
 
 				}
@@ -1013,34 +1047,34 @@ void CHuman::Render()
 					if (isStateCrawl)
 					{
 						flip = true;
-						ani = HUMAN_ANI_SMALL_CRAWLING;
+						ani_small = HUMAN_ANI_SMALL_CRAWLING;
 					}
 					else if (isStateClimb)
 					{
-						ani = HUMAN_ANI_SMALL_CLIMBING;
+						ani_small = HUMAN_ANI_SMALL_CLIMBING;
 					}
 					else
 					{
 						flip = false;
-						ani = HUMAN_ANI_SMALL_IDLE;
+						ani_small = HUMAN_ANI_SMALL_IDLE;
 					}
 
 				}
-				animation_set->at(ani)->isPause = true; //Dừng animation
+				animation_set->at(ani_small)->isPause = true; //Dừng animation
 			}
 			else if (vx > 0)
 			{
 				if (isStateCrawl)
 				{
 					flip = false;
-					ani = HUMAN_ANI_SMALL_CRAWLING;
+					ani_small = HUMAN_ANI_SMALL_CRAWLING;
 				}
 				else
 				{
 					flip = true;
-					ani = HUMAN_ANI_SMALL_WALKING;
+					ani_small = HUMAN_ANI_SMALL_WALKING;
 				}
-				animation_set->at(ani)->isPause = false; // Tiếp tục animation đã dừng trước đó
+				animation_set->at(ani_small)->isPause = false; // Tiếp tục animation đã dừng trước đó
 
 			}
 			else if (vx < 0)
@@ -1048,40 +1082,49 @@ void CHuman::Render()
 				if (isStateCrawl)
 				{
 					flip = true;
-					ani = HUMAN_ANI_SMALL_CRAWLING;
+					ani_small = HUMAN_ANI_SMALL_CRAWLING;
 				}
 				else
 				{
 					flip = false;
-					ani = HUMAN_ANI_SMALL_WALKING;
+					ani_small = HUMAN_ANI_SMALL_WALKING;
 				}
-				animation_set->at(ani)->isPause = false; // Tiếp tục animation đã dừng trước đó	
+				animation_set->at(ani_small)->isPause = false; // Tiếp tục animation đã dừng trước đó	
 			}
 			if (isStateClimb)
 			{
 				if (vy != 0)
 				{
-					ani = HUMAN_ANI_SMALL_CLIMBING;
-					animation_set->at(ani)->isPause = false;
+					ani_small = HUMAN_ANI_SMALL_CLIMBING;
+					animation_set->at(ani_small)->isPause = false;
 				}
 				else
 				{
-					ani = HUMAN_ANI_SMALL_CLIMBING;
-					animation_set->at(ani)->isPause = true;
+					ani_small = HUMAN_ANI_SMALL_CLIMBING;
+					animation_set->at(ani_small)->isPause = true;
 				}
 			}
 			if (isStateExplosion)
 			{
-				ani = HUMAN_ANI_SMALL_DYING;
-				if (animation_set->at(ani)->isFinish)
-					isFininshAnimationDying = true;
+				ani_small = HUMAN_ANI_SMALL_DYING;
+				Sound::getInstance()->Play(SOUND_ID_PLAYER_EXPLOSION);
+				if (animation_set->at(ani_small)->isFinish)
+				{
+					SetState(MAIN_CHARACTER_STATE_DIE);
+					if(player)
+						dynamic_cast<CMainCharacter*>(player)->SetState(MAIN_CHARACTER_STATE_DIE);
+				}
 			}
+			int alpha = 255;
+			if (untouchable)
+				alpha = 128;
+			animation_set->at(ani_small)->Render(x, y, flip, alpha);
 		}
-		int alpha = 255;
-		if (untouchable)
-			alpha = 128;
-		animation_set->at(ani)->Render(x, y, flip, alpha);
-		//RenderBoundingBox();
+	}
+	if (list_weapon.size() > 0)
+	{
+		for (int i = 0; i < list_weapon.size(); i++)
+			list_weapon[i]->Render();
 	}
 }
 
@@ -1132,7 +1175,6 @@ void CHuman::SetState(int state)
 			if (isStateClimb)
 				vy = 0;
 		}
-
 		break;
 	case MAIN_CHARACTER_STATE_UP_BARREL:
 		if (level == HUMAN_LEVEL_BIG)
@@ -1152,11 +1194,14 @@ void CHuman::SetState(int state)
 			{
 				vy = 0.04f;
 			}
-
+			else
+			{
+				if (canChangeStateClimb)
+					SetState(HUMAN_STATE_CLIMB);
+			}
 		}
 		break;
 	case MAIN_CHARACTER_STATE_DOWN_BARREL:
-		if (isBeingHuman)
 		{
 			if (level == HUMAN_LEVEL_BIG)
 			{
@@ -1174,7 +1219,6 @@ void CHuman::SetState(int state)
 				}
 			}
 		}
-
 		break;
 	case MAIN_CHARACTER_STATE_DIE:
 		isEnable = false;
@@ -1189,15 +1233,48 @@ void CHuman::SetState(int state)
 		vy = 0;
 		vx = 0;
 		break;
+	case MAIN_CHARACTER_STATE_BARREL_FIRE:
+		{
+			CWeapon* weapon = new CWeapon(WEAPON_TYPE_BIG_HUMAN);// Khởi tạo weapon theo x,y của human
+			float x_human = this->x;
+			float y_human = this->y;
+			if (GetGoingUp())
+			{
+				weapon->SetPosition(x_human + HUMAN_BIG_BBOX_WIDTH / 2, y_human);
+				weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY_UP);
+			}
+			else if (GetGoingDown())
+			{
+				weapon->SetPosition(x_human + HUMAN_BIG_BBOX_WIDTH / 2, y_human);
+				weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY_DOWN);
+			}
+			else
+			{
+				if (level == HUMAN_LEVEL_BIG)
+				{
+					weapon->SetPosition(x_human, y_human - HUMAN_BIG_BBOX_HEIGHT / 2);
+					weapon->SetDirection(nx);
+					weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY);
+				}
+				else
+				{
+					if(GetIsStateCrawl())
+						weapon->SetPosition(x_human, y_human);
+					else
+						weapon->SetPosition(x_human, y_human - HUMAN_SMALL_BBOX_HEIGHT / 2);
+					weapon->SetDirection(nx);
+					weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY);
+				}
+			}
+			list_weapon.push_back(weapon);
+		}
+		break;
 	}
 }
 
 void CHuman::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-
 	left = x;
-
-
 	if (level == HUMAN_LEVEL_BIG)
 	{
 		top = y - HUMAN_BIG_BBOX_HEIGHT;
@@ -1218,7 +1295,6 @@ void CHuman::GetBoundingBox(float& left, float& top, float& right, float& bottom
 			right = x + HUMAN_SMALL_BBOX_WIDTH;
 			bottom = y;
 		}
-
 	}
 }
 
@@ -1227,8 +1303,11 @@ void CHuman::GetBoundingBox(float& left, float& top, float& right, float& bottom
 */
 void CHuman::Reset()
 {
-	SetState(HUMAN_STATE_IDLE);
-	SetLevel(HUMAN_LEVEL_SMALL);
+	SetState(MAIN_CHARACTER_STATE_IDLE);
+	if(level==HUMAN_LEVEL_BIG)
+		SetLevel(HUMAN_LEVEL_BIG);
+	else
+		SetLevel(HUMAN_LEVEL_SMALL);
 	SetPosition(start_x, start_y);
 	SetSpeed(0, 0);
 }

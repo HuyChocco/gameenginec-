@@ -194,14 +194,32 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			DebugOut(L"[ERROR] Player object was created before!\n");
 			return;
 		}
-
 		player = new CMainCharacter(x, y);
 		player->SetPosition(x, y);
 		player->SetAnimationSet(animation_sets->Get(ani_set_id));
+		if (type_scence == OVER_WORLD)
+			player->Is_Human=true;
 		DebugOut(L"[INFO] Player object created!\n");
 		return;
 		break;
-	case  OBJECT_TYPE_WORM:
+	case OBJECT_TYPE_HUMAN:
+	{
+		player_human = new CHuman(x, y);
+		player_human->SetPosition(x, y);
+		//obj->SetID(object_id);
+		player_human->SetAnimationSet(animation_sets->Get(ani_set_id));
+		if (type_scence == OVER_WORLD)
+			player_human->SetLevel(HUMAN_LEVEL_BIG);
+		if (player != NULL)
+		{
+			DebugOut(L"[INFO] Player object has been Created Already!\n");
+			//player->AddComponentObject(obj);
+			player_human->SetPlayerObject(player);
+		}
+		return;
+		break;
+	}
+	case OBJECT_TYPE_WORM:
 	{
 		int item = 0;
 		if (tokens.size() > 5)
@@ -210,7 +228,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		LPANIMATION_SET ani_set = animation_sets->Get(200);
 		obj->SetAnimationItemSet(ani_set);
 	}
-	
 	break;
 	case OBJECT_TYPE_FLOATER:
 	{
@@ -282,7 +299,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetAnimationItemSet(ani_set);
 	}
 	break;
-
 	case OBJECT_TYPE_INSECT:
 	{
 		int item = 0;
@@ -303,7 +319,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj->SetAnimationItemSet(ani_set);
 	}
 	break;
-
 	case OBJECT_TYPE_ORB:
 	{
 		int item = 0;
@@ -440,22 +455,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		return;
 		break;
 	}
-	case OBJECT_TYPE_HUMAN:
-	{
-		obj = new CHuman(x, y);
-		obj->SetID(object_id);
-		obj->SetAnimationSet(animation_sets->Get(ani_set_id));
-		if (type_scence == OVER_WORLD)
-			dynamic_cast<CHuman*>(obj)->SetLevel(HUMAN_LEVEL_BIG);
-		if (player != NULL)
-		{
-			DebugOut(L"[INFO] Player object has been Created Already!\n");
-			player->AddComponentObject(obj);
-			dynamic_cast<CHuman*>(obj)->SetPlayerObject(player);
-		}
-		return;
-		break;
-	}
 	case OBJECT_TYPE_ITEM:
 	{
 		int type = 0;
@@ -473,28 +472,30 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CSpecialPortal(x, y, r, b, scene_id, next_portal_id);
 		if (CGame::GetInstance()->GetIsPreMap())
 		{
-			if (player != NULL)
+			if (CGame::GetInstance()->GetNextPortalId() == object_id)
 			{
-				if (CGame::GetInstance()->GetNextPortalId() == object_id)
+				if (player != NULL)
 				{
-					player->SetPosition((x - MAIN_CHARACTER_BBOX_WIDTH) - 2, y);
-				}
-				for (int i = 0; i < player->GetComponentObjects().size(); i++)
-				{
-					LPGAMEOBJECT object = player->GetComponentObjects()[i];
-					if (dynamic_cast<CHuman*>(object))
+					float old_x_player =CGame::GetInstance()->GetParamXPlayer();
+					float old_y_player = CGame::GetInstance()->GetParamYPlayer();
+					player->Is_Human = true;
+					player->SetState(MAIN_CHARACTER_STATE_OPEN_CABIN);
+					player->SetPosition(old_x_player, old_y_player);
 					{
-						if (dynamic_cast<CHuman*>(object)->GetLevel() == HUMAN_LEVEL_SMALL)
+						if (player_human)
 						{
-
-							if (CGame::GetInstance()->GetNextPortalId() == object_id)
+							if (player_human->GetLevel() == HUMAN_LEVEL_SMALL)
 							{
-								object->SetPosition((x - HUMAN_SMALL_BBOX_WIDTH) - 2, y);
+								if (CGame::GetInstance()->GetNextPortalId() == object_id)
+								{
+									player_human->SetPosition((x - HUMAN_SMALL_BBOX_WIDTH) - 2, y);
+								}
 							}
 						}
 					}
 				}
 			}
+			
 		}
 	}
 	break;
@@ -514,31 +515,20 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 				{
 					player->SetPosition((x - MAIN_CHARACTER_BBOX_WIDTH) - 2, y);
 				}
-				for (int i = 0; i < player->GetComponentObjects().size(); i++)
 				{
-					LPGAMEOBJECT object = player->GetComponentObjects()[i];
-					if (dynamic_cast<CHuman*>(object))
+					if (player_human)
 					{
-						if (dynamic_cast<CHuman*>(object)->GetLevel() == HUMAN_LEVEL_BIG)
+						if (player_human->GetLevel() == HUMAN_LEVEL_BIG)
 						{
 							if (CGame::GetInstance()->GetNextPortalId() == object_id)
 							{
-								object->SetPosition((x - HUMAN_BIG_BBOX_WIDTH) - 2, y);
-							}
-						}
-						else if (dynamic_cast<CHuman*>(object)->GetLevel() == HUMAN_LEVEL_SMALL)
-						{
-
-							if (CGame::GetInstance()->GetNextPortalId() == object_id)
-							{
-								object->SetPosition((x - HUMAN_SMALL_BBOX_WIDTH) - 2, y);
+								player_human->SetPosition((x - HUMAN_BIG_BBOX_WIDTH) - 2, y);
 							}
 						}
 					}
 				}
 			}
 		}
-
 		else if (CGame::GetInstance()->GetIsNextMap())
 		{
 			if (player != NULL)
@@ -547,16 +537,16 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 				{
 					player->SetPosition(x + (r - x) + 2, y);
 				}
-				for (int i = 0; i < player->GetComponentObjects().size(); i++)
+				//for (int i = 0; i < player->GetComponentObjects().size(); i++)
 				{
-					LPGAMEOBJECT object = player->GetComponentObjects()[i];
-					if (dynamic_cast<CHuman*>(object))
+					//LPGAMEOBJECT object = player->GetComponentObjects()[i];
+					if (player_human)
 					{
-						if (dynamic_cast<CHuman*>(object)->GetLevel() == HUMAN_LEVEL_BIG)
+						if (player_human->GetLevel() == HUMAN_LEVEL_BIG)
 						{
 							if (CGame::GetInstance()->GetNextPortalId() == object_id)
 							{
-								object->SetPosition(x + (r - x) + 2, y);
+								player_human->SetPosition(x + (r - x) + 2, y);
 							}
 						}
 					}
@@ -571,16 +561,16 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 				{
 					player->SetPosition(x, y + MAIN_CHARACTER_BBOX_HEIGHT + 12);
 				}
-				for (int i = 0; i < player->GetComponentObjects().size(); i++)
+				//for (int i = 0; i < player->GetComponentObjects().size(); i++)
 				{
-					LPGAMEOBJECT object = player->GetComponentObjects()[i];
-					if (dynamic_cast<CHuman*>(object))
+					//LPGAMEOBJECT object = player->GetComponentObjects()[i];
+					if (player_human)
 					{
-						if (dynamic_cast<CHuman*>(object)->GetLevel() == HUMAN_LEVEL_BIG)
+						if (player_human->GetLevel() == HUMAN_LEVEL_BIG)
 						{
 							if (CGame::GetInstance()->GetNextPortalId() == object_id)
 							{
-								object->SetPosition(x, y + HUMAN_BIG_BBOX_HEIGHT + 12);
+								player_human->SetPosition(x, y + HUMAN_BIG_BBOX_HEIGHT + 12);
 							}
 						}
 					}
@@ -595,16 +585,16 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 				{
 					player->SetPosition(x, y -(y-b)-6);
 				}
-				for (int i = 0; i < player->GetComponentObjects().size(); i++)
+				//for (int i = 0; i < player->GetComponentObjects().size(); i++)
 				{
-					LPGAMEOBJECT object = player->GetComponentObjects()[i];
-					if (dynamic_cast<CHuman*>(object))
+				//	LPGAMEOBJECT object = player->GetComponentObjects()[i];
+					if (player_human)
 					{
-						if (dynamic_cast<CHuman*>(object)->GetLevel() == HUMAN_LEVEL_BIG)
+						if (player_human->GetLevel() == HUMAN_LEVEL_BIG)
 						{
 							if (CGame::GetInstance()->GetNextPortalId() == object_id)
 							{
-								object->SetPosition(x, y - (y - b) - 6);
+								player_human->SetPosition(x, y - (y - b) - 6);
 							}
 						}
 					}
@@ -617,7 +607,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		DebugOut(L"[ERR] Invalid object type: %d\n", object_type);
 		return;
 	}
-
 	// General object setup
 	obj->SetPosition(x, y);
 	obj->SetID(object_id);
@@ -785,9 +774,11 @@ void CPlayScene::Update(DWORD dt)
 	{
 		objects = CGrid::GetInstance()->GetList();
 		vector<LPGAMEOBJECT> coObjects;
-		for (size_t i = 0; i < objects.size(); i++)
+		vector<int>	index_same_object;
+		if (objects.size() > 0)
 		{
-			coObjects.push_back(objects[i]);
+			for (size_t i = 0; i < objects.size(); i++)
+						coObjects.push_back(objects[i]);
 		}
 		for (size_t i = 0; i < objects.size(); i++)
 		{
@@ -796,10 +787,10 @@ void CPlayScene::Update(DWORD dt)
 		if (player == NULL) return;
 		else
 		{
-			//coObjects.push_back(player);
 			player->Update(dt, &coObjects);
+			if(player_human)
+				player_human->Update(dt, &coObjects);
 		}
-
 		// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 
 		//Thực hiện chuyển sang scene tiếp theo
@@ -884,6 +875,16 @@ void CPlayScene::Update(DWORD dt)
 			//Sau hiệu ứng di chuyển camera sang màn thì tiến hành chuyển màn
 			//if (player_x <= -(widthPreMap / 3))
 			{
+				if (CGame::GetInstance()->GetParamEnteringOverWorld())
+				{
+					if (player)
+					{
+						float player_x, player_y;
+						player->GetPosition(player_x, player_y);
+						CGame::GetInstance()->SetParamPlayer(player_x, player_y);
+					}
+					CGame::GetInstance()->SetParamEnteringOverWorld(false);
+				}
 				// switch scene
 				game->SwitchScene(game->GetSceneId(), player->GetAlive(), player->GetPower());
 				game->SetIsPreMap(false);
@@ -918,20 +919,11 @@ void CPlayScene::Update(DWORD dt)
 		{
 			if (player->Is_Human)
 			{
-				for (int i = 0; i < player->GetComponentObjects().size(); i++)
-				{
-					if (dynamic_cast<CHuman*>(player->GetComponentObjects()[i]))
-					{
-						CHuman* human = dynamic_cast<CHuman*>(player->GetComponentObjects()[i]);
-						human->GetPosition(cx, cy);
-					}
-				}
+				player_human->GetPosition(cx, cy);
 			}
 			else
 				player->GetPosition(cx, cy);
 		}
-
-
 		CMap* map = CTiledMapSets::GetInstance()->Get(id);
 		int widthMap, heightMap;
 		map->GetMapWidth(widthMap);
@@ -963,14 +955,7 @@ void CPlayScene::Update(DWORD dt)
 			player_y = 0;
 			if (player->Is_Human)
 			{
-				for (int i = 0; i < player->GetComponentObjects().size(); i++)
-				{
-					if (dynamic_cast<CHuman*>(player->GetComponentObjects()[i]))
-					{
-						CHuman* human = dynamic_cast<CHuman*>(player->GetComponentObjects()[i]);
-						human->GetPosition(player_x, player_y);
-					}
-				}
+				player_human->GetPosition(player_x, player_y);
 			}
 			else
 				player->GetPosition(player_x, player_y);
@@ -983,8 +968,6 @@ void CPlayScene::Update(DWORD dt)
 
 				cy += height;
 			}
-
-
 		}
 		CGame::GetInstance()->SetCamPos(cx, cy);
 		//Vẽ Hub objects
@@ -1032,7 +1015,18 @@ void CPlayScene::Render()
 			for (int i = 0; i < objects.size(); i++)
 				objects[i]->Render();
 			//Vẽ player object
-			player->Render();
+			if (type_scence == OVER_WORLD)
+			{
+				if (player_human)
+					player_human->Render();
+			}
+			else
+			{
+				if (player)
+					player->Render();
+				if (player_human)
+					player_human->Render();
+			}
 			if (player->GetPower() < 0 && player->GetState() == MAIN_CHARACTER_STATE_DIE)
 			{
 				int lives = player->GetAlive();
@@ -1082,38 +1076,37 @@ void CPlayScene::GetNextMap()
 		//
 		switch (section)
 		{
-		case SCENE_SECTION_MAP:
-		{
-			vector<string> tokens = split(line);
-			if (tokens.size() < 1) return; // skip invalid lines - an map must have at least path
-			wstring path = ToWSTR(tokens[0]);
-			tiledMap = new CTiledMap();
-			tiledMap->LoadMap(path.c_str());
-			break;
-		}
-		case SCENE_SECTION_SPRITES:
-		{
-			vector<string> tokens = split(line);
-
-			if (tokens.size() < 6) return; // skip invalid lines
-
-			int ID = atoi(tokens[0].c_str());
-			int l = atoi(tokens[1].c_str());
-			int t = atoi(tokens[2].c_str());
-			int r = atoi(tokens[3].c_str());
-			int b = atoi(tokens[4].c_str());
-			int texID = atoi(tokens[5].c_str());
-
-			LPDIRECT3DTEXTURE9 tex = CTextures::GetInstance()->Get(texID);
-			if (tex == NULL)
+			case SCENE_SECTION_MAP:
 			{
-				DebugOut(L"[ERROR] Texture ID %d not found!\n", texID);
-				return;
+				vector<string> tokens = split(line);
+				if (tokens.size() < 1) return; // skip invalid lines - an map must have at least path
+				wstring path = ToWSTR(tokens[0]);
+				tiledMap = new CTiledMap();
+				tiledMap->LoadMap(path.c_str());
+				break;
 			}
+			case SCENE_SECTION_SPRITES:
+			{
+				vector<string> tokens = split(line);
 
-			sprites_next_map->Add(ID, l, t, r, b, tex);
-			break;
-		}
+				if (tokens.size() < 6) return; // skip invalid lines
+
+				int ID = atoi(tokens[0].c_str());
+				int l = atoi(tokens[1].c_str());
+				int t = atoi(tokens[2].c_str());
+				int r = atoi(tokens[3].c_str());
+				int b = atoi(tokens[4].c_str());
+				int texID = atoi(tokens[5].c_str());
+
+				LPDIRECT3DTEXTURE9 tex = CTextures::GetInstance()->Get(texID);
+				if (tex == NULL)
+				{
+					DebugOut(L"[ERROR] Texture ID %d not found!\n", texID);
+					return;
+				}
+				sprites_next_map->Add(ID, l, t, r, b, tex);
+				break;
+			}
 		}
 	}
 
@@ -1131,6 +1124,7 @@ void CPlayScene::Unload()
 	sprites_next_map = NULL;
 	objects.clear();
 	player = NULL;
+	player_human = NULL;
 	isRenderNextMap = false;
 	isRenderPreMap = false;
 	initNextMap = true;
@@ -1157,29 +1151,44 @@ void CPlayScenceKeyHandler::OnKeyDown(int KeyCode)
 {
 	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 	CMainCharacter* player = ((CPlayScene*)scence)->GetPlayer();
+	CHuman* player_human = ((CPlayScene*)scence)->GetHumanPlayer();
+	float player_x, player_y;
+	player->GetPosition(player_x, player_y);
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
-		player->SetState(MAIN_CHARACTER_STATE_JUMP);
+		if (!player->Is_Human)
+			player->SetState(MAIN_CHARACTER_STATE_JUMP);
+		else
+			player_human->SetState(MAIN_CHARACTER_STATE_JUMP);
 		break;
 	case DIK_A:
 		player->Reset();
 		break;
 	case DIK_Z:
-		player->SetState(MAIN_CHARACTER_STATE_BARREL_FIRE);
-		Sound::getInstance()->PlayNew(SOUND_ID_BULLET_FIRE);
+		if (!player->Is_Human)
+		{
+			player->SetState(MAIN_CHARACTER_STATE_BARREL_FIRE);
+			Sound::getInstance()->PlayNew(SOUND_ID_BULLET_FIRE);
+		}
+		else
+		{
+			player_human->SetState(MAIN_CHARACTER_STATE_BARREL_FIRE);
+			Sound::getInstance()->PlayNew(SOUND_ID_BULLET_FIRE);
+		}
 		break;
 	case DIK_X:
-		player->SetState(MAIN_CHARACTER_STATE_FIRE_ROCKET);
+		if (!player->Is_Human)
+			player->SetState(MAIN_CHARACTER_STATE_FIRE_ROCKET);
 		break;
 	case DIK_M:
-		if(!player->Is_Human)
+		if (!player->Is_Human)
+		{
 			player->SetState(MAIN_CHARACTER_STATE_OPEN_CABIN);
-		else if(player->Is_Human && player->CanChangeState)
+			player_human->SetPosition(player_x, player_y);
+		}
+		else if(player->Is_Human && player_human->CanChangeBeingPLayer)
 			player->SetState(MAIN_CHARACTER_STATE_CLOSE_CABIN);
-		break;
-	case DIK_DOWN:
-		player->SetState(MAIN_CHARACTER_STATE_DOWN_BARREL);
 		break;
 	}
 }
@@ -1192,27 +1201,46 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 {
 	CGame* game = CGame::GetInstance();
 	CMainCharacter* player = ((CPlayScene*)scence)->GetPlayer();
+	CHuman* player_human = ((CPlayScene*)scence)->GetHumanPlayer();
 	//// disable control key when Mario die 
 	if (player->GetState() == MAIN_CHARACTER_STATE_DIE) return;
 	if (player->GetState() == MAIN_CHARACTER_STATE_NONE_COLLISION) return;
 
 	if (game->IsKeyDown(DIK_UP))
 	{
-		player->SetState(MAIN_CHARACTER_STATE_UP_BARREL);
+		if(!player->Is_Human)
+			player->SetState(MAIN_CHARACTER_STATE_UP_BARREL);
+		else
+			player_human->SetState(MAIN_CHARACTER_STATE_UP_BARREL);
 	}
 	else if (game->IsKeyDown(DIK_DOWN))
 	{
-		player->SetState(MAIN_CHARACTER_STATE_DOWN_BARREL);
+		if (!player->Is_Human)
+			player->SetState(MAIN_CHARACTER_STATE_DOWN_BARREL);
+		else
+			player_human->SetState(MAIN_CHARACTER_STATE_DOWN_BARREL);
 	}
 	else if (game->IsKeyDown(DIK_RIGHT))
-		player->SetState(MAIN_CHARACTER_STATE_RUN_RIGHT);
+	{
+		if (!player->Is_Human)
+			player->SetState(MAIN_CHARACTER_STATE_RUN_RIGHT);
+		else
+			player_human->SetState(MAIN_CHARACTER_STATE_RUN_RIGHT);
+	}
+		
 	else if (game->IsKeyDown(DIK_LEFT))
-		player->SetState(MAIN_CHARACTER_STATE_RUN_LEFT);
+	{
+		if (!player->Is_Human)
+			player->SetState(MAIN_CHARACTER_STATE_RUN_LEFT);
+		else
+			player_human->SetState(MAIN_CHARACTER_STATE_RUN_LEFT);
+	}
 	else
 	{
-		player->SetState(MAIN_CHARACTER_STATE_IDLE);
-		//DebugOut(L"[INFO] ELSE\n");
+		if (!player->Is_Human)
+			player->SetState(MAIN_CHARACTER_STATE_IDLE);
+		else
+			player_human->SetState(MAIN_CHARACTER_STATE_IDLE);
 	}
-
 }
 
