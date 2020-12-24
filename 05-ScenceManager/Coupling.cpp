@@ -42,75 +42,113 @@ void CCoupling::GetBoundingBox(float& left, float& top, float& right, float& bot
 void CCoupling::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	time_moving += dt;
-	switch (current_state)
+	if (is_left)
 	{
-	case 0:
-		if(!is_left)
-			SetState(COUPLING_STATE_MOVE_RIGHT);
-		else
+		switch (current_state)
+		{
+		case 0:
+			SetState(COUPLING_STATE_MOVE_UP);
+			if (time_moving >= 2500)
+			{
+				time_moving = 0;
+				current_state += 1;
+			}
+			break;
+		case 1:
 			SetState(COUPLING_STATE_MOVE_LEFT);
-		if (time_moving >= 2000)
-		{
-			time_moving = 0;
-			current_state += 1;
-		}
-		break;
-	case 1:
-		if(!is_left)
-			SetState(COUPLING_STATE_MOVE_UP);
-		else
+			if (time_moving >= 500)
+			{
+				time_moving = 0;
+				current_state += 1;
+			}
+			break;
+		case 2:
 			SetState(COUPLING_STATE_MOVE_DOWN);
-		if (time_moving >= 2000)
-		{
-			time_moving = 0;
-			current_state += 1;
-		}
-		break;
-	case 2:
-		if(!is_left)
-			SetState(COUPLING_STATE_MOVE_DOWN);
-		else
-			SetState(COUPLING_STATE_MOVE_UP);
-		if (time_moving >= 2000)
-		{
-			time_moving = 0;
-			current_state += 1;
-		}
-		break;
-	case 3:
-		if(!is_left)
-			SetState(COUPLING_STATE_MOVE_LEFT);
-		else
+			if (time_moving >= 2500)
+			{
+				time_moving = 0;
+				current_state += 1;
+			}
+			break;
+		case 3:
 			SetState(COUPLING_STATE_MOVE_RIGHT);
-		if (time_moving >= 2000)
-		{
-			time_moving = 0;
-			current_state += 1;
-		}
-		break;
-	case 4:
-		if(!is_left)
+			if (time_moving >= 500)
+			{
+				time_moving = 0;
+				current_state += 1;
+			}
+			break;
+		case 4:
 			SetState(COUPLING_STATE_MOVE_UP);
-		else
+			if (time_moving >= 2500)
+			{
+				time_moving = 0;
+				current_state += 1;
+			}
+			break;
+		case 5:
 			SetState(COUPLING_STATE_MOVE_DOWN);
-		if (time_moving >= 2000)
-		{
-			time_moving = 0;
-			current_state += 1;
+			if (time_moving >= 2500)
+			{
+				time_moving = 0;
+				current_state = 0;
+			}
+			break;
 		}
-		break;
-	case 5:
-		if(!is_left)
-			SetState(COUPLING_STATE_MOVE_DOWN);
-		else
+	}
+	else
+	{
+		switch (current_state)
+		{
+		case 0:
+			SetState(COUPLING_STATE_MOVE_RIGHT);
+			if (time_moving >= 500)
+			{
+				time_moving = 0;
+				current_state += 1;
+			}
+			break;
+		case 1:
 			SetState(COUPLING_STATE_MOVE_UP);
-		if (time_moving >= 2000)
-		{
-			time_moving = 0;
-			current_state = 0;
+			if (time_moving >= 2500)
+			{
+				time_moving = 0;
+				current_state += 1;
+			}
+			break;
+		case 2:
+			SetState(COUPLING_STATE_MOVE_DOWN);
+			if (time_moving >= 2500)
+			{
+				time_moving = 0;
+				current_state += 1;
+			}
+			break;
+		case 3:
+			SetState(COUPLING_STATE_MOVE_LEFT);
+			if (time_moving >= 500)
+			{
+				time_moving = 0;
+				current_state += 1;
+			}
+			break;
+		case 4:
+			SetState(COUPLING_STATE_MOVE_UP);
+			if (time_moving >= 3000)
+			{
+				time_moving = 0;
+				current_state += 1;
+			}
+			break;
+		case 5:
+			SetState(COUPLING_STATE_MOVE_DOWN);
+			if (time_moving >= 3000)
+			{
+				time_moving = 0;
+				current_state = 0;
+			}
+			break;
 		}
-		break;
-
 	}
 	//if (x <= 0 || x >= CGame::GetInstance()->GetScreenWidth() - COUPLING_BBOX_WIDTH - 1)
 		//SetState(COUPLING_STATE_MOVE_CHANGE_DIRECTION_X);
