@@ -22,6 +22,7 @@ class CGrid
 	int numCol;
 	int numRow;
 	vector<LPGAMEOBJECT> objects;
+	unordered_map<int, LPGAMEOBJECT> map_objects;
 	CCell** cells;
 
 public:
@@ -33,6 +34,7 @@ public:
 	void SetRow(int _numRow) { this->numRow = _numRow; }
 	void Add(LPGAMEOBJECT object, float x, float y);
 	void Add(LPGAMEOBJECT object, int xCell, int yCell);
-	vector<LPGAMEOBJECT> GetList();
+	//vector<LPGAMEOBJECT> GetList();
+	unordered_map<int, LPGAMEOBJECT> GetList();
 	void Unload();
 };
