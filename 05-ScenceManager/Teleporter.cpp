@@ -176,6 +176,8 @@ void CTeleporter::SetState(int state)
 		weapon->SetPosition(x, y);
 		weapon->SetDirection(nx);
 		weapon->SetState(WEAPON_TELEPORTER_STATE_FLY);
+		if (player)
+			weapon->SetPlayerObject(player);
 		list_weapon.push_back(weapon);
 	}
 

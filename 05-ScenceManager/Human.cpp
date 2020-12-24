@@ -138,13 +138,11 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				teleporter->SetDirectionY(1);//Up
 			else
 				teleporter->SetDirectionY(-1);//Down
-			if (isBeingHuman)
 				teleporter->SetPlayerObject(this);
 		}
 		else if (dynamic_cast<CCannon*>(coObjects->at(i))) {
 			CCannon* cannon = dynamic_cast<CCannon*>(coObjects->at(i));
-			if (isBeingHuman)
-				cannon->SetPlayerObject(this);
+			cannon->SetPlayerObject(this);
 		}
 		else if (dynamic_cast<CJumper*>(coObjects->at(i))) {
 			CJumper* jumper = dynamic_cast<CJumper*>(coObjects->at(i));

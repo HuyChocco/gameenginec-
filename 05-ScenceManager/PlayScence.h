@@ -48,6 +48,7 @@ protected:
 	CHuman* player_human;
 
 	vector<LPGAMEOBJECT> objects;
+	unordered_map<int,LPGAMEOBJECT> map_objects;
 
 	vector<LPGAMEOBJECT> hub_objects;
 

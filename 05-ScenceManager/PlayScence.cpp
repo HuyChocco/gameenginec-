@@ -764,17 +764,16 @@ void CPlayScene::Update(DWORD dt)
 	}
 	else
 	{
-		objects = CGrid::GetInstance()->GetList();
+		map_objects = CGrid::GetInstance()->GetList();
 		vector<LPGAMEOBJECT> coObjects;
-		vector<int>	index_same_object;
-		if (objects.size() > 0)
+		if (map_objects.size() > 0)
 		{
-			for (size_t i = 0; i < objects.size(); i++)
-						coObjects.push_back(objects[i]);
-		}
-		for (size_t i = 0; i < objects.size(); i++)
-		{
-			objects[i]->Update(dt, &coObjects);
+			for (auto object : map_objects)
+				coObjects.push_back(object.second);
+			{
+				for (auto object : map_objects)
+					object.second->Update(dt, &coObjects);
+			}
 		}
 		if (player == NULL) return;
 		else
@@ -1004,8 +1003,8 @@ void CPlayScene::Render()
 		//Vẽ tất cả các object hiện tại nếu thỏa điều kiện
 		if (player->GetState() != MAIN_CHARACTER_STATE_NONE_COLLISION)
 		{
-			for (int i = 0; i < objects.size(); i++)
-				objects[i]->Render();
+			for (auto object:map_objects)
+				object.second->Render();
 			//Vẽ player object
 			if (type_scence == OVER_WORLD)
 			{
@@ -1115,6 +1114,7 @@ void CPlayScene::Unload()
 	CGame::GetInstance()->SetRenderingNextMap(false);
 	sprites_next_map = NULL;
 	objects.clear();
+	map_objects.clear();
 	player = NULL;
 	player_human = NULL;
 	isRenderNextMap = false;
