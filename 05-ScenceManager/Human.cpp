@@ -1002,8 +1002,7 @@ void CHuman::Render()
 				ani = HUMAN_ANI_BIG_WALKING_UP;
 				break;
 			case MAIN_CHARACTER_STATE_DOWN_BARREL:
-				if (level == HUMAN_LEVEL_BIG)
-					ani = HUMAN_ANI_BIG_WALKING_DOWN;
+				ani = HUMAN_ANI_BIG_WALKING_DOWN;
 				break;
 			}
 			if (vx == 0 && vy == 0) // Nhân vật đứng yên
@@ -1235,32 +1234,41 @@ void CHuman::SetState(int state)
 			CWeapon* weapon = new CWeapon(WEAPON_TYPE_BIG_HUMAN);// Khởi tạo weapon theo x,y của human
 			float x_human = this->x;
 			float y_human = this->y;
-			if (GetGoingUp())
+			if (level == HUMAN_LEVEL_SMALL)
 			{
-				weapon->SetPosition(x_human + HUMAN_BIG_BBOX_WIDTH / 2, y_human);
-				weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY_UP);
-			}
-			else if (GetGoingDown())
-			{
-				weapon->SetPosition(x_human + HUMAN_BIG_BBOX_WIDTH / 2, y_human);
-				weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY_DOWN);
+				if (GetIsStateCrawl())
+					weapon->SetPosition(x_human, y_human);
+				else
+					weapon->SetPosition(x_human, y_human - HUMAN_SMALL_BBOX_HEIGHT / 2);
+				weapon->SetDirection(nx);
+				weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY);
 			}
 			else
 			{
-				if (level == HUMAN_LEVEL_BIG)
+				switch (ani)
 				{
-					weapon->SetPosition(x_human, y_human - HUMAN_BIG_BBOX_HEIGHT / 2);
-					weapon->SetDirection(nx);
-					weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY);
-				}
-				else
-				{
-					if(GetIsStateCrawl())
-						weapon->SetPosition(x_human, y_human);
+				case HUMAN_ANI_BIG_WALKING_UP:
+					weapon->SetPosition(x_human + HUMAN_BIG_BBOX_WIDTH / 2, y_human);
+					weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY_UP);
+					break;
+				case HUMAN_ANI_BIG_WALKING_DOWN:
+					weapon->SetPosition(x_human + HUMAN_BIG_BBOX_WIDTH / 2, y_human);
+					weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY_DOWN);
+					break;
+				case HUMAN_ANI_BIG_WALKING:
+					if (flip)
+					{
+						weapon->SetPosition(x_human, y_human - HUMAN_BIG_BBOX_HEIGHT / 2);
+						weapon->SetDirection(1);
+						weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY);
+					}
 					else
-						weapon->SetPosition(x_human, y_human - HUMAN_SMALL_BBOX_HEIGHT / 2);
-					weapon->SetDirection(nx);
-					weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY);
+					{
+						weapon->SetPosition(x_human, y_human - HUMAN_BIG_BBOX_HEIGHT / 2);
+						weapon->SetDirection(-1);
+						weapon->SetState(WEAPON_BIG_HUMAN_STATE_FLY);
+					}
+					break;
 				}
 			}
 			list_weapon.push_back(weapon);
