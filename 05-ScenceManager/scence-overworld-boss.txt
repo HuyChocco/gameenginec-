@@ -52,6 +52,11 @@
 40	222	1129	238	1146	66
 # Chan - ben trai
 41	218	1147	236	1179	66
+# Explosion
+42	155	181	162	189	55
+43	171	178	187	191	55
+44	192	177	208	193	55
+45	177	121	201	145	55
 # SOFIA Human
 #idle
 10001	3	30	11	46	1
@@ -145,6 +150,8 @@ map-overworld-25.txt
 104	40	100
 # ==== Chan cua BOSS - Ben Trai =========
 105	41	100
+# ==== Explosion =========
+106	42	100	43	100	44	100	45	4000
 # ==== SOFIA HUMAN =========
 #idle
 600	10001	100
@@ -204,8 +211,8 @@ map-overworld-25.txt
 1	600	601	602	603	604	605
 # MAIN_CHARACTER 
 2	2000
-# BOSS	dichuyenmauvang	xuathien	Khopnoi-benphai	Chan-benphai	Khopnoi-bentrai	Chan-bentrai	
-3	100	101	102	103	104	105
+# BOSS	dichuyenmauvang	xuathien	Khopnoi-benphai	Chan-benphai	Khopnoi-bentrai	Chan-bentrai	Explosion
+3	100	101	102	103	104	105	106
 # WEAPON
 7	4000	4001	4002	4003	4004	4005	4006
 # HUB

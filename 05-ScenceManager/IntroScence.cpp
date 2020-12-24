@@ -233,8 +233,10 @@ void CIntroScence::Render()
 		{
 			CAnimationSets::GetInstance()->Get(0)->at(2)->Render(25, 10);
 			Sound::getInstance()->Stop(SOUND_ID_OPENING);
+			Sound::getInstance()->Play(SOUND_ID_VEHICLE);
 			if (CAnimationSets::GetInstance()->Get(0)->at(2)->isFinish)
 			{
+				Sound::getInstance()->Stop(SOUND_ID_VEHICLE);
 				game->SwitchScene(SCENCE_ID_START);
 			}
 		}

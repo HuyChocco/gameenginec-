@@ -122,8 +122,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				eyeball->SetDirectionY(1);//Up
 			else
 				eyeball->SetDirectionY(-1);//Down
-			if (isBeingHuman)
-				eyeball->SetPlayerObject(this);
+			eyeball->SetPlayerObject(this);
 		}
 		else if (dynamic_cast<CTeleporter*>(coObjects->at(i))) {
 			CTeleporter* teleporter = dynamic_cast<CTeleporter*>(coObjects->at(i));
