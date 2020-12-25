@@ -1,0 +1,375 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Cannon.cpp">
+      <Filter>Source Files\EnemyObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Dome.cpp">
+      <Filter>Source Files\EnemyObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Eyeball.cpp">
+      <Filter>Source Files\EnemyObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Insect.cpp">
+      <Filter>Source Files\EnemyObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Floater.cpp">
+      <Filter>Source Files\EnemyObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Jumper.cpp">
+      <Filter>Source Files\EnemyObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Orb.cpp">
+      <Filter>Source Files\EnemyObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Teleporter.cpp">
+      <Filter>Source Files\EnemyObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Worm.cpp">
+      <Filter>Source Files\EnemyObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GunHub.cpp">
+      <Filter>Source Files\Hub</Filter>
+    </ClCompile>
+    <ClCompile Include="PowerHub.cpp">
+      <Filter>Source Files\Hub</Filter>
+    </ClCompile>
+    <ClCompile Include="Spike.cpp">
+      <Filter>Source Files\ItemObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="BarrelObject.cpp">
+      <Filter>Source Files\MainCharacterObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="CabinObject.cpp">
+      <Filter>Source Files\MainCharacterObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Human.cpp">
+      <Filter>Source Files\MainCharacterObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Vehicle.cpp">
+      <Filter>Source Files\MainCharacterObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="WheelObject.cpp">
+      <Filter>Source Files\MainCharacterObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Animations.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Brick.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EndingScence.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Goomba.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Grid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IntroScence.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Koopas.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MainCharacter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mario.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayScence.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Portal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scence.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprites.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Stair.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Textures.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TiledMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Weapon.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Vehicle.cpp">
+      <Filter>Source Files\MainCharacterObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Skull.cpp">
+      <Filter>Source Files\EnemyObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="BossScence.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Boss.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Pincer.cpp">
+      <Filter>Source Files\BossElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Coupling.cpp">
+      <Filter>Source Files\BossElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Lava.cpp">
+      <Filter>Source Files\ItemObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="dxaudio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuScence.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>Source Files\ItemObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Egg.cpp">
+      <Filter>Source Files\ItemObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Arrow.cpp">
+      <Filter>Source Files\ItemObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="SpecialPortal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mine.cpp">
+      <Filter>Source Files\EnemyObjects</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Cannon.h">
+      <Filter>Header Files\EnemyObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Dome.h">
+      <Filter>Header Files\EnemyObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Eyeball.h">
+      <Filter>Header Files\EnemyObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Floater.h">
+      <Filter>Header Files\EnemyObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Insect.h">
+      <Filter>Header Files\EnemyObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Jumper.h">
+      <Filter>Header Files\EnemyObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Orb.h">
+      <Filter>Header Files\EnemyObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Skull.h">
+      <Filter>Header Files\EnemyObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Teleporter.h">
+      <Filter>Header Files\EnemyObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Worm.h">
+      <Filter>Header Files\EnemyObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GunHub.h">
+      <Filter>Header Files\Hub</Filter>
+    </ClInclude>
+    <ClInclude Include="HovHub.h">
+      <Filter>Header Files\Hub</Filter>
+    </ClInclude>
+    <ClInclude Include="Spike.h">
+      <Filter>Header Files\ItemObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="BarrelObject.h">
+      <Filter>Header Files\MainCharacterObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="CabinObject.h">
+      <Filter>Header Files\MainCharacterObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Human.h">
+      <Filter>Header Files\MainCharacterObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Vehicle.h">
+      <Filter>Header Files\MainCharacterObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="WheelObject.h">
+      <Filter>Header Files\MainCharacterObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Animations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Brick.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EndingScence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Goomba.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Grid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IntroScence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyEventHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Koopas.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MainCharacter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mario.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayScence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Portal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprites.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Stair.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Textures.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TiledMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Weapon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BossScence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Boss.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Pincer.h">
+      <Filter>Header Files\BossElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Coupling.h">
+      <Filter>Header Files\BossElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Lava.h">
+      <Filter>Header Files\ItemObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="dxaudio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PowerHub.h">
+      <Filter>Header Files\Hub</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuScence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>Header Files\ItemObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Egg.h">
+      <Filter>Header Files\ItemObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Arrow.h">
+      <Filter>Header Files\ItemObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="SpecialPortal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mine.h">
+      <Filter>Header Files\EnemyObjects</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{da9b4231-b657-4eeb-9670-fe42eea442e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\EnemyObjects">
+      <UniqueIdentifier>{a6e05b0c-5f67-45f6-a24d-30d534c01189}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Hub">
+      <UniqueIdentifier>{c73724c7-c0b2-4786-bf96-72f59e5124b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ItemObjects">
+      <UniqueIdentifier>{297da68f-b895-4e01-b92c-d9460f1e5140}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\MainCharacterObjects">
+      <UniqueIdentifier>{1dd3d07c-34bd-4654-b461-cc014482dc34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{85547546-982a-42e0-868f-e3c1d635bd30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\EnemyObjects">
+      <UniqueIdentifier>{d40de226-01d9-4b3b-86a1-daebe3b6ee9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Hub">
+      <UniqueIdentifier>{104f5e93-7adc-4223-9e48-5b293555d7c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ItemObjects">
+      <UniqueIdentifier>{3b0e3d01-1c4d-4937-88a9-4827e102362f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\MainCharacterObjects">
+      <UniqueIdentifier>{cbdb355c-d240-4c13-9cfa-1b882cbaaa30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\BossElements">
+      <UniqueIdentifier>{bed60ae5-8675-451f-b209-697e268d7f2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\BossElements">
+      <UniqueIdentifier>{5875a0e6-a6d1-4d55-b3dc-8b30b4bff1f2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
