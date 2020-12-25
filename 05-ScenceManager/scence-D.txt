@@ -6,6 +6,7 @@
 44	textures\NES-Blaster-Master-Area-2-Overworld1.png	255	255	255
 55	textures\sophia.png	255	255	255
 66	textures\Items-Objects.png	255	255	255
+77	textures\mine.png	0	0	0
 # id	left	top	right	bottom	texture_id
 [SPRITES]
 # tiled map sprites
@@ -321,6 +322,8 @@
 # ITEMS
 # P
 900000	87	240	103	256	55
+# MINE
+100000	0	0	16	16	77
 # path
 [MAP]
 Map-Blaster-Master-Area-2-D.txt
@@ -401,6 +404,9 @@ Map-Blaster-Master-Area-2-D.txt
 #7000	140001	100	140002	100
 #Walk right
 #7001	140003	100	140004	100
+# ==== ENEMY MINE =========
+#Stay
+110000	100000	100
 # ==== WEAPON =========
 # Main Character
 # left
@@ -486,6 +492,8 @@ Map-Blaster-Master-Area-2-D.txt
 12	9000	9001
 # INSECT - ENEMY
 #11	7000	7001
+# MINE- ENEMY
+13	110000
 # WEAPON Player-horizontal Player-vertical Player-explode Big human-bullet Big human-explosion Cannon-bullet Cannon-explosion Eyeball-bullet Eyeball-explosion	Floater-bullet	Floater-explosion	Skull bullet left	Skull bullet right	Skull bullet explosion	Player-Rocket-right	Player-Rocket-left	Player-Rocket-up	Player-Rocket-down
 7	4000	4001	4002	4003	4004	4005	4006	4007	4008	4009	4010	4011	4012	4013	4100	4101	4102	4103
 # HUB
@@ -499,7 +507,8 @@ Map-Blaster-Master-Area-2-D.txt
 # type: 12 = Floater, 13 = Domes, 14 = Jumpers, 15 = Insect,16 = Orbs, 17 = Skulls, 18 = Dashers, 19 = Mine, 30 = LAVA
 # type: 101 = DESTROYABLE_BRICK , 22 = Stair
 # MAIN_CHARACTER need to be created first!
-1	9	78	144.73	2
+#1	9	78	144.73	2
+1	9	78	1500	2
 # MAIN OBJECTS LIST
 # WHEEL_LEFT
 3	4	18	132	3
@@ -524,13 +533,15 @@ Map-Blaster-Master-Area-2-D.txt
 17	3	462	1392.75	8
 18	3	172.333	1351.67	8
 # MINE- ENEMY
-#19	19	144.75	1462.5
+#19	19	144.75	1462.5	13
 # DOME- ENEMY
 20	13	242.25	1632.25	11
 21	13	319.25	1631.75	11
 # INSECT- ENEMY
 #22	15	255.333	1172.67	11
 #23	15	336.667	1308.33	11
+# JUMPERS
+24	40	319	1456	13
 # MAP OBJECT LIST
 # BRICK 
 # object_id 	type	l	t	ani_set_id	r	b	
@@ -604,6 +615,7 @@ Map-Blaster-Master-Area-2-D.txt
 167	1	96.666	672.0	2	126.667	624.667
 168	1	288	383.32996	2	318	290.0
 169	1	160	256.0	2	190	176.66699
+178	1	160	1040	2	223	1026
 # DESTROYABLE_BRICK 
 # object_id 	type	l	t	ani_set_id	r	b	type_brick: 1: normal	2,3: destructible  
 170	1	160.182	815.455	5	175.182	799.455	2
@@ -625,13 +637,13 @@ Map-Blaster-Master-Area-2-D.txt
 #185	30	l t	2	r	b
 # --- SCENE PORTAL ----
 # object_id 	type	l	t	ani_set_id	r	b	scene_id	type_portal: 1-Next scene 0-Previous scene
-#1000	50	452	1654.667	2	463	1631.667	4	1
-1001	50	453.5	1144.0	2	464.5	1121.0	5	0	1001
-#1002	50	47	888.5	2	58	865.5	4	1
-#1003	50	47.5	632.5	2	58.5	609.5	4	1
-#1004	50	453	633.0	2	464	610.0	4	1
-#1005	50	48	120.0	2	59	97.0	4	1
-#1006	51	69.3333	1650.0	2	82	1642.0	4	1
+1000	50	452	1654.667	2	463	1631.667	5	1	1000
+#1001	50	453.5	1144.0	2	464.5	1121.0	5	0	1001
+#1002	50	47	888.5	2	58	865.5	4	1	1000
+#1003	50	47.5	632.5	2	58.5	609.5	4	1	1000
+1004	50	453	633.0	2	464	610.0	6	1	1000
+#1005	50	48	120.0	2	59	97.0	4	1	1000
+1006	51	72	1650.0	2	82	1632.0	17	1	1000
 # cellx celly id_object...
 [GRID]
 0	0	154	157	169	1006	174
@@ -641,20 +653,20 @@ Map-Blaster-Master-Area-2-D.txt
 1	1	151	146
 1	2	146	1000	155	150
 2	0	157	169	142	143	174
-2	1	144	145
+2	1	144	145	24
 2	2	144	141	156
 3	0	157	158	136
-3	1	137	11	139	138
+3	1	137	11	139	138	178
 3	2	138	140	156
 4	0	158	135	134
 4	1	135
 4	2	148	156
 5	0	158	132
-5	1	131	130
+5	1	131	130	178
 5	2	130	1001	156	159
 6	0	158	147	132	127
 6	1	131	130	127	129
-6	2	129	128	130
+6	2	129	128	130	19
 7	0	158	161	1002	121	127	120	165
 7	1	165	170	171	127	129	120
 7	2	129	128	124	123	159	160

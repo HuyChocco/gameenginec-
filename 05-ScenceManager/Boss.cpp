@@ -6,7 +6,7 @@
 CBoss::CBoss(float x,float y,int _item) :CEnemyObject()
 {
 	SetState(BOSS_STATE_IDLE);
-	this->blood = 20;
+	this->blood = 10;
 	item = _item;
 	time_moving = 0;
 	time_moving_coupling = 0;
@@ -74,10 +74,13 @@ void CBoss::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 
 void CBoss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	if (!isEnable) {
+		return;
+	}
 	if (state != BOSS_STATE_IDLE)
 	{
 		time_moving += dt;
-		if (time_moving >= 2000)
+		if (time_moving >= 1000)
 		{
 			time_moving = 0;
 			SetState(BOSS_STATE_ATTACK);

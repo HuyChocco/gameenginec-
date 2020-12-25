@@ -303,7 +303,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else if (dynamic_cast<CStair*>(e->obj))
 				{
 					x += dx;
-					y += dy;
+					//y += dy;
 				}
 				// Nếu là portal object thì thực hiện chuyển cảnh
 				else if (dynamic_cast<CPortal*>(e->obj))

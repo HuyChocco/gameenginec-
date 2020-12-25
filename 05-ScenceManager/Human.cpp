@@ -24,6 +24,8 @@
 #include "Boss.h"
 #include "Sound.h"
 #include "Item.h"
+#include "SpecialPortal.h"
+#include "Egg.h"
 #define JUMPER_ROUNDING_DISTANCE_X 50
 #define JUMPER_ROUNDING_DISTANCE_Y 20
 #define ORB_ROUNDING_DISTANCE_X 120
@@ -310,6 +312,26 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 
 			}
+			else if (dynamic_cast<CEgg*>(e->obj))
+			{
+				CEgg* egg = dynamic_cast<CEgg*>(e->obj);
+				if (egg->GetState() == STATE_ITEM)
+				{
+					if (player != NULL)
+					{
+						Sound::getInstance()->PlayNew(SOUND_ID_EATING_ITEM);
+						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+						int power = player_object->GetPower();
+						if (power < 8)
+						{
+							power++;
+							player_object->SetPower(power);
+						}
+					}
+					egg->SetState(EGG_STATE_DESTROYED);
+				}
+
+			}
 			else if (dynamic_cast<CSpike*>(e->obj))
 			{
 				x += dx;
@@ -381,6 +403,19 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						CGame::GetInstance()->SetSceneId(p->GetSceneId());
 						CGame::GetInstance()->SetNextPortalId(p->GetNextPortalId());
 					}
+				}
+			}
+			else if (dynamic_cast<CSpecialPortal*>(e->obj))
+			{
+				if (level == HUMAN_LEVEL_SMALL && !isStateClimb)
+				{
+					CSpecialPortal* p = dynamic_cast<CSpecialPortal*>(e->obj);
+					//Nếu portal là đối tượng chuyển overworld
+					CGame::GetInstance()->SetIsNextMap(false);
+					CGame::GetInstance()->SetIsPreMap(true);
+					CGame::GetInstance()->SetIsUpMap(false);
+					CGame::GetInstance()->SetIsDownMap(false);
+					CGame::GetInstance()->SetSceneId(p->GetSceneId());
 				}
 			}
 			//Outdoor enemies
@@ -922,6 +957,8 @@ void CHuman::Render()
 			}
 			if (vx == 0 && vy == 0) // Nhân vật đứng yên
 			{
+				if (ani == animation_set->size())
+					return;
 				animation_set->at(ani)->isPause = true; //Dừng animation 
 				animation_set->at(ani)->Render(x, y, flip, alpha); // Vẽ frame đang bị tạm dừng
 			}

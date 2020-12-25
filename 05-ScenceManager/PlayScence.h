@@ -24,6 +24,8 @@
 #include "SKull.h"
 #include "Orb.h"
 #include "Item.h"
+#include "Mine.h"
+#include "Egg.h"
 //bo sung
 #include "MainCharacter.h"
 #include "BarrelObject.h"
@@ -34,6 +36,7 @@
 
 #include "TiledMap.h"
 #include "Grid.h"
+#include "SpecialPortal.h"
 
 #define MENU_SCENCE_ID	1000
 #define START_SCENCE_ID	1

@@ -1,30 +1,25 @@
 #include "Egg.h"
 #include "Game.h"
-CEgg::CEgg(int type)
+CEgg::CEgg(int item)
 {
+	width = height = 16;
 	isDisplay = true;
 	isEnable = true;
-	isEnable = true;
-	this->type = type;
-
+	this->item = item;
+	SetState(EGG_STATE_NORMAL);
+	blood = 0;
 }
 
 void CEgg::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (isEnable)
 	{
-		switch (type)
+		if (this->blood < 0)
 		{
-		case 1:
-			break;
-		case 2:
-			break;
-		case 3:
-			break;
-		case 4:
-			break;
-		default:
-			break;
+			if (item > 0)
+				SetState(STATE_ITEM);
+			else
+				SetState(EGG_STATE_DESTROYED);
 		}
 	}
 }
@@ -33,24 +28,25 @@ void CEgg::Render()
 	int ani = -1;
 	if (isEnable)
 	{
-		switch (type)
+		switch (state)
 		{
-		case 1:
-			ani = ITEM_ANI_H_ROCKET;
+		case EGG_STATE_NORMAL:
+			ani = 0;
 			break;
-		case 2:
-			ani = ITEM_ANI_H_GREEN;
+		case EGG_STATE_DESTROYED:
 			break;
-		case 3:
-			ani = ITEM_ANI_FLASH;
+		case EGG_STATE_NONE:
 			break;
-		case 4:
-			ani = ITEM_ANI_P_GREEN;
-			break;
-		default:
+		case STATE_ITEM:
+			ani = item;
+			animation_item_set->at(ani - 1)->Render(x, y);
 			break;
 		}
-		animation_set->at(ani)->Render(x, y);
+		if (isDisplay)
+		{
+			animation_set->at(ani)->Render(x, y);
+			RenderBoundingBox();
+		}
 	}
 
 }
@@ -59,12 +55,16 @@ void CEgg::SetState(int state)
 	CGameObject::SetState(state);
 	switch (state)
 	{
-	case ITEM_STATE_IDLE:
-		vx = 0;
+	case EGG_STATE_NORMAL:
 		break;
-	case ITEM_STATE_DIE:
-		isDisplay = false;
+	case EGG_STATE_DESTROYED:
 		isEnable = false;
+		isDisplay = false;
+		break;
+	case STATE_ITEM:
+		vx = 0;
+		vy = 0;
+		isDisplay = false;
 		break;
 	default:
 		break;
@@ -75,9 +75,21 @@ void CEgg::GetBoundingBox(float& l, float& t, float& r, float& b)
 	if (isEnable)
 	{
 		l = x;
-		t = y - ITEM_BBOX_HEIGHT;
-		r = x + ITEM_BBOX_WIDTH;
+		if (state != STATE_ITEM)
+		{
+			t = y - EGG_BBOX_HEIGHT;
+			r = x + EGG_BBOX_WIDTH;
+		}
+		else
+		{
+			if (item == 1)
+			{
+				t = y - ITEM_P_BBOX_HEIGHT;
+
+				r = x + ITEM_P_BBOX_WIDTH;
+			}
+
+		}
 		b = y;
 	}
-
 }
