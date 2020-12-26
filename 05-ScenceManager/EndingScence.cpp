@@ -253,7 +253,7 @@ void CEndingScence::Update(DWORD dt)
 	if (isAniFive)
 	{
 		float cy = 0;
-		roll_y += dt * 0.08;
+		roll_y += dt * 0.03;
 		CMap* map = CTiledMapSets::GetInstance()->Get(id);
 		int heightMap;
 		heightMap = 1241;
