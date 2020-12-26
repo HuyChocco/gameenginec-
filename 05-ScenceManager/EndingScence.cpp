@@ -5,11 +5,6 @@
 #include "Utils.h"
 #include "Textures.h"
 #include "Sprites.h"
-#include "Sound.h"
-
-
-#define SCENCE_ID_START	1
-
 using namespace std;
 
 CEndingScence::CEndingScence(int id, LPCWSTR filePath) :
@@ -49,7 +44,6 @@ CEndingScence::CEndingScence(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_JUMPER	14
 #define OBJECT_TYPE_CANNON	19
 #define OBJECT_TYPE_EYEBALL	20
-#define OBJECT_TYPE_TELEPORTER	33
 
 //Main character objects
 #define OBJECT_TYPE_MAIN_CHARACTER	9
@@ -219,12 +213,11 @@ float roll_x = 0;
 float roll_y = 0;
 
 bool isAniThree;
-bool isEndMoveX ;
+bool isEndMoveX;
 bool isEndMoveY;
 bool isAniFive;
 DWORD timeMoveX = 0;
 DWORD timeMoveY = 0;
-
 void CEndingScence::Update(DWORD dt)
 {
 	if (isAniThree)
@@ -267,24 +260,24 @@ void CEndingScence::Update(DWORD dt)
 
 		if (roll_y <= (float)CGame::GetInstance()->GetScreenHeight() / 2)
 		{
-			
+
 			cy = 0;
 		}
 		else if (heightMap - roll_y <= (float)CGame::GetInstance()->GetScreenHeight() / 2)
 		{
-			cy = CGame::GetInstance()->GetScreenHeight()- heightMap;
-			
+			cy = CGame::GetInstance()->GetScreenHeight() - heightMap;
+
 			timeMoveY += dt;
 			if (timeMoveY >= 2000)
 			{
 				timeMoveY = 0;
 				isEndMoveY = true;
-				
+
 			}
 		}
 		else
 		{
-			cy =((float)CGame::GetInstance()->GetScreenHeight() / 2)-roll_y ;
+			cy = ((float)CGame::GetInstance()->GetScreenHeight() / 2) - roll_y;
 		}
 		CGame::GetInstance()->SetCamPos(0, cy);
 
@@ -309,7 +302,7 @@ void CEndingScence::Render()
 				isAniThree = true;
 				CAnimationSets::GetInstance()->Get(0)->at(2)->Render(20, -6);
 				CAnimationSets::GetInstance()->Get(0)->at(3)->Render(430, -95);
-				
+
 			}
 			else
 				CAnimationSets::GetInstance()->Get(0)->at(1)->Render(20, -10);
@@ -318,21 +311,21 @@ void CEndingScence::Render()
 			CAnimationSets::GetInstance()->Get(0)->at(0)->Render(20, -10);
 
 	}
-	 if(isEndMoveX)
+	if (isEndMoveX)
 	{
 		isAniFive = true;
 		CAnimationSets::GetInstance()->Get(0)->at(4)->Render(20, 0);
 		CAnimationSets::GetInstance()->Get(0)->at(5)->Render(140, -220);
-			
+
 
 	}
-	  if(isEndMoveY) {
+	if (isEndMoveY) {
 
 		CAnimationSets::GetInstance()->Get(0)->at(4)->Render(20, 0);
 		CAnimationSets::GetInstance()->Get(0)->at(6)->Render(115, 0);
 
 	}
-	
+
 }
 
 
@@ -341,8 +334,8 @@ void CEndingScence::Render()
 */
 void CEndingScence::Unload()
 {
-	if (CAnimationSets::GetInstance()->Get(0))
-		CAnimationSets::GetInstance()->Get(0)->at(0)->isIntroEndScence = false;
+
+
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
 }
 
@@ -352,14 +345,7 @@ void CEndingScenceKeyHandler::OnKeyDown(int KeyCode)
 }
 void CEndingScenceKeyHandler::OnKeyUp(int KeyCode)
 {
-	CGame* game = CGame::GetInstance();
-	switch (KeyCode)
-	{
-	case DIK_A:
-		game->SwitchScene(SCENCE_ID_START);
-		Sound::getInstance()->Stop(SOUND_ID_OPENING);
-		break;
-	}
+
 }
 
 void CEndingScenceKeyHandler::KeyState(BYTE* states)
