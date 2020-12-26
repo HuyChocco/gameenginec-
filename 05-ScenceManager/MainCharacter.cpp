@@ -298,7 +298,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else if (dynamic_cast<CLava*>(e->obj)) // if e->obj is CLava
 				{
-<<<<<<< HEAD
+
 
 					x += dx;
 					y += dy;
@@ -319,8 +319,7 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						x += dx;
 					}*/
 
-=======
->>>>>>> master
+
 					if (untouchable == 0)
 					{
 						StartUntouchable();
