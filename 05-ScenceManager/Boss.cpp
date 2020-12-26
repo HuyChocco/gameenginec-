@@ -6,7 +6,7 @@
 CBoss::CBoss(float x,float y,int _item) :CEnemyObject()
 {
 	SetState(BOSS_STATE_IDLE);
-	this->blood = 20;
+	this->blood = 15;
 	item = _item;
 	time_moving = 0;
 	time_moving_coupling = 0;
@@ -27,6 +27,7 @@ void CBoss::CreateCouplingElements()
 		ani_set = animation_sets->Get(3);
 		object_right->SetAnimationSet(ani_set);
 		object_right->SetIndex(i);
+		object_right->SetPlayerObject(player);
 		right_coupling_elements.push_back(object_right);
 	}
 	for (int i = 0; i < 4; i++)
@@ -35,16 +36,19 @@ void CBoss::CreateCouplingElements()
 		ani_set = animation_sets->Get(3);
 		object_left->SetAnimationSet(ani_set);
 		object_left->SetIndex(i);
+		object_left->SetPlayerObject(player);
 		left_coupling_elements.push_back(object_left);
 	}
 	CPincer* object_right = new CPincer(start_x+BOSS_BBOX_WIDTH, start_y - BOSS_BBOX_HEIGHT / 2 - 4 * COUPLING_BBOX_HEIGHT,false);
 	ani_set = animation_sets->Get(3);
 	object_right->SetAnimationSet(ani_set);
+	object_right->SetPlayerObject(player);
 	right_pincer = object_right;
 
 	CPincer* object_left = new CPincer(start_x, start_y - BOSS_BBOX_HEIGHT / 2 - 4 * COUPLING_BBOX_HEIGHT,true);
 	ani_set = animation_sets->Get(3);
 	object_left->SetAnimationSet(ani_set);
+	object_left->SetPlayerObject(player);
 	left_pincer = object_left;
 }
 void CBoss::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -96,7 +100,10 @@ void CBoss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		if (item > 0)
 			SetState(STATE_ITEM);
 		else
-			SetState(BOSS_STATE_DIE);
+		{
+			SetState(BOSS_STATE_EXPLOSION);
+			return;
+		}
 	}
 	
 	x += dx;
@@ -111,17 +118,14 @@ void CBoss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		time_moving_coupling_left += dt;
 		for (int i = 0; i < right_coupling_elements.size(); i++)
 		{
-			dynamic_cast<CCoupling*>(right_coupling_elements[i])->SetPlayerObject(player);
 			right_coupling_elements[i]->SetPosition(x + BOSS_BBOX_WIDTH - 10, y - BOSS_BBOX_HEIGHT / 2 - i * COUPLING_BBOX_HEIGHT);
 			right_coupling_elements[i]->Update(dt, coObjects);
 		}
 		for (int i = 0; i < left_coupling_elements.size(); i++)
 		{
-			dynamic_cast<CCoupling*>(left_coupling_elements[i])->SetPlayerObject(player);
-			left_coupling_elements[i]->SetPosition(x, y - BOSS_BBOX_HEIGHT / 2 - i * COUPLING_BBOX_HEIGHT);
+			left_coupling_elements[i]->SetPosition(x, y - BOSS_BBOX_HEIGHT / 2 -i * COUPLING_BBOX_HEIGHT);
 			left_coupling_elements[i]->Update(dt, coObjects);
 		}
-
 	}
 	//Xử lý Pincer
 	float _x, _y;
@@ -154,6 +158,9 @@ void CBoss::Render()
 		case BOSS_STATE_IDLE:
 			ani = BOSS_ANI_START;
 			break;
+		case BOSS_STATE_EXPLOSION:
+			ani= BOSS_ANI_EXPLOSION;
+			break;
 		case STATE_ITEM:
 			ani = item;
 			animation_item_set->at(ani - 1)->Render(x, y);
@@ -161,10 +168,10 @@ void CBoss::Render()
 		}
 		if (isDisplay)
 		{
-			animation_set->at(ani)->Render(x, y);
-			//RenderBoundingBox();
 			if(state==BOSS_STATE_IDLE)
 			{
+				animation_set->at(ani)->Render(x, y);
+				//RenderBoundingBox();
 				if(animation_set->at(ani)->isFinish)
 				{
 					SetState(BOSS_STATE_MOVE);
@@ -172,10 +179,23 @@ void CBoss::Render()
 				Sound::getInstance()->Stop(SOUND_ID_AREA_2);
 				Sound::getInstance()->Play(SOUND_ID_STARTING_BOSS);
 			}
+			else if (state == BOSS_STATE_EXPLOSION)
+			{
+				Sound::getInstance()->Stop(SOUND_ID_BOSS);
+				Sound::getInstance()->Play(SOUND_ID_BOSS_EXPLOSION);
+				animation_set->at(ani)->Render(x+BOSS_BBOX_WIDTH/2, y-BOSS_BBOX_HEIGHT/2);
+				if (animation_set->at(ani)->isFinish)
+				{
+					SetState(BOSS_STATE_DIE);
+					Sound::getInstance()->Stop(SOUND_ID_BOSS_EXPLOSION);
+				}
+			}
 			else
 			{
 				Sound::getInstance()->Stop(SOUND_ID_STARTING_BOSS);
 				Sound::getInstance()->Play(SOUND_ID_BOSS);
+				animation_set->at(ani)->Render(x, y);
+				//RenderBoundingBox();
 				for (int i = 0; i < left_coupling_elements.size(); i++)
 				{
 					if (left_coupling_elements[i])
@@ -194,13 +214,12 @@ void CBoss::Render()
 					right_pincer->Render();
 				if (left_pincer)
 					left_pincer->Render();
+				for (int i = 0; i < list_weapon.size(); i++)
+				{
+					list_weapon[i]->Render();
+				}
 			}
 		}
-		for (int i = 0; i < list_weapon.size(); i++)
-		{
-			list_weapon[i]->Render();
-		}
-
 	}
 	
 }
@@ -238,6 +257,9 @@ void CBoss::SetState(int state)
 
 	}
 	break;
+	case BOSS_STATE_EXPLOSION:
+		vx = vy = 0;
+		break;
 	case BOSS_STATE_DIE:
 		isDisplay = false;
 		isEnable = false;

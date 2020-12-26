@@ -29,7 +29,7 @@ void CGrid::Add(LPGAMEOBJECT object, int xCell, int yCell)
 	cells[xCell][yCell].Add(object);
 }
 
-vector<LPGAMEOBJECT> CGrid::GetList()
+unordered_map<int,LPGAMEOBJECT> CGrid::GetList()
 {
 	int heightMap;
 	
@@ -49,9 +49,10 @@ vector<LPGAMEOBJECT> CGrid::GetList()
 		endY -= 1;
 	if (endX == numCol)
 		endX -= 1;
-	if (startX >= numCol || startY >= numRow|| endX>=numCol|| endY>=numRow)
-		return objects;
-	objects.clear();
+	if (startX >= numCol || startY >= numRow || endX >= numCol || endY >= numRow)
+		return map_objects;
+		//return objects;
+	map_objects.clear();
 	for (int i = startY; i <= endY; i++)
 	{
 		for (int j = startX; j <= endX; j++)
@@ -62,13 +63,17 @@ vector<LPGAMEOBJECT> CGrid::GetList()
 				{
 					if (cells[i][j].GetObjects().at(k) != NULL)
 					{
-						objects.push_back(cells[i][j].GetObjects().at(k));
+						LPGAMEOBJECT object = cells[i][j].GetObjects().at(k);
+						int id = object->GetID();
+						//objects.push_back(cells[i][j].GetObjects().at(k));
+						map_objects[id] = object;
 					}
 				}
 			}
 		}
 	}
-	return objects;
+	//return objects;
+	return map_objects;
 }
 
 void CGrid::Unload()

@@ -126,11 +126,15 @@ void CCannon::SetState(int state)
 		CWeapon* weapon_up = new CWeapon(WEAPON_TYPE_ENEMY_CANNONS);// Khởi tạo weapon
 		weapon_up->SetPosition((x + CANNON_BBOX_WIDTH/2), y);
 		weapon_up->SetState(WEAPON_CANNONS_STATE_FIRE_VERTICAL_UP);
+		if (player)
+			weapon_up->SetPlayerObject(player);
 		list_weapon.push_back(weapon_up);
 
 		CWeapon* weapon_down = new CWeapon(WEAPON_TYPE_ENEMY_CANNONS);// Khởi tạo weapon
 		weapon_down->SetPosition((x + CANNON_BBOX_WIDTH/2) , y);
 		weapon_down->SetState(WEAPON_CANNONS_STATE_FIRE_VERTICAL_DOWN);
+		if (player)
+			weapon_down->SetPlayerObject(player);
 		list_weapon.push_back(weapon_down);
 
 		break;
@@ -140,11 +144,15 @@ void CCannon::SetState(int state)
 		CWeapon* weapon_left = new CWeapon(WEAPON_TYPE_ENEMY_CANNONS);// Khởi tạo weapon
 		weapon_left->SetPosition(x,y);
 		weapon_left->SetState(WEAPON_CANNONS_STATE_FIRE_HORIZONTAL_LEFT);
+		if (player)
+			weapon_left->SetPlayerObject(player);
 		list_weapon.push_back(weapon_left);
 
 		CWeapon* weapon_right = new CWeapon(WEAPON_TYPE_ENEMY_CANNONS);// Khởi tạo weapon
 		weapon_right->SetPosition(x,y);
 		weapon_right->SetState(WEAPON_CANNONS_STATE_FIRE_HORIZONTAL_RIGHT);
+		if (player)
+			weapon_right->SetPlayerObject(player);
 		list_weapon.push_back(weapon_right);
 
 		break;

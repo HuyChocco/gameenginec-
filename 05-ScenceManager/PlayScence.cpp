@@ -754,7 +754,7 @@ void CPlayScene::Load(int _alive, int _power)
 	}
 }
 
-
+float cam_y = CGame::GetInstance()->GetScreenHeight();
 void CPlayScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
@@ -772,17 +772,16 @@ void CPlayScene::Update(DWORD dt)
 	}
 	else
 	{
-		objects = CGrid::GetInstance()->GetList();
+		map_objects = CGrid::GetInstance()->GetList();
 		vector<LPGAMEOBJECT> coObjects;
-		vector<int>	index_same_object;
-		if (objects.size() > 0)
+		if (map_objects.size() > 0)
 		{
-			for (size_t i = 0; i < objects.size(); i++)
-						coObjects.push_back(objects[i]);
-		}
-		for (size_t i = 0; i < objects.size(); i++)
-		{
-			objects[i]->Update(dt, &coObjects);
+			for (auto object : map_objects)
+				coObjects.push_back(object.second);
+			{
+				for (auto object : map_objects)
+					object.second->Update(dt, &coObjects);
+			}
 		}
 		if (player == NULL) return;
 		else
@@ -900,7 +899,6 @@ void CPlayScene::Update(DWORD dt)
 				game->SwitchScene(game->GetSceneId(), player->GetAlive(), player->GetPower());
 				game->SetIsUpMap(false);
 			}
-
 		}
 		else if (game->GetIsDownMap() == true)
 		{
@@ -913,9 +911,15 @@ void CPlayScene::Update(DWORD dt)
 		}
 		else
 			game->SetRenderingNextMap(false);
+
+		CMap* map = CTiledMapSets::GetInstance()->Get(id);
+		int widthMap, heightMap;
+		map->GetMapWidth(widthMap);
+		map->GetMapHeight(heightMap);
 		// Update camera to follow main character
+		//Xử lý camera theo trục x
 		float cx = 0, cy = 0;
-		if (player != NULL)
+		if (player)
 		{
 			if (player->Is_Human)
 			{
@@ -923,27 +927,21 @@ void CPlayScene::Update(DWORD dt)
 			}
 			else
 				player->GetPosition(cx, cy);
-		}
-		CMap* map = CTiledMapSets::GetInstance()->Get(id);
-		int widthMap, heightMap;
-		map->GetMapWidth(widthMap);
-		map->GetMapHeight(heightMap);
-
-		if (cx <= (float)game->GetScreenWidth() / 2)
-		{
-			cx = 0;
-			cy = 0;
-		}
-		else if (widthMap - cx <= (float)game->GetScreenWidth() / 2)
-		{
-			if (game->GetIsNextMap())//nếu player va chạm portal
-				cx -= (float)game->GetScreenWidth() / 2;
+			if (cx <= (float)game->GetScreenWidth() / 2)
+			{
+				cx = 0;
+			}
+			else if (widthMap - cx <= (float)game->GetScreenWidth() / 2)
+			{
+				if (game->GetIsNextMap())//nếu player va chạm portal
+					cx -= (float)game->GetScreenWidth() / 2;
+				else
+					cx = widthMap - game->GetScreenWidth();
+			}
 			else
-				cx = widthMap - game->GetScreenWidth();
-		}
-		else
-		{
-			cx -= (float)game->GetScreenWidth() / 2;
+			{
+				cx -= (float)game->GetScreenWidth() / 2;
+			}
 		}
 		//Xử lý camera theo trục y
 		cy = game->GetScreenHeight();
@@ -962,14 +960,19 @@ void CPlayScene::Update(DWORD dt)
 
 			float height = (player_y - cy);
 
-			if (height >= ((float)game->GetScreenHeight() / 80))
+			/*if (height >= ((float)game->GetScreenHeight() / 80))
 			{
 				height += (float)(game->GetScreenHeight() / 3);
 
 				cy += height;
+			}*/
+			if (player_y >= (float)game->GetScreenHeight()/2 && player_y <= heightMap - (float)(game->GetScreenHeight() / 2)&&id!=1&&id!=5&&id!=3)
+			{
+				cam_y = player_y + (float)game->GetScreenHeight() / 2;
 			}
+
 		}
-		CGame::GetInstance()->SetCamPos(cx, cy);
+		CGame::GetInstance()->SetCamPos(cx, cam_y);
 		//Vẽ Hub objects
 		for (int i = 0; i < hub_objects.size(); i++)
 			hub_objects[i]->Update(dt);
@@ -1012,8 +1015,8 @@ void CPlayScene::Render()
 		//Vẽ tất cả các object hiện tại nếu thỏa điều kiện
 		if (player->GetState() != MAIN_CHARACTER_STATE_NONE_COLLISION)
 		{
-			for (int i = 0; i < objects.size(); i++)
-				objects[i]->Render();
+			for (auto object:map_objects)
+				object.second->Render();
 			//Vẽ player object
 			if (type_scence == OVER_WORLD)
 			{
@@ -1120,9 +1123,11 @@ void CPlayScene::GetNextMap()
 */
 void CPlayScene::Unload()
 {
+	cam_y = CGame::GetInstance()->GetScreenHeight();;
 	CGame::GetInstance()->SetRenderingNextMap(false);
 	sprites_next_map = NULL;
 	objects.clear();
+	map_objects.clear();
 	player = NULL;
 	player_human = NULL;
 	isRenderNextMap = false;

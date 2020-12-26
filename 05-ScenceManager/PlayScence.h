@@ -47,8 +47,9 @@ protected:
 	//CMario *player;	
 	CMainCharacter* player;// A play scene has to have player, right? 
 	CHuman* player_human;
-
+	float cx,cy;
 	vector<LPGAMEOBJECT> objects;
+	unordered_map<int,LPGAMEOBJECT> map_objects;
 
 	vector<LPGAMEOBJECT> hub_objects;
 
