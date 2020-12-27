@@ -47,6 +47,7 @@ protected:
 	CMainCharacter* player;// A play scene has to have player, right? 
 	CHuman* player_human;
 	float cx,cy;
+	float cam_y;
 	vector<LPGAMEOBJECT> objects;
 	unordered_map<int,LPGAMEOBJECT> map_objects;
 

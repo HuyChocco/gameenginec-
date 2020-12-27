@@ -269,6 +269,7 @@ void CIntroScenceKeyHandler::OnKeyUp(int KeyCode)
 	case DIK_A:
 		game->SwitchScene(SCENCE_ID_START);
 		Sound::getInstance()->Stop(SOUND_ID_OPENING);
+		Sound::getInstance()->Stop(SOUND_ID_VEHICLE);
 		break;
 	}
 }
