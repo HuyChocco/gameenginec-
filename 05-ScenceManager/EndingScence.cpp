@@ -5,6 +5,7 @@
 #include "Utils.h"
 #include "Textures.h"
 #include "Sprites.h"
+#include "Sound.h"
 using namespace std;
 
 CEndingScence::CEndingScence(int id, LPCWSTR filePath) :
@@ -209,15 +210,114 @@ void CEndingScence::Load(int _alive, int _power)
 
 }
 
+float roll_x = 0;
+float roll_y = 0;
 
+bool isAniThree;
+bool isEndMoveX;
+bool isEndMoveY;
+bool isAniFive;
+DWORD timeMoveX = 0;
+DWORD timeMoveY = 0;
 void CEndingScence::Update(DWORD dt)
 {
+	if (isAniThree)
+	{
+		float cx = 0;
+		roll_x += dt * 0.06;
+		//CMap* map = CTiledMapSets::GetInstance()->Get(id);
+		int widthMap;
+		widthMap = 511;
 
+		if (roll_x <= (float)CGame::GetInstance()->GetScreenWidth() / 2)
+		{
+			cx = 0;
+		}
+		else if (widthMap - roll_x <= (float)CGame::GetInstance()->GetScreenWidth() / 2)
+		{
+			cx = widthMap - CGame::GetInstance()->GetScreenWidth();
+
+			timeMoveX += dt;
+			if (timeMoveX >= 4000)
+			{
+				timeMoveX = 0;
+				isEndMoveX = true;
+			}
+		}
+		else
+		{
+			cx = roll_x - (float)CGame::GetInstance()->GetScreenWidth() / 2;
+		}
+		CGame::GetInstance()->SetCamPos(cx, 0);
+		Sound::getInstance()->Play(SOUND_ID_END);
+	}
+
+	if (isAniFive)
+	{
+		float cy = 0;
+		roll_y += dt * 0.03;
+		//CMap* map = CTiledMapSets::GetInstance()->Get(id);
+		int heightMap;
+		heightMap = 1241;
+
+		if (roll_y <= (float)CGame::GetInstance()->GetScreenHeight() / 2)
+		{
+			cy = 0;
+		}
+		else if (heightMap - roll_y <= (float)CGame::GetInstance()->GetScreenHeight() / 2)
+		{
+			cy = CGame::GetInstance()->GetScreenHeight() - heightMap;
+			timeMoveY += dt;
+			if (timeMoveY >= 2000)
+			{
+				timeMoveY = 0;
+				isEndMoveY = true;
+			}
+		}
+		else
+		{
+			cy = ((float)CGame::GetInstance()->GetScreenHeight() / 2) - roll_y;
+		}
+		CGame::GetInstance()->SetCamPos(0, cy);
+	}
 }
 
 void CEndingScence::Render()
 {
+	CGame* game = CGame::GetInstance();
+	CAnimationSets::GetInstance()->Get(0)->at(0)->isIntroEndScence = true;
+	CAnimationSets::GetInstance()->Get(0)->at(1)->isIntroEndScence = true;
+	CAnimationSets::GetInstance()->Get(0)->at(4)->isIntroEndScence = true;
+	CAnimationSets::GetInstance()->Get(0)->at(6)->isIntroEndScence = true;
+	if (!isEndMoveX)
+	{
+		if (CAnimationSets::GetInstance()->Get(0)->at(0)->isFinish)
+		{
 
+			if (CAnimationSets::GetInstance()->Get(0)->at(1)->isFinish)
+			{
+				isAniThree = true;
+				CAnimationSets::GetInstance()->Get(0)->at(2)->Render(20, -6);
+				CAnimationSets::GetInstance()->Get(0)->at(3)->Render(430, -95);
+
+			}
+			else
+				CAnimationSets::GetInstance()->Get(0)->at(1)->Render(20, -10);
+		}
+		else
+			CAnimationSets::GetInstance()->Get(0)->at(0)->Render(20, -10);
+
+	}
+	if (isEndMoveX)
+	{
+		isAniFive = true;
+		CAnimationSets::GetInstance()->Get(0)->at(4)->Render(20, 0);
+		CAnimationSets::GetInstance()->Get(0)->at(5)->Render(140, -220);
+	}
+	if (isEndMoveY) {
+		CAnimationSets::GetInstance()->Get(0)->at(4)->Render(20, 0);
+		CAnimationSets::GetInstance()->Get(0)->at(6)->Render(115, 0);
+	}
 
 }
 
@@ -227,8 +327,6 @@ void CEndingScence::Render()
 */
 void CEndingScence::Unload()
 {
-
-
 	DebugOut(L"[INFO] Scene %s unloaded! \n", sceneFilePath);
 }
 

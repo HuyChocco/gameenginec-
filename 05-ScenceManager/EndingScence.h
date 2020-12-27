@@ -3,6 +3,7 @@
 #include "Textures.h"
 #include "Scence.h"
 #include "GameObject.h"
+
 class CEndingScence : public CScene
 {
 protected:

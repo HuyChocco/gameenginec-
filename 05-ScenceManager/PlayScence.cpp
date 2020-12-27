@@ -18,6 +18,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 	CScene(id, filePath)
 {
 	key_handler = new CPlayScenceKeyHandler(this);
+	cam_y = CGame::GetInstance()->GetScreenHeight();
 }
 
 /*
@@ -746,7 +747,7 @@ void CPlayScene::Load(int _alive, int _power)
 	}
 }
 
-float cam_y = CGame::GetInstance()->GetScreenHeight();
+//float cam_y = CGame::GetInstance()->GetScreenHeight();
 void CPlayScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
@@ -950,7 +951,7 @@ void CPlayScene::Update(DWORD dt)
 			else
 				player->GetPosition(player_x, player_y);
 
-			float height = (player_y - cy);
+			//float height = (player_y - cy);
 
 			/*if (height >= ((float)game->GetScreenHeight() / 80))
 			{
@@ -958,7 +959,7 @@ void CPlayScene::Update(DWORD dt)
 
 				cy += height;
 			}*/
-			if (player_y >= (float)game->GetScreenHeight()/2 && player_y <= heightMap - (float)(game->GetScreenHeight() / 2)&&id!=1&&id!=5&&id!=3)
+			if (player_y > (float)game->GetScreenHeight()/2 && player_y < heightMap - (float)(game->GetScreenHeight() / 2)&&id!=1&&id!=5&&id!=3)
 			{
 				cam_y = player_y + (float)game->GetScreenHeight() / 2;
 			}
@@ -1115,7 +1116,7 @@ void CPlayScene::GetNextMap()
 */
 void CPlayScene::Unload()
 {
-	cam_y = CGame::GetInstance()->GetScreenHeight();;
+	cam_y = CGame::GetInstance()->GetScreenHeight();
 	CGame::GetInstance()->SetRenderingNextMap(false);
 	sprites_next_map = NULL;
 	objects.clear();

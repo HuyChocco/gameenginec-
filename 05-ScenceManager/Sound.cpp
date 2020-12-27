@@ -62,6 +62,9 @@ void Sound::loadSound(HWND hWnd)
 
 	sound = LoadSound("Sound//vehicle.wav");
 	_listSound[SOUND_ID_VEHICLE] = sound;
+
+	sound = LoadSound("Sound//end_scence.wav");
+	_listSound[SOUND_ID_END] = sound;
 }
 
 bool Sound::IsPlaying(int soundid)

@@ -28,6 +28,7 @@
 class CBoss :public CEnemyObject
 {
 	DWORD time_moving;
+	DWORD time_moving_y;
 	DWORD time_moving_coupling;
 	DWORD time_moving_coupling_left;
 	bool isBeingDown;

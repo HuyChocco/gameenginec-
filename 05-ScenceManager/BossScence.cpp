@@ -337,6 +337,13 @@ void CBossScence::Update(DWORD dt)
 				player_human->IsStartingBossScence = true;
 			}
 		}
+		else if (dynamic_cast<CBoss*>(objects[i])->GetState() == BOSS_STATE_DIE)
+		{
+			if (player)
+			{
+				CGame::GetInstance()->SwitchScene(8, player->GetAlive(), player->GetPower());
+			}
+		}
 		else
 		{
 			if (player_human)

@@ -87,8 +87,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				floater->SetDirection(1);
 			else
 				floater->SetDirection(-1);
-			if (isBeingHuman)
-				floater->SetPlayerObject(this);
+			floater->SetPlayerObject(this);
 		}
 		else if (dynamic_cast<CDome*>(coObjects->at(i))) {
 			CDome* dome = dynamic_cast<CDome*>(coObjects->at(i));
@@ -137,7 +136,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				teleporter->SetDirectionY(1);//Up
 			else
 				teleporter->SetDirectionY(-1);//Down
-				teleporter->SetPlayerObject(this);
+			teleporter->SetPlayerObject(this);
 		}
 		else if (dynamic_cast<CCannon*>(coObjects->at(i))) {
 			CCannon* cannon = dynamic_cast<CCannon*>(coObjects->at(i));
@@ -184,21 +183,9 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 			}
 		}
-		else if (dynamic_cast<CStair*>(coObjects->at(i)))
-		{
-			float l1, t1, r1, b1, l2, t2, r2, b2;
-			GetBoundingBox(l1, t1, r1, b1);
-			dynamic_cast<CStair*>(coObjects->at(i))->GetBoundingBox(l2, t2, r2, b2);
-			if (isStateClimb)
-			{
-				if (!CGame::GetInstance()->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2))
-					isStateClimb = false;
-			}
-		}
 		else if (dynamic_cast<CSkull*>(coObjects->at(i))) {
 			CSkull* skull = dynamic_cast<CSkull*>(coObjects->at(i));
-			if (isBeingHuman)
-				skull->SetPlayerObject(this);
+			skull->SetPlayerObject(this);
 			float x_skull, y_skull;
 			skull->GetPosition(x_skull, y_skull);
 			if (x > x_skull)
@@ -237,10 +224,9 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 			}
 		}
-		if (dynamic_cast<CBoss*>(coObjects->at(i))) {
+		else if (dynamic_cast<CBoss*>(coObjects->at(i))) {
 			CBoss* boss = dynamic_cast<CBoss*>(coObjects->at(i));
-			if (isBeingHuman)
-				boss->SetPlayerObject(this);
+			boss->SetPlayerObject(this);
 		}
 		else if (dynamic_cast<CLava*>((coObjects->at(i)))) // if e->obj is CLava
 		{
@@ -259,6 +245,14 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				canChangeStateClimb = true;
 			else
 				canChangeStateClimb = false;
+			float l1, t1, r1, b1, l2, t2, r2, b2;
+			GetBoundingBox(l1, t1, r1, b1);
+			dynamic_cast<CStair*>(coObjects->at(i))->GetBoundingBox(l2, t2, r2, b2);
+			if (isStateClimb)
+			{
+				if (!CGame::GetInstance()->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2))
+					isStateClimb = false;
+			}
 		}
 	}
 	// Simple fall down

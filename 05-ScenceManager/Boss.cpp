@@ -6,7 +6,7 @@
 CBoss::CBoss(float x,float y,int _item) :CEnemyObject()
 {
 	SetState(BOSS_STATE_IDLE);
-	this->blood = 15;
+	this->blood = 18;
 	item = _item;
 	time_moving = 0;
 	time_moving_coupling = 0;
@@ -84,14 +84,26 @@ void CBoss::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (state != BOSS_STATE_IDLE)
 	{
 		time_moving += dt;
+		time_moving_y += dt;
 		if (time_moving >= 1000)
 		{
 			time_moving = 0;
 			SetState(BOSS_STATE_ATTACK);
 		}
+		if (time_moving_y >= 1000)
+		{
+			time_moving_y = 0;
+			SetState(BOSS_STATE_MOVE_CHANGE_DIRECTION_Y);
+		}
+		if (x <= 0 || x >= CGame::GetInstance()->GetScreenWidth() - BOSS_BBOX_WIDTH - 1)
+		{
+			SetState(BOSS_STATE_MOVE_CHANGE_DIRECTION_X);
+		}
+		else if (y <= 0 || y >= CGame::GetInstance()->GetScreenHeight() - BOSS_BBOX_HEIGHT - 1)
+		{
+			//SetState(BOSS_STATE_MOVE_CHANGE_DIRECTION_Y);
+		}
 	}
-	if (x<=0||x >= CGame::GetInstance()->GetScreenWidth() - BOSS_BBOX_WIDTH-1)
-		SetState(BOSS_STATE_MOVE_CHANGE_DIRECTION_X);
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
 
@@ -235,6 +247,7 @@ void CBoss::SetState(int state)
 		break;
 	case BOSS_STATE_MOVE:
 		vx = BOSS_MOVE_SPEED;
+		vy = -0.02;
 		break;
 	case BOSS_STATE_MOVE_CHANGE_DIRECTION_X:
 		vx = -vx;

@@ -12,6 +12,8 @@ start	0
 5	scence-E.txt	0
 6	scence-I.txt	0
 7	scence-K.txt	0
+22	scence-L.txt	0
+23	scence-M.txt	0
 8	scence-test-overworld-1.txt	1
 9	scence-test-overworld-2.txt	1
 10	scence-test-overworld-3.txt	1
