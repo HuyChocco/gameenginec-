@@ -26,6 +26,7 @@
 
 
 #include "Teleporter.h"
+#include "Arrow.h"
 
 #define JUMPER_ROUNDING_DISTANCE_X 50
 #define JUMPER_ROUNDING_DISTANCE_Y 20
@@ -307,6 +308,15 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else if (dynamic_cast<CStair*>(e->obj))
 				{
 					x += dx;
+				}
+				else if (dynamic_cast<CArrow*>(e->obj))
+				{
+					if (untouchable == 0)
+					{
+						StartUntouchable();
+						power--;
+						Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
+					}
 				}
 				// Nếu là portal object thì thực hiện chuyển cảnh
 				else if (dynamic_cast<CPortal*>(e->obj))

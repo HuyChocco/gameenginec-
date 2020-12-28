@@ -27,6 +27,7 @@
 #include "SpecialPortal.h"
 #include "Egg.h"
 #include "Lava.h"
+#include "Arrow.h"
 #define JUMPER_ROUNDING_DISTANCE_X 50
 #define JUMPER_ROUNDING_DISTANCE_Y 20
 #define ORB_ROUNDING_DISTANCE_X 120
@@ -254,6 +255,26 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					isStateClimb = false;
 			}
 		}
+		else if (dynamic_cast<CItem*>((coObjects->at(i))))
+		{
+			CItem* item = dynamic_cast<CItem*>((coObjects->at(i)));
+			if (item->GetState() != ITEM_STATE_DIE)
+			{
+				if (CGame::GetInstance()->GetCurrentScenceID()==24)
+				{
+					float x_item, y_item;
+					item->GetPosition(x_item, y_item);
+					if (x_item >= x)
+						SetState(MAIN_CHARACTER_STATE_RUN_RIGHT);
+					else
+						SetState(MAIN_CHARACTER_STATE_RUN_LEFT);
+					if (y_item >= y)
+						SetState(MAIN_CHARACTER_STATE_UP_BARREL);
+					else
+						SetState(MAIN_CHARACTER_STATE_DOWN_BARREL);
+				}
+			}
+		}
 	}
 	// Simple fall down
 	if (level == HUMAN_LEVEL_SMALL && !isStateClimb)
@@ -394,6 +415,21 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
 				}
 			}
+			else if (dynamic_cast<CArrow*>(e->obj))
+			{
+				if (untouchable == 0)
+				{
+					if (player != NULL)
+					{
+						CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+						int power = player_object->GetPower();
+						power--;
+						player_object->SetPower(power);
+					}
+					StartUntouchable();
+					Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
+				}
+			}
 			// Nếu là portal object thì thực hiện chuyển cảnh
 			else if (dynamic_cast<CPortal*>(e->obj))
 			{
@@ -449,7 +485,7 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					CSpecialPortal* p = dynamic_cast<CSpecialPortal*>(e->obj);
 					//Nếu portal là đối tượng chuyển overworld
 					CGame::GetInstance()->SetIsNextMap(false);
-					CGame::GetInstance()->SetIsPreMap(true);
+					CGame::GetInstance()->SetIsPreMap(true);//Tránh hiệu ứng di chuyển màn hình
 					CGame::GetInstance()->SetIsUpMap(false);
 					CGame::GetInstance()->SetIsDownMap(false);
 					CGame::GetInstance()->SetSceneId(p->GetSceneId());
@@ -945,6 +981,18 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					{
 						power++;
 						dynamic_cast<CMainCharacter*>(player)->SetPower(power);
+					}
+				}
+				{
+					if (CGame::GetInstance()->GetCurrentScenceID() == 24)
+					{
+						if (player != NULL)
+						{
+							CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+							int power = player_object->GetPower();
+							int alives = player_object->GetAlive();
+							CGame::GetInstance()->SwitchScene(8, alives, power);
+						}
 					}
 				}
 				item->SetState(ITEM_STATE_DIE);

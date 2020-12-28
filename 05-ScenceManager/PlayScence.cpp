@@ -44,6 +44,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath) :
 #define OBJECT_TYPE_LAVA	30
 #define OBJECT_TYPE_SPIKE	21
 #define OBJECT_TYPE_STAIR	22
+#define OBJECT_TYPE_ARROW	31
 
 //Enemy objects
 #define OBJECT_TYPE_ENEMY1	2
@@ -339,6 +340,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		float r = atof(tokens[5].c_str());
 		float b = atof(tokens[6].c_str());
 		obj = new CSpike(x, y, r, b);
+		break;
+	}
+	case OBJECT_TYPE_ARROW:
+	{
+		float r = atof(tokens[5].c_str());
+		float b = atof(tokens[6].c_str());
+		obj = new CArrow(x, y, r, b);
 		break;
 	}
 	case OBJECT_TYPE_POWERHUB:
@@ -959,7 +967,7 @@ void CPlayScene::Update(DWORD dt)
 
 				cy += height;
 			}*/
-			if (player_y > (float)game->GetScreenHeight()/2 && player_y < heightMap - (float)(game->GetScreenHeight() / 2)&&id!=1&&id!=5&&id!=3)
+			if (player_y > (float)game->GetScreenHeight()/2 && player_y < heightMap - (float)(game->GetScreenHeight() / 2)-1&&id!=1&&id!=5&&id!=3&&id!=22&&id!=23)
 			{
 				cam_y = player_y + (float)game->GetScreenHeight() / 2;
 			}
@@ -1203,7 +1211,7 @@ void CPlayScenceKeyHandler::KeyState(BYTE* states)
 	//// disable control key when Mario die 
 	if (player->GetState() == MAIN_CHARACTER_STATE_DIE) return;
 	if (player->GetState() == MAIN_CHARACTER_STATE_NONE_COLLISION) return;
-
+	if (CGame::GetInstance()->GetCurrentScenceID()== SCENCE_ID_OVERWORLD_END) return;
 	if (game->IsKeyDown(DIK_UP))
 	{
 		if(!player->Is_Human)

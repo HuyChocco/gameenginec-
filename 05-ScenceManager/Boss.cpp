@@ -6,7 +6,7 @@
 CBoss::CBoss(float x,float y,int _item) :CEnemyObject()
 {
 	SetState(BOSS_STATE_IDLE);
-	this->blood = 18;
+	this->blood = 40;
 	item = _item;
 	time_moving = 0;
 	time_moving_coupling = 0;

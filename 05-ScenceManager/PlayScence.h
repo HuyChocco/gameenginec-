@@ -26,6 +26,7 @@
 #include "Item.h"
 #include "Mine.h"
 #include "Egg.h"
+#include "Arrow.h"
 //bo sung
 #include "MainCharacter.h"
 #include "BarrelObject.h"

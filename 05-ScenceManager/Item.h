@@ -5,6 +5,7 @@
 #define ITEM_ANI_H_GREEN	2
 #define ITEM_ANI_FLASH	3
 #define ITEM_ANI_P_GREEN	4
+#define ITEM_ANI_KEY 5
 
 #define	ITEM_BBOX_WIDTH	16
 #define	ITEM_BBOX_HEIGHT	16

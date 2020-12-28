@@ -47,6 +47,9 @@ void CItem::Render()
 		case 4:
 			ani = ITEM_ANI_P_GREEN;
 			break;
+		case 5:
+			ani = ITEM_ANI_KEY;
+			break;
 		default:
 			break;
 		}

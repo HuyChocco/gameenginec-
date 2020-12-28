@@ -341,7 +341,7 @@ void CBossScence::Update(DWORD dt)
 		{
 			if (player)
 			{
-				CGame::GetInstance()->SwitchScene(8, player->GetAlive(), player->GetPower());
+				CGame::GetInstance()->SwitchScene(24, player->GetAlive(), player->GetPower());
 			}
 		}
 		else

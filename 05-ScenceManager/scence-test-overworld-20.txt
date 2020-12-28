@@ -221,9 +221,11 @@ map-overworld-20.txt
 1161	161	300	162	300
 # ==== ENEMY TELEPORTERS =========
 #bien hinh
-1152	154	100	155	50	154	50	155	50
+1152	154	200
 #sau khi bien hinh va tan cong
 1153	155	100
+#start
+1154	154	200	155	100
 # ==== ENEMY EYEBALLS =========
 1150	150	100	151	100
 # nham mat chuan bi ban
@@ -341,6 +343,8 @@ map-overworld-20.txt
 900003	900003	100
 #P green
 900004	900004	100
+#Egg
+900005	83	100
 [ANIMATION_SETS]
 # SOFIA 
 1	600	601	602	603	604	605
@@ -365,12 +369,14 @@ map-overworld-20.txt
 # EYEBALLS
 11	1150	1151
 # TELEPORTER
-12	1152	1153
+12	1152	1153	1154
 # HUB
 100	100000	100001	100002	100003	100004	100005	100006	100007	100008	100009	100010	100011
 # ITEMS
 # P
 200	900000	900001	900002	900003	900004
+# Egg
+300	900005
 [OBJECTS]
 # object_id  type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Worm, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Cabin, 8= Barrel, 9= Main character, 10= Spider, 11=Human

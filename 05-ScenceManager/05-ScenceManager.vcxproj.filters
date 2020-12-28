@@ -163,6 +163,9 @@
     <ClCompile Include="SpecialPortal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Arrow.cpp">
+      <Filter>Source Files\ItemObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cannon.h">
@@ -326,6 +329,9 @@
     </ClInclude>
     <ClInclude Include="SpecialPortal.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Arrow.h">
+      <Filter>Header Files\ItemObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
