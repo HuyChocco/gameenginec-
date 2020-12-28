@@ -6,6 +6,7 @@
 44	textures\NES-Blaster-Master-Area-2-Overworld1.png	255	255	255
 55	textures\sophia.png	255	255	255
 66	textures\Items-Objects.png	255	255	255
+77	textures\mine.png	0	0	0
 # id	left	top	right	bottom	texture_id
 [SPRITES]
 # tiled map sprites
@@ -528,7 +529,7 @@ Map-Blaster-Master-Area-2-M.txt
 # type: 12 = Floater-spider, 13 = Domes, 14 = Jumpers, 15 = Insect,16 = Orbs, 17 = Skulls, 18 = Dashers, 19 = Mine, 20 = LAVA,
 # type: 101 = DESTROYABLE_BRICK 
 # MAIN_CHARACTER need to be created first!
-1	9	165	130	2
+1	9	160	130	2
 # MAIN OBJECTS LIST
 # WHEEL_LEFT
 3	4	18	132	3
@@ -566,10 +567,11 @@ Map-Blaster-Master-Area-2-M.txt
 105	1	16	208	2	32	48
 # --- SCENE PORTAL ----
 # object_id 	type	l	t	ani_set_id	r	b	scene_id	type_portal: 1-Next scene 0-Previous scene	next_portal_id
-1000	50	192	128	2	224	96	5	0	1001
+1000	50	192	128	2	224	96	4	1	1002
+1001	50	48	96	2	80	64	100	0	1000
 # cellx celly id_object...
 [GRID]
 0	0	105	104
 0	1	104	103
-1	0	105	100
+1	0	105	100	1001
 1	1	100	101	102	103	1000

@@ -220,9 +220,11 @@ map-overworld-24.txt
 1161	161	300	162	300
 # ==== ENEMY TELEPORTERS =========
 #bien hinh
-1152	154	100	155	50	154	50	155	50
+1152	154	200
 #sau khi bien hinh va tan cong
 1153	155	100
+#start
+1154	154	200	155	100
 # ==== ENEMY EYEBALLS =========
 1150	150	100	151	100
 # nham mat chuan bi ban
@@ -364,7 +366,7 @@ map-overworld-24.txt
 # EYEBALLS
 11	1150	1151
 # TELEPORTER
-12	1152	1153
+12	1152	1153	1154
 # HUB
 100	100000	100001	100002	100003	100004	100005	100006	100007	100008	100009	100010	100011
 # ITEMS
@@ -423,14 +425,14 @@ map-overworld-24.txt
 250	34	113.348	474.58	200	1
 251	34	128.551	474.601	200	2
 252	34	113.275	458.993	200	3
-253	34	128.667	459.065	200	4
+254	34	128.667	459.065	200	4
 # --- SCENE PORTAL ----
 # object_id 	type	l	t	ani_set_id	r	b	scene_id	type_portal: 1-Next scene 0-Previous scene	next_portal_id
 #cong ve area2
 1001	50	143.989	144.06	2	160.0079	128.0358	4	0	1006
 # cellx celly id_object...
 [GRID]
-0	0	122	123	128	130	250	251	252	253
+0	0	122	123	128	130	250	251	252	254
 1	0	123	126	128	130
 2	0	123	126	127
 3	0	123	127	1001	25	20

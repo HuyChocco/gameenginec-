@@ -166,6 +166,10 @@
 # Climbing - leo cau thang
 10016	26	177	38	194	55
 10017	47	177	59	194	55
+# Dying
+10018	67	177	81	194	55
+10019	87	179	103	194	55
+10020	108	183	125	193	55
 # BIG-SOFIA
 # move left
 10007	208	69	232	101	1
@@ -352,6 +356,8 @@ Map-Blaster-Master-Area-2-L.txt
 602	10005	100	10006	100
 #climb
 606	10016	100	10017	100
+#dying
+607	10018	100	10019	100	10020	100
 # BIG-SOFIA
 # move left
 603	10007	100	10008	100	10009	100
@@ -492,7 +498,7 @@ Map-Blaster-Master-Area-2-L.txt
 #
 [ANIMATION_SETS]
 # SOFIA 
-1	600	601	602	603	604	605	606
+1	600	601	602	603	604	605	606	607
 # MAIN_CHARACTER 
 2	2000	2001
 # WHEEL 
@@ -566,8 +572,8 @@ Map-Blaster-Master-Area-2-L.txt
 105	1	16	208	2	496	192
 # --- SCENE PORTAL ----
 # object_id 	type	l	t	ani_set_id	r	b	scene_id	type_portal: 1-Next scene 0-Previous scene	next_portal_id
-1000	50	448	144	2	480	112	5	0	1001
-1001	50	64	96	2	96	64	8	0	1000
+1000	50	448	144	2	480	112	7	1	1001
+1001	51	72	82	2	84	64	8	1005
 # cellx celly id_object...
 [GRID]
 0	0	105	100	

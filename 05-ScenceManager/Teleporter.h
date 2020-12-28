@@ -15,17 +15,20 @@
 #define TELEPORTER_STATE_CLOAK 600
 #define TELEPORTER_STATE_ATTACK 500
 
-#define TELEPORTER_ANI_LEFT 0
-#define TELEPORTER_ANI_ATTACK 1
+#define TELEPORTER_ANI_CLOAK 0
+#define TELEPORTER_ANI_MOVE 1
+#define TELEPORTER_ANI_START 2
 
-#define TIME_START_MOVING			2000
+#define TIME_START_MOVING	1000
 #define TIME_MOVING			1000
+#define TIME_START_CLOAK	2000
+#define TIME_CLOAK			1000
 class CTeleporter :public CEnemyObject
 {
-	DWORD timeWaitingToMove;
-	DWORD timeMoving;
-	bool isStartMoving;
-	bool isMoving;
+	DWORD timeWaitingToMove, timeWaitingCloak;
+	DWORD timeMoving, timeCloak;
+	bool isStartMoving, isStartCloak;
+	bool isMoving, isCloak;
 	bool isAttack;
 
 	vector<CGameObject*> list_weapon;

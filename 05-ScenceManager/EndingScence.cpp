@@ -221,6 +221,7 @@ DWORD timeMoveX = 0;
 DWORD timeMoveY = 0;
 void CEndingScence::Update(DWORD dt)
 {
+	Sound::getInstance()->Stop(SOUND_ID_AREA_2);
 	if (isAniThree)
 	{
 		float cx = 0;

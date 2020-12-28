@@ -23,6 +23,7 @@ enum TYPE_SCENCE
 };
 
 #define MENU_SCENCE_ID	1000
+#define SCENCE_ID_OVERWORLD_END	24
 class CGame
 {
 	static CGame * __instance;
