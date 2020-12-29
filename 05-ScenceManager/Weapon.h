@@ -23,6 +23,9 @@
 #define WEAPON_SKULL_BBOX_WIDTH 8
 #define WEAPON_SKULL_BBOX_HEIGHT 16
 
+#define WEAPON_MINE_BBOX_WIDTH 4
+#define WEAPON_MINE_BBOX_HEIGHT 4
+
 
 #define WEAPON_BIG_HUMAN_BBOX_WIDTH 4
 #define WEAPON_BIG_HUMAN_BBOX_HEIGHT 4
@@ -80,6 +83,10 @@
 #define WEAPON_PLAYER_ROCKET_STATE_FLY_HORIZONTAL_LEFT		902
 #define WEAPON_PLAYER_ROCKET_STATE_FLY_HORIZONTAL_RIGHT		903
 
+//Enemy mine bullet
+#define WEAPON_MINE_STATE_FALL		1000
+#define WEAPON_MINE_STATE_UP		1001
+
 //Player
 #define WEAPON_ANI_FLY_HORIZONTAL 0
 #define WEAPON_ANI_FLY_VERTICAL 1
@@ -97,6 +104,9 @@
 //Enemy_Floater
 #define WEAPON_ANI_ENEMY_FLOATER 9
 #define WEAPON_ANI_EXPLODE_ENEMY_FLOATER 10
+//Enemy_Mine
+#define WEAPON_ANI_ENEMY_MINE 18
+#define WEAPON_ANI_EXPLODE_ENEMY_MINE 19
 //Enemy_Skull
 #define WEAPON_ANI_ENEMY_SKULL_LEFT 11
 #define WEAPON_ANI_ENEMY_SKULL_RIGHT 12
@@ -119,8 +129,12 @@
 #define WEAPON_BIG_HUMAN_FLY_SPEED 0.15f;
 #define WEAPON_SKULL_FLY_SPEED 0.04f;
 #define WEAPON_SKULL_FLY_SPEED_X 0.03f;
+#define WEAPON_MINE_FALL_SPEED 0.03f;
+#define WEAPON_MINE_UP_SPEED 0.03f;
 
 #define TIME_ENABLE_FIRE			1000
+#define TIME_ENABLE_MINE_UP			1000
+#define TIME_ENABLE_MINE			4000
 
 #define WEAPON_TYPE_PLAYER			1
 #define WEAPON_TYPE_ENEMY_CANNONS			2
@@ -131,6 +145,7 @@
 #define WEAPON_TYPE_ENEMY_SKULL			6
 #define WEAPON_TYPE_BOSS			99
 #define WEAPON_TYPE_PLAYER_ROCKET			98
+#define WEAPON_TYPE_MINE	100
 class CWeapon : public CGameObject
 {
 	int dame = 0;
@@ -145,6 +160,7 @@ class CWeapon : public CGameObject
 	CGameObject* player;
 
 	DWORD time_movingg;
+	DWORD time_mine;
 	bool isOne;
 	bool isTwo= true;
 	bool isThree = true;

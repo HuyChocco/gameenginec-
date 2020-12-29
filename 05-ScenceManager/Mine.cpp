@@ -1,5 +1,6 @@
-#include "Mine.h"
+﻿#include "Mine.h"
 #include "Brick.h"
+#include "Weapon.h"
 CMine::CMine(int _item) :CEnemyObject()
 {
 	SetState(MINE_STATE_IDLE);
@@ -87,8 +88,10 @@ void CMine::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
-
-
+	for (int i = 0; i < list_weapon.size(); i++)
+	{
+		list_weapon[i]->Update(dt, coObjects);
+	}
 }
 
 void CMine::Render()
@@ -101,22 +104,30 @@ void CMine::Render()
 		case MINE_STATE_IDLE:
 			ani = MINE_ANI_IDLE;
 			break;
-		case MINE_STATE_ATTACK:
-			break;
-
 		case STATE_ITEM:
 			ani = item;
 			animation_item_set->at(ani - 1)->Render(x, y);
 			break;
+		case MINE_STATE_EXPLOSION:
+			ani = MINE_ANI_EXPLOSION;
+			break;
 		}
 		if (isDisplay)
 		{
+			if (state == MINE_STATE_EXPLOSION) {
+				if (animation_set->at(ani)->isFinish) {
+					SetState(MINE_STATE_ATTACK);
+				}
+			}
 			animation_set->at(ani)->Render(x, y);
 			RenderBoundingBox();
 		}
 
 	}
-
+	for (int i = 0; i < list_weapon.size(); i++)
+	{
+		list_weapon[i]->Render();
+	}
 }
 
 void CMine::SetState(int state)
@@ -129,6 +140,41 @@ void CMine::SetState(int state)
 		vy = 0;
 		break;
 	case MINE_STATE_ATTACK:
+	{
+		CWeapon* weapon = new CWeapon(WEAPON_TYPE_MINE);// Khởi tạo weapon
+		weapon->SetDirection(-1);
+		weapon->SetPosition(x, y);
+		weapon->SetState(WEAPON_MINE_STATE_UP);
+		if (player)
+			weapon->SetPlayerObject(player);
+		list_weapon.push_back(weapon);
+
+		weapon = new CWeapon(WEAPON_TYPE_MINE);// Khởi tạo weapon
+		weapon->SetDirection(-1);
+		weapon->SetPosition(x + MINE_BBOX_WIDTH / 2, y);
+		weapon->SetState(WEAPON_MINE_STATE_UP);
+		if (player)
+			weapon->SetPlayerObject(player);
+		list_weapon.push_back(weapon);
+
+		weapon = new CWeapon(WEAPON_TYPE_MINE);// Khởi tạo weapon
+		weapon->SetDirection(1);
+		weapon->SetPosition(x + MINE_BBOX_WIDTH / 2, y);
+		weapon->SetState(WEAPON_MINE_STATE_UP);
+		if (player)
+			weapon->SetPlayerObject(player);
+		list_weapon.push_back(weapon);
+
+		weapon = new CWeapon(WEAPON_TYPE_MINE);// Khởi tạo weapon
+		weapon->SetDirection(1);
+		weapon->SetPosition(x + MINE_BBOX_WIDTH, y);
+		weapon->SetState(WEAPON_MINE_STATE_UP);
+		if (player)
+			weapon->SetPlayerObject(player);
+		list_weapon.push_back(weapon);
+		SetState(MINE_STATE_DIE);
+	}
+		
 		break;
 	case MINE_STATE_DIE:
 		isDisplay = false;

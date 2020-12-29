@@ -16,6 +16,7 @@
 class CMine :public CEnemyObject
 {
 	bool startMoving;
+	vector<CGameObject*> list_weapon;
 public:
 	CMine(int _item);
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);

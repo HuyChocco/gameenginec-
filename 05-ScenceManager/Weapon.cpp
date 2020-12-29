@@ -18,6 +18,7 @@
 #include "Orb.h"
 #include "Boss.h"
 #include "Egg.h"
+#include "Mine.h"
 
 #include "Sound.h"
 CWeapon::CWeapon(int type)
@@ -37,6 +38,11 @@ CWeapon::CWeapon(int type)
 	{
 		this->timeAttack = 0.0f;
 		SetTypeWeapon(WEAPON_TYPE_ENEMY_TELEPORTER);
+	}
+	else if (type == WEAPON_TYPE_MINE)
+	{
+		this->timeAttack = 0.0f;
+		SetTypeWeapon(WEAPON_TYPE_MINE);
 	}
 	else if (type == WEAPON_TYPE_ENEMY_EYEBALL)
 	{
@@ -128,6 +134,28 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 							if (!isAttacked)
 							{
 								worm->LostBlood(GetDame());
+								isAttacked = true;
+							}
+						}
+					}
+
+				}
+				else if (dynamic_cast<CMine*>(colliable_object->at(i)))
+				{
+					CMine* mine = dynamic_cast<CMine*>(colliable_object->at(i));
+					if (mine->GetState() != STATE_ITEM)
+					{
+						float l1, t1, r1, b1, l2, t2, r2, b2;
+						GetBoundingBox(l1, t1, r1, b1);
+						mine->GetBoundingBox(l2, t2, r2, b2);
+
+						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+						{
+							SetState(WEAPON_STATE_EXPLODE);
+							isBurning = true;
+							if (!isAttacked)
+							{
+								mine->LostBlood(GetDame());
 								isAttacked = true;
 							}
 						}
@@ -507,6 +535,28 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 							}
 						}
 					}
+				}
+				else if (dynamic_cast<CMine*>(colliable_object->at(i)))
+				{
+					CMine* mine = dynamic_cast<CMine*>(colliable_object->at(i));
+					if (mine->GetState() != STATE_ITEM)
+					{
+						float l1, t1, r1, b1, l2, t2, r2, b2;
+						GetBoundingBox(l1, t1, r1, b1);
+						mine->GetBoundingBox(l2, t2, r2, b2);
+
+						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+						{
+							SetState(WEAPON_STATE_EXPLODE);
+							isBurning = true;
+							if (!isAttacked)
+							{
+								mine->LostBlood(GetDame());
+								isAttacked = true;
+							}
+						}
+					}
+
 				}
 				else if (dynamic_cast<CPortal*>(colliable_object->at(i)))
 				{
@@ -983,6 +1033,27 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 						}
 					}
 				}
+				else if (dynamic_cast<CMine*>(minObjectDistance))
+				{
+					CMine* mine = dynamic_cast<CMine*>(minObjectDistance);
+					if (mine->GetState() != STATE_ITEM)
+					{
+						float l1, t1, r1, b1, l2, t2, r2, b2;
+						GetBoundingBox(l1, t1, r1, b1);
+						mine->GetBoundingBox(l2, t2, r2, b2);
+
+						if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+						{
+							SetState(WEAPON_STATE_EXPLODE);
+							isBurning = true;
+							if (!isAttacked)
+							{
+								mine->LostBlood(GetDame());
+								isAttacked = true;
+							}
+						}
+					}
+				}
 				else if (dynamic_cast<CFloater*>(minObjectDistance))
 				{
 					CFloater* floater = dynamic_cast<CFloater*>(minObjectDistance);
@@ -1116,17 +1187,61 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* colliable_object)
 				}
 			}
 		}
-		timeAttack += dt;
-		if (timeAttack > 3000)
+		else if (type_weapon == WEAPON_TYPE_MINE)
 		{
-			SetState(WEAPON_STATE_NONE);
-			timeAttack = 0;
+			
+			if (state == WEAPON_MINE_STATE_FALL) {
+				time_mine += dt;
+				if (time_mine >= 1500) {
+					for (UINT i = 0; i < colliable_object->size(); i++)
+					{
+						if (dynamic_cast<CBrick*>(colliable_object->at(i)))
+						{
+							CBrick* brick = dynamic_cast<CBrick*>(colliable_object->at(i));
+							if (brick->GetType() == BRICK_TYPE_NORMAL) //Default brick type
+							{
+								float l1, t1, r1, b1, l2, t2, r2, b2;
+								GetBoundingBox(l1, t1, r1, b1);
+								brick->GetBoundingBox(l2, t2, r2, b2);
+
+								if (game->CheckCollision(l1, t1, r1, b1, l2, t2, r2, b2) == true)
+								{
+									SetState(WEAPON_STATE_EXPLODE);
+									isBurning = true;
+								}
+							}
+						}
+					}
+				}
+			}
+			else
+			{
+				time_mine += dt;
+				if (time_mine >= 500) {
+					SetState(WEAPON_MINE_STATE_FALL);
+					time_mine = 0;
+				}
+			}
+
+			float l1, t1, r1, b1;
+			GetBoundingBox(l1, t1, r1, b1);
+			if (game->CheckCollision(l1, t1, r1, b1, l_player, t_player, r_player, b_player) == true)
+			{
+				SetState(WEAPON_STATE_EXPLODE);
+				isBurning = true;
+				player->SetIsAttacked(true);
+			}
+		}
+		if (type_weapon != WEAPON_TYPE_MINE)
+		{
+			timeAttack += dt;
+			if (timeAttack > 3000)
+			{
+				SetState(WEAPON_STATE_NONE);
+				timeAttack = 0;
+			}
 		}
 	}
-
-
-
-
 }
 
 void CWeapon::Render()
@@ -1464,6 +1579,40 @@ void CWeapon::Render()
 				animation_set->at(ani)->Render(x, y, flip);
 		}
 	}
+	else if (typeWeapon == WEAPON_TYPE_MINE)
+	{
+	if (state != WEAPON_STATE_NONE)
+	{
+		int ani = WEAPON_ANI_ENEMY_MINE;
+		int flip = false;
+		switch (state)
+		{
+		case WEAPON_MINE_STATE_FALL:
+		case WEAPON_MINE_STATE_UP:
+			ani = ani = WEAPON_ANI_ENEMY_MINE;;
+			break;
+		case WEAPON_STATE_EXPLODE:
+			ani = WEAPON_ANI_EXPLODE_ENEMY_MINE;
+			break;
+		default:
+			break;
+		}
+		if (state == WEAPON_STATE_EXPLODE)
+		{
+			float l, t, r, b;
+			GetBoundingBox(l, t, r, b);
+			animation_set->at(ani)->Render(x, y, flip);
+			if (animation_set->at(ani)->isFinish)
+			{
+				animation_set->at(ani)->isFinish = false;
+				SetState(WEAPON_STATE_NONE);
+			}
+		}
+		else
+			animation_set->at(ani)->Render(x, y, flip);
+		//RenderBoundingBox();
+	}
+	}
 }
 
 void CWeapon::SetState(int state)
@@ -1633,6 +1782,21 @@ void CWeapon::SetState(int state)
 			break;
 		}
 	}
+	else if (type_weapon == WEAPON_TYPE_MINE)
+	{
+		switch (state)
+		{
+			case WEAPON_MINE_STATE_FALL:
+				vy = - 0.06;
+				this->dame = 1;
+				break;
+			case WEAPON_MINE_STATE_UP:
+				vx = nx*0.01;
+				vy = WEAPON_MINE_UP_SPEED;
+				this->dame = 1;
+				break;
+		}
+	}
 	else if (type_weapon == WEAPON_TYPE_BOSS)
 	{
 		switch (state)
@@ -1758,6 +1922,13 @@ void CWeapon::GetBoundingBox(float& left, float& top, float& right, float& botto
 		left = x;
 		top = y - WEAPON_BOSS_BBOX_HEIGHT;
 		right = x + WEAPON_BOSS_BBOX_WIDTH;
+		bottom = y;
+	}
+	else if (typeWeapon == WEAPON_TYPE_MINE)
+	{
+		left = x;
+		top = y - WEAPON_MINE_BBOX_HEIGHT;
+		right = x + WEAPON_MINE_BBOX_WIDTH;
 		bottom = y;
 	}
 	else if (typeWeapon == WEAPON_TYPE_PLAYER_ROCKET)
