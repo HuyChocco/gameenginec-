@@ -27,6 +27,7 @@
 
 #include "Teleporter.h"
 #include "Arrow.h"
+#include "Mine.h"
 
 #define JUMPER_ROUNDING_DISTANCE_X 50
 #define JUMPER_ROUNDING_DISTANCE_Y 20
@@ -617,6 +618,27 @@ void CMainCharacter::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 						else
 							x += dx;
 						orb->SetState(ORB_STATE_DIE);
+					}
+				}
+				else if (dynamic_cast<CMine*>(e->obj))
+				{
+					Is_On_Ground = false;
+					CMine* mine = dynamic_cast<CMine*>(e->obj);
+					if (mine->GetState() != STATE_ITEM)
+					{
+						if (untouchable == 0)
+						{
+							StartUntouchable();
+							power--;
+							Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
+						}
+					}
+					else
+					{
+						Sound::getInstance()->PlayNew(SOUND_ID_EATING_ITEM);
+						if (power < 8)
+							power++;
+						mine->SetState(MINE_STATE_DIE);
 					}
 				}
 				//Indoor enemies

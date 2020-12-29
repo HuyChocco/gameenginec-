@@ -28,6 +28,7 @@
 #include "Egg.h"
 #include "Lava.h"
 #include "Arrow.h"
+#include "Mine.h"
 #define JUMPER_ROUNDING_DISTANCE_X 50
 #define JUMPER_ROUNDING_DISTANCE_Y 20
 #define ORB_ROUNDING_DISTANCE_X 120
@@ -776,6 +777,39 @@ void CHuman::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 					else
 						x += dx;
 					skull->SetState(SKULL_STATE_DIE);
+				}
+			}
+			else if (dynamic_cast<CMine*>(e->obj))
+			{
+				CMine* mine = dynamic_cast<CMine*>(e->obj);
+				if (mine->GetState() != STATE_ITEM)
+				{
+					if (untouchable == 0)
+					{
+						if (player != NULL)
+						{
+							CMainCharacter* player_object = dynamic_cast<CMainCharacter*>(player);
+							int power = player_object->GetPower();
+							power--;
+							player_object->SetPower(power);
+						}
+						StartUntouchable();
+						Sound::getInstance()->PlayNew(SOUND_ID_IS_ATTACKED);
+					}
+				}
+				else
+				{
+					if (player != NULL)
+					{
+						Sound::getInstance()->PlayNew(SOUND_ID_EATING_ITEM);
+						int power = dynamic_cast<CMainCharacter*>(player)->GetPower();
+						if (power < 8)
+						{
+							power++;
+							dynamic_cast<CMainCharacter*>(player)->SetPower(power);
+						}
+					}
+					mine->SetState(SKULL_STATE_DIE);
 				}
 			}
 			//Indoor enemies

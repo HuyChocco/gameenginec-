@@ -315,6 +315,12 @@
 100020	51	515	61	525	2
 #bullet_explosion
 100021	166	97	182	113	1
+#mine_bullet
+100022	135	183	139	187	55
+#mine_bullet_explosion
+100023	155	181	162	189	55
+100024	171	178	187	191	55
+100025	192	177	208	193	55
 # Hub objects
 # PowerHub - Text
 800001	175	219	183	235	55
@@ -337,6 +343,10 @@
 900000	87	240	103	256	55
 # MINE
 100000	0	0	16	16	77
+#MINE-EXPLOSION
+100200	155	181	162	189	55
+100201	171	178	187	191	55
+100202	192	177	208	193	55
 # path
 [MAP]
 Map-Blaster-Master-Area-2-D.txt
@@ -422,6 +432,8 @@ Map-Blaster-Master-Area-2-D.txt
 # ==== ENEMY MINE =========
 #Stay
 110000	100000	100
+#EXPLOSION
+110001	100200	100	100201	100	100202	100
 #=== SKULLS ====
 #walk left
 120000	180001	100
@@ -475,6 +487,11 @@ Map-Blaster-Master-Area-2-D.txt
 4012	100020	100
 #Bullet explosion
 4013	100021	100
+# ==== ENEMY MINE - BULLET =========
+#FALL
+4014	100022	100
+#EXPLOSION
+4015	100022	100	100023	100	100024	100
 # ==== HUB =========
 # PowerHub - Text
 100000	800001	100
@@ -516,12 +533,12 @@ Map-Blaster-Master-Area-2-D.txt
 12	9000	9001
 # INSECT - ENEMY
 #11	7000	7001
-# MINE- ENEMY
-13	110000
+#MINE - ENEMY
+13	110000	110001
 # SKULLS
 15	120000	120001	120002	120003
 # WEAPON Player-horizontal Player-vertical Player-explode Big human-bullet Big human-explosion Cannon-bullet Cannon-explosion Eyeball-bullet Eyeball-explosion	Floater-bullet	Floater-explosion	Skull bullet left	Skull bullet right	Skull bullet explosion	Player-Rocket-right	Player-Rocket-left	Player-Rocket-up	Player-Rocket-down
-7	4000	4001	4002	4003	4004	4005	4006	4007	4008	4009	4010	4011	4012	4013	4100	4101	4102	4103
+7	4000	4001	4002	4003	4004	4005	4006	4007	4008	4009	4010	4011	4012	4013	4100	4101	4102	4103	4014	4015
 # HUB
 100	100000	100001	100002	100003	100004	100005	100006	100007	100008	100009	100010	100011
 # ITEMS
@@ -530,7 +547,7 @@ Map-Blaster-Master-Area-2-D.txt
 [OBJECTS]
 # object_id  type	x	y	ani_set_id	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Enemy1, 3 = Worm, 4 = Wheel_Left, 5 = Wheel_Middle, 6 = Wheel_right, 7= Cabin, 8= Barrel, 9= Main character, 10= Spider, 11=Human
-# type: 12 = Floater, 13 = Domes, 14 = Jumpers, 15 = Insect,16 = Orbs, 17 = Skulls, 18 = Dashers, 19 = Mine, 30 = LAVA
+# type: 12 = Floater, 13 = Domes, 14 = Jumpers, 15 = Insect,16 = Orbs, 17 = Skulls, 18 = Dashers, 40 = Mine, 30 = LAVA
 # type: 101 = DESTROYABLE_BRICK , 22 = Stair
 # MAIN_CHARACTER need to be created first!
 #1	9	78	144.73	2
@@ -559,7 +576,7 @@ Map-Blaster-Master-Area-2-D.txt
 17	3	462	1392.75	8
 18	3	172.333	1351.67	8
 # MINE- ENEMY
-#19	19	144.75	1462.5	13
+19	40	251	1196	13
 # DOME- ENEMY
 20	13	242.25	1632.25	11
 21	13	319.25	1631.75	11
@@ -686,20 +703,20 @@ Map-Blaster-Master-Area-2-D.txt
 1	1	151	146
 1	2	146	1000	155	150	24
 2	0	157	169	142	143	174
-2	1	144	145	24	185
+2	1	144	145	24	185	19
 2	2	144	141	156	25	26	22	23
 3	0	157	158	136
 3	1	137	11	139	138	178	184
 3	2	138	140	156	22	23
 4	0	158	135	134	30
-4	1	135	
+4	1	135	19
 4	2	148	156
 5	0	158	132
 5	1	131	130	178	183
 5	2	130	1001	156	159
 6	0	158	147	132	127
 6	1	131	130	127	129	182
-6	2	129	128	130	19	182
+6	2	129	128	130	182
 7	0	158	161	1002	121	127	120	165
 7	1	165	170	171	127	129	120	27
 7	2	129	128	124	123	159	160	27
